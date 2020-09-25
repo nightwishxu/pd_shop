@@ -73,6 +73,16 @@ public class RedisCache
     }
 
     /**
+     * 设置失效
+     * @param key
+     * @param obj
+     * @param timeout
+     */
+    public void expire(final String key,Object obj, final long timeout){
+        redisTemplate.opsForValue().set(key,obj,timeout,TimeUnit.SECONDS);
+    }
+
+    /**
      * 获得缓存的基本对象。
      *
      * @param key 缓存键值
@@ -89,9 +99,9 @@ public class RedisCache
      *
      * @param key
      */
-    public boolean deleteObject(final String key)
+    public void deleteObject(final String key)
     {
-        return redisTemplate.delete(key);
+        redisTemplate.delete(key);
     }
 
     /**
@@ -100,9 +110,9 @@ public class RedisCache
      * @param collection 多个对象
      * @return
      */
-    public long deleteObject(final Collection collection)
+    public void deleteObject(final Collection collection)
     {
-        return redisTemplate.delete(collection);
+        redisTemplate.delete(collection);
     }
 
     /**
@@ -223,5 +233,14 @@ public class RedisCache
     public Collection<String> keys(final String pattern)
     {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 是否存在key
+     * @param key
+     * @return
+     */
+    public boolean exists(String key){
+       return redisTemplate.hasKey(key);
     }
 }

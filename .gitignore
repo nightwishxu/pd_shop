@@ -24,8 +24,10 @@ target/
 *.iws
 *.iml
 *.ipr
-ruoyi.iml
-
+LICENSE
+README.md
+ry.sh
+.docx
 ### NetBeans ###
 nbproject/private/
 build/*

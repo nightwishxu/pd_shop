@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.AuthEnterpriseMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.AuthEnterpriseEx" extends="com.paidang.dao.AuthEnterpriseMapper.BaseResultMap">
+  </resultMap>
+  <update id="changeStateByPrimaryKey" >
+        update b_auth_enterprise
+        set state = #{state},refuse_info=#{refuseInfo}
+        where id = #{id}
+    </update>
+
+    <update id="setAuthInvalid" parameterType="int">
+        update b_auth_personal set state = '3' where create_user = #{userId}
+    </update>
+</mapper>

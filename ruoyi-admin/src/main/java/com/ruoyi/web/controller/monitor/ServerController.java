@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.framework.web.domain.Server;
 
 /**
@@ -19,10 +19,10 @@ public class ServerController extends BaseController
 {
     @PreAuthorize("@ss.hasPermi('monitor:server:list')")
     @GetMapping()
-    public AjaxResult getInfo() throws Exception
+    public Ret getInfo() throws Exception
     {
         Server server = new Server();
         server.copyTo();
-        return AjaxResult.success(server);
+        return Ret.success(server);
     }
 }

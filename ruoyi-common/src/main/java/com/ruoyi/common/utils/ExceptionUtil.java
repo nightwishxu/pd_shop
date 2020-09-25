@@ -37,4 +37,8 @@ public class ExceptionUtil
         }
         return StringUtils.defaultString(msg);
     }
+
+    public static String getMessage(Throwable e) {
+        return null == e ? "null" : String.format("{}: {}", new Object[]{e.getClass().getSimpleName(), e.getMessage()});
+    }
 }

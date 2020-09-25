@@ -10,7 +10,7 @@
       :on-success="quillImgSuccess"
       :on-error="uploadError"
       :before-upload="quillImgBefore"
-      accept='.jpg,.jpeg,.png,.gif'
+      accept=".jpg, .jpeg, .png, .gif"
     ></el-upload>
 
     <!-- 富文本组件 -->
@@ -27,20 +27,20 @@
 </template>
 
 <script>
-import { getToken } from '@/utils/auth'
+import { getToken } from "@/utils/auth";
 
 // 工具栏配置
 const toolbarOptions = [
-  ["bold", "italic", "underline", "strike"],       // 加粗 斜体 下划线 删除线
-  ["blockquote", "code-block"],                    // 引用  代码块
-  [{ list: "ordered" }, { list: "bullet" }],       // 有序、无序列表
-  [{ indent: "-1" }, { indent: "+1" }],            // 缩进
-  [{ size: ["small", false, "large", "huge"] }],   // 字体大小
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],         // 标题
-  [{ color: [] }, { background: [] }],             // 字体颜色、字体背景颜色
-  [{ align: [] }],                                 // 对齐方式
-  ["clean"],                                       // 清除文本格式
-  ["link", "image", "video"]                       // 链接、图片、视频
+  ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
+  ["blockquote", "code-block"], // 引用  代码块
+  [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+  [{ indent: "-1" }, { indent: "+1" }], // 缩进
+  [{ size: ["small", false, "large", "huge"] }], // 字体大小
+  [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+  [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+  [{ align: [] }], // 对齐方式
+  ["clean"], // 清除文本格式
+  ["link", "image", "video"], // 链接、图片、视频
 ];
 
 import { quillEditor } from "vue-quill-editor";
@@ -52,13 +52,13 @@ export default {
   props: {
     /* 编辑器的内容 */
     value: {
-      type: String
+      type: String,
     },
     /* 图片大小 */
     maxSize: {
       type: Number,
-      default: 4000 //kb
-    }
+      default: 4000, //kb
+    },
   },
   components: { quillEditor },
   data() {
@@ -72,28 +72,29 @@ export default {
           toolbar: {
             container: toolbarOptions,
             handlers: {
-              image: function(value) {
+              image: function (value) {
                 if (value) {
                   // 触发input框选择图片文件
                   document.querySelector(".quill-img input").click();
                 } else {
                   this.quill.format("image", false);
                 }
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
-      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      // uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/fileUpload", // 上传的图片服务器地址
       headers: {
-        Authorization: 'Bearer ' + getToken()
-      }
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   watch: {
-    value: function() {
+    value: function () {
       this.content = this.value;
-    }
+    },
   },
   methods: {
     onEditorBlur() {
@@ -110,12 +111,12 @@ export default {
     // 富文本图片上传前
     quillImgBefore(file) {
       let fileType = file.type;
-			if(fileType === 'image/jpeg' || fileType === 'image/png'){
-				return true;
-			}else {
-				this.$message.error('请插入图片类型文件(jpg/jpeg/png)');
-				return false;
-			}
+      if (fileType === "image/jpeg" || fileType === "image/png") {
+        return true;
+      } else {
+        this.$message.error("请插入图片类型文件(jpg/jpeg/png)");
+        return false;
+      }
     },
 
     quillImgSuccess(res, file) {
@@ -127,7 +128,7 @@ export default {
         // 获取光标所在位置
         let length = quill.getSelection().index;
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", res.url);
+        quill.insertEmbed(length, "image", res.data.path);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
@@ -138,14 +139,14 @@ export default {
     uploadError() {
       // loading动画消失
       this.$message.error("图片插入失败");
-    }
-  }
+    },
+  },
 };
 </script> 
 
 <style>
 .editor {
-  white-space: pre-wrap!important;
+  white-space: pre-wrap !important;
   line-height: normal !important;
   height: 192px;
 }

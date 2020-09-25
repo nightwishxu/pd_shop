@@ -181,6 +181,14 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.qiyuesuo.sdk</groupId>
+                <artifactId>sdk-java</artifactId>
+                <version>3.1.8</version>
+            </dependency>
+
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -191,6 +199,8 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>paidang-service</module>
+        <module>paidang-user-api</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -216,25 +226,26 @@
 
     <repositories>
         <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <id>glave</id>
+            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <id>glave</id>
+            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>

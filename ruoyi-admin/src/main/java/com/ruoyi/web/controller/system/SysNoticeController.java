@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.Ret;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -50,9 +51,9 @@ public class SysNoticeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:notice:query')")
     @GetMapping(value = "/{noticeId}")
-    public AjaxResult getInfo(@PathVariable Long noticeId)
+    public Ret getInfo(@PathVariable Long noticeId)
     {
-        return AjaxResult.success(noticeService.selectNoticeById(noticeId));
+        return Ret.success(noticeService.selectNoticeById(noticeId));
     }
 
     /**
@@ -61,7 +62,7 @@ public class SysNoticeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:notice:add')")
     @Log(title = "通知公告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysNotice notice)
+    public Ret add(@Validated @RequestBody SysNotice notice)
     {
         notice.setCreateBy(SecurityUtils.getUsername());
         return toAjax(noticeService.insertNotice(notice));
@@ -73,7 +74,7 @@ public class SysNoticeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:notice:edit')")
     @Log(title = "通知公告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysNotice notice)
+    public Ret edit(@Validated @RequestBody SysNotice notice)
     {
         notice.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(noticeService.updateNotice(notice));
@@ -85,7 +86,7 @@ public class SysNoticeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:notice:remove')")
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
     @DeleteMapping("/{noticeIds}")
-    public AjaxResult remove(@PathVariable Long[] noticeIds)
+    public Ret remove(@PathVariable Long[] noticeIds)
     {
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
     }

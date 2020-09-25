@@ -2,20 +2,30 @@ package com.ruoyi.web.controller.common;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.base.util.CoreConstants;
+import com.paidang.service.BFileService;
+import com.ruoyi.common.core.domain.ApiFile;
+import com.ruoyi.common.core.domain.Ret;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
+
+import java.util.List;
 
 /**
  * 通用请求处理
@@ -29,6 +39,10 @@ public class CommonController
 
     @Autowired
     private ServerConfig serverConfig;
+
+
+    @Autowired
+    private BFileService fileService;
 
     /**
      * 通用下载请求
@@ -68,7 +82,7 @@ public class CommonController
      * 通用上传请求
      */
     @PostMapping("/common/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    public Ret uploadFile(MultipartFile file) throws Exception
     {
         try
         {
@@ -77,14 +91,14 @@ public class CommonController
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
-            AjaxResult ajax = AjaxResult.success();
+            Ret ajax = Ret.success();
             ajax.put("fileName", fileName);
             ajax.put("url", url);
             return ajax;
         }
         catch (Exception e)
         {
-            return AjaxResult.error(e.getMessage());
+            return Ret.error(e.getMessage());
         }
     }
 
@@ -105,5 +119,79 @@ public class CommonController
         response.setHeader("Content-Disposition",
                 "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, downloadName));
         FileUtils.writeBytes(downloadPath, response.getOutputStream());
+    }
+
+
+    @ApiOperation(value = "文件上传", notes = "")
+    @RequestMapping(value = "/common/fileUpload", method = RequestMethod.POST)
+    @ResponseBody
+    public Ret upload(HttpServletRequest request) throws Exception {
+        if (!ServletFileUpload.isMultipartContent(request)){
+//            throw new ApiException("files");
+            return Ret.error();
+        }
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setHeaderEncoding("UTF-8");
+        List<FileItem> list = upload.parseRequest(request);
+
+        ApiFile ret = new ApiFile();
+        if (CollectionUtils.isEmpty(list)){
+            return Ret.error();
+        }
+
+        StringBuffer sb = new StringBuffer();
+        StringBuffer url = new StringBuffer();
+        for (int i = 0;i<list.size() ; i++){
+            FileItem file = list.get(i);
+            if (!file.isFormField()){
+                if (sb.length() > 0){
+                    sb.append(",");
+                    url.append(",");
+                }
+                String temp = fileService.uploadFile(file.get(), file.getName(), BFileService.LOCAL);
+                sb.append(temp);
+                url.append(getUrl(temp));
+            }
+            if (i == (list.size()-1)){
+                ret.setId(sb.toString());
+                ret.setPath(url.toString());
+                return Ret.success(ret);
+            }
+        }
+        return null;
+
+    }
+
+
+    protected String getUrl(String fileid) {
+        return this.getUrl(fileid, (Integer)null, (Integer)null);
+    }
+
+    protected String getUrl(String fileid, Integer width, Integer height) {
+        if (org.apache.commons.lang.StringUtils.isNotBlank(fileid)) {
+            String url = CoreConstants.SERVER_URL + "download?id=" + fileid;
+            if (width != null) {
+                url = url + "&w=" + width;
+            }
+
+            if (height != null) {
+                url = url + "&h=" + height;
+            }
+
+            return url;
+        } else {
+            return "";
+        }
+    }
+
+
+    @RequestMapping("/download")
+    public void downloadFile(String id,HttpServletResponse resp,
+                             @RequestParam(value = "w", required = false) String w,
+                             @RequestParam(value = "h", required = false) String h,
+                             @RequestParam(value = "q", required = false) String q
+            ,String type,HttpServletRequest request) throws Exception{
+        fileService.getFile(id, w, h, q, resp, type,request);
     }
 }

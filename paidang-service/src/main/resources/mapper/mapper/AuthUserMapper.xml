@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.dao.AuthUserMapper" >
+	<resultMap id="BaseResultMap" type="com.item.daoEx.model.UserEx" extends="com.item.dao.UserMapper.BaseResultMap">
+		<result column="authType" property="authType" jdbcType="VARCHAR"/>
+		<result column="authId" property="authId" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<!-- 机构后台，用户列表 -->
+	<select id="authUserList" parameterType="string" resultMap="BaseResultMap">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				u1.*,
+				p.create_time ct,
+				'1' authType,
+				p.state st,
+				p.id authId
+			FROM
+				b_auth_personal p
+				LEFT JOIN b_user u1 ON p.create_user = u1.id UNION ALL
+			SELECT
+				u2.*,
+				e.create_time ct,
+				'2' authType,
+				e.state st,
+				e.id authId
+			FROM
+				b_auth_enterprise e
+				LEFT JOIN b_user u2 ON e.create_user = u2.id
+			) t
+		WHERE
+			t.st = '1'
+		<if test="nickOrMobile != '' and nickOrMobile != null">
+			and (t.nick_name like concat('%',#{nickOrMobile},'%') or t.phone like concat('%',#{nickOrMobile},'%'))
+		</if>
+		ORDER BY
+			t.ct DESC
+	</select>
+
+</mapper>

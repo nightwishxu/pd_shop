@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.dao.PawnTicketMapper" >
+    <resultMap id="BaseResultMap" type="com.paidang.dao.model.PawnTicket" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="pawn_ticket_code" property="pawnTicketCode" jdbcType="VARCHAR" />
+        <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+        <result column="org_tel" property="orgTel" jdbcType="VARCHAR" />
+        <result column="org_adress" property="orgAdress" jdbcType="VARCHAR" />
+        <result column="business_license" property="businessLicense" jdbcType="VARCHAR" />
+        <result column="pawner_name" property="pawnerName" jdbcType="VARCHAR" />
+        <result column="pawner_tel" property="pawnerTel" jdbcType="VARCHAR" />
+        <result column="pawner_id_card" property="pawnerIdCard" jdbcType="VARCHAR" />
+        <result column="pawner_cert" property="pawnerCert" jdbcType="VARCHAR" />
+        <result column="contactor" property="contactor" jdbcType="VARCHAR" />
+        <result column="pawner_addr" property="pawnerAddr" jdbcType="VARCHAR" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="auth_price_test" property="authPriceTest" jdbcType="VARCHAR" />
+        <result column="auth_price" property="authPrice" jdbcType="DECIMAL" />
+        <result column="equivalent_ratio" property="equivalentRatio" jdbcType="VARCHAR" />
+        <result column="loan_money" property="loanMoney" jdbcType="VARCHAR" />
+        <result column="user_money" property="userMoney" jdbcType="VARCHAR" />
+        <result column="pawn_money" property="pawnMoney" jdbcType="VARCHAR" />
+        <result column="loan_money_c_n" property="loanMoneyCN" jdbcType="VARCHAR" />
+        <result column="user_money_c_n" property="userMoneyCN" jdbcType="VARCHAR" />
+        <result column="pawn_money_c_n" property="pawnMoneyCN" jdbcType="VARCHAR" />
+        <result column="pawn_begin_time" property="pawnBeginTime" jdbcType="VARCHAR" />
+        <result column="pawn_end_time" property="pawnEndTime" jdbcType="VARCHAR" />
+        <result column="begin_pawn_end_time" property="beginPawnEndTime" jdbcType="VARCHAR" />
+        <result column="rate" property="rate" jdbcType="VARCHAR" />
+        <result column="money_rate" property="moneyRate" jdbcType="VARCHAR" />
+        <result column="cost" property="cost" jdbcType="VARCHAR" />
+        <result column="money_cost" property="moneyCost" jdbcType="VARCHAR" />
+        <result column="repawn_total" property="repawnTotal" jdbcType="VARCHAR" />
+        <result column="cost_c_n" property="costCN" jdbcType="VARCHAR" />
+        <result column="repawn_total_c_n" property="repawnTotalCN" jdbcType="VARCHAR" />
+        <result column="money_cost_c_n" property="moneyCostCN" jdbcType="VARCHAR" />
+        <result column="repawn_begin_time" property="repawnBeginTime" jdbcType="VARCHAR" />
+        <result column="repawn_end_time" property="repawnEndTime" jdbcType="VARCHAR" />
+        <result column="checker" property="checker" jdbcType="VARCHAR" />
+        <result column="handler" property="handler" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="other_order" property="otherOrder" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Base_Column_List" >
+        id,pawn_ticket_code,org_name,org_tel,org_adress,business_license,pawner_name,pawner_tel,pawner_id_card,pawner_cert,contactor,pawner_addr,goods_name,auth_price_test,auth_price,equivalent_ratio,loan_money,user_money,pawn_money,loan_money_c_n,user_money_c_n,pawn_money_c_n,pawn_begin_time,pawn_end_time,begin_pawn_end_time,rate,money_rate,cost,money_cost,repawn_total,cost_c_n,repawn_total_c_n,money_cost_c_n,repawn_begin_time,repawn_end_time,checker,handler,user_id,remark,other_order,create_time,modify_time,type,contract_id,status,sign_time
+    </sql>
+
+    <select id="selectByExample" resultMap="BaseResultMap" >
+        select
+        <if test="distinct" >
+            distinct
+        </if>
+        <include refid="Base_Column_List" />
+        from p_pawn_ticket
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from p_pawn_ticket
+        where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" >
+        delete from p_pawn_ticket
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByExample" >
+        delete from p_pawn_ticket
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        insert into p_pawn_ticket (pawn_ticket_code,org_name,
+        org_tel,org_adress,business_license,
+        pawner_name,pawner_tel,pawner_id_card,
+        pawner_cert,contactor,pawner_addr,
+        goods_name,auth_price_test,auth_price,
+        equivalent_ratio,loan_money,user_money,
+        pawn_money,loan_money_c_n,user_money_c_n,
+        pawn_money_c_n,pawn_begin_time,pawn_end_time,
+        begin_pawn_end_time,rate,money_rate,
+        cost,money_cost,repawn_total,
+        cost_c_n,repawn_total_c_n,money_cost_c_n,
+        repawn_begin_time,repawn_end_time,checker,
+        handler,user_id,remark,
+        other_order,create_time,modify_time,
+        type,contract_id,status,
+        sign_time
+        )
+        values (#{pawnTicketCode,jdbcType=VARCHAR},#{orgName,jdbcType=VARCHAR},
+        #{orgTel,jdbcType=VARCHAR},#{orgAdress,jdbcType=VARCHAR},#{businessLicense,jdbcType=VARCHAR},
+        #{pawnerName,jdbcType=VARCHAR},#{pawnerTel,jdbcType=VARCHAR},#{pawnerIdCard,jdbcType=VARCHAR},
+        #{pawnerCert,jdbcType=VARCHAR},#{contactor,jdbcType=VARCHAR},#{pawnerAddr,jdbcType=VARCHAR},
+        #{goodsName,jdbcType=VARCHAR},#{authPriceTest,jdbcType=VARCHAR},#{authPrice,jdbcType=DECIMAL},
+        #{equivalentRatio,jdbcType=VARCHAR},#{loanMoney,jdbcType=VARCHAR},#{userMoney,jdbcType=VARCHAR},
+        #{pawnMoney,jdbcType=VARCHAR},#{loanMoneyCN,jdbcType=VARCHAR},#{userMoneyCN,jdbcType=VARCHAR},
+        #{pawnMoneyCN,jdbcType=VARCHAR},#{pawnBeginTime,jdbcType=VARCHAR},#{pawnEndTime,jdbcType=VARCHAR},
+        #{beginPawnEndTime,jdbcType=VARCHAR},#{rate,jdbcType=VARCHAR},#{moneyRate,jdbcType=VARCHAR},
+        #{cost,jdbcType=VARCHAR},#{moneyCost,jdbcType=VARCHAR},#{repawnTotal,jdbcType=VARCHAR},
+        #{costCN,jdbcType=VARCHAR},#{repawnTotalCN,jdbcType=VARCHAR},#{moneyCostCN,jdbcType=VARCHAR},
+        #{repawnBeginTime,jdbcType=VARCHAR},#{repawnEndTime,jdbcType=VARCHAR},#{checker,jdbcType=VARCHAR},
+        #{handler,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},
+        #{otherOrder,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
+        #{type,jdbcType=VARCHAR},#{contractId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
+        #{signTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
+        insert into p_pawn_ticket
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="pawnTicketCode != null" >
+                pawn_ticket_code,
+            </if>
+            <if test="orgName != null" >
+                org_name,
+            </if>
+            <if test="orgTel != null" >
+                org_tel,
+            </if>
+            <if test="orgAdress != null" >
+                org_adress,
+            </if>
+            <if test="businessLicense != null" >
+                business_license,
+            </if>
+            <if test="pawnerName != null" >
+                pawner_name,
+            </if>
+            <if test="pawnerTel != null" >
+                pawner_tel,
+            </if>
+            <if test="pawnerIdCard != null" >
+                pawner_id_card,
+            </if>
+            <if test="pawnerCert != null" >
+                pawner_cert,
+            </if>
+            <if test="contactor != null" >
+                contactor,
+            </if>
+            <if test="pawnerAddr != null" >
+                pawner_addr,
+            </if>
+            <if test="goodsName != null" >
+                goods_name,
+            </if>
+            <if test="authPriceTest != null" >
+                auth_price_test,
+            </if>
+            <if test="authPrice != null" >
+                auth_price,
+            </if>
+            <if test="equivalentRatio != null" >
+                equivalent_ratio,
+            </if>
+            <if test="loanMoney != null" >
+                loan_money,
+            </if>
+            <if test="userMoney != null" >
+                user_money,
+            </if>
+            <if test="pawnMoney != null" >
+                pawn_money,
+            </if>
+            <if test="loanMoneyCN != null" >
+                loan_money_c_n,
+            </if>
+            <if test="userMoneyCN != null" >
+                user_money_c_n,
+            </if>
+            <if test="pawnMoneyCN != null" >
+                pawn_money_c_n,
+            </if>
+            <if test="pawnBeginTime != null" >
+                pawn_begin_time,
+            </if>
+            <if test="pawnEndTime != null" >
+                pawn_end_time,
+            </if>
+            <if test="beginPawnEndTime != null" >
+                begin_pawn_end_time,
+            </if>
+            <if test="rate != null" >
+                rate,
+            </if>
+            <if test="moneyRate != null" >
+                money_rate,
+            </if>
+            <if test="cost != null" >
+                cost,
+            </if>
+            <if test="moneyCost != null" >
+                money_cost,
+            </if>
+            <if test="repawnTotal != null" >
+                repawn_total,
+            </if>
+            <if test="costCN != null" >
+                cost_c_n,
+            </if>
+            <if test="repawnTotalCN != null" >
+                repawn_total_c_n,
+            </if>
+            <if test="moneyCostCN != null" >
+                money_cost_c_n,
+            </if>
+            <if test="repawnBeginTime != null" >
+                repawn_begin_time,
+            </if>
+            <if test="repawnEndTime != null" >
+                repawn_end_time,
+            </if>
+            <if test="checker != null" >
+                checker,
+            </if>
+            <if test="handler != null" >
+                handler,
+            </if>
+            <if test="userId != null" >
+                user_id,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="otherOrder != null" >
+                other_order,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="modifyTime != null" >
+                modify_time,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="contractId != null" >
+                contract_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="signTime != null" >
+                sign_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pawnTicketCode != null" >
+                #{pawnTicketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgName != null" >
+                #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgTel != null" >
+                #{orgTel,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAdress != null" >
+                #{orgAdress,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null" >
+                #{businessLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerName != null" >
+                #{pawnerName,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerTel != null" >
+                #{pawnerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerIdCard != null" >
+                #{pawnerIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerCert != null" >
+                #{pawnerCert,jdbcType=VARCHAR},
+            </if>
+            <if test="contactor != null" >
+                #{contactor,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerAddr != null" >
+                #{pawnerAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsName != null" >
+                #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="authPriceTest != null" >
+                #{authPriceTest,jdbcType=VARCHAR},
+            </if>
+            <if test="authPrice != null" >
+                #{authPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="equivalentRatio != null" >
+                #{equivalentRatio,jdbcType=VARCHAR},
+            </if>
+            <if test="loanMoney != null" >
+                #{loanMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="userMoney != null" >
+                #{userMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnMoney != null" >
+                #{pawnMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="loanMoneyCN != null" >
+                #{loanMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="userMoneyCN != null" >
+                #{userMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnMoneyCN != null" >
+                #{pawnMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnBeginTime != null" >
+                #{pawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnEndTime != null" >
+                #{pawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="beginPawnEndTime != null" >
+                #{beginPawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyRate != null" >
+                #{moneyRate,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyCost != null" >
+                #{moneyCost,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnTotal != null" >
+                #{repawnTotal,jdbcType=VARCHAR},
+            </if>
+            <if test="costCN != null" >
+                #{costCN,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnTotalCN != null" >
+                #{repawnTotalCN,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyCostCN != null" >
+                #{moneyCostCN,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnBeginTime != null" >
+                #{repawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnEndTime != null" >
+                #{repawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="checker != null" >
+                #{checker,jdbcType=VARCHAR},
+            </if>
+            <if test="handler != null" >
+                #{handler,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="otherOrder != null" >
+                #{otherOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null" >
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="contractId != null" >
+                #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="signTime != null" >
+                #{signTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByExample" resultType="java.lang.Integer" >
+        select count(*) from p_pawn_ticket
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+    </select>
+
+    <update id="updateByExampleSelective" >
+        update p_pawn_ticket
+        <set >
+            <if test="record.id != null" >
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.pawnTicketCode != null" >
+                pawn_ticket_code = #{record.pawnTicketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orgName != null" >
+                org_name = #{record.orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orgTel != null" >
+                org_tel = #{record.orgTel,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orgAdress != null" >
+                org_adress = #{record.orgAdress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.businessLicense != null" >
+                business_license = #{record.businessLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnerName != null" >
+                pawner_name = #{record.pawnerName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnerTel != null" >
+                pawner_tel = #{record.pawnerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnerIdCard != null" >
+                pawner_id_card = #{record.pawnerIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnerCert != null" >
+                pawner_cert = #{record.pawnerCert,jdbcType=VARCHAR},
+            </if>
+            <if test="record.contactor != null" >
+                contactor = #{record.contactor,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnerAddr != null" >
+                pawner_addr = #{record.pawnerAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="record.goodsName != null" >
+                goods_name = #{record.goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.authPriceTest != null" >
+                auth_price_test = #{record.authPriceTest,jdbcType=VARCHAR},
+            </if>
+            <if test="record.authPrice != null" >
+                auth_price = #{record.authPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="record.equivalentRatio != null" >
+                equivalent_ratio = #{record.equivalentRatio,jdbcType=VARCHAR},
+            </if>
+            <if test="record.loanMoney != null" >
+                loan_money = #{record.loanMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userMoney != null" >
+                user_money = #{record.userMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnMoney != null" >
+                pawn_money = #{record.pawnMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="record.loanMoneyCN != null" >
+                loan_money_c_n = #{record.loanMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userMoneyCN != null" >
+                user_money_c_n = #{record.userMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnMoneyCN != null" >
+                pawn_money_c_n = #{record.pawnMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnBeginTime != null" >
+                pawn_begin_time = #{record.pawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnEndTime != null" >
+                pawn_end_time = #{record.pawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.beginPawnEndTime != null" >
+                begin_pawn_end_time = #{record.beginPawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.rate != null" >
+                rate = #{record.rate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.moneyRate != null" >
+                money_rate = #{record.moneyRate,jdbcType=VARCHAR},
+            </if>
+            <if test="record.cost != null" >
+                cost = #{record.cost,jdbcType=VARCHAR},
+            </if>
+            <if test="record.moneyCost != null" >
+                money_cost = #{record.moneyCost,jdbcType=VARCHAR},
+            </if>
+            <if test="record.repawnTotal != null" >
+                repawn_total = #{record.repawnTotal,jdbcType=VARCHAR},
+            </if>
+            <if test="record.costCN != null" >
+                cost_c_n = #{record.costCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.repawnTotalCN != null" >
+                repawn_total_c_n = #{record.repawnTotalCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.moneyCostCN != null" >
+                money_cost_c_n = #{record.moneyCostCN,jdbcType=VARCHAR},
+            </if>
+            <if test="record.repawnBeginTime != null" >
+                repawn_begin_time = #{record.repawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.repawnEndTime != null" >
+                repawn_end_time = #{record.repawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="record.checker != null" >
+                checker = #{record.checker,jdbcType=VARCHAR},
+            </if>
+            <if test="record.handler != null" >
+                handler = #{record.handler,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userId != null" >
+                user_id = #{record.userId,jdbcType=INTEGER},
+            </if>
+            <if test="record.remark != null" >
+                remark = #{record.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="record.otherOrder != null" >
+                other_order = #{record.otherOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="record.createTime != null" >
+                create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.modifyTime != null" >
+                modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.type != null" >
+                type = #{record.type,jdbcType=VARCHAR},
+            </if>
+            <if test="record.contractId != null" >
+                contract_id = #{record.contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.status != null" >
+                status = #{record.status,jdbcType=VARCHAR},
+            </if>
+            <if test="record.signTime != null" >
+                sign_time = #{record.signTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByExample" >
+        update p_pawn_ticket
+        set id = #{id,jdbcType=INTEGER},
+        pawn_ticket_code = #{pawnTicketCode,jdbcType=VARCHAR},
+        org_name = #{orgName,jdbcType=VARCHAR},
+        org_tel = #{orgTel,jdbcType=VARCHAR},
+        org_adress = #{orgAdress,jdbcType=VARCHAR},
+        business_license = #{businessLicense,jdbcType=VARCHAR},
+        pawner_name = #{pawnerName,jdbcType=VARCHAR},
+        pawner_tel = #{pawnerTel,jdbcType=VARCHAR},
+        pawner_id_card = #{pawnerIdCard,jdbcType=VARCHAR},
+        pawner_cert = #{pawnerCert,jdbcType=VARCHAR},
+        contactor = #{contactor,jdbcType=VARCHAR},
+        pawner_addr = #{pawnerAddr,jdbcType=VARCHAR},
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+        auth_price_test = #{authPriceTest,jdbcType=VARCHAR},
+        auth_price = #{authPrice,jdbcType=DECIMAL},
+        equivalent_ratio = #{equivalentRatio,jdbcType=VARCHAR},
+        loan_money = #{loanMoney,jdbcType=VARCHAR},
+        user_money = #{userMoney,jdbcType=VARCHAR},
+        pawn_money = #{pawnMoney,jdbcType=VARCHAR},
+        loan_money_c_n = #{loanMoneyCN,jdbcType=VARCHAR},
+        user_money_c_n = #{userMoneyCN,jdbcType=VARCHAR},
+        pawn_money_c_n = #{pawnMoneyCN,jdbcType=VARCHAR},
+        pawn_begin_time = #{pawnBeginTime,jdbcType=VARCHAR},
+        pawn_end_time = #{pawnEndTime,jdbcType=VARCHAR},
+        begin_pawn_end_time = #{beginPawnEndTime,jdbcType=VARCHAR},
+        rate = #{rate,jdbcType=VARCHAR},
+        money_rate = #{moneyRate,jdbcType=VARCHAR},
+        cost = #{cost,jdbcType=VARCHAR},
+        money_cost = #{moneyCost,jdbcType=VARCHAR},
+        repawn_total = #{repawnTotal,jdbcType=VARCHAR},
+        cost_c_n = #{costCN,jdbcType=VARCHAR},
+        repawn_total_c_n = #{repawnTotalCN,jdbcType=VARCHAR},
+        money_cost_c_n = #{moneyCostCN,jdbcType=VARCHAR},
+        repawn_begin_time = #{repawnBeginTime,jdbcType=VARCHAR},
+        repawn_end_time = #{repawnEndTime,jdbcType=VARCHAR},
+        checker = #{checker,jdbcType=VARCHAR},
+        handler = #{handler,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=INTEGER},
+        remark = #{remark,jdbcType=VARCHAR},
+        other_order = #{otherOrder,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+        type = #{type,jdbcType=VARCHAR},
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        sign_time = #{signTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null" >
+            <include refid="Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+
+    <update id="updateByPrimaryKeySelective" >
+        update p_pawn_ticket
+        <set >
+            <if test="pawnTicketCode != null" >
+                pawn_ticket_code = #{pawnTicketCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgName != null" >
+                org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgTel != null" >
+                org_tel = #{orgTel,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAdress != null" >
+                org_adress = #{orgAdress,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null" >
+                business_license = #{businessLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerName != null" >
+                pawner_name = #{pawnerName,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerTel != null" >
+                pawner_tel = #{pawnerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerIdCard != null" >
+                pawner_id_card = #{pawnerIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerCert != null" >
+                pawner_cert = #{pawnerCert,jdbcType=VARCHAR},
+            </if>
+            <if test="contactor != null" >
+                contactor = #{contactor,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnerAddr != null" >
+                pawner_addr = #{pawnerAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsName != null" >
+                goods_name = #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="authPriceTest != null" >
+                auth_price_test = #{authPriceTest,jdbcType=VARCHAR},
+            </if>
+            <if test="authPrice != null" >
+                auth_price = #{authPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="equivalentRatio != null" >
+                equivalent_ratio = #{equivalentRatio,jdbcType=VARCHAR},
+            </if>
+            <if test="loanMoney != null" >
+                loan_money = #{loanMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="userMoney != null" >
+                user_money = #{userMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnMoney != null" >
+                pawn_money = #{pawnMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="loanMoneyCN != null" >
+                loan_money_c_n = #{loanMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="userMoneyCN != null" >
+                user_money_c_n = #{userMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnMoneyCN != null" >
+                pawn_money_c_n = #{pawnMoneyCN,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnBeginTime != null" >
+                pawn_begin_time = #{pawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnEndTime != null" >
+                pawn_end_time = #{pawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="beginPawnEndTime != null" >
+                begin_pawn_end_time = #{beginPawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                rate = #{rate,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyRate != null" >
+                money_rate = #{moneyRate,jdbcType=VARCHAR},
+            </if>
+            <if test="cost != null" >
+                cost = #{cost,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyCost != null" >
+                money_cost = #{moneyCost,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnTotal != null" >
+                repawn_total = #{repawnTotal,jdbcType=VARCHAR},
+            </if>
+            <if test="costCN != null" >
+                cost_c_n = #{costCN,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnTotalCN != null" >
+                repawn_total_c_n = #{repawnTotalCN,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyCostCN != null" >
+                money_cost_c_n = #{moneyCostCN,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnBeginTime != null" >
+                repawn_begin_time = #{repawnBeginTime,jdbcType=VARCHAR},
+            </if>
+            <if test="repawnEndTime != null" >
+                repawn_end_time = #{repawnEndTime,jdbcType=VARCHAR},
+            </if>
+            <if test="checker != null" >
+                checker = #{checker,jdbcType=VARCHAR},
+            </if>
+            <if test="handler != null" >
+                handler = #{handler,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null" >
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="otherOrder != null" >
+                other_order = #{otherOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null" >
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="contractId != null" >
+                contract_id = #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="signTime != null" >
+                sign_time = #{signTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateByPrimaryKey" >
+        update p_pawn_ticket
+        set pawn_ticket_code = #{pawnTicketCode,jdbcType=VARCHAR},
+        org_name = #{orgName,jdbcType=VARCHAR},
+        org_tel = #{orgTel,jdbcType=VARCHAR},
+        org_adress = #{orgAdress,jdbcType=VARCHAR},
+        business_license = #{businessLicense,jdbcType=VARCHAR},
+        pawner_name = #{pawnerName,jdbcType=VARCHAR},
+        pawner_tel = #{pawnerTel,jdbcType=VARCHAR},
+        pawner_id_card = #{pawnerIdCard,jdbcType=VARCHAR},
+        pawner_cert = #{pawnerCert,jdbcType=VARCHAR},
+        contactor = #{contactor,jdbcType=VARCHAR},
+        pawner_addr = #{pawnerAddr,jdbcType=VARCHAR},
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+        auth_price_test = #{authPriceTest,jdbcType=VARCHAR},
+        auth_price = #{authPrice,jdbcType=DECIMAL},
+        equivalent_ratio = #{equivalentRatio,jdbcType=VARCHAR},
+        loan_money = #{loanMoney,jdbcType=VARCHAR},
+        user_money = #{userMoney,jdbcType=VARCHAR},
+        pawn_money = #{pawnMoney,jdbcType=VARCHAR},
+        loan_money_c_n = #{loanMoneyCN,jdbcType=VARCHAR},
+        user_money_c_n = #{userMoneyCN,jdbcType=VARCHAR},
+        pawn_money_c_n = #{pawnMoneyCN,jdbcType=VARCHAR},
+        pawn_begin_time = #{pawnBeginTime,jdbcType=VARCHAR},
+        pawn_end_time = #{pawnEndTime,jdbcType=VARCHAR},
+        begin_pawn_end_time = #{beginPawnEndTime,jdbcType=VARCHAR},
+        rate = #{rate,jdbcType=VARCHAR},
+        money_rate = #{moneyRate,jdbcType=VARCHAR},
+        cost = #{cost,jdbcType=VARCHAR},
+        money_cost = #{moneyCost,jdbcType=VARCHAR},
+        repawn_total = #{repawnTotal,jdbcType=VARCHAR},
+        cost_c_n = #{costCN,jdbcType=VARCHAR},
+        repawn_total_c_n = #{repawnTotalCN,jdbcType=VARCHAR},
+        money_cost_c_n = #{moneyCostCN,jdbcType=VARCHAR},
+        repawn_begin_time = #{repawnBeginTime,jdbcType=VARCHAR},
+        repawn_end_time = #{repawnEndTime,jdbcType=VARCHAR},
+        checker = #{checker,jdbcType=VARCHAR},
+        handler = #{handler,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=INTEGER},
+        remark = #{remark,jdbcType=VARCHAR},
+        other_order = #{otherOrder,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+        type = #{type,jdbcType=VARCHAR},
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        sign_time = #{signTime,jdbcType=TIMESTAMP}
+        where id = #{id}
+    </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_pawn_ticket
+        ${sqlSegment}
+    </select>
+
+</mapper>

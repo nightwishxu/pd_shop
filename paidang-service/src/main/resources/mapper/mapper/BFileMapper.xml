@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paidang.dao.BFileMapper">
+  <resultMap id="BaseResultMap" type="com.paidang.dao.model.BFile">
+    <id column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="file_belong" jdbcType="VARCHAR" property="fileBelong" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="file_minitype" jdbcType="VARCHAR" property="fileMinitype" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_state" jdbcType="INTEGER" property="fileState" />
+    <result column="file_size" jdbcType="DECIMAL" property="fileSize" />
+    <result column="file_md5" jdbcType="VARCHAR" property="fileMd5" />
+    <result column="file_creater" jdbcType="VARCHAR" property="fileCreater" />
+    <result column="file_createtime" jdbcType="TIMESTAMP" property="fileCreatetime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    file_id, file_belong, file_path, file_minitype, file_name, file_state, file_size, 
+    file_md5, file_creater, file_createtime
+  </sql>
+  <select id="selectByExample" parameterType="com.paidang.dao.model.BFileExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from b_file
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from b_file
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.paidang.dao.model.BFileExample">
+    delete from b_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.paidang.dao.model.BFile">
+    insert into b_file (file_id, file_belong, file_path, 
+      file_minitype, file_name, file_state, 
+      file_size, file_md5, file_creater, 
+      file_createtime)
+    values (#{fileId,jdbcType=VARCHAR}, #{fileBelong,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+      #{fileMinitype,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileState,jdbcType=INTEGER}, 
+      #{fileSize,jdbcType=DECIMAL}, #{fileMd5,jdbcType=VARCHAR}, #{fileCreater,jdbcType=VARCHAR}, 
+      #{fileCreatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.paidang.dao.model.BFile">
+    insert into b_file
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="fileBelong != null">
+        file_belong,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+      <if test="fileMinitype != null">
+        file_minitype,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="fileState != null">
+        file_state,
+      </if>
+      <if test="fileSize != null">
+        file_size,
+      </if>
+      <if test="fileMd5 != null">
+        file_md5,
+      </if>
+      <if test="fileCreater != null">
+        file_creater,
+      </if>
+      <if test="fileCreatetime != null">
+        file_createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileBelong != null">
+        #{fileBelong,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMinitype != null">
+        #{fileMinitype,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileState != null">
+        #{fileState,jdbcType=INTEGER},
+      </if>
+      <if test="fileSize != null">
+        #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="fileMd5 != null">
+        #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreater != null">
+        #{fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreatetime != null">
+        #{fileCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.paidang.dao.model.BFileExample" resultType="java.lang.Long">
+    select count(*) from b_file
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update b_file
+    <set>
+      <if test="record.fileId != null">
+        file_id = #{record.fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileBelong != null">
+        file_belong = #{record.fileBelong,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null">
+        file_path = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileMinitype != null">
+        file_minitype = #{record.fileMinitype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null">
+        file_name = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileState != null">
+        file_state = #{record.fileState,jdbcType=INTEGER},
+      </if>
+      <if test="record.fileSize != null">
+        file_size = #{record.fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fileMd5 != null">
+        file_md5 = #{record.fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileCreater != null">
+        file_creater = #{record.fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileCreatetime != null">
+        file_createtime = #{record.fileCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update b_file
+    set file_id = #{record.fileId,jdbcType=VARCHAR},
+      file_belong = #{record.fileBelong,jdbcType=VARCHAR},
+      file_path = #{record.filePath,jdbcType=VARCHAR},
+      file_minitype = #{record.fileMinitype,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
+      file_state = #{record.fileState,jdbcType=INTEGER},
+      file_size = #{record.fileSize,jdbcType=DECIMAL},
+      file_md5 = #{record.fileMd5,jdbcType=VARCHAR},
+      file_creater = #{record.fileCreater,jdbcType=VARCHAR},
+      file_createtime = #{record.fileCreatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.paidang.dao.model.BFile">
+    update b_file
+    <set>
+      <if test="fileBelong != null">
+        file_belong = #{fileBelong,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMinitype != null">
+        file_minitype = #{fileMinitype,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileState != null">
+        file_state = #{fileState,jdbcType=INTEGER},
+      </if>
+      <if test="fileSize != null">
+        file_size = #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="fileMd5 != null">
+        file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreater != null">
+        file_creater = #{fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreatetime != null">
+        file_createtime = #{fileCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.paidang.dao.model.BFile">
+    update b_file
+    set file_belong = #{fileBelong,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      file_minitype = #{fileMinitype,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_state = #{fileState,jdbcType=INTEGER},
+      file_size = #{fileSize,jdbcType=DECIMAL},
+      file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      file_creater = #{fileCreater,jdbcType=VARCHAR},
+      file_createtime = #{fileCreatetime,jdbcType=TIMESTAMP}
+    where file_id = #{fileId,jdbcType=VARCHAR}
+  </update>
+</mapper>

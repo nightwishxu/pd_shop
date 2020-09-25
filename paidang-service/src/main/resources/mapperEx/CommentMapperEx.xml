@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.CommentMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.CommentEx" extends="com.paidang.dao.CommentMapper.BaseResultMap">
+  </resultMap>
+
+  <resultMap type="com.paidang.daoEx.model.CommentEx" id="commentReplyList">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="topic_id" property="topicId" jdbcType="INTEGER" />
+    <result column="topic_user_id" property="topicUserId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+    <result column="is_top" property="isTop" jdbcType="TINYINT" />
+    <result column="is_hot" property="isHot" jdbcType="TINYINT" />
+    <result column="like_num" property="likeNum" jdbcType="INTEGER" />
+    <result column="reply_num" property="replyNum" jdbcType="INTEGER" />
+    <result column="is_reply" property="isReply" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="is_show" property="isShow" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_author" property="isAuthor" jdbcType="TINYINT" />
+    <collection property="commentReplyExList" ofType="com.paidang.daoEx.model.CommentReplyEx" select="findCommentReplyList" column="id">
+    </collection>
+  </resultMap>
+
+  <select id="findList" parameterType="com.paidang.daoEx.model.CommentEx" resultMap="commentReplyList">
+
+    SELECT * from p_comment where topic_id=#{topicId} order by create_time desc
+
+  </select>
+
+  <select id="findCommentReplyList" parameterType="java.lang.Integer" resultType="com.paidang.daoEx.model.CommentReplyEx">
+    SELECT
+    id as id,
+    comment_id as commentId,
+    reply_type as replyType,
+    reply_id as replyId,
+    to_uid as toUid,
+    from_uid as fromUid,
+    from_thumb_img as fromThumbImg,
+    from_nickname as fromNickname,
+    create_time as createTime,
+    to_nickname as toNickname,
+    is_show as isShow,
+    content as content,
+    is_author as isAuthor
+     from p_comment_reply where comment_id=#{id} order by create_time desc
+  </select>
+</mapper>

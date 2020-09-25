@@ -1,0 +1,281 @@
+package com.paidang.action;
+
+import com.base.action.CoreController;
+import com.base.entity.QueryParams;
+import com.base.util.BaseUtils;
+import com.base.util.DateUtil;
+import com.item.dao.model.Admin;
+import com.item.service.AdminService;
+import com.paidang.dao.model.Goods;
+import com.paidang.dao.model.GoodsExample;
+import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.service.GoodsService;
+import com.ruoyi.common.core.domain.Ret;
+import com.ruoyi.common.core.page.TableDataInfo;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
+
+/**
+@author sun
+*/
+@RequestMapping("goods")
+@RestController
+public class GoodsController extends CoreController{
+
+    @Autowired
+    private GoodsService goodsService;
+	@Autowired
+	private AdminService adminService;
+
+//    @RequestMapping("/serviceList")
+//	@ResponseBody
+//	public Ret serviceList(Integer page, Integer rows,String name,Integer type,Integer source){
+//		QueryParams.Builder builder = QueryParams.newBuilder();
+//    	Integer id = UserUtils.getDefaultPrincipal().getId();
+//		builder.put("source",source);
+//		builder.put("type",type);
+//    	builder.put("name",name);
+//    	builder.put("orgId",id);
+//
+//		PaginationSupport.byPage(page, rows);
+//		List<GoodsEx> list = goodsService.selectGoodsList(builder);
+//		return page(list);
+//	}
+
+	@RequestMapping("/list")
+	@ResponseBody
+	public TableDataInfo serviceAdminList(Integer page, Integer rows, String name, Integer type, Integer source){
+		QueryParams.Builder builder = QueryParams.newBuilder();
+		builder.put("source",source);
+		builder.put("type",type);
+		builder.put("name",name);
+
+		startPage();
+		List<GoodsEx> list = goodsService.selectGoodsList(builder);
+		return page(list);
+	}
+
+//	@RequestMapping("/exportServiceAdminList")
+//	public void exportServiceAdminList(String name, Integer type, Integer source, HttpServletResponse resp){
+//		QueryParams.Builder builder = QueryParams.newBuilder();
+//		builder.put("source",source);
+//		builder.put("type",type);
+//		builder.put("name",name);
+//		List<GoodsEx> list = goodsService.selectGoodsList(builder);
+//		ExcelExporter excelExporter=new ExcelExporter();
+//		ExcelColumns[] headers ={new ExcelColumns("name","名称"),new ExcelColumns("cost","出售价格")};
+//		excelExporter.createWork(list,headers);
+//		excelExporter.export(resp, DateUtil.dateToStr(new Date(), DateUtil.YYSSSS));
+//	}
+
+	@RequestMapping("/save")
+	@ResponseBody
+	public Ret save(@RequestBody Goods goods){
+		if (goods.getCateCode()!=null && (goods.getCateCode()==4 || goods.getCateCode()==6)){
+			goods.setCateCode(Integer.parseInt(goods.getCateCodeSon()));
+			goods.setCateCodeSon(null);
+		}
+		goods.setImgs(BaseUtils.removeUrl(goods.getImgs()));
+		goods.setImg(BaseUtils.removeUrl(goods.getImg()));
+		goods.setBannerVideo(BaseUtils.removeUrl(goods.getBannerVideo()));
+		goods.setBannerVideoFace(BaseUtils.removeUrl(goods.getBannerVideoFace()));
+		if (goods.getId() == null){
+			if (goods.getSoldOut()==null){
+				goods.setSoldOut(0);
+
+			}
+			if (goods.getIsOnline()==null){
+				goods.setIsOnline(1);
+			}
+			if (goods.getIsVerfiy() ==null){
+				goods.setIsVerfiy(1);
+			}
+			goods.setCreateTime(new Date());
+			goodsService.insert(goods);
+		}else{
+			goodsService.updateByPrimaryKeySelective(goods);
+		}
+		return ok();
+	}
+
+	@RequestMapping("/findByType")
+	@ResponseBody
+	public Ret findBySource(Integer type,Integer code){
+		QueryParams.Builder builder = QueryParams.newBuilder();
+		builder.put("type",type);
+		builder.put("cateCode",code);
+		List<GoodsEx> list = goodsService.selectGoodsList(builder);
+		return ok(list);
+	}
+//	@RequestMapping("/serviceSave")
+//	@ResponseBody
+//	public Ret serviceSave(Goods goods,Integer cateCode,Integer type,Integer source){
+//		if (goods.getPrice() == null){
+//			return msg(-1,"请输入出售价格");
+//		}
+//		/*if (goods.getPrice().compareTo(PaidangConst.BOUNDARY_PRICE) > 0){
+//			return msg(-1,"您上传的物品鉴定价格不能超过"+PaidangConst.BOUNDARY_PRICE.toString());
+//		}*/
+//		int w;
+//		int h;
+//		if (StringUtils.isEmpty(goods.getWidth()) && StringUtils.isEmpty(goods.getHeight())){
+//			return msg(-1,"请输入封面宽高");
+//		}
+//		try{
+//			w = Integer.valueOf(goods.getWidth());
+//			h = Integer.valueOf(goods.getHeight());
+//		}catch (NumberFormatException e){
+//			return msg(-1,"您输入的数字不正确");
+//		}
+//		int gy = gongyue(w,h);
+//		if (goods.getId() == null){
+//			goods.getImg();
+//			goods.setIsOnline(1);//1上架0下架
+//			goods.setIsVerfiy(2);//1审核中2通过3不通过
+//			goods.setSource(source);//1平台2机构3服务商
+//			goods.setState(1);//(针对竞拍)- 0已失效 1有效；现后台只能上传3万以下物品，且不是拍卖，是直接买卖
+//			goods.setSoldOut(0);//已售
+//			if (goods.getTotal()==null){
+//				goods.setTotal(1);//库存
+//			}
+//			goods.setCost(goods.getPrice());
+//			goods.setType(type);//1新品2绝当品
+//			goods.setCateCode(cateCode);
+//
+//			Admin admin = adminService.selectByPrimaryKey(UserUtils.getDefaultPrincipal().getId());
+//			if(null != admin){
+//				if("admin".equals(admin.getRoleCode()) || "authAdmin".equals(admin.getRoleCode())){
+//					goods.setOrgId(0);
+//				}
+//			}else{
+//				goods.setOrgId(UserUtils.getDefaultPrincipal().getId());
+//			}
+//
+//
+//			//
+//			goods.setWidth(w/gy+"");
+//			goods.setHeight(h/gy+"");
+//			goodsService.insert(goods);
+//		}else{
+//			if(goods.getTotal()>0){
+//				goods.setIsOnline(1);
+//				goods.setState(1);//1上架0下架
+//			}
+//            if(goods.getTotal()<=0){
+//                goods.setIsOnline(0);//1上架0下架
+//				goods.setState(-1);
+//            }
+//			goodsService.updateByPrimaryKeySelective(goods);
+//		}
+//		return ok();
+//	}
+
+	//求最大公约数
+	public static int gongyue(int a,int b)
+	{
+		int gongyue=0;
+		if(a<b)
+		{   //交换a、b的值
+			a=a+b;
+			b=a-b;
+			a=a-b;
+		}
+		if(a%b==0)
+		{
+			gongyue = b;
+		}
+		while(a % b>0)
+		{
+			a=a%b;
+			if(a<b)
+			{
+				a=a+b;
+				b=a-b;
+				a=a-b;
+			}
+			if(a%b==0)
+			{
+				gongyue = b;
+			}
+		}
+		return gongyue;
+	}
+
+	@RequestMapping("/changeState")
+	@ResponseBody
+		public Ret changeState(Integer id,Integer v,GoodsEx goods){
+			goods.setId(id);
+			goods.setIsVerfiy(v);
+			if(goods.getIsVerfiy() != 3){
+				goodsService.changeStateByPrimaryKey(goods);
+			}else{
+				goods.setIsVerfiy(1);
+				goodsService.changeStateByPrimaryKey(goods);
+			}
+		return ok();
+	}
+
+	@RequestMapping("/soldOut")
+	@ResponseBody
+	public Ret soldOut(Integer id){
+			if(id != null){
+				Goods goods = goodsService.selectByPrimaryKey(id);
+				goods.setState(0);
+				goodsService.updateCreatTime(goods);
+			}
+		return ok();
+	}
+    
+    @GetMapping("/{id}")
+	@ResponseBody 
+    public Ret find(@PathVariable Integer id){
+    	GoodsEx goods = goodsService.selectByPrimaryId(id);
+       	return ok(goods);
+    }
+    
+    @RequestMapping("/del")
+	@ResponseBody 
+    public Ret del(String id){
+    	String[] ids = id.split(",");
+    	for (String str : ids){
+    		goodsService.deleteByPrimaryKey(Integer.parseInt(str));
+    	}
+       	return ok();
+    }
+
+
+	@RequestMapping("/getOrgDeadPawnStoreList")
+	@ResponseBody
+	public Ret getOrgDeadPawnStoreList(){
+    	String orgId = getSessionParameter("id");
+		GoodsExample example = new GoodsExample();
+		example.createCriteria().andOrgIdEqualTo(Integer.valueOf(orgId)).andSourceEqualTo(2);
+		List<Goods> list = goodsService.selectByExample(example);
+		return ok(list);
+	}
+
+	@RequestMapping("/saveOrgGoods")
+	@ResponseBody
+	public Ret saveOrgGoods(Goods goods){
+		String orgId = getSessionParameter("id");
+		if(goods.getId() == null){
+			goods.setSource(2);//1平台2机构3服务商
+			goods.setType(1);//1新品2绝当品
+//			goods.setOrgId(Integer.valueOf(orgId));
+			goods.setSoldOut(0);//已售
+			goods.setIsOnline(1);//1上架0下架
+			goods.setIsVerfiy(2);//1审核中2通过3不通过
+			goodsService.insert(goods);
+		}else{
+			goodsService.updateByPrimaryKey(goods);
+		}
+		return ok();
+	}
+
+}
