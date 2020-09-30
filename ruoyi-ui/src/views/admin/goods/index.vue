@@ -17,8 +17,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -30,7 +38,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['admin:goods:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -40,7 +49,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['admin:goods:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button
@@ -63,7 +73,12 @@
       </el-col>-->
       <div class="top-right-btn">
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-          <el-button size="mini" circle icon="el-icon-refresh" @click="handleQuery" />
+          <el-button
+            size="mini"
+            circle
+            icon="el-icon-refresh"
+            @click="handleQuery"
+          />
         </el-tooltip>
         <el-tooltip
           class="item"
@@ -71,14 +86,28 @@
           :content="showSearch ? '隐藏搜索' : '显示搜索'"
           placement="top"
         >
-          <el-button size="mini" circle icon="el-icon-search" @click="showSearch=!showSearch" />
+          <el-button
+            size="mini"
+            circle
+            icon="el-icon-search"
+            @click="showSearch = !showSearch"
+          />
         </el-tooltip>
       </div>
     </el-row>
 
-    <el-table v-loading="loading" :data="goodsList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="goodsList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="分类" align="center" prop="cateCode" :formatter="handleCateCode" />
+      <el-table-column
+        label="分类"
+        align="center"
+        prop="cateCode"
+        :formatter="handleCateCode"
+      />
       <el-table-column label="商品名称" align="center" prop="name" />
       <el-table-column columnlabel="商品封面" align="center" prop="img">
         <template scope="scope">
@@ -87,7 +116,7 @@
               slot="reference"
               :src="scope.row.img"
               :alt="scope.row.img"
-              style="max-height: 50px;max-width: 50px"
+              style="max-height: 50px; max-width: 50px"
             ></el-image>
             <el-image :src="scope.row.img"></el-image>
           </el-popover>
@@ -96,14 +125,14 @@
       </el-table-column>
       <el-table-column label="组图" align="center" prop="imgs">
         <template scope="scope">
-          <span v-for="(item,index) in scope.row.imgs.split(',')" :key="index">
+          <span v-for="(item, index) in scope.row.imgs.split(',')" :key="index">
             <el-popover placement="left" trigger="click" width="300">
               <el-image :src="item" />
               <el-image
                 slot="reference"
                 :src="item"
                 :alt="item"
-                style="max-height: 50px;max-width: 50px; padding: 5px"
+                style="max-height: 50px; max-width: 50px; padding: 5px"
               />
             </el-popover>
           </span>
@@ -119,21 +148,24 @@
           <el-button
             type="text"
             size="mini"
-            v-if="(scope.row.isVerfiy===1)"
+            v-if="scope.row.isVerfiy === 1"
             @click="handleIsVerify(scope.row)"
-          >开始审核</el-button>
+            >开始审核</el-button
+          >
           <el-button
             type="text"
             size="mini"
-            v-if="(scope.row.isVerfiy===2)"
+            v-if="scope.row.isVerfiy === 2"
             @click="handleIsVerify(scope.row)"
-          >审核通过</el-button>
+            >审核通过</el-button
+          >
           <el-button
             type="text"
             size="mini"
-            v-if="(scope.row.isVerfiy===3)"
+            v-if="scope.row.isVerfiy === 3"
             @click="handleIsVerify(scope.row)"
-          >审核不通过</el-button>
+            >审核不通过</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column label="排序(倒序)" align="center" prop="sortOrder" />
@@ -142,14 +174,29 @@
           <el-button
             type="text"
             size="mini"
-            v-if="(scope.row.isSuggest===1)"
+            v-if="scope.row.isSuggest === 1"
             @click="handleIsSuggest(scope.row)"
-          >取消首页推荐</el-button>
-          <el-button type="text" size="mini" v-else @click="handleIsSuggest(scope.row)">设置为首页推荐</el-button>
+            >取消首页推荐</el-button
+          >
+          <el-button
+            type="text"
+            size="mini"
+            v-else
+            @click="handleIsSuggest(scope.row)"
+            >设置为首页推荐</el-button
+          >
         </template>
       </el-table-column>
-      <el-table-column label="审核不通过原因" align="center" prop="refuseInfo" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="审核不通过原因"
+        align="center"
+        prop="refuseInfo"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template scope="scope">
           <el-button
             size="mini"
@@ -157,27 +204,34 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['admin:goods:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['admin:goods:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
-    <el-dialog :title="title1" :visible.sync="open1" width="400px" append-to-body>
+    <el-dialog
+      :title="title1"
+      :visible.sync="open1"
+      width="400px"
+      append-to-body
+    >
       <el-form ref="form1" :model="form1" label-width="150px">
         <el-form-item label="原因" prop="refuseInfo" id="refuseInfo">
           <el-input v-model="form1.refuseInfo" placeholder="请输入原因" />
@@ -205,7 +259,7 @@
                 v-model="form.cateCode"
                 placeholder="请选择下拉选择"
                 clearable
-                :style="{width: '100%'}"
+                :style="{ width: '100%' }"
                 @change="selectCateCode"
               >
                 <el-option
@@ -216,7 +270,6 @@
                   :disabled="item.disabled"
                 ></el-option>
               </el-select>
-              <!-- cateCodeSon -->
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -226,7 +279,7 @@
                 v-model="form.cateCodeSon"
                 placeholder="请选择下拉选择"
                 clearable
-                :style="{width: '100%'}"
+                :style="{ width: '100%' }"
               >
                 <el-option
                   v-for="item in cateCodeSonOptions"
@@ -254,7 +307,7 @@
         <el-form-item label="商品封面" prop="img">
           <single-upload
             v-model="form.img"
-            style="width: 300px;display: inline-block;margin-left: 10px"
+            style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
         </el-form-item>
         <el-form-item label="图片">
@@ -264,13 +317,13 @@
         <el-form-item label="轮播图视频封面" prop="bannerVideoFace">
           <single-upload
             v-model="form.bannerVideoFace"
-            style="width: 300px;display: inline-block;margin-left: 10px"
+            style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
         </el-form-item>
         <el-form-item label="轮播图视频" prop="bannerVideo">
           <video-upload
             v-model="form.bannerVideo"
-            style="width: 300px;display: inline-block;margin-left: 10px"
+            style="width: 300px; display: inline-block; margin-left: 10px"
           ></video-upload>
         </el-form-item>
         <el-form-item label="封面宽度" prop="width">

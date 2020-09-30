@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,8 +38,10 @@ public class CouponController extends CoreController{
 	@ResponseBody
     public Ret save(Coupon coupon){
     	if (coupon.getId() == null){
+    		coupon.setCreateTime(new Date());
     		couponService.insert(coupon);
     	}else{
+			coupon.setModifyTime(new Date());
     		couponService.updateByPrimaryKeySelective(coupon);
     	}
        	return ok();

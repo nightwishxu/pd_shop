@@ -148,4 +148,15 @@ public class BaseUtils {
         }
         return path;
     }
+
+    public static String processImgs(String imgs){
+        if (StringUtils.isNoneBlank(imgs)){
+            String[] paths = imgs.split(",");
+            for (int i=0;i<paths.length;i++){
+                paths[i] = processImg(paths[i]);
+            }
+            return String.join(",",paths);
+        }
+        return imgs;
+    }
 }

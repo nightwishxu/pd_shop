@@ -14,7 +14,7 @@
     <if test="domainId != '' and domainId != null">
       where A.domain_id = #{domainId}
     </if>
-    order by A.create_time desc;
+    order by A.create_time desc
 
   </select>
   

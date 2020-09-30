@@ -1,6 +1,7 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
+import com.base.util.BaseUtils;
 import com.base.util.StringUtil;
 import com.paidang.dao.model.Certificate;
 import com.paidang.dao.model.CertificateExample;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,15 +50,22 @@ public class CertificateController extends CoreController{
 		}
 		example.setOrderByClause("id desc");
     	List<Certificate> list = certificateService.selectByExample(example);
-      	return page(list);
+		for (Certificate certificate : list) {
+			certificate.setImgs(BaseUtils.processImgs(certificate.getImgs()));
+		}
+
+		return page(list);
     }
     
     @RequestMapping("/save")
 	@ResponseBody
     public Ret save(Certificate certificate){
+    	certificate.setImgs(BaseUtils.removeUrl(certificate.getImgs()));
     	if (certificate.getId() == null){
+    		certificate.setCreateTime(new Date());
     		certificateService.insert(certificate);
     	}else{
+    		certificate.setModifyTime(new Date());
     		certificateService.updateByPrimaryKeySelective(certificate);
     	}
        	return ok();
@@ -66,6 +75,7 @@ public class CertificateController extends CoreController{
 	@ResponseBody
     public Ret find(Integer id){
     	Certificate certificate = certificateService.selectByPrimaryKey(id);
+    	certificate.setImgs(BaseUtils.processImgs(certificate.getImgs()));
        	return ok(certificate);
     }
     

@@ -811,12 +811,13 @@ public class UserPawnController extends CoreController{
 	//典当详情--平台查看
 	@RequestMapping("/pawnRecord")
 	@ResponseBody
-	public Ret pawnRecord(Integer page, Integer rows, String goodsName, String orgId){
+	public TableDataInfo pawnRecord(Integer page, Integer rows, String goodsName, String orgId){
+		startPage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("goodsName",goodsName);
 		map.put("orgId",orgId);
 		List<UserPawnEx> list = userPawnService.selectPawnRecord(map);
-		return ok(list);
+		return page(list);
 	}
 
 

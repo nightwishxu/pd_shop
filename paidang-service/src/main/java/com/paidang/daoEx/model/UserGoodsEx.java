@@ -425,6 +425,21 @@ public class UserGoodsEx extends UserGoods {
     }
 
     @Override
+    public String getGoVideo(){
+        return processImg(super.getGoVideo());
+    }
+
+    @Override
+    public String getPlatGoodsAuthVideo(){
+        return processImg(super.getPlatGoodsAuthVideo());
+    }
+
+    @Override
+    public String getOpenGoodsVideo(){
+        return processImg(super.getOpenGoodsVideo());
+    }
+
+    @Override
     public String getVideo() {
         return processImg(super.getVideo());
     }

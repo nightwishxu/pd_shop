@@ -65,15 +65,13 @@ public class UserGoodsController extends CoreController{
 
 	@RequestMapping("/list")
 	@ResponseBody
-
-    public TableDataInfo list(Integer page, Integer rows, String name, String account, String type){
-    	startPage();
+    public TableDataInfo list(String name, String account, String type){
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("name",name);
 		map.put("account",account);
     	map.put("type",type);
+		startPage();
 		List<UserGoodsEx> list = userGoodsService.selectList(map);
-		List<UserGoodsEx> ret = new ArrayList<UserGoodsEx>();
 		for(UserGoodsEx ex : list){
 			UserGoodsEx c = new UserGoodsEx();
 			LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
@@ -84,9 +82,8 @@ public class UserGoodsController extends CoreController{
 			}else{
 				ex.setPower(0);
 			}
-			ret.add(ex);
 		}
-		return page(ret);
+		return page(list);
     }
     
     @RequestMapping("/save")
@@ -376,7 +373,8 @@ public class UserGoodsController extends CoreController{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id",id);
 		List<UserGoodsEx> list = userGoodsService.checkDetail(map);
-		return ok(list.get(0));
+        UserGoodsEx userGoodsEx = list.get(0);
+        return ok(userGoodsEx);
 	}
 
 	@RequestMapping("/detail")

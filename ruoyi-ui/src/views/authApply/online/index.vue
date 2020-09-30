@@ -115,25 +115,66 @@
             ref="btn"
             size="mini"
           >
-            播 放
+            查看宝贝视频
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column
-        label="估价"
-        align="center"
-        prop="PriceTest"
-      ></el-table-column>
-      <el-table-column
-        label="鉴定说明"
-        align="center"
-        prop="appraisalDsc"
-      ></el-table-column>
-      <el-table-column
-        label="专家鉴定"
-        align="center"
-        prop="auth"
-      ></el-table-column>
+      <el-table-column label="估价" align="center" prop="authPriceTest">
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="!scope.row.authPriceTest"
+            @click="handleForm2(scope.row)"
+            >估价</el-button
+          >
+          <el-button
+            type="info"
+            size="mini"
+            v-else
+            @click="handleForm2(scope.row)"
+            >{{ scope.row.authPriceTest }}</el-button
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="鉴定说明" align="center" prop="appraisalDsc">
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="!scope.row.appraisalDsc"
+            @click="handleForm3(scope.row)"
+            >鉴定说明</el-button
+          >
+          <el-button
+            type="info"
+            size="mini"
+            v-else
+            @click="handleForm3(scope.row)"
+            >{{ scope.row.appraisalDsc }}</el-button
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="专家鉴定" align="center" prop="auth">
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="
+              scope.row.experterInfoId != null && scope.row.experterInfoId != 0
+            "
+            @click="handleForm4(scope.row)"
+            >复制url</el-button
+          >
+          <el-button
+            type="info"
+            size="mini"
+            v-else
+            @click="handleForm5(scope.row)"
+            >专家鉴定</el-button
+          >
+        </template>
+      </el-table-column>
       <el-table-column
         label
         align="center"
@@ -176,6 +217,110 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      :title="title2"
+      :visible.sync="open2"
+      width="400px"
+      append-to-body
+    >
+      <el-form ref="form1" :model="form2" label-width="100px">
+        <el-form-item label="设置估价" prop="settleMoney" id="refuseInfo">
+          <el-input v-model="form2.authPriceTest" placeholder="请输入价格" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="from2Submit">确 定</el-button>
+        <el-button @click="cancel2">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      :title="title3"
+      :visible.sync="open3"
+      width="400px"
+      append-to-body
+    >
+      <el-form ref="form1" :model="form3" label-width="100px">
+        <el-form-item label="鉴定说明" prop="appraisalDsc">
+          <el-input v-model="form3.appraisalDsc" placeholder="请输入鉴定说明" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="from3Submit">确 定</el-button>
+        <el-button @click="cancel3">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      :title="title4"
+      :visible.sync="open4"
+      width="400px"
+      append-to-body
+    >
+      <el-form ref="form1" :model="form4" label-width="100px">
+        <el-form-item label="链接地址" prop="settleMoney">
+          <el-input v-model="form4.authUrl" disabled />
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog
+      :title="title5"
+      :visible.sync="open5"
+      width="400px"
+      append-to-body
+    >
+      <el-form ref="form5" :model="form5" label-width="100px">
+        <el-form-item label="领域名称" prop="domainId">
+          <el-select
+            v-model="form5.domainId"
+            placeholder="请选择下拉选择"
+            clearable
+            :style="{ width: '100%' }"
+            @change="selectDomain"
+          >
+            <el-option
+              v-for="item in domainOptions"
+              :key="item.id"
+              :label="item.domainName"
+              :value="item.id"
+              :disabled="item.disabled"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="专家姓名" prop="experterId">
+          <el-select
+            v-model="form5.experterId"
+            placeholder="请选择下拉选择"
+            clearable
+            :style="{ width: '100%' }"
+          >
+            <el-option
+              v-for="item in experterOptions"
+              :key="item.id"
+              :label="item.expertName"
+              :value="item.id"
+              :disabled="item.disabled"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="from5Submit">确 定</el-button>
+        <el-button @click="cancel5">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title :visible.sync="videoOpen" width="40%" @close="closeDialog">
+      <video
+        :src="videoUrl"
+        class="avatar"
+        preload="auto"
+        controls="controls"
+        width="100%"
+      ></video>
+    </el-dialog>
+
     <!-- 添加或修改商品对话框 -->
     <el-dialog
       :title="title"
@@ -185,13 +330,10 @@
       v-if="isRouterAlive"
     >
       <el-form ref="form" :model="form" label-width="150px">
-        <el-form-item label="上传的寄卖图片" prop="sellImgs">
+        <el-form-item label="藏品照片" prop="images">
           <!-- <el-image :src="form.sellImgs"></el-image> -->
           <template slot-scope="scope">
-            <span
-              v-for="(item, index) in form.sellImgs.split(',')"
-              :key="index"
-            >
+            <span v-for="(item, index) in form.images.split(',')" :key="index">
               <el-popover placement="left" trigger="click" width="300">
                 <el-image :src="item" />
                 <el-image
@@ -204,7 +346,7 @@
             </span>
           </template>
         </el-form-item>
-        <el-form-item label="上传的寄卖视频" prop="sellVideo">
+        <el-form-item label="商品视频" prop="sellVideo">
           <!-- <video class="avatar video-avatar" controls="controls" :src="form.sellVideo"></video> -->
           <template slot-scope="scope">
             <!-- <video
@@ -214,29 +356,16 @@
               　　controls="controls"
             >您的浏览器不支持视频播放</video>-->
             <video
-              v-if="form.sellVideo"
+              v-if="form.video"
               class="avatar"
               preload="auto"
               controls="controls"
-              :src="form.sellVideo"
+              :src="form.video"
             ></video>
           </template>
         </el-form-item>
-        <el-form-item label="寄卖商品描述" prop="sellInfo">
-          <el-input v-model="form.sellInfo" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="一口价(元)" prop="sellPrice">
-          <el-input v-model="form.sellPrice" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="鉴定价(元)" prop="authPrice">
-          <el-input v-model="form.authPrice" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="邮寄鉴定结果" prop="authResult">
-          <el-input
-            v-model="form.authResult"
-            style="color: red"
-            disabled
-          ></el-input>
+        <el-form-item label="藏品描述及鉴定要求" prop="content">
+          <el-input v-model="form.authenticateRequire" disabled></el-input>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -254,6 +383,9 @@ import {
   changeCheck,
   exportGoods,
 } from "@/api/postStore/goods";
+import { listDomain } from "@/api/authApply/domain";
+import { experterList } from "@/api/authApply/experter";
+import { saveInfo } from "@/api/authApply/experterInfo";
 import SingleUpload from "@/components/Upload/singleUpload";
 import VideoUpload from "@/components/Upload/videoUpload";
 import MultiUpload from "@/components/Upload/multiUpload";
@@ -287,7 +419,15 @@ export default {
       open: false,
       open1: false,
       open2: false,
+      open3: false,
+      open4: false,
+      videoOpen: false,
+      videoUrl: null,
       title1: "",
+      title2: "",
+      title3: "",
+      title4: "",
+      title5: "",
 
       isRouterAlive: true,
       // 查询参数
@@ -338,6 +478,10 @@ export default {
       // 表单参数
       form: {},
       form1: {},
+      form2: {},
+      form3: {},
+      form4: {},
+      form5: {},
       uploadAction: process.env.BASE_API + "common/fileUplaod",
       // imgfileList:[],
       // 表单校验
@@ -371,6 +515,8 @@ export default {
           { required: true, message: "创建时间不能为空", trigger: "blur" },
         ],
       },
+      domainOptions: [],
+      experterOptions: [],
       cateCodeOptions: [
         {
           label: "钟表",
@@ -493,6 +639,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getDomainList();
   },
   methods: {
     reload() {
@@ -516,6 +663,40 @@ export default {
       this.open1 = true;
       this.title1 = "宝贝名称";
     },
+    handleForm2(row) {
+      this.reset2();
+      const id = row.id;
+      this.form2 = { id: id, authPriceTest: row.authPriceTest };
+      this.open2 = true;
+      this.title2 = "估价";
+    },
+    handleForm3(row) {
+      this.reset3();
+      const id = row.id;
+      this.form3 = { id: id, appraisalDsc: row.appraisalDsc };
+      this.open3 = true;
+      this.title3 = "鉴定说明";
+    },
+    handleForm4(row) {
+      this.reset4();
+      const id = row.id;
+      this.form4 = { id: id, authUrl: null };
+      this.open4 = true;
+      this.title4 = "复制url";
+    },
+    handleForm5(row) {
+      this.reset5();
+      this.form5 = { goodsId: row.id, state: 0 };
+      console.info(this.form5);
+      this.open5 = true;
+      this.title5 = "专家鉴定";
+    },
+    playVideo(row) {
+      this.videoOpen = true;
+      this.videoUrl = row.video;
+      // this.videoUrl =
+      //   "http://baidu.paidangwang.net/admin/download?id=c379cda3f709491c867c39e8cd6cb6c4";
+    },
     handleIsSuggest(row) {
       var data = {};
       if (row.isSuggest == 1) {
@@ -535,6 +716,43 @@ export default {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open1 = false;
+          this.getList();
+        }
+      });
+    },
+    from2Submit() {
+      updateGoods(this.form2).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open2 = false;
+          this.getList();
+        }
+      });
+    },
+    from3Submit() {
+      updateGoods(this.form3).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open3 = false;
+          this.getList();
+        }
+      });
+    },
+    from4Submit() {
+      updateGoods(this.form4).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open4 = false;
+          this.getList();
+        }
+      });
+    },
+    from5Submit() {
+      console.info(this.form5);
+      saveInfo(this.form5).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open5 = false;
           this.getList();
         }
       });
@@ -604,6 +822,11 @@ export default {
         return "--";
       }
     },
+    selectDomain(value) {
+      experterList({ domainId: value }).then((response) => {
+        this.experterOptions = response;
+      });
+    },
     selectCateCode(value) {
       if (value != null && value === 4) {
         this.cateCodeSonOptions = [
@@ -658,6 +881,14 @@ export default {
         this.loading = false;
       });
     },
+    //专业领域
+    getDomainList() {
+      listDomain({}).then((response) => {
+        this.domainOptions = response;
+        console.info("domainOptions");
+        console.info(this.domainOptions);
+      });
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -671,16 +902,27 @@ export default {
       this.open2 = false;
       this.reset2();
     },
+    cancel3() {
+      this.open3 = false;
+      this.reset3();
+    },
+    cancel4() {
+      this.open4 = false;
+      this.reset4();
+    },
+    cancel5() {
+      this.open5 = false;
+      this.reset5();
+    },
+    closeDialog() {
+      this.videoUrl = "";
+    },
     // 表单重置
     reset() {
       this.form = {
         id: null,
-        sellImgs: null,
-        sellVideo: null,
-        sellInfo: null,
-        sellPrice: null,
-        authPrice: null,
-        authResult: null,
+        images: null,
+        video: null,
       };
       this.resetForm("form");
       this.reload();
@@ -695,6 +937,36 @@ export default {
         name: null,
       };
       this.resetForm("form1");
+    },
+    reset2() {
+      this.form2 = {
+        id: null,
+        authPriceTest: null,
+      };
+      this.resetForm("form2");
+    },
+    reset3() {
+      this.form3 = {
+        id: null,
+        appraisalDsc: null,
+      };
+      this.resetForm("form3");
+    },
+    reset4() {
+      this.form4 = {
+        id: null,
+        authUrl: null,
+      };
+      this.resetForm("form4");
+    },
+    reset5() {
+      this.form5 = {
+        domainId: null,
+        experterId: null,
+        goodsId: null,
+        state: 0,
+      };
+      this.resetForm("form5");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -730,40 +1002,16 @@ export default {
       // console.info("img: "+this.imgfileList)
       //       this.imgfileList.get = [];
 
-      const id = row.id || this.ids;
-      getGoods(id).then((response) => {
-        this.reset();
-        var authResult = response.data.authResult;
-        var res;
-        switch (authResult) {
-          case -1:
-            res = "无";
-            break;
-          case 0:
-            res = "未鉴定";
-            break;
-          case 1:
-            res = "鉴定中";
-            break;
-          case 2:
-            res = "无法鉴定";
-            break;
-          case 3:
-            res = "赝品";
-            break;
-          case 4:
-            res = "真品";
-            break;
-        }
-        response.data.authResult = res;
-        this.form = response.data;
-        this.form.sellImgs =
-          "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
-        this.form.sellVideo =
-          "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
-        this.open = true;
-        this.title = "详情";
-      });
+      this.form.images =
+        "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
+      this.form.video =
+        "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
+      // this.form.images = row.images;
+      // this.form.video = row.video;
+      this.form.authenticateRequire = row.authenticateRequire;
+      console.info(row);
+      this.open = true;
+      this.title = "详情";
     },
 
     /** 提交按钮 */

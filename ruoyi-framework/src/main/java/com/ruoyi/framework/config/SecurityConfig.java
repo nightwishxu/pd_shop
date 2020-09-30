@@ -103,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/*.html",
                         "/**/*.html",
                         "/**/*.css",
+                        "/**/*.jsp",
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers("/profile/**").anonymous()

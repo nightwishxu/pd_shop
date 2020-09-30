@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class DomainController extends CoreController{
 	@ResponseBody
     public Ret save(Domain domain){
     	if (domain.getId() == null){
+    		domain.setCreateTime(new Date());
     		domainService.insert(domain);
     	}else{
     		domainService.updateByPrimaryKeySelective(domain);

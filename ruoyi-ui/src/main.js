@@ -60,6 +60,9 @@ Vue.prototype.moment = moment
 Vue.filter('dateYMDHMSFormat', function (dateStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dateStr).format(pattern);
 })
+Vue.filter('dateYMDFormat', function (dateStr, pattern = 'YYYY-MM-DD') {
+  return moment(dateStr).format(pattern);
+})
 
 /**
  * If you don't want to use mock-server

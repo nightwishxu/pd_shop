@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ExperterController extends CoreController{
 	@ResponseBody
     public Ret save(Experter experter){
     	if (experter.getId() == null){
+    	    experter.setCreateTime(new Date());
     		experterService.insert(experter);
     	}else{
     		experterService.updateByPrimaryKeySelective(experter);

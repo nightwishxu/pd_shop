@@ -1,6 +1,7 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
+import com.base.util.BaseUtils;
 import com.paidang.dao.model.VideoOnline;
 import com.paidang.dao.model.VideoOnlineExample;
 import com.paidang.service.VideoOnlineService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,14 +32,22 @@ public class VideoOnlineController extends CoreController{
     	VideoOnlineExample example = new VideoOnlineExample();
     	example.setOrderByClause("create_time desc");
     	List<VideoOnline> list = videoOnlineService.selectByExample(example);
-      	return page(list);
+		for (VideoOnline videoOnline : list) {
+			videoOnline.setImg(BaseUtils.processImgs(videoOnline.getImg()));
+			videoOnline.setVideo(BaseUtils.processImg(videoOnline.getVideo()));
+		}
+
+		return page(list);
     }
     
     @RequestMapping("/save")
 	@ResponseBody
     public Ret save(VideoOnline videoOnline){
+    	videoOnline.setImg(BaseUtils.removeUrl(videoOnline.getImg()));
+    	videoOnline.setVideo(BaseUtils.removeUrl(videoOnline.getVideo()));
     	if (videoOnline.getId() == null){
     		videoOnline.setViewCnt(0);
+    		videoOnline.setCreateTime(new Date());
     		videoOnlineService.insert(videoOnline);
     	}else{
     		videoOnlineService.updateByPrimaryKeySelective(videoOnline);
@@ -49,6 +59,8 @@ public class VideoOnlineController extends CoreController{
 	@ResponseBody
     public Ret find(Integer id){
     	VideoOnline videoOnline = videoOnlineService.selectByPrimaryKey(id);
+    	videoOnline.setImg(BaseUtils.processImgs(videoOnline.getImg()));
+    	videoOnline.setVideo(BaseUtils.processImg(videoOnline.getVideo()));
        	return ok(videoOnline);
     }
     

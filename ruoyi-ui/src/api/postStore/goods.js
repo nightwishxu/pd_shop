@@ -35,6 +35,7 @@ export function updateGoods(data) {
   })
 }
 
+
 // 删除商品
 export function delGoods(id) {
   return request({
@@ -72,5 +73,45 @@ export function goodsList(query) {
     url: '/userGoods/list',
     method: 'get',
     params: query
+  })
+}
+
+//鉴定者鉴定
+export function authAdminVerify(data) {
+  return request({
+    url: '/userGoods/authAdminVerify',
+    params: data
+  })
+}
+
+//鉴定
+export function beginToOper(data) {
+  return request({
+    url: '/userGoods/beginToOper',
+    params: data
+  })
+}
+
+
+export function checkDetail(data) {
+  return request({
+    url: '/userGoods/checkDetail',
+    params: data
+  })
+}
+
+
+export function goodsByOrgList(query) {
+  return request({
+    url: '/userGoods/goodsByOrgList',
+    method: 'get',
+    params: query
+  })
+}
+
+export function paltBackToOrg(data) {
+  return request({
+    url: '/userGoods/paltBackToOrg',
+    params: data
   })
 }

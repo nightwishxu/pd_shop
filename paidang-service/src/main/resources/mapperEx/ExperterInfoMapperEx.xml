@@ -29,7 +29,7 @@
     <if test="goodsName != null and goodsName != ''" >
         and C.name like '%${goodsName}%'
     </if>
-    order by A.create_time desc;
+    order by A.create_time desc
   </select>
   
 </mapper>

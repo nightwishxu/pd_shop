@@ -2,6 +2,7 @@ package com.paidang.action;
 
 import com.base.action.CoreController;
 
+import com.base.util.BaseUtils;
 import com.base.util.Md5;
 import com.github.sd4324530.fastweixin.util.CollectionUtil;
 import com.item.dao.model.Code;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +61,9 @@ public class PawnOrgController extends CoreController{
     @RequestMapping("/save")
 	@ResponseBody 
     public Ret save(PawnOrg pawnOrg)throws Exception{
-
+		BaseUtils.removeUrl(pawnOrg.getOrgLogo());
+		BaseUtils.removeUrl(pawnOrg.getOrgImages());
+		BaseUtils.removeUrl(pawnOrg.getBusinessLicense());
     	if (pawnOrg.getId() == null){
 			PawnOrgExample example=new PawnOrgExample();
 			example.createCriteria().andAccountEqualTo(pawnOrg.getAccount());
@@ -75,6 +79,7 @@ public class PawnOrgController extends CoreController{
 			pawnOrg.setPassword(Md5.md5("1"));
 			pawnOrg.setBalance(BigDecimal.ZERO);
 			pawnOrg.setState(2);
+			pawnOrg.setCreateTime(new Date());
 			//pawnOrg.setType(1);
 			pawnOrgService.insert(pawnOrg);
     	}else{
@@ -116,6 +121,9 @@ public class PawnOrgController extends CoreController{
 	@ResponseBody 
     public Ret find(Integer id){
     	PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(id);
+		BaseUtils.processImg(pawnOrg.getOrgLogo());
+		BaseUtils.processImgs(pawnOrg.getOrgImages());
+		BaseUtils.processImg(pawnOrg.getBusinessLicense());
        	return ok(pawnOrg);
     }
     
