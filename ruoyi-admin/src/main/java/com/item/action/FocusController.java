@@ -1,6 +1,7 @@
 package com.item.action;
 
 import com.base.action.CoreController;
+import com.base.util.BaseUtils;
 import com.item.dao.model.Focus;
 import com.item.daoEx.model.FocusEx;
 import com.item.service.FocusService;
@@ -30,8 +31,8 @@ public class FocusController extends CoreController{
 		startPage();
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("location", location);
-		String areaCode = getSessionParameter("areaCode");
-		if(StringUtils.isBlank(areaCode) && location == 1)areaCode = "0";
+//		String areaCode = getSessionParameter("areaCode");
+//		if(StringUtils.isBlank(areaCode) && location == 1)areaCode = "0";
 		//map.put("areaCode", areaCode);
 		List<FocusEx> list = focusService.selectList(map);
 		return page(list);
@@ -50,6 +51,7 @@ public class FocusController extends CoreController{
 	@RequestMapping("/save")
 	@ResponseBody
 	public Ret save(Focus focus, Integer location){
+		focus.setImg(BaseUtils.removeUrl(focus.getImg()));
 		if(focus.getId() == null) {//添加
 			if(location == 5){
 				focus.setImg("");

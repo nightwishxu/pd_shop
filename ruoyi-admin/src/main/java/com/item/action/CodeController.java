@@ -4,10 +4,7 @@ import com.api.view.common.AppVersion;
 import com.api.view.common.LoadingImg;
 import com.base.action.CoreController;
 
-import com.base.util.CoreConstants;
-import com.base.util.DFA;
-import com.base.util.IoUtil;
-import com.base.util.JSONUtils;
+import com.base.util.*;
 import com.item.dao.model.Code;
 import com.item.dao.model.CodeExample;
 import com.item.dao.model.CodeExample.Criteria;
@@ -23,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.List;
+import java.util.*;
 
 @RequestMapping("code")
 @Controller
@@ -47,6 +44,14 @@ public class CodeController extends CoreController{
 	@ResponseBody
 	public Ret findById(String code){
 		Code codes = codeService.getByCode(code);
+		if (codes!=null && StringUtils.isNotBlank(codes.getValue())){
+			Map map =JSONUtils.deserialize(codes.getValue(),Map.class);
+			String img = (String)map.get("img");
+			if (StringUtils.isNotBlank(img)){
+				map.put("img", BaseUtils.processImgs(img));
+				codes.setValue(JSONUtils.serialize(map));
+			}
+		}
 		return ok(codes);
 	}
 
@@ -73,6 +78,12 @@ public class CodeController extends CoreController{
 	@RequestMapping("save")
 	@ResponseBody
 	public Ret save(Code code){
+		Map map =JSONUtils.deserialize(code.getValue(),Map.class);
+		String img = (String)map.get("img");
+		if (StringUtils.isNotBlank(img)){
+			map.put("img", BaseUtils.removeUrl(img));
+			code.setValue(JSONUtils.serialize(map));
+		}
 		int i = this.codeService.updateByPrimaryKeySelective(code);
 		if(i == 0){
 			codeService.insertSelective(code);

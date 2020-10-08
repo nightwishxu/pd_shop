@@ -26,9 +26,10 @@ public class SinglePageController extends CoreController{
 		startPage();
 		SinglePageExample example = new SinglePageExample();
 		example.setOrderByClause("sort_order desc");
-		if(!getSessionParameter("sys").equals("administrator")){
-			example.createCriteria().andIsShowEqualTo(1);
-		}
+		example.createCriteria().andIsShowEqualTo(1);
+//		if(!getSessionParameter("sys").equals("administrator")){
+//
+//		}
 		List<SinglePage> list = singlePageService.selectByExample(example);
 		return page(list);
 	}

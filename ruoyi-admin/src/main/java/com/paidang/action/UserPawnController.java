@@ -67,7 +67,7 @@ public class UserPawnController extends CoreController{
 	@RequestMapping("/baoxiangGet")
 	@ResponseBody
 	public TableDataInfo baoxiangGet(Integer page, Integer rows, String pawnTicketCode){
-//		startPage();
+		startPage();
 ////		UserPawnExample example = new UserPawnExample();
 ////
 //		if(null != pawnTicketCode){
@@ -92,7 +92,7 @@ public class UserPawnController extends CoreController{
 		example.createCriteria().andPawnTicketCodeEqualTo(code);
 		List<UserPawn> list= userPawnService.selectByExample(example);
 		if(list.size()!=0){
-			return ok(new Ret(1,"当号不能重复"));
+			throw new SystemException(400,"当号不能重复");
 		}
     	if (userPawn.getId() == null){
     		userPawnService.insert(userPawn);

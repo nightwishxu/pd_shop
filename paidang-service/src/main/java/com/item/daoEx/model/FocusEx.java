@@ -1,5 +1,6 @@
 package com.item.daoEx.model;
 
+import com.base.util.BaseUtils;
 import com.item.dao.model.Focus;
 
 public class FocusEx extends Focus {
@@ -22,5 +23,10 @@ public class FocusEx extends Focus {
 
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
+    }
+
+    @Override
+    public String getImg() {
+        return BaseUtils.processImgs(super.getImg());
     }
 }
