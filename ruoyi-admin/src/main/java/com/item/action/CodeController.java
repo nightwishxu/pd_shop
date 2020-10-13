@@ -45,11 +45,15 @@ public class CodeController extends CoreController{
 	public Ret findById(String code){
 		Code codes = codeService.getByCode(code);
 		if (codes!=null && StringUtils.isNotBlank(codes.getValue())){
-			Map map =JSONUtils.deserialize(codes.getValue(),Map.class);
-			String img = (String)map.get("img");
-			if (StringUtils.isNotBlank(img)){
-				map.put("img", BaseUtils.processImgs(img));
-				codes.setValue(JSONUtils.serialize(map));
+			try {
+				Map map =JSONUtils.deserialize(codes.getValue(),Map.class);
+				String img = (String)map.get("img");
+				if (StringUtils.isNotBlank(img)){
+                    map.put("img", BaseUtils.processImgs(img));
+                    codes.setValue(JSONUtils.serialize(map));
+                }
+			} catch (Exception e) {
+
 			}
 		}
 		return ok(codes);

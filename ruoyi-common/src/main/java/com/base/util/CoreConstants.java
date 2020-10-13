@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CoreConstants {
 
     public static String getProperty(String name){
-        return "1";
+        return PropertySupport.getProperty(name);
     }
 
     public static String getProperty(String name,String def){
