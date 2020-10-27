@@ -58,7 +58,7 @@ public class ApiUserFaceController extends ApiBaseController {
                         @ApiParam(value = "图片", required = true) String image) {
         //初始化状态为识别失败
 
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
         //判断人脸是否已经录入
         if(1 != user.getIsBind()){
@@ -109,7 +109,7 @@ public class ApiUserFaceController extends ApiBaseController {
                            @ApiParam(value = "用户姓名", required = true) String userName,
                            @ApiParam(value = "用户身份证号码", required = true) String idCard,
                            @ApiParam(value = "地址", required = true) String address){
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
         //判断是否已经绑定身份证和是否已经录入人脸
         if(StringUtil.isNotBlank(user.getIdCardImg()) || StringUtil.isNotBlank(user.getHeadShake())){

@@ -94,7 +94,7 @@ public class ApiHomeController extends ApiBaseController {
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
     public UserInfo getUserInfo(MobileInfo mobileInfo) {
-        User record = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User record = userService.selectByPrimaryKey(mobileInfo.getUserId());
         if (record == null) {
             throw new ApiException(MEnumError.USER_NOEXIST_ERROR);
         }
@@ -118,8 +118,8 @@ public class ApiHomeController extends ApiBaseController {
     public UserInfo editUser(MobileInfo mobileInfo, UserInfo userInfo) {
         boolean update = false;
         User temp = new User();
-        temp.setId(mobileInfo.getUserid());
-        userInfo.setId(mobileInfo.getUserid());
+        temp.setId(mobileInfo.getUserId());
+        userInfo.setId(mobileInfo.getUserId());
         if (StringUtil.isNotBlank(userInfo.getHeadImg())) {
             update = true;
             temp.setHeadImg(userInfo.getHeadImg());
@@ -146,7 +146,7 @@ public class ApiHomeController extends ApiBaseController {
             //更新
             userService.updateByPrimaryKeySelective(temp);
         }
-        temp = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        temp = userService.selectByPrimaryKey(mobileInfo.getUserId());
         if (temp != null)
             userInfo.setAccount(temp.getAccount());
         userInfo.setNickName(temp.getNickName());
@@ -167,7 +167,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public List<ApiUserBankCard> myBankCardList(MobileInfo mobileInfo) {
         UserBankCardExample example = new UserBankCardExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         example.setOrderByClause("create_time desc");
         List<UserBankCard> list = userBankCardService.selectByExample(example);
         List<ApiUserBankCard> list2 = new ArrayList<ApiUserBankCard>();
@@ -214,7 +214,7 @@ public class ApiHomeController extends ApiBaseController {
     public Ret setDefBankCard(MobileInfo mobileInfo,
                               @ApiParam(value = "id", required = true) Integer id) {
         UserBankCardExample example = new UserBankCardExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         UserBankCard userBankCard = new UserBankCard();
         userBankCard.setIsDefault(0);
         int result = userBankCardService.updateByExampleSelective(userBankCard, example);
@@ -248,7 +248,7 @@ public class ApiHomeController extends ApiBaseController {
                              @ApiParam(value = "姓名", required = true) String userName,
                              @ApiParam(value = "身份证号", required = true) String idCard) {
         Ret ret = new Ret();
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
 
         if(StringUtil.isBlank(user.getName())){
@@ -290,7 +290,7 @@ public class ApiHomeController extends ApiBaseController {
 
                 //
                 UserBankCard record = new UserBankCard();
-                record.setUserId(mobileInfo.getUserid());
+                record.setUserId(mobileInfo.getUserId());
 
                 ///////////////////////laria edit at 2019-09-29 start///////////////////////
         //        record.setBankLogo(bankCardResult.getInformation().getBankimage());
@@ -331,7 +331,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public List<AppUserAddress> myAddressList(MobileInfo mobileInfo) {
         UserAddressExample example = new UserAddressExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         example.setOrderByClause("is_default desc, create_time desc");
         List<UserAddress> list = userAddressService.selectByExample(example);
         List<AppUserAddress> list2 = new ArrayList<AppUserAddress>();
@@ -399,7 +399,7 @@ public class ApiHomeController extends ApiBaseController {
     public Ret setDefAddress(MobileInfo mobileInfo,
                              @ApiParam(value = "id", required = true) Integer id) {
         UserAddressExample userAddressExample = new UserAddressExample();
-        userAddressExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        userAddressExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         UserAddress address = new UserAddress();
         address.setIsDefault(0);
         int result = userAddressService.updateByExampleSelective(address, userAddressExample);
@@ -433,7 +433,7 @@ public class ApiHomeController extends ApiBaseController {
                             @ApiParam(value = "省市区", required = true) String area,
                             @ApiParam(value = "详细地址", required = true) String address) {
         UserAddress record = new UserAddress();
-        record.setUserId(mobileInfo.getUserid());
+        record.setUserId(mobileInfo.getUserId());
         record.setUserName(userName);
         record.setArea(area);
         record.setAddress(address);
@@ -475,7 +475,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public String getMyPayeeTotal(MobileInfo mobileInfo) {
         UserPawnExample userPawnExample = new UserPawnExample();
-        userPawnExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andPayeeStateEqualTo(1);
+        userPawnExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andPayeeStateEqualTo(1);
         List<UserPawn> list = userPawnService.selectByExample(userPawnExample);
         BigDecimal totalPrice = new BigDecimal(0);
         for (UserPawn ex : list) {
@@ -491,7 +491,7 @@ public class ApiHomeController extends ApiBaseController {
     public TableDataInfo getMyPayeeList(MobileInfo mobileInfo,
                                         PageLimit pageLimit) {
         UserBalanceLogExample example = new UserBalanceLogExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         example.setOrderByClause("create_time desc");
         startPage();
         List<UserBalanceLog> list = userBalanceLogService.selectByExample(example);
@@ -530,7 +530,7 @@ public class ApiHomeController extends ApiBaseController {
         List<ApiUserTradeRecord> ret = new ArrayList<>();
         startPage();
         Map<String, Object> map = new HashMap<>();
-        map.put("user_id", mobileInfo.getUserid());
+        map.put("user_id", mobileInfo.getUserId());
         map.put("state",state);
         List<UserGoodsEx> list = userGoodsService.selectTradeRecordList(map);
         for (UserGoodsEx ex : list) {
@@ -567,7 +567,7 @@ public class ApiHomeController extends ApiBaseController {
         UserPawn userPawn = userPawnService.selectByPrimaryKey(id);
         //查找出当前流通记录
         PawnLogExample pawnLogExample = new PawnLogExample();
-        pawnLogExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andGoodsIdEqualTo(userGoods.getId());
+        pawnLogExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andGoodsIdEqualTo(userGoods.getId());
         pawnLogExample.setOrderByClause("create_time desc");
         List<PawnLog> list = pawnLogService.selectByExample(pawnLogExample);
 
@@ -622,7 +622,7 @@ public class ApiHomeController extends ApiBaseController {
             , @ApiParam(value = "评价状态0未评价，1已经评价", required = true)Integer commentState) {
         Map<String, Object> map = new HashMap<String, Object>();
         List<AppMyStoreGoods> list = new ArrayList<AppMyStoreGoods>();
-        map.put("user_id", mobileInfo.getUserid());
+        map.put("user_id", mobileInfo.getUserId());
         map.put("is_del", 0);
         map.put("orderState", orderState);
         map.put("commentState", commentState);
@@ -710,8 +710,8 @@ public class ApiHomeController extends ApiBaseController {
                            @ApiParam(value = "回寄单号", required = true) String expressCode,
                            @ApiParam(value = "订单id", required = true) Integer orderId){
         Order order = orderService.selectByPrimaryKey(orderId);
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
-        if(!order.getUserId().equals(mobileInfo.getUserid())){
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        if(!order.getUserId().equals(mobileInfo.getUserId())){
             throw new ApiException(MEnumError.CONTENT_NOEXIST_ERROR);
         }
 //        if(order.getState() != 7){
@@ -882,7 +882,7 @@ public class ApiHomeController extends ApiBaseController {
     public Ret delMyOrder(MobileInfo mobileInfo,
                           @ApiParam(value = "id", required = true) Integer id) {
         OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andGoodsIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserid());
+        orderExample.createCriteria().andGoodsIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserId());
 
         Order order = new Order();
         order.setIsDel(1);
@@ -907,7 +907,7 @@ public class ApiHomeController extends ApiBaseController {
     public List<AppJdGoodsAuc> jdStoreGoodsAucList(MobileInfo mobileInfo) {
         List<AppJdGoodsAuc> ret = new ArrayList<AppJdGoodsAuc>();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id", mobileInfo.getUserid());
+        map.put("user_id", mobileInfo.getUserId());
 
         List<GoodsEx> goodsExList = goodsService.selectMyAucList(map);
 
@@ -933,7 +933,7 @@ public class ApiHomeController extends ApiBaseController {
                 } else {
                     c.setTime("0");
                 }
-                if (ex.getUserId().equals(mobileInfo.getUserid())) {
+                if (ex.getUserId().equals(mobileInfo.getUserId())) {
                     //如果查出来的相等，那就是中标
                     c.setState(2);
                 } else {
@@ -957,7 +957,7 @@ public class ApiHomeController extends ApiBaseController {
     public UserIsReadCountInfo getUserIsReadCount(MobileInfo mobileInfo) {
         int count = 0;
         UserNotifyExample example = new UserNotifyExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andIsReadEqualTo(0);
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andIsReadEqualTo(0);
         count = userNotifyService.countByExample(example);
         UserIsReadCountInfo userIsReadCountInfo = new UserIsReadCountInfo();
         userIsReadCountInfo.setCount(count);
@@ -970,14 +970,14 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "获取用户消息列表", notes = "登陆,分页")
     @RequestMapping(value = "/getUserMsgList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public TableDataInfo getUserMsgList(MobileInfo mobileInfo,
+    public List<UserNotifyInfo> getUserMsgList(MobileInfo mobileInfo,
                                                PageLimit pageLimit) {
         UserNotifyExample example = new UserNotifyExample();
         example.setOrderByClause("create_time desc");
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         startPage();
         List<UserNotify> list = userNotifyService.selectByExample(example);
-        return getDataTable(getAppInfo(list));
+        return getAppInfo(list);
     }
 
     /**
@@ -1035,7 +1035,7 @@ public class ApiHomeController extends ApiBaseController {
         record.setContent(ex.getContent());
         record.setRedirectType(ex.getRedirectType());
         record.setIsRead(ex.getIsRead());
-        if (mobileInfo.getUserid() != null) {
+        if (mobileInfo.getUserId() != null) {
 
             ex.setIsRead(1);
             userNotifyService.updateByPrimaryKey(ex);
@@ -1170,7 +1170,7 @@ public class ApiHomeController extends ApiBaseController {
     public List<ApiContractList> getContractList(MobileInfo mobileInfo) {
         List<ApiContractList> ret = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
-        map.put("user_id", mobileInfo.getUserid());
+        map.put("user_id", mobileInfo.getUserId());
         List<UserPawnEx> list = userPawnService.selectConList(map);
         for (UserPawnEx ex : list) {
             ApiContractList c = new ApiContractList();

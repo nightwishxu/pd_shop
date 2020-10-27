@@ -7,7 +7,7 @@ package com.base.util;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
-import com.base.expection.ValidateException;
+import com.base.exception.ValidateException;
 
 
 import java.net.MalformedURLException;

@@ -433,7 +433,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             throw new ApiException(1100,"商品不存在！");
         }
 
-        User user=userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user=userService.selectByPrimaryKey(mobileInfo.getUserId());
         if (user==null){
             throw new ApiException(1100,"用户不存在");
         }
@@ -444,7 +444,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         if (comment==null){
             throw new ApiException(1100,"评论不存在！");
         }
-        if (userGoods.getUserId()==mobileInfo.getUserid()){
+        if (userGoods.getUserId()==mobileInfo.getUserId()){
             entity.setIsAuthor(2);
         }else {
             entity.setIsAuthor(0);
@@ -469,7 +469,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             entity.setToUid(comment.getUserId());
             entity.setToNickname(comment.getNickName());
         }
-        entity.setFromUid(mobileInfo.getUserid());
+        entity.setFromUid(mobileInfo.getUserId());
         entity.setFromNickname(user.getNickName());
         entity.setFromThumbImg(user.getHeadImg());
         entity.setCreateTime(new Date());
@@ -486,7 +486,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     public Object mySell(MobileInfo mobileInfo, PageLimit pageLimit, @ApiParam(value="name",required = false)String name){
         startPage();
         UserGoodsEx ex=new UserGoodsEx();
-        ex.setUserId(mobileInfo.getUserid());
+        ex.setUserId(mobileInfo.getUserId());
         if (StringUtil.isNotBlank(name)){
             ex.setName(name);
         }
@@ -501,7 +501,7 @@ public class ApiUserGoodsController extends ApiBaseController {
 
         if (!redisCache.exists("createUserGoodsOrder:"+userGoodsId)){
             redisCache.expire("createUserGoodsOrder:"+userGoodsId,userGoodsId,30L);
-            return apiUserGoodsService.createUserGoodsOrder(mobileInfo.getUserid(),userGoodsId,addressId);
+            return apiUserGoodsService.createUserGoodsOrder(mobileInfo.getUserId(),userGoodsId,addressId);
         }else {
             throw new ApiException(1100,"该商品已经被下单！");
         }
@@ -514,7 +514,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public Object myCollectUserGoods(MobileInfo mobileInfo){
         UserGoodsEx userGoodsEx=new UserGoodsEx();
-        userGoodsEx.setCollectUserId(mobileInfo.getUserid());
+        userGoodsEx.setCollectUserId(mobileInfo.getUserId());
         userGoodsEx.setCollectPraiseType(1);
         List<UserGoodsEx> list=userGoodsService.findCollectList(userGoodsEx);
         processUerGoods(list);
@@ -540,7 +540,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         CollectPraise entity=new CollectPraise();
         entity.setType(type);
         entity.setCreateTime(new Date());
-        entity.setUserId(mobileInfo.getUserid());
+        entity.setUserId(mobileInfo.getUserId());
         entity.setStatus(1);
         entity.setUserGoodsId(userGoodsId);
         entity.setOwnerId(userGoods.getUserId());
@@ -549,7 +549,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             entity.setImg(imgs[0]);
         }
         CollectPraiseExample example=new CollectPraiseExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andUserGoodsIdEqualTo(userGoodsId).andTypeEqualTo(type);
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andUserGoodsIdEqualTo(userGoodsId).andTypeEqualTo(type);
         if (CollectionUtil.isEmpty(collectPraiseService.selectByExample(example))){
             if (type==0){
                 userGoodsService.updateUserGoodsCount(userGoodsId,1,2);
@@ -562,54 +562,54 @@ public class ApiUserGoodsController extends ApiBaseController {
         return ok();
     }
 
-    @ApiOperation(value = "新增评价", notes = "登陆")
-    @RequestMapping(value = "/addUserGoodsComment", method = RequestMethod.POST)
-    @ApiMethod(isLogin = true)
-    public Object addUserGoodsComment(MobileInfo mobileInfo,
-                                      @ApiParam(value = "评论", required = true)String content,
-//                      @ApiParam(value = "头像", required =false)String headImg,
-//                      @ApiParam(value = "昵称", required = true)String nickName,
-                                      @ApiParam(value = "商品id", required = true)Integer userGoodsId
-    ){
-
-        Comment entity=new Comment();
-        UserGoods userGoods=userGoodsService.selectByPrimaryKey(userGoodsId);
-
-        if (userGoods==null){
-            throw new ApiException(1100,"商品不存在！");
-        }
-//        if (userBlackService.isBlackUser(mobileInfo.getUserid(),article.getUserId())>0){
-//            throw new ApiException("已被拉黑无法评论动态");
+//    @ApiOperation(value = "新增评价", notes = "登陆")
+//    @RequestMapping(value = "/addUserGoodsComment", method = RequestMethod.POST)
+//    @ApiMethod(isLogin = true)
+//    public Object addUserGoodsComment(MobileInfo mobileInfo,
+//                                      @ApiParam(value = "评论", required = true)String content,
+////                      @ApiParam(value = "头像", required =false)String headImg,
+////                      @ApiParam(value = "昵称", required = true)String nickName,
+//                                      @ApiParam(value = "商品id", required = true)Integer userGoodsId
+//    ){
+//
+//        Comment entity=new Comment();
+//        UserGoods userGoods=userGoodsService.selectByPrimaryKey(userGoodsId);
+//
+//        if (userGoods==null){
+//            throw new ApiException(1100,"商品不存在！");
 //        }
-
-        //敏感词汇过滤
-        entity.setContent(sensitivWordsService.relpSensitivWords(content));
-        User user=userService.selectByPrimaryKey(mobileInfo.getUserid());
-        if (user==null){
-            throw new ApiException(1100,"用户不存在");
-        }
-        entity.setIsHot(0);
-        entity.setUserId(mobileInfo.getUserid());
-        entity.setLikeNum(0);
-        entity.setIsReply(0);
-        entity.setReplyNum(0);
-        entity.setIsTop(0);
-        entity.setHeadImg(user.getHeadImg());
-        entity.setNickName(user.getNickName());
-        entity.setTopicId(userGoodsId);
-        entity.setType(1);
-        entity.setStatus(1);
-        entity.setTopicUserId(userGoods.getUserId());
-        entity.setCreateTime(new Date());
-        if (userGoods.getUserId()==mobileInfo.getUserid()){
-            entity.setIsAuthor(2);
-        }else {
-            entity.setIsAuthor(0);
-        }
-        //更新评论数
-        userGoodsService.updateUserGoodsCount(userGoodsId,1,0);
-        return commentService.insert(entity);
-    }
+////        if (userBlackService.isBlackUser(mobileInfo.getUserid(),article.getUserId())>0){
+////            throw new ApiException("已被拉黑无法评论动态");
+////        }
+//
+//        //敏感词汇过滤
+//        entity.setContent(sensitivWordsService.relpSensitivWords(content));
+//        User user=userService.selectByPrimaryKey(mobileInfo.getUserid());
+//        if (user==null){
+//            throw new ApiException(1100,"用户不存在");
+//        }
+//        entity.setIsHot(0);
+//        entity.setUserId(mobileInfo.getUserid());
+//        entity.setLikeNum(0);
+//        entity.setIsReply(0);
+//        entity.setReplyNum(0);
+//        entity.setIsTop(0);
+//        entity.setHeadImg(user.getHeadImg());
+//        entity.setNickName(user.getNickName());
+//        entity.setTopicId(userGoodsId);
+//        entity.setType(1);
+//        entity.setStatus(1);
+//        entity.setTopicUserId(userGoods.getUserId());
+//        entity.setCreateTime(new Date());
+//        if (userGoods.getUserId()==mobileInfo.getUserid()){
+//            entity.setIsAuthor(2);
+//        }else {
+//            entity.setIsAuthor(0);
+//        }
+//        //更新评论数
+//        userGoodsService.updateUserGoodsCount(userGoodsId,1,0);
+//        return commentService.insert(entity);
+//    }
 
 
     /**
@@ -760,8 +760,8 @@ public class ApiUserGoodsController extends ApiBaseController {
                 }
                 userGoods.setImages(images);
                 userGoods.setContent(content);
-                userGoods.setUserId(mobileInfo.getUserid());
-                userGoods.setBelongId(mobileInfo.getUserid());
+                userGoods.setUserId(mobileInfo.getUserId());
+                userGoods.setBelongId(mobileInfo.getUserId());
                 userGoods.setBelongType(1);
                 userGoods.setLocation(0);
                 if(StringUtil.isNotBlank(buyTime)){
@@ -877,8 +877,8 @@ public class ApiUserGoodsController extends ApiBaseController {
         }else if(MGoodsCateList.qt.code.equals(pawnCate.getCode())){
             //其他
             userGoods.setImages(images);
-            userGoods.setUserId(mobileInfo.getUserid());
-            userGoods.setBelongId(mobileInfo.getUserid());
+            userGoods.setUserId(mobileInfo.getUserId());
+            userGoods.setBelongId(mobileInfo.getUserId());
             userGoods.setBelongType(1);
             userGoods.setLocation(0);
             //userGoods.setPostState(-1);
@@ -921,7 +921,7 @@ public class ApiUserGoodsController extends ApiBaseController {
 //        example.createCriteria().andBelongIdEqualTo(mobileInfo.getUserid()).andGotoPawnEqualTo(0).andBackStateEqualTo(0);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("belong_id",mobileInfo.getUserid());
+        map.put("belong_id",mobileInfo.getUserId());
         List<UserGoodsEx> list = userGoodsService.selectMyGoods(map);
         return getUserGoodsList(list);
     }
@@ -1039,7 +1039,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     public Ret saleToPlatform(MobileInfo mobileInfo,
                                @ApiParam(value="id",required = true)Integer id,
                                @ApiParam(value="银行卡id",required = true)Integer bankCardId) {
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
         UserBankCard userBankCard = userBankCardService.selectByPrimaryKey(bankCardId);
         //UserGoods userGoods = userGoodsService.selectByPrimaryKey(id);
         UserGoodsExample example = new UserGoodsExample();
@@ -1106,7 +1106,7 @@ public class ApiUserGoodsController extends ApiBaseController {
        startPage();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("source_id",mobileInfo.getUserid());
+        map.put("source_id",mobileInfo.getUserId());
         map.put("type",type);
 //        List<ExpressEx> list = expressService.selectByGoods(map);
 //        List<AppLogisticsDetail> list2 = new ArrayList<AppLogisticsDetail>();
@@ -1200,8 +1200,8 @@ public class ApiUserGoodsController extends ApiBaseController {
             express.setFid(userGoods.getId());
         }else{
             //直接邮寄
-            record.setUserId(mobileInfo.getUserid());
-            record.setBelongId(mobileInfo.getUserid());
+            record.setUserId(mobileInfo.getUserId());
+            record.setBelongId(mobileInfo.getUserId());
             record.setBelongType(1);
             record.setPostExpressCode(pid);
             record.setGotoPawn(0);
@@ -1232,7 +1232,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         //插入物流记录
 
         express.setSource(1);
-        express.setSourceId(mobileInfo.getUserid());
+        express.setSourceId(mobileInfo.getUserId());
 
         express.setType(1);
         express.setExpressName(MPostExpressAddress.xfAddress);
@@ -1263,7 +1263,7 @@ public class ApiUserGoodsController extends ApiBaseController {
 //        map.put("id",id);
 //
 //        UserAddressEx userAddressEx = userAddressService.selectAppList(map);
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserid());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
         //UserGoods userGoods = new UserGoods();
         //userGoods.setId(id);
         UserGoods userGoods = userGoodsService.selectByPrimaryKey(id);
@@ -1304,8 +1304,8 @@ public class ApiUserGoodsController extends ApiBaseController {
                                                 PageLimit pageLimit){
         startPage();
         UserGoodsExample userGoodsExample = new UserGoodsExample();
-        userGoodsExample.or().andBelongIdEqualTo(mobileInfo.getUserid()).andPostStateEqualTo(2);
-        userGoodsExample.or().andBelongIdEqualTo(mobileInfo.getUserid()).andPostStateEqualTo(3);
+        userGoodsExample.or().andBelongIdEqualTo(mobileInfo.getUserId()).andPostStateEqualTo(2);
+        userGoodsExample.or().andBelongIdEqualTo(mobileInfo.getUserId()).andPostStateEqualTo(3);
         List<UserGoods> list = userGoodsService.selectByExample(userGoodsExample);
         List<AppLogisticsDetail> array = new ArrayList<AppLogisticsDetail>();
         for(UserGoods ex : list){

@@ -2,7 +2,7 @@ package com.base.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.base.expection.SystemException;
+import com.base.exception.SystemException;
 
 public class JSONUtils {
     private static final SerializerFeature[] serializerFeatures;

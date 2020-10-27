@@ -29,8 +29,8 @@
     	u.*
     from b_user u 
     where u.type = 0
-    <if test="nickName != null and nickName !=''">
-    	 and u.nick_name like '%${nickName}%'
+    <if test="nick_name != null and nick_name !=''">
+    	 and u.nick_name like '%${nick_name}%'
     </if>
 		<if test="account != null and account !=''">
 			and  u.account like '%${account}%'
@@ -66,5 +66,132 @@
     from b_user u
     where account = #{account}
 	</select>
+
+
+	<select id="findList" resultType="com.item.daoEx.model.UserEx">
+		SELECT a.id,a.nick_name,a.icon
+		<if test="userId!=null">
+			,t.status as followStatus
+		</if>
+		from (select u.* from b_user u where u.nick_name like  CONCAT('%',#{keyword},'%') and u.status!=0 ) a
+		<if test="userId!=null">
+			left join t_user_follow t on a.id=t.follow_id
+			and t.user_id=#{userId}
+		</if>
+		where 1=1
+		<if test="userId!=null">
+			and a.id!=#{userId}
+		</if>
+		order by LENGTH(a.nick_name)
+	</select>
+
+	<select id="findListBack" resultType="com.item.daoEx.model.UserEx">
+		SELECT m.*
+		<if test="isHealthCounselor!=null and isHealthCounselor=='1'.toString()">
+			,(SELECT count(*) from t_user_counselor where counselor_id=m.id and counselor_type=1) as healthCount
+		</if>
+		<if test="isInsuranceCounselor!=null and isInsuranceCounselor=='1'.toString()">
+			,(SELECT count(*) from t_user_counselor where counselor_id=m.id and counselor_type=2) as insuranceCount
+		</if>
+		from b_user m where 1=1
+		<if test="nick_name!=null and nick_name!=''">
+			and m.nick_name like CONCAT('%',#{nick_name},'%')
+		</if>
+		<if test="username!=null and username!=''">
+			and m.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isHealthCounselor!=null and isHealthCounselor=='1'.toString()">
+			and m.is_health_counselor = 1
+		</if>
+		<if test="isInsuranceCounselor!=null and isInsuranceCounselor=='1'.toString()">
+			and m.is_insurance_counselor = 1
+		</if>
+		order by m.create_time desc
+	</select>
+
+	<select id="getCounselor" resultType="com.item.daoEx.model.UserEx">
+		SELECT
+		id,username,nick_name,icon,real_name realName,is_health_counselor,is_insurance_counselor,status
+		FROM
+		b_user
+		WHERE
+		b_user.id >= FLOOR(
+		RAND() * (
+		( SELECT MAX( U1.id ) FROM b_user AS U1 ) - ( SELECT MIN( U2.id ) FROM b_user AS U2 )
+		) + ( SELECT MIN( U3.id ) FROM b_user AS U3 )
+		) and b_user.status=1
+		<if test="type!=null and  type=='1'.toString()">
+			and b_user.is_health_counselor=1
+		</if>
+		<if test="type!=null and type=='2'.toString()">
+			and b_user.is_insurance_counselor=1
+		</if>
+		ORDER BY
+		b_user.id ASC
+		LIMIT 1
+	</select>
+
+
+	<select id="findFollowList" resultType="com.item.daoEx.model.UserEx">
+             SELECT
+        u.id, u.nick_name, u.phone, u.icon,u.city, u.age
+        FROM
+            t_user_follow t left join b_user u on t.follow_id = u.id
+        where t.status=1 and u.status=1 and t.user_id=#{userId} order by t.create_time desc
+
+    </select>
+
+	<select id="findFansList" resultType="com.item.daoEx.model.UserEx">
+        SELECT
+        u.id, u.nick_name, u.phone, u.icon,u.city, u.age
+        FROM
+        t_user_follow t left join b_user u on t.user_id = u.id
+        where t.status=1 and u.status=1 and t.follow_id=#{userId} order by t.create_time desc
+
+    </select>
+
+
+	<update id="updatePokeAmount">
+        update b_user set poke_amount = (poke_amount + #{amount}) where id = #{id}
+    </update>
+
+	<select id="getByInviteCode" resultType="com.item.dao.model.User">
+        SELECT  * from b_user where invite_code =#{inviteCode}
+    </select>
+
+	<update id="reSumPokeAmount">
+        update b_user t set t.poke_amount =(SELECT ifnull(sum(amount_new),0) from b_user_poke_amount_log where user_id=t.id ) where t.id=#{id} and t.account_type=0
+    </update>
+
+	<select id="recommendList" resultType="com.item.daoEx.model.UserEx">
+		SELECT
+		*
+		FROM
+		b_user u
+		WHERE
+		u.recommend_sort IS NOT NULL and u.status=1
+		<if test="userId!=null">
+			and u.id not in (select follow_id from t_user_follow where user_id=#{userId}) and u.id!=#{userId}
+		</if>
+		ORDER BY
+		u.recommend_sort DESC
+	</select>
+
+	<update id="updateUserCount">
+		update b_user t set
+		<if test="type!=null and type==1">
+			t.article_count = (SELECT count(1) from t_article where user_id =t.id and type=1 and status!=0)
+		</if>
+		<if test="type!=null and type==2">
+			t.follow_count = (SELECT count(1) from t_user_follow where user_id =t.id and status=1 )
+		</if>
+		<if test="type!=null and type==3">
+			t.fans_count = (SELECT count(1) from t_user_follow where follow_id =t.id and status=1)
+		</if>
+		<if test="type!=null and type==4">
+			t.order_count = (SELECT count(1) from oms_order where user_id =t.id and status=4)
+		</if>
+		where t.id=#{id}
+	</update>
   	
 </mapper>

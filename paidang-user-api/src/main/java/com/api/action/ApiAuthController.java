@@ -70,7 +70,7 @@ public class ApiAuthController extends CoreController {
 	@GetMapping("/passOrNot")
 	@ApiMethod(isLogin = true)
 	public Result passOrNot(MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		Result result = authService.passOrNot(userId);
 		return result;
 	}
@@ -80,7 +80,7 @@ public class ApiAuthController extends CoreController {
     @PostMapping("/save/personal")
 	@ApiMethod(isLogin = true)
     public Ret savePersonal(MobileInfo mobileInfo, AuthPersonal authPersonal){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		authPersonal.setCreateUser(userId);
 		authPersonal.setCreateTime(new Date());
 		authPersonal.setState("0");
@@ -100,7 +100,7 @@ public class ApiAuthController extends CoreController {
 	@ApiOperation(value = "（重新）提交企业认证")
 	@ApiMethod(isLogin = true)
 	public Ret saveEnterprise(MobileInfo mobileInfo, AuthEnterprise authEnterprise){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		authEnterprise.setCreateTime(new Date());
 		authEnterprise.setState("0");
 		authEnterprise.setCreateUser(userId);
@@ -120,7 +120,7 @@ public class ApiAuthController extends CoreController {
 	@GetMapping("/get/userInfo")
 	@ApiMethod(isLogin = true)
 	public Object getUserInfo(MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		User user = userService.selectByPrimaryKey(userId);
 		if(user == null){
 			throw new ApiException(-1,"不存在该人员");
@@ -159,7 +159,7 @@ public class ApiAuthController extends CoreController {
 	@PostMapping("/saveOrUpdate/returnAddress")
 	@ApiMethod(isLogin = true)
 	public Ret saveReturnAddress(MobileInfo mobileInfo, UserReturnAddress userReturnAddress){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		userReturnAddress.setUserId(userId);
 		if (userReturnAddress.getId() == null){
 			userReturnAddress.setCreateTime(new Date());
@@ -176,7 +176,7 @@ public class ApiAuthController extends CoreController {
 	@PostMapping("/set/default")
 	@ApiMethod(isLogin = true)
 	public Ret setDefault(MobileInfo mobileInfo, @ApiParam(required = true,value = "退货地址id") @RequestParam("addressId") int addressId){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		UserReturnAddress userReturnAddress = userReturnAddressService.selectByPrimaryKey(addressId);
 		if(userReturnAddress == null){
 			throw new ApiException(-1,"不存在的退货地址");
@@ -194,7 +194,7 @@ public class ApiAuthController extends CoreController {
 	@PostMapping("/delete/returnAddress")
 	@ApiMethod(isLogin = true)
 	public Ret deleteReturnAddress(MobileInfo mobileInfo, @ApiParam(required = true,value = "退货地址id") @RequestParam("addressId") int addressId){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		UserReturnAddress userReturnAddress = userReturnAddressService.selectByPrimaryKey(addressId);
 		if(userReturnAddress == null){
 			throw new ApiException(-1,"不存在的退货地址");
@@ -224,12 +224,12 @@ public class ApiAuthController extends CoreController {
 		if("1".equals(type)){
 			AuthPersonalExample authPersonalExample = new AuthPersonalExample();
 			AuthPersonalExample.Criteria criteria  = authPersonalExample.createCriteria();
-			criteria.andCreateUserEqualTo(mobileInfo.getUserid()).andStateNotEqualTo("3");
+			criteria.andCreateUserEqualTo(mobileInfo.getUserId()).andStateNotEqualTo("3");
 			return authPersonalService.selectByExample(authPersonalExample);
 		}else if("2".equals(type)){
 			AuthEnterpriseExample authEnterpriseExample = new AuthEnterpriseExample();
 			AuthEnterpriseExample.Criteria criteria  = authEnterpriseExample.createCriteria();
-			criteria.andCreateUserEqualTo(mobileInfo.getUserid()).andStateNotEqualTo("3");
+			criteria.andCreateUserEqualTo(mobileInfo.getUserId()).andStateNotEqualTo("3");
 			return authEnterpriseService.selectByExample(authEnterpriseExample);
 		}
 		return null;
@@ -239,7 +239,7 @@ public class ApiAuthController extends CoreController {
 	@ApiMethod(isLogin = true)
 	@ApiOperation(value = "商家端商品发布(更新)")
 	public Ret OrgGoodsSave(Goods goods, MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		//判断当前登录商家端的人是个人还是企业
 		JSONObject ret = authService.isPersonal(userId);
 		int code = ret.getInteger("code");
@@ -323,7 +323,7 @@ public class ApiAuthController extends CoreController {
 								   @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
 								   @ApiParam(value = "分页(不传则不分页)") String pageSize,
 								   @ApiParam(value = "商品名称")String goodsName){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
 			startPage();
 		}
@@ -376,7 +376,7 @@ public class ApiAuthController extends CoreController {
 							   @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
 							   @ApiParam(value = "分页(不传则不分页)") String pageNum,
 							   @ApiParam(value = "商品名称")String goodsName){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
 			startPage();
 		}
@@ -396,7 +396,7 @@ public class ApiAuthController extends CoreController {
 	public Object afterSales(MobileInfo mobileInfo , @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
                              @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
                              @ApiParam(value = "商品名称")String goodsName){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
 			startPage();
 		}
@@ -416,7 +416,7 @@ public class ApiAuthController extends CoreController {
                                     @ApiParam(value = "物流单号") String shipCode,
                                     @ApiParam(value = "订单号") String orderCode,
                                     MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 	    //先根据订单号查询订单信息
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
@@ -511,7 +511,7 @@ public class ApiAuthController extends CoreController {
 	@ApiOperation(value = "设置支付密码（第一次）")
 	public Ret setPassword(@ApiParam(value = "支付密码") String password,
 						 MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		//密码MD5加密
 		String encryptHex = DigestUtil.md5Hex(password);
 		BusinessUserInfoExample businessUserInfoExample = new BusinessUserInfoExample();
@@ -542,7 +542,7 @@ public class ApiAuthController extends CoreController {
 							  @ApiParam(value = "第一次输入新支付密码") String newPassword,
 							  @ApiParam(value = "第二次输入新支付密码") String reNewPassword,
 							  MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		if(!newPassword.equals(reNewPassword)){
 			throw new ApiException(-1,"两次输入的密码不一致");
 		}
@@ -582,7 +582,7 @@ public class ApiAuthController extends CoreController {
 	@ApiOperation(value = "支付密码验证")
 	public Ret verification(@ApiParam(value = "支付密码") String password,
 								MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		BusinessUserInfoExample businessUserInfoExample = new BusinessUserInfoExample();
 		BusinessUserInfoExample.Criteria criteria = businessUserInfoExample.createCriteria();
 		criteria.andUserIdEqualTo(userId);
@@ -612,7 +612,7 @@ public class ApiAuthController extends CoreController {
 	@ApiMethod(isLogin = true)
 	@ApiOperation(value = "查看个人财务情况")
 	public Map<String,Object> finance(MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		Map<String,Object> ret = new HashMap<>();
 		GoodsExample goodsExample = new GoodsExample();
 		GoodsExample.Criteria goodsCriteria = goodsExample.createCriteria();
@@ -649,7 +649,7 @@ public class ApiAuthController extends CoreController {
 	@ApiMethod(isLogin = true)
 	@ApiOperation(value = "查看个人资金记录")
 	public List<BusinessUserBalanceLog> getFinanceDetails(MobileInfo mobileInfo){
-		int userId = mobileInfo.getUserid();
+		int userId = mobileInfo.getUserId();
 		BusinessUserBalanceLogExample businessUserBalanceLogExample = new BusinessUserBalanceLogExample();
 		BusinessUserBalanceLogExample.Criteria criteria = businessUserBalanceLogExample.createCriteria();
 		criteria.andUserIdEqualTo(userId);

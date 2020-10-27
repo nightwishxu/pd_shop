@@ -1154,7 +1154,7 @@ public class CommentExample {
 			return (Criteria) this;
 		}
 
-}
+	}
 
 	public static class Criteria extends GeneratedCriteria {
 
@@ -1193,7 +1193,7 @@ public class CommentExample {
 		}
 
 		public boolean isNoValue() {
-		return noValue;
+			return noValue;
 		}
 
 		public boolean isSingleValue() {

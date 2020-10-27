@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.ArticleCommentMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.ArticleCommentEx" extends="com.paidang.dao.ArticleCommentMapper.BaseResultMap">
+  </resultMap>
+
+  <resultMap id="commentExMap" type="com.paidang.daoEx.model.ArticleCommentEx">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="article_id" property="articleId" jdbcType="INTEGER" />
+    <result column="author_id" property="authorId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="is_top" property="isTop" jdbcType="INTEGER" />
+    <result column="is_hot" property="isHot" jdbcType="INTEGER" />
+    <result column="like_num" property="likeNum" jdbcType="INTEGER" />
+    <result column="reply_num" property="replyNum" jdbcType="INTEGER" />
+    <result column="is_reply" property="isReply" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="is_show" property="isShow" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_author" property="isAuthor" jdbcType="INTEGER" />
+    <result column="is_report" property="isReport" jdbcType="INTEGER" />
+    <collection property="commentReplyExList" ofType="com.paidang.daoEx.model.ArticleCommentReplyEx" select="getCommentReplyEx" column="id">
+
+    </collection>
+  </resultMap>
+
+  <select id="findList" resultMap="commentExMap">
+    SELECT c.*
+    <if test="userId!=null">
+      ,t.status as praiseStatus
+    </if>
+    from t_article_comment c
+    <if test="userId!=null">
+      left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
+    </if>
+    where c.status=1 and  c.article_id=#{articleId} order by c.create_time desc
+  </select>
+
+  <select id="getCommentReplyEx" resultType="com.paidang.daoEx.model.ArticleCommentReplyEx">
+    SELECT c.*
+    <!--<if test="userId!=null">-->
+    <!--,t.status as praiseStatus-->
+    <!--</if>-->
+    from t_article_comment_reply c
+    <!--<if test="userId!=null">-->
+    <!--left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}-->
+    <!--</if>-->
+    where c.comment_id=#{id} and c.status=1 order by c.create_time desc
+  </select>
+
+
+
+  <update id="updateReplyNum" >
+    UPDATE t_article_comment set reply_num=reply_num+1,is_reply=1 where id=#{id}
+  </update>
+
+  <update id="updateLikeNum" >
+    UPDATE t_article_comment set like_num=like_num+#{num} where id=#{id}
+  </update>
+
+  <select id="findWonderfulCommentList" resultType="com.paidang.daoEx.model.ArticleCommentEx">
+    SELECT  c.*
+    <if test="userId!=null">
+      ,t.status as praiseStatus
+    </if>
+    from t_article_comment c
+    <if test="userId!=null">
+      left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
+    </if>
+    where c.status=1 and c.article_id=#{articleId} and c.reply_num &gt;=#{replyNum} and c.like_num &gt;=#{likeNum} order by c.reply_num desc,c.like_num desc,c.create_time desc limit 10
+  </select>
+
+
+  <select id="findCommentListBack" resultType="com.paidang.domain.vo.ArticleCommentVo">
+    SELECT c.id, c.article_id, c.author_id,
+    c.type, c.content, c.user_id,
+    c.is_top,
+    c.is_hot, c.like_num, c.reply_num,
+    c.is_reply, c.status, c.is_show,
+    c.create_time, c.is_author, c.is_report,0 as commentType,u.icon,u.nickname,u.username from t_article_comment c left join ums_user u on c.user_id=u.id where c.status!=-1
+    <if test="content!=null and content!=''">
+      and c.content like CONTACT ('%',#{content},'%')
+    </if>
+    <if test="isReport!=null">
+      and c.is_report= #{isReport}
+    </if>
+    order by c.create_time desc
+  </select>
+
+
+</mapper>

@@ -7,6 +7,7 @@ import com.item.dao.model.User;
 import com.item.dao.model.UserExample;
 import com.item.daoEx.UserMapperEx;
 import com.item.daoEx.model.UserEx;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -148,5 +149,22 @@ public class UserService {
 	}
 	public User selectByAccount(String record) {
 		return this.userMapperEx.selectByAccount(record);
+	}
+
+
+	public List<UserEx> findList(Integer userId, String keyword){
+		return userMapperEx.findList(userId,keyword);
+	}
+
+	public List<UserEx> findFollowList(Integer userId){
+		return userMapperEx.findFollowList(userId);
+	}
+
+	public List<UserEx> findFansList(Integer userId){
+		return userMapperEx.findFansList(userId);
+	}
+
+	public List<UserEx> recommendList(Integer userId){
+		return userMapperEx.recommendList(userId);
 	}
 }

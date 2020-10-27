@@ -131,7 +131,7 @@ public class ApiWatchVideo extends ApiBaseController {
 
         VideoOnlineComment comment = new VideoOnlineComment();
         comment.setContent(content);
-        comment.setUserId(mobileInfo.getUserid());
+        comment.setUserId(mobileInfo.getUserId());
         comment.setIsDel(0);
         comment.setVideoId(id);
         videoOnlineCommentService.insert(comment);
@@ -152,7 +152,7 @@ public class ApiWatchVideo extends ApiBaseController {
         //List<CouponEx> list = couponService.selectGoods();
 
         Map<String ,Object> map = new HashMap<>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<CouponEx> list = couponService.selectGoods(map);
 
         if(list.size() == 0 || null == list){
@@ -185,7 +185,7 @@ public class ApiWatchVideo extends ApiBaseController {
                           @ApiParam(value = "优惠券领取方式 1新用户注册 2看视频 3首页领取",required = true)Integer type){
         Ret ret = new Ret();
         UserCouponExample example = new UserCouponExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andCreateTimeBetween(DateUtil.add(new Date(),1), DateUtil.add(new Date(),-1));
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andCreateTimeBetween(DateUtil.add(new Date(),1), DateUtil.add(new Date(),-1));
         List<UserCoupon> list = userCouponService.selectByExample(example);
         if(list.size()>0){
             //用户已经抢过券了
@@ -201,7 +201,7 @@ public class ApiWatchVideo extends ApiBaseController {
 
 
         UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setUserId(mobileInfo.getUserid());
+        userCoupon.setUserId(mobileInfo.getUserId());
         userCoupon.setCouponId(coupon.getId());
         userCoupon.setFull(coupon.getFull());
         //userCoupon.setValue(coupon.getValue());

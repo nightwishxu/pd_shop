@@ -3,7 +3,7 @@ package com.base.util.http;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.base.expection.HttpException;
+import com.base.exception.HttpException;
 import com.base.util.LogKit;
 import com.base.util.StringUtil;
 import com.base.util.URLUtil;

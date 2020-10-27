@@ -1,6 +1,6 @@
 package com.base.util;
 
-import com.base.expection.SystemException;
+import com.base.exception.SystemException;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;

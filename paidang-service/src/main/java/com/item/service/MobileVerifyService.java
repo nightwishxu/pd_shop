@@ -74,14 +74,14 @@ public class MobileVerifyService {
      */
     public String updateMobileVerify(MobileInfo mobileInfo,Integer deviceType,String cid){
     	if(!ConstantsCode.MULTI_LOGIN){//单设备登录删除其他设备的登录信息
-			deleteOther(mobileInfo.getUserid(),mobileInfo.getDeviceid());
+			deleteOther(mobileInfo.getUserId(),mobileInfo.getDeviceid());
     	}
     	
     	//更新当前设备登录信息
 		MobileVerify mobileVerify = new MobileVerify();
 		mobileVerify.setVerify(UUID.randomUUID().toString());
 		mobileVerify.setDeviceId(mobileInfo.getDeviceid());
-		mobileVerify.setUserId(mobileInfo.getUserid());
+		mobileVerify.setUserId(mobileInfo.getUserId());
 		mobileVerify.setDeviceType(deviceType);
 		if(StringUtils.isNotBlank(cid))mobileVerify.setCid(cid);
 		int count = mobileVerifyMapper.updateByPrimaryKeySelective(mobileVerify);
@@ -109,7 +109,7 @@ public class MobileVerifyService {
     
 	public void deleteOther(MobileInfo mobileInfo) {
 		MobileVerifyExample example = new MobileVerifyExample();
-		example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andDeviceIdNotEqualTo(mobileInfo.getDeviceid());
+		example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andDeviceIdNotEqualTo(mobileInfo.getDeviceid());
 		mobileVerifyMapper.deleteByExample(example);
 	}
 	

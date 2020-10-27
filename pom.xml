@@ -201,6 +201,7 @@
         <module>ruoyi-common</module>
         <module>paidang-service</module>
         <module>paidang-user-api</module>
+        <module>paidang-org-api</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -224,30 +225,30 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>glave</id>
-            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>glave</id>-->
+<!--            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>glave</id>
-            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+<!--    <pluginRepositories>-->
+<!--        <pluginRepository>-->
+<!--            <id>glave</id>-->
+<!--            <url>http://nexus.glaveinfo.com/nexus/content/groups/public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </pluginRepository>-->
+<!--    </pluginRepositories>-->
 
 </project>

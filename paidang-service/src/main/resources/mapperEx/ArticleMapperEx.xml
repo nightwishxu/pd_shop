@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.ArticleMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.ArticleEx" extends="com.paidang.dao.ArticleMapper.BaseResultMap">
+  </resultMap>
+
+
+  <update id="updateArticleCount">
+    UPDATE  t_article
+    <set>
+      <if test="type==0">
+        comment_count=comment_count+#{num}
+      </if>
+      <if test="type==1">
+        collect_count=collect_count+#{num}
+      </if>
+      <if test="type==2">
+        praise_count=praise_count+#{num}
+      </if>
+      <if test="type==3">
+        click_count=click_count+#{num}
+      </if>
+      <if test="type==4">
+        report_count=report_count+#{num}
+      </if>
+    </set>
+    where id=#{id}
+
+  </update>
+
+  <select id="getArticleCount" resultType="java.lang.Integer">
+    SELECT count(*) from t_article where user_id=#{userId} and status=2
+  </select>
+
+
+  <select id="findList" parameterType="com.paidang.daoEx.model.ArticleEx" resultType="com.paidang.daoEx.model.ArticleEx">
+    SELECT  b.*
+    <if test="userId!=null">
+      ,t.status as followStatus
+      ,p.status as praiseStatus
+    </if>
+    from (SELECT
+    a.*,
+    u.nickname as nickname,
+    u.username as username,
+    u.icon
+    from t_article a LEFT JOIN  ums_user u on a.user_id = u.id
+    where a.status!=0
+    <if test="id!=null">
+      and a.id=#{id}
+    </if>
+    <if test="status!=null">
+      and a.status=#{status}
+    </if>
+    <if test="isShow!=null">
+      and a.is_show=#{isShow}
+    </if>
+    <if test="type!=null">
+      and a.type=#{type}
+    </if>
+    <if test="title!=null and title!=''">
+      and a.title like CONCAT('%',#{title},'%')
+    </if>
+    <if test="content!=null and content!=''">
+      and a.content like CONCAT('%',#{content},'%')
+    </if>
+    <if test="reportCount!=null">
+      and a.report_count &gt;= #{reportCount}
+    </if>
+    <if test="labels!=null and labels!=''">
+      and a.labels like CONCAT('%',#{labels},'%')
+    </if>
+    <if test="username!=null and username!=''">
+      and u.username=#{username}
+    </if>
+    <if test="authorId!=null">
+      and a.user_id=#{authorId}
+    </if>
+    <if test="startTime!=null">
+      and a.create_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!=null">
+      and a.create_time &lt;=#{endTime}
+    </if>) b
+    <if test="userId!=null">
+      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}
+      left join t_article_collect_praise p on p.article_id = b.id and p.type=0 and p.user_id=#{userId}
+    </if>
+    ORDER  by b.create_time desc
+  </select>
+
+
+
+  <select id="findReportList" resultType="com.paidang.daoEx.model.ArticleEx">
+    SELECT  b.*,b.info as reportInfo
+    <if test="userId!=null">
+      ,t.status as followStatus
+      ,p.status as praiseStatus
+    </if>
+    from (SELECT
+    a.*,
+    m.info,
+    u.nickname as nickname,
+    u.username as username,
+    u.icon
+    from t_user_report m left join t_article a on m.article_id=a.id LEFT JOIN  ums_user u on a.user_id = u.id
+    where a.status!=0 and m.status!=0
+    <if test="id!=null">
+      and a.id=#{id}
+    </if>
+    <if test="status!=null">
+      and a.status=#{status}
+    </if>
+    <if test="isShow!=null">
+      and a.is_show=#{isShow}
+    </if>
+    <if test="type!=null">
+      and a.type=#{type}
+    </if>
+    <if test="title!=null and title!=''">
+      and a.title like CONCAT('%',#{title},'%')
+    </if>
+    <if test="content!=null and content!=''">
+      and a.content like CONCAT('%',#{content},'%')
+    </if>
+    <if test="reportCount!=null">
+      and a.report_count &gt;= #{reportCount}
+    </if>
+    <if test="labels!=null and labels!=''">
+      and a.labels like CONCAT('%',#{labels},'%')
+    </if>
+    <if test="username!=null and username!=''">
+      and u.username=#{username}
+    </if>
+    <if test="startTime!=null">
+      and a.create_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!=null">
+      and a.create_time &lt;=#{endTime}
+    </if>) b
+    <if test="userId!=null">
+      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}
+      left join t_article_collect_praise p on p.article_id = b.id and p.type=0 and p.user_id=#{userId}
+    </if>
+    ORDER  by b.create_time desc
+  </select>
+
+
+  <select id="findNoticeList" parameterType="com.paidang.daoEx.model.ArticleEx" resultType="com.paidang.daoEx.model.ArticleEx">
+    SELECT
+    a.*
+    from t_article a
+    where a.status!=0
+    <if test="id!=null">
+      and a.id=#{id}
+    </if>
+    <if test="status!=null">
+      and a.status=#{status}
+    </if>
+    <if test="type!=null">
+      and a.type=#{type}
+    </if>
+    <if test="isShow!=null">
+      and a.is_show=#{isShow}
+    </if>
+    <if test="title!=null and title!=''">
+      and a.title like CONCAT('%',#{title},'%')
+    </if>
+    <if test="content!=null and content!=''">
+      and a.content like CONCAT('%',#{content},'%')
+    </if>
+    <if test="reportCount!=null">
+      and a.report_count &gt;= #{reportCount}
+    </if>
+    <if test="labels!=null and labels!=''">
+      and a.labels like CONCAT('%',#{labels},'%')
+    </if>
+    <if test="startTime!=null">
+      and a.create_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!=null">
+      and a.create_time &lt;=#{endTime}
+    </if>
+    ORDER  by a.sort desc,a.create_time  desc
+  </select>
+
+
+  <select id="findNoticeIndex" parameterType="com.paidang.daoEx.model.ArticleEx" resultType="com.paidang.daoEx.model.ArticleEx">
+    SELECT
+    a.*
+    from t_article a
+    where a.status!=0
+    <if test="id!=null">
+      and a.id=#{id}
+    </if>
+    <if test="status!=null">
+      and a.status=#{status}
+    </if>
+    <if test="type!=null">
+      and a.type=#{type}
+    </if>
+    <if test="isShow!=null">
+      and a.is_show=#{isShow}
+    </if>
+    <if test="reportCount!=null">
+      and a.report_count &gt;= #{reportCount}
+    </if>
+    <if test="labels!=null and labels!=''">
+      and a.labels like CONCAT('%',#{labels},'%')
+    </if>
+    <if test="startTime!=null">
+      and a.create_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!=null">
+      and a.create_time &lt;=#{endTime}
+    </if>
+    ORDER  by a.sort desc,a.create_time desc limit 3
+  </select>
+
+  <select id="recommendList" resultType="com.paidang.daoEx.model.ArticleEx">
+    <if test="userIds!=null and userIds.size()>0">
+      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article  t  LEFT JOIN  ums_user u on t.user_id = u.id  left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      and t.user_id in
+      <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+      order by t.create_time desc limit 0,1000) a
+      union
+      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article t  LEFT JOIN  ums_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      and t.user_id not  in
+      <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+      order by t.create_time desc limit 0,1000) a
+    </if>
+    <if test="(userIds==null or  userIds.size()==0) and userId==null">
+      select a.* from (select t.*,u.nickname,u.icon from t_article t LEFT JOIN  ums_user u on t.user_id = u.id where t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+    </if>
+    <if test="(userIds==null or  userIds.size()==0)  and userId!=null">
+      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article t LEFT JOIN  ums_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId}  where t.user_id!=#{userId} and  t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+    </if>
+  </select>
+
+  <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx">
+    SELECT a.*,m.icon,m.nickname  from t_article a left join ums_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1 and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId}) order by a.create_time desc
+  </select>
+
+
+</mapper>

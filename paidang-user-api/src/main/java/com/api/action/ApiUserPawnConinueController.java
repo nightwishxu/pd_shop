@@ -23,8 +23,6 @@ import com.util.PaidangMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -86,7 +84,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
-        map.put("userId",mobileInfo.getUserid());
+        map.put("userId",mobileInfo.getUserId());
         UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map);
         if(null == ex){
             throw new ApiException(MErrorEnum.GOODS_NOTEXISTS_ERROR);
@@ -114,7 +112,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
                                                     @ApiParam(value="续当档期",required = true) Integer pawnTime) throws Exception{
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
-        map.put("userId",mobileInfo.getUserid());
+        map.put("userId",mobileInfo.getUserId());
         UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map);
         AppMyPawnConinue record = new AppMyPawnConinue();
 
@@ -235,7 +233,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
                               @ApiParam(value="打款凭证",required = true)String platformImage){
         Map<String, Object> map2 = new HashMap<String, Object>();
         map2.put("id",id);
-        map2.put("userId",mobileInfo.getUserid());
+        map2.put("userId",mobileInfo.getUserId());
         UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map2);
         BigDecimal totalMoney = null;
         BigDecimal lxMoeny = null;
@@ -272,7 +270,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         UserPawnEx userPawn = userPawnService.selectUserName(map);
 
         PawnContinue pawnContinue = new PawnContinue();

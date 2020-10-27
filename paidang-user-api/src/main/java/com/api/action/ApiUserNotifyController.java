@@ -41,7 +41,7 @@ public class ApiUserNotifyController extends ApiBaseController {
                                               PageLimit pageLimit){
         startPage();
         UserNotifyExample userNotifyExample = new UserNotifyExample();
-        userNotifyExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        userNotifyExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         userNotifyExample.setOrderByClause("create_time desc");
         List<UserNotify> list = userNotifyService.selectByExample(userNotifyExample);
 
@@ -69,7 +69,7 @@ public class ApiUserNotifyController extends ApiBaseController {
     public Ret userNotifyList(MobileInfo mobileInfo,
                               @ApiParam(value="id",required = true) Integer id) {
         UserNotifyExample userNotifyExample = new UserNotifyExample();
-        userNotifyExample.createCriteria().andIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserid());
+        userNotifyExample.createCriteria().andIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserId());
         int result = userNotifyService.deleteByExample(userNotifyExample);
         if (result == 0) {
             throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.UserFollowMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.UserFollowEx" extends="com.paidang.dao.UserFollowMapper.BaseResultMap">
+  </resultMap>
+
+  <select id="getUserFollowCount" resultType="java.lang.Integer">
+    SELECT count(*) from t_user_follow where follow_id=#{userId}
+  </select>
+
+  <!--<select id="getuserFollow" resultType="com.macro.mall.modelEx.userFollowEx">-->
+  <!--SELECT uf.* ,-->
+  <!--u1.head_img as userHeadImg,-->
+  <!--u1.nick_name as usernick_name,-->
+  <!--u2.head_img as followHeadImg,-->
+  <!--u2.nick_name as follownick_name,-->
+  <!--wxu1.article_count as userArticleCount,-->
+  <!--wxu2.article_count as followArticleCount,-->
+  <!--wxu1.fans_count as userFansCount,-->
+  <!--wxu2.fans_count as followFansCount-->
+  <!--from t_user_follow uf-->
+  <!--LEFT JOIN b_user u1 on uf.user_id=u1.id-->
+  <!--LEFT JOIN b_user u2 on uf.follow_id=u2.id-->
+  <!--LEFT JOIN t_wx_user_info wxu1 on uf.user_id=wxu1.id-->
+  <!--LEFT JOIN t_wx_user_info wxu2 on uf.follow_id=wxu2.id-->
+  <!--where (uf.user_id=#{userId} and uf.status in (1,3)) or (uf.operate_object=#{userId} and uf.status in (2,3))-->
+  <!--order by-->
+  <!--</select>-->
+
+
+  <select id="getUserFlowIds" resultType="java.lang.Long">
+  select follow_id from t_user_follow where user_id=#{userId} and status=1
+</select>
+
+
+
+  <select id="getUserFansCount" resultType="java.lang.Integer">
+    SELECT count(*) from t_user_follow where follow_id=#{user_id}
+  </select>
+
+  <select id="getIsFollow" resultType="java.lang.Integer">
+    SELECT count(*) from t_user_follow
+    where user_id=#{userId} and follow_id=#{followId}
+</select>
+
+  <select id="getUserFollow" resultType="com.item.daoEx.model.UserEx">
+    SELECT b.id,b.nick_name,b.icon  from t_user_follow a left join b_user b on b.id=a.follow_id where a.user_id=#{userId} order by a.create_time desc
+  </select>
+
+
+</mapper>

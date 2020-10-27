@@ -68,7 +68,7 @@ public class ApiUserSms
         {
             User user = users.get(0);
             MobileInfo mobileInfo = new MobileInfo();
-            mobileInfo.setUserid(user.getId());
+            mobileInfo.setUserId(user.getId());
             mobileInfo.setDeviceid(deviceid);
             mobileInfo.setDeviceType(deviceType);
             String verify = this.verifyService.updateMobileVerify(mobileInfo, deviceType, cid);
@@ -172,7 +172,7 @@ public class ApiUserSms
             }
             this.userService.updateByPrimaryKeySelective(user);
             MobileInfo mobileInfo = new MobileInfo();
-            mobileInfo.setUserid(user.getId());
+            mobileInfo.setUserId(user.getId());
             mobileInfo.setDeviceid(deviceid);
             mobileInfo.setDeviceType(deviceType);
             String verify = this.verifyService.updateMobileVerify(mobileInfo, deviceType, cid);

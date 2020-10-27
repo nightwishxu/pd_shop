@@ -2,7 +2,9 @@ package com.base.util;
 
 import cn.hutool.core.date.DateBetween;
 import cn.hutool.core.date.DateException;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
+import com.base.date.DateField;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.DateFormat;
@@ -344,5 +346,20 @@ public class DateUtil {
         String[] dayNames = new String[]{"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
         int dayOfWeek = d1.get(7);
         return dayNames[dayOfWeek - 1];
+    }
+
+    public static Date offsetSecond(Date date, int offset) {
+        return offset(date, DateField.SECOND, offset);
+    }
+
+    public static DateTime offset(Date date, DateField dateField, int offset) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(dateField.getValue(), offset);
+        return new DateTime(cal.getTime());
+    }
+
+    public static Date offsetMinute(Date date, int offset) {
+        return offset(date, DateField.MINUTE, offset);
     }
 }

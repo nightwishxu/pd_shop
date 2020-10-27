@@ -312,7 +312,7 @@ public class ApiLoginController extends ApiBaseController {
 		User record = regist(phone, password, deviceType, deviceid, cid);
 
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(record.getId());
+		mobileInfo.setUserId(record.getId());
 		mobileInfo.setDeviceid(deviceid);
 		String verify = verifyService.updateMobileVerify(mobileInfo,
 				deviceType, cid);
@@ -403,7 +403,7 @@ public class ApiLoginController extends ApiBaseController {
 			throw new ApiException(MEnumError.ACCOUNT_STOP_ERROR);
 		}
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(user.getId());
+		mobileInfo.setUserId(user.getId());
 		mobileInfo.setDeviceid(deviceid);
 		mobileInfo.setDeviceType(deviceType);
 		String verify = verifyService.updateMobileVerify(mobileInfo,
@@ -476,7 +476,7 @@ public class ApiLoginController extends ApiBaseController {
 		
 
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(record.getId());
+		mobileInfo.setUserId(record.getId());
 		mobileInfo.setDeviceType(deviceType);
 		mobileInfo.setDeviceid(deviceid);
 		//删除其他登陆设备

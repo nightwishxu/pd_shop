@@ -218,7 +218,7 @@ public class ApiUserPawnController extends ApiBaseController {
                                     PageLimit pageLimit) {
         startPage();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<UserPawnEx> list = userPawnService.selectPawningList(map);
         List<AppMyPawnList> ret = new ArrayList<>();
         for(UserPawnEx ex : list){
@@ -253,7 +253,7 @@ public class ApiUserPawnController extends ApiBaseController {
                                             PageLimit pageLimit) {
         startPage();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<UserPawnEx> list = userPawnService.selectMyPawnedList(map);
         List<AppMyPawnList> ret = new ArrayList<>();
         for(UserPawnEx ex : list){
@@ -391,7 +391,7 @@ public class ApiUserPawnController extends ApiBaseController {
 //        example.setOrderByClause("create_time desc");
 //        List<UserGoods> list = userGoodsService.selectByExample(example);
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<UserGoodsEx> list = userGoodsService.selectNoPawnList(map);
 
         List<AppMyPawnNoDetail> list2 = new ArrayList<AppMyPawnNoDetail>();
@@ -443,7 +443,7 @@ public class ApiUserPawnController extends ApiBaseController {
                                                   PageLimit pageLimit){
         startPage();
        Map<String, Object> map = new HashMap<String, Object>();
-       map.put("user_id",mobileInfo.getUserid());
+       map.put("user_id",mobileInfo.getUserId());
 
        //List<UserPawnEx> list = userPawnService.selectCancelPawnList(map);
         List<UserGoodsEx> list = userGoodsService.selectCancelPawnList(map);
@@ -571,7 +571,7 @@ public class ApiUserPawnController extends ApiBaseController {
         userGoods.setGotoPawn(1);
         //新增典当表
         UserPawn userPawn = new UserPawn();
-        userPawn.setUserId(mobileInfo.getUserid());
+        userPawn.setUserId(mobileInfo.getUserId());
         userPawn.setGoodsId(userPawn1.getGoodsId());;
         userPawn.setLoansPrice(new BigDecimal(loansPrice));
         userPawn.setLoansRate(new BigDecimal(loansRate));
@@ -617,7 +617,7 @@ public class ApiUserPawnController extends ApiBaseController {
                                        @ApiParam(value="id",required = true)Integer id) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         UserPawnEx userPawn = userPawnService.selectPawningDetail(map);
 
         if (null == userPawn) {
@@ -781,7 +781,7 @@ public class ApiUserPawnController extends ApiBaseController {
         //UserAddress userAddress = userAddressService.selectByPrimaryKey(0);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         map.put("bankCardId",bankCardId);
         UserBankCardEx userBankCard = userBankCardService.selectByUser(map);
 
@@ -851,7 +851,7 @@ public class ApiUserPawnController extends ApiBaseController {
         //插入典当记录表
         pawnLogService.updatePawnlog(
                 userGoods.getId(),
-                mobileInfo.getUserid(),
+                mobileInfo.getUserId(),
                 0,
                 userGoods.getName(),
                 userGoods.getAuthPrice(),
@@ -866,7 +866,7 @@ public class ApiUserPawnController extends ApiBaseController {
                 userBankCard.getBankCardNo());
 
         //推送
-        userNotifyService.insertByTemplate(mobileInfo.getUserid(),"1", PaidangMessage.PAWN_SUCCESS_NOTIFY,userGoods.getName(),userPawn.getOrgName(),userPawn.getPayeeBankName()+userPawn.getPayeeBankCardCode());
+        userNotifyService.insertByTemplate(mobileInfo.getUserId(),"1", PaidangMessage.PAWN_SUCCESS_NOTIFY,userGoods.getName(),userPawn.getOrgName(),userPawn.getPayeeBankName()+userPawn.getPayeeBankCardCode());
         logger.debug("========================用户端发起推送兜底消息到机构端,orgId = 0 ========================");
         orgNotifyService.insertByTemplate(0,"3", PaidangMessage.BAOXIANG_DOUDI,userGoods.getName());
 
@@ -981,7 +981,7 @@ public class ApiUserPawnController extends ApiBaseController {
                          @ApiParam(value="id",required = true)Integer id,
                          @ApiParam(value="银行卡id",required = true)Integer bankCardId) throws ClassNotFoundException {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         map.put("bankCardId",bankCardId);
         UserBankCardEx userBankCard = userBankCardService.selectByUser(map);
 
@@ -1099,7 +1099,7 @@ public class ApiUserPawnController extends ApiBaseController {
     public JSONObject checkPawnTic(MobileInfo mobileInfo,
                                    @ApiParam(value="id",required = true)Integer id){
         UserPawnExample userPawnExample = new UserPawnExample();
-        userPawnExample.createCriteria().andIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserid()).andStateEqualTo(2);
+        userPawnExample.createCriteria().andIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserId()).andStateEqualTo(2);
         List<UserPawn> list = userPawnService.selectByExample(userPawnExample);
         JSONObject object = new JSONObject();
         String url = ConstantsCode.SERVER_URL+"/m/pawn/toPawnTicket/"+id;
@@ -1126,7 +1126,7 @@ public class ApiUserPawnController extends ApiBaseController {
                                          @ApiParam(value="id",required = true)Integer id){
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         UserPawnEx ex = userPawnService.selectPawningDetail(map);
         if(null == ex){
             throw new ApiException(MEnumError.CONTENT_NOEXIST_ERROR);

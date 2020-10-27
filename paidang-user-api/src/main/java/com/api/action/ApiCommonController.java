@@ -137,7 +137,7 @@ public class ApiCommonController extends ApiBaseController {
 		record.setInfo(content);
 //		record.setPhone(phone);
 		if (mobileInfo != null){
-			record.setUserId(mobileInfo.getUserid());
+			record.setUserId(mobileInfo.getUserId());
 		}
 		feedbackService.insert(record);
 		return new Ret(1, "反馈成功");

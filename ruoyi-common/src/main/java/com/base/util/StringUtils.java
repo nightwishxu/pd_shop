@@ -179,9 +179,9 @@ public final class StringUtils extends org.apache.commons.lang3.StringUtils {
         return JavaScriptUtils.javaScriptEscape(HtmlUtils.htmlEscape(str));
     }
 
-//    public static String unescapeXss(String str) {
-//        return StringEscapeUtils.unescapeJavaScript(StringEscapeUtils.unescapeHtml(str));
-//    }
+    public static String unescapeXss(String str) {
+        return StringEscapeUtils.unescapeJavaScript(StringEscapeUtils.unescapeHtml(str));
+    }
 
     public static void main(String[] args) {
         System.out.println(random(32, RandomType.ALL));

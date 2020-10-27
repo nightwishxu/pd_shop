@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.PrivateMessageMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.PrivateMessageEx" extends="com.paidang.dao.PrivateMessageMapper.BaseResultMap">
+  </resultMap>
+
+  <!--我的私信列表-->
+  <select id="myPrivateMessageList" resultType="com.paidang.daoEx.model.PrivateMessageEx">
+	 SELECT
+	p.id,
+	t.messageCount,
+	p.user_id,
+	p.friend_id,
+	p.sender_id,
+	p.receiver_id,
+	p.send_time,
+	p.message_content,
+	u.nickname AS receiverNickname,
+	u.icon AS receiverIcon
+	from (SELECT max(id) id,count(1) as messageCount FROM t_private_message where user_id=#{userId} and status!=3 GROUP BY friend_id  ORDER BY id DESC) t
+	left join t_private_message p on t.id = p.id  left join b_user  u ON u.id = p.friend_id
+  </select>
+
+  <!--我的私信列表详情-->
+  <select id="myPrivateMessageInfo" resultType="com.paidang.daoEx.model.PrivateMessageEx">
+      SELECT
+	p.id,
+	p.message_content,
+	p.sender_id,
+	p.receiver_id,
+	p.send_time,
+	u.nickname AS senderNickname,
+	u.icon AS senderIcon,
+	uu.nickname AS receiverNickname
+FROM
+	t_private_message p
+	left JOIN b_user u ON u.id = p.sender_id
+	left JOIN  b_user uu ON uu.id = p.friend_id
+WHERE
+	p.user_id = #{userId}
+	AND p.friend_id = #{friendId}
+	AND p.`status` != 3
+ORDER BY
+	p.id DESC
+  </select>
+
+  <update id="readMsg">
+		update t_private_message set status=2 where status=1 and user_id=#{userId} AND friend_id=#{friendId}
+	</update>
+
+  <!--我的私信列表页面删除整个会话-->
+  <update id="deleteAll">
+    UPDATE t_private_message SET status=3,delete_time= NOW() WHERE user_id=#{userId} AND friend_id=#{friendId}
+  </update>
+
+  <!--我的私信列表详情删除单个对话-->
+  <update id="deleteSingle">
+    UPDATE t_private_message SET status=3,delete_time= NOW() WHERE id=#{id}
+  </update>
+
+  <!--获取用户未读消息数量-->
+  <select id="countUnreadMsg" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM t_private_message WHERE user_id=#{userId} AND receiver_id=#{friendId} AND status=1
+  </select>
+
+</mapper>

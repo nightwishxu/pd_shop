@@ -73,7 +73,7 @@ public class ApiUserCommentController extends ApiBaseController {
         userComment.setStatus(1);
         userComment.setScore(score);
         userComment.setShowName(0);
-        userComment.setUserId(mobileInfo.getUserid());
+        userComment.setUserId(mobileInfo.getUserId());
         userComment.setGoodsId(goodsId);
         userComment.setOrgId(orders.get(0).getOrgId());
         userComment.setOrderId(orderId);
@@ -91,7 +91,7 @@ public class ApiUserCommentController extends ApiBaseController {
         Goods goods=goodsService.selectByPrimaryKey(orders.get(0).getGoodsId());
 
         userComment.setGoodsName(goods==null?"":goods.getName());
-        userComment.setUserName(userService.selectByPrimaryKey(mobileInfo.getUserid()).getNickName());
+        userComment.setUserName(userService.selectByPrimaryKey(mobileInfo.getUserId()).getNickName());
         Integer result=userCommentService.insert(userComment);
         if (result>0){
             com.paidang.dao.model.Order order=new  com.paidang.dao.model.Order();

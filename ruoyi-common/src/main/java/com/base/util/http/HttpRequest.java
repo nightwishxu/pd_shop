@@ -8,7 +8,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.base.expection.HttpException;
+import com.base.exception.HttpException;
 import com.base.util.Convert;
 import com.base.util.IoUtil;
 import com.base.util.LogKit;

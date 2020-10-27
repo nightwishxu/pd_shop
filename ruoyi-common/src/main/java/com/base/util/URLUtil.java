@@ -2,7 +2,7 @@ package com.base.util;
 
 
 import cn.hutool.core.util.ClassUtil;
-import com.base.expection.UtilException;
+import com.base.exception.UtilException;
 import org.springframework.util.Assert;
 
 import java.io.*;

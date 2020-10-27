@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiParam;
 public class MobileInfo {
     @ApiModelProperty(name="userId",value="用户id")
     @ApiParam(hidden = true)
-    private Integer userid;
+    private Integer userId;
 
     @ApiModelProperty(name="deviceid",value="设备Id",hidden=true)
     @ApiParam(hidden = true)
@@ -24,18 +24,18 @@ public class MobileInfo {
     public MobileInfo() {
     }
 
-    public MobileInfo(Integer userid, String deviceid, Integer deviceType) {
-        this.userid = userid;
+    public MobileInfo(Integer userId, String deviceid, Integer deviceType) {
+        this.userId = userId;
         this.deviceid = deviceid;
         this.deviceType = deviceType;
     }
 
-    public Integer getUserid() {
-        return userid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getDeviceid() {

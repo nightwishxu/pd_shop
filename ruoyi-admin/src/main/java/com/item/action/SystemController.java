@@ -9,7 +9,7 @@ import com.item.service.FocusService;
 import com.item.service.SinglePageService;
 import com.paidang.dao.model.Goods;
 import com.paidang.service.GoodsService;
-import com.weixin.service.ArticleService;
+import com.weixin.service.WxArticleService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ public class SystemController extends CoreController {
 	@Autowired
 	private FocusService focusService;
 	@Autowired
-	private ArticleService articleService;
+	private WxArticleService wxArticleService;
 	@Autowired
 	private GoodsService goodsService;
 	@Autowired

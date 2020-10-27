@@ -1,7 +1,7 @@
 package com.base.util;
 
 import cn.hutool.core.io.IORuntimeException;
-import com.base.expection.UtilException;
+import com.base.exception.UtilException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

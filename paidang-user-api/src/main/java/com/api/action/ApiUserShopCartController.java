@@ -86,7 +86,7 @@ public class ApiUserShopCartController extends ApiBaseController {
         }
         ShopCartExample entity=new ShopCartExample();
         ShopCartExample.Criteria criteria=entity.createCriteria();
-        criteria.andUserIdEqualTo(mobileInfo.getUserid());
+        criteria.andUserIdEqualTo(mobileInfo.getUserId());
         List<ShopCart> all=shopCartService.selectByExample(entity);
         if (CollectionUtils.isNotEmpty(all)){
            int i= num;
@@ -141,7 +141,7 @@ public class ApiUserShopCartController extends ApiBaseController {
             shopCart.setGoodsId(goodsId);
             shopCart.setNum(num);
             shopCart.setCreateTime(new Date());
-            shopCart.setUserId(mobileInfo.getUserid());
+            shopCart.setUserId(mobileInfo.getUserId());
             shopCart.setOrgId(goods.getOrgId());
             return shopCartService.insert(shopCart);
         }
@@ -154,7 +154,7 @@ public class ApiUserShopCartController extends ApiBaseController {
     public Object delGoods(MobileInfo mobileInfo, @ApiParam(value = "商品id", required = true)Integer goodsId) {
         ShopCartExample entity=new ShopCartExample();
         ShopCartExample.Criteria criteria=entity.createCriteria();
-        criteria.andUserIdEqualTo(mobileInfo.getUserid());
+        criteria.andUserIdEqualTo(mobileInfo.getUserId());
         criteria.andGoodsIdEqualTo(goodsId);
         return shopCartService.deleteByExample(entity);
     }
@@ -164,7 +164,7 @@ public class ApiUserShopCartController extends ApiBaseController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
     public Object list( MobileInfo mobileInfo) {
-        return shopCartService.findList(mobileInfo.getUserid());
+        return shopCartService.findList(mobileInfo.getUserId());
     }
 
 
@@ -175,7 +175,7 @@ public class ApiUserShopCartController extends ApiBaseController {
     public Object delAll(MobileInfo mobileInfo) {
         ShopCartExample entity=new ShopCartExample();
         ShopCartExample.Criteria criteria=entity.createCriteria();
-        criteria.andUserIdEqualTo(mobileInfo.getUserid());
+        criteria.andUserIdEqualTo(mobileInfo.getUserId());
         return shopCartService.deleteByExample(entity);
     }
 

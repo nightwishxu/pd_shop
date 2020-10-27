@@ -6,7 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
-import com.base.expection.HttpException;
+import com.base.exception.HttpException;
 import com.base.util.*;
 import com.base.util.http.ssl.SSLSocketFactoryBuilder;
 import com.base.util.http.ssl.TrustAnyHostnameVerifier;

@@ -338,7 +338,7 @@ public class ApiStoreController extends ApiBaseController {
         //商品售价
         BigDecimal price = goods.getPrice();
         UserCouponExample userCouponExample = new UserCouponExample();
-        userCouponExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserid()).andFullLessThanOrEqualTo(price).andEndTimeGreaterThanOrEqualTo(new Date()).andStateEqualTo(1);
+        userCouponExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andFullLessThanOrEqualTo(price).andEndTimeGreaterThanOrEqualTo(new Date()).andStateEqualTo(1);
         List<UserCoupon> list = userCouponService.selectByExample(userCouponExample);
         List<AppUserCoupon> list2 = new ArrayList<AppUserCoupon>();
         for(UserCoupon ex : list){
@@ -582,7 +582,7 @@ public class ApiStoreController extends ApiBaseController {
         //插入竞拍表 goods_auction
         GoodsAuction c = new GoodsAuction();
         c.setGoodsId(id);
-        c.setUserId(mobileInfo.getUserid());
+        c.setUserId(mobileInfo.getUserId());
         c.setPrice(new BigDecimal(price));
         int result = goodsAuctionService.insert(c);
         if(result == 0){
@@ -591,7 +591,7 @@ public class ApiStoreController extends ApiBaseController {
          //更新商品表的最新消息
         goods.setMaxAutionId(c.getId());
         goods.setMaxAuction(new BigDecimal(price));
-        goods.setUserId(mobileInfo.getUserid());
+        goods.setUserId(mobileInfo.getUserId());
         int result2 = goodsService.updateByPrimaryKey(goods);
         if(result2 == 0){
             throw new ApiException(MEnumError.SERVER_BUSY_ERROR);

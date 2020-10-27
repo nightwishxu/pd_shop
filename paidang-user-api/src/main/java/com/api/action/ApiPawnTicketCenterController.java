@@ -47,7 +47,7 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
     @RequestMapping(value = "/pawnTicketList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
     public TableDataInfo pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
-        Integer userid = mobileInfo.getUserid();
+        Integer userid = mobileInfo.getUserId();
         User user = userService.selectByPrimaryKey(userid);
         PawnTicketExample pawnTicketExample = new PawnTicketExample();
         //查询用户真实姓名和手机号相同的票据

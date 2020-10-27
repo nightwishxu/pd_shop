@@ -3,7 +3,7 @@ package com.h5.action;
 import com.api.view.myPawn.AppMyPawnConinue;
 import com.api.view.myPawn.AppMyPawnGetBack;
 
-import com.base.expection.SystemException;
+import com.base.exception.SystemException;
 import com.base.util.DateUtil;
 import com.base.util.JSONUtils;
 import com.h5.view.CertificateLogModel;

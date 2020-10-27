@@ -1,7 +1,7 @@
 package com.base.util.http;
 
 
-import com.base.expection.HttpException;
+import com.base.exception.HttpException;
 import com.base.util.Convert;
 import com.base.util.FastByteArrayOutputStream;
 import com.base.util.IoUtil;

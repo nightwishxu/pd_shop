@@ -15,7 +15,7 @@ import cn.hutool.core.io.resource.UrlResource;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.setting.SettingRuntimeException;
-import com.base.expection.SystemException;
+import com.base.exception.SystemException;
 import com.base.util.Convert;
 import com.base.util.IoUtil;
 import com.base.util.StringUtil;

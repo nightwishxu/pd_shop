@@ -20,7 +20,7 @@ import com.base.util.JSONUtils;
 import com.weixin.dao.model.ArticleExample;
 import com.weixin.dao.model.Resource;
 import com.weixin.daoEx.model.ResourceEx;
-import com.weixin.service.ArticleService;
+import com.weixin.service.WxArticleService;
 import com.weixin.service.ResourceService;
 
 @RequestMapping("wxres")
@@ -30,7 +30,7 @@ public class ResourceController extends CoreController{
     @Autowired
     private ResourceService resourceService;
     @Autowired
-    private ArticleService articleService;
+    private WxArticleService wxArticleService;
     
     @RequestMapping("/list")
 	@ResponseBody 
@@ -81,7 +81,7 @@ public class ResourceController extends CoreController{
     	for (String str : ids){
     		ArticleExample example = new ArticleExample();
     		example.createCriteria().andResIdEqualTo(str);
-    		articleService.deleteByExample(example);
+    		wxArticleService.deleteByExample(example);
     		resourceService.deleteByPrimaryKey(str);
     	}
        	return JSONUtils.serialize(new Ret(0));

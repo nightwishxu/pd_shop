@@ -39,7 +39,7 @@ public class ApiUserCouponController extends ApiBaseController {
 //        List<UserCoupon> list = userCouponService.selectByExample(example);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<UserCouponEx> list = userCouponService.selectByGoods(map);
         List<AppUserCoupon> list2 = new ArrayList<AppUserCoupon>();
         if(list.size() == 0 || list == null){

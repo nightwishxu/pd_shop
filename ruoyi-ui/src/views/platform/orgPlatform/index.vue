@@ -756,10 +756,10 @@ export default {
         }
         response.data.authResult = res;
         this.form = response.data;
-        this.form.sellImgs =
-          "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
-        this.form.sellVideo =
-          "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
+        // this.form.sellImgs =
+        //   "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
+        // this.form.sellVideo =
+        //   "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
         this.open = true;
         this.title = "详情";
       });

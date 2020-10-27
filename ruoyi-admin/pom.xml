@@ -88,16 +88,6 @@
 
 
     <build>
-        <resources>
-            <!--注册webapp资源目录-->
-            <resource>
-                <directory>src/main/webapp</directory>
-                <targetPath>META-INF/resources</targetPath>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

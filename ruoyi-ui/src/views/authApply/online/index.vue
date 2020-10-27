@@ -1002,10 +1002,10 @@ export default {
       // console.info("img: "+this.imgfileList)
       //       this.imgfileList.get = [];
 
-      this.form.images =
-        "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
-      this.form.video =
-        "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
+      // this.form.images =
+      //   "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
+      // this.form.video =
+      //   "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
       // this.form.images = row.images;
       // this.form.video = row.video;
       this.form.authenticateRequire = row.authenticateRequire;

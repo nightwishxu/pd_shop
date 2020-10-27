@@ -44,10 +44,10 @@ public class ApiUserVideo extends ApiBaseController {
         startPage();
         List<AppMyVideo> ret = new ArrayList<AppMyVideo>();
         UserGoodsExample example = new UserGoodsExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserid());
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
         example.setOrderByClause("create_time desc");
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("user_id",mobileInfo.getUserid());
+        map.put("user_id",mobileInfo.getUserId());
         List<UserGoodsEx> list = userGoodsService.selectMyVideo(map);
         for(UserGoodsEx ex : list){
             AppMyVideo c = new AppMyVideo();

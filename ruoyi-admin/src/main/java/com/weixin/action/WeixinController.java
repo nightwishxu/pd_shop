@@ -40,7 +40,7 @@ import com.weixin.dao.model.FirstAttention;
 import com.weixin.dao.model.Keyword;
 import com.weixin.dao.model.KeywordExample;
 import com.weixin.dao.model.Weixin;
-import com.weixin.service.ArticleService;
+import com.weixin.service.WxArticleService;
 import com.weixin.service.FirstAttentionService;
 import com.weixin.service.KeywordService;
 import com.weixin.service.WeixinService;
@@ -60,7 +60,7 @@ public class WeixinController extends WeixinSupport {
 	@Autowired
 	private FirstAttentionService attentionService;
 	@Autowired
-	private ArticleService articleService;
+	private WxArticleService wxArticleService;
 	@Autowired
 	private KeywordService keywordService;
 	
@@ -121,7 +121,7 @@ public class WeixinController extends WeixinSupport {
 			ArticleExample artexample = new ArticleExample();
 			artexample.createCriteria().andResIdEqualTo(kw.getResId());
 			artexample.setOrderByClause("sort_order,create_time");
-	    	List<Article> artlist = articleService.selectByExample(artexample);
+	    	List<Article> artlist = wxArticleService.selectByExample(artexample);
 	    	if(artlist.size()>0){
 	    		NewsMsg news = new NewsMsg(artlist.size());
 	    		for (Article article : artlist) {
@@ -153,7 +153,7 @@ public class WeixinController extends WeixinSupport {
 				ArticleExample example = new ArticleExample();
 		    	example.createCriteria().andResIdEqualTo(attention.getResId());
 		    	example.setOrderByClause("sort_order,create_time");
-		    	List<Article> list = articleService.selectByExample(example);
+		    	List<Article> list = wxArticleService.selectByExample(example);
 		    	if(list.size()>0){
 		    		NewsMsg news = new NewsMsg(list.size());
 		    		for (Article article : list) {

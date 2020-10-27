@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paidang.daoEx.ArticleCommentReplyMapperEx" >
+  <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.ArticleCommentReplyEx" extends="com.paidang.dao.ArticleCommentReplyMapper.BaseResultMap">
+  </resultMap>
+
+  <select id="findList" resultType="com.paidang.daoEx.model.ArticleCommentReplyEx">
+    SELECT c.*
+    <if test="userId!=null">
+      ,t.status as praiseStatus
+    </if>
+    from t_article_comment_reply c
+    <if test="userId!=null">
+      left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
+    </if>
+    where c.comment_id=#{commentId} and c.status=1 order by c.create_time desc
+  </select>
+
+
+  <update id="updateReplyNum" >
+    UPDATE t_article_comment_reply set reply_num=reply_num+1 where id=#{id}
+  </update>
+
+  <select id="findCommentReplyListBack" resultType="com.paidang.domain.vo.ArticleCommentVo">
+    SELECT c.id, c.content, c.to_uid,
+    c.from_uid as userId ,
+    c.create_time, c.is_show,
+    c.is_author, c.like_num, c.status,
+    c.is_report, c.reply_num from t_article_comment_reply c left join ums_user u on c.from_uid=u.id where c.status!=-1
+    <if test="content!=null and content!=''">
+      and c.content like CONTACT ('%',#{content},'%')
+    </if>
+    <if test="isReport!=null">
+      and c.is_report= #{isReport}
+    </if>
+    order by c.create_time desc
+  </select>
+  
+</mapper>
