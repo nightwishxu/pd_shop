@@ -1,6 +1,7 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
+import com.base.util.BaseUtils;
 import com.paidang.dao.model.PawnCate;
 import com.paidang.dao.model.PawnCateExample;
 import com.paidang.service.PawnCateService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +32,11 @@ public class PawnCateController extends CoreController{
     	PawnCateExample example = new PawnCateExample();
 		example.setOrderByClause("sort_order asc,create_time desc");
     	List<PawnCate> list = pawnCateService.selectByExample(example);
-      	return page(list);
+		for (PawnCate cate : list) {
+			cate.setIcon(BaseUtils.processImgs(cate.getIcon()));
+		}
+
+		return page(list);
     }
 
 	@RequestMapping("/all")
@@ -39,13 +45,18 @@ public class PawnCateController extends CoreController{
 		PawnCateExample example = new PawnCateExample();
 		example.setOrderByClause("sort_order asc,create_time desc");
 		List<PawnCate> list = pawnCateService.selectByExample(example);
+		for (PawnCate cate : list) {
+			cate.setIcon(BaseUtils.processImgs(cate.getIcon()));
+		}
 		return ok(list);
 	}
     
     @RequestMapping("/save")
 	@ResponseBody
     public Ret save(PawnCate pawnCate){
+    	pawnCate.setIcon(BaseUtils.removeUrl(pawnCate.getIcon()));
     	if (pawnCate.getId() == null){
+    		pawnCate.setCreateTime(new Date());
     		pawnCateService.insert(pawnCate);
     	}else{
     		pawnCateService.updateByPrimaryKeySelective(pawnCate);
@@ -57,6 +68,7 @@ public class PawnCateController extends CoreController{
 	@ResponseBody
     public Ret find(Integer id){
     	PawnCate pawnCate = pawnCateService.selectByPrimaryKey(id);
+    	pawnCate.setIcon(BaseUtils.removeUrl(pawnCate.getIcon()));
        	return ok(pawnCate);
     }
     
