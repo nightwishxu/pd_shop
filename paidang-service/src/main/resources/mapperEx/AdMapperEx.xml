@@ -11,12 +11,34 @@
       B.goods_id as goodsId
       from b_ad A left join p_goods B
       on A.content = B.id
+      where 1=1
       <if test="location != null and location != ''">
-
-          where A.location = #{location}
+          and A.location = #{location}
       </if>
-
+      <if test="locations!=null and locations.size()>0">
+          and A.location in
+          <foreach collection="locations" item="item" index="index" open="(" close=")" separator=",">
+              #{item}
+          </foreach>
+      </if>
       order by A.sort_order desc, A.create_time desc
   </select>
-  
+
+
+    <select id="findList" resultMap="BaseResultMap">
+        select
+        A.*,
+        B.cost,
+        B.goods_id as goodsId
+        from b_ad A left join p_goods B
+        on A.content = B.id
+        where 1=1
+        <if test="locations!=null and locations.size()>0">
+            and A.location in
+            <foreach collection="locations" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by A.sort_order desc, A.create_time desc
+    </select>
 </mapper>

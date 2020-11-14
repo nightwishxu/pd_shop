@@ -9,6 +9,7 @@ import com.item.dao.model.Admin;
 import com.item.dao.model.AdminExample;
 import com.paidang.daoEx.PawnOrgMapperEx;
 import com.paidang.daoEx.model.PawnOrgEx;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,4 +112,23 @@ public class PawnOrgService {
 	public Integer changeState(PawnOrg pawnOrg){
 		return pawnOrgMapperEx.changeState(pawnOrg);
 	}
+
+	/**
+	 * 更新机构评论数量
+	 * @param orgId
+	 * @return
+	 */
+	public int updateCommentCount(Integer orgId){
+		return pawnOrgMapperEx.updateCommentCount(orgId);
+	}
+
+	/**
+	 * 更新机构评分
+	 * @param orgId
+	 * @return
+	 */
+	public int updateCommentScore(Integer orgId){
+		return pawnOrgMapperEx.updateCommentScore(orgId);
+	}
+
 }

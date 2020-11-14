@@ -3,6 +3,7 @@ package com.paidang.daoEx;
 import com.base.entity.QueryParams;
 import com.paidang.dao.model.Order;
 import com.paidang.daoEx.model.OrderEx;
+import com.paidang.domain.qo.OrderQo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -46,4 +47,6 @@ public interface OrderMapperEx {
                                   @Param("state") String state);
     List<OrderEx> getAfterSalesOrder(@Param("userId") String userId,
                                    @Param("goodsName") String goodsName);
+
+    List<OrderEx> findList(OrderQo qo);
 }

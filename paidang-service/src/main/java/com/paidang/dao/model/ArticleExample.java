@@ -1574,6 +1574,136 @@ public class ArticleExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andRefTypeIsNull() {
+			addCriterion("ref_type is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeIsNotNull() {
+			addCriterion("ref_type is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeEqualTo(Integer value) {
+			addCriterion("ref_type =", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeNotEqualTo(Integer value) {
+			addCriterion("ref_type <>", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeGreaterThan(Integer value) {
+			addCriterion("ref_type >", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeGreaterThanOrEqualTo(Integer value) {
+			addCriterion("ref_type >=", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeLessThan(Integer value) {
+			addCriterion("ref_type <", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeLessThanOrEqualTo(Integer value) {
+			addCriterion("ref_type <=", value, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeIn(List<Integer> values) {
+			addCriterion("ref_type in", values, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeNotIn(List<Integer> values) {
+			addCriterion("ref_type not in", values, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeBetween(Integer value1, Integer value2) {
+			addCriterion("ref_type between", value1, value2, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefTypeNotBetween(Integer value1, Integer value2) {
+			addCriterion("ref_type not between", value1, value2, "refType");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlIsNull() {
+			addCriterion("ref_url is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlIsNotNull() {
+			addCriterion("ref_url is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlEqualTo(String value) {
+			addCriterion("ref_url =", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlNotEqualTo(String value) {
+			addCriterion("ref_url <>", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlGreaterThan(String value) {
+			addCriterion("ref_url >", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlGreaterThanOrEqualTo(String value) {
+			addCriterion("ref_url >=", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlLessThan(String value) {
+			addCriterion("ref_url <", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlLessThanOrEqualTo(String value) {
+			addCriterion("ref_url <=", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlLike(String value) {
+			addCriterion("ref_url like", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlNotLike(String value) {
+			addCriterion("ref_url not like", value, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlIn(List<String> values) {
+			addCriterion("ref_url in", values, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlNotIn(List<String> values) {
+			addCriterion("ref_url not in", values, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlBetween(String value1, String value2) {
+			addCriterion("ref_url between", value1, value2, "refUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefUrlNotBetween(String value1, String value2) {
+			addCriterion("ref_url not between", value1, value2, "refUrl");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

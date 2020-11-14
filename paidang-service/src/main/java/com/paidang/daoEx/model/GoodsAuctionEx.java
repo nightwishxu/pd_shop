@@ -8,6 +8,7 @@ import com.paidang.dao.model.GoodsAuction;
 public class GoodsAuctionEx extends GoodsAuction {
     private String maxPrice;
     private String userName;
+    private String headImg;
 
     public String getMaxPrice() {
         return maxPrice;
@@ -23,5 +24,13 @@ public class GoodsAuctionEx extends GoodsAuction {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
     }
 }

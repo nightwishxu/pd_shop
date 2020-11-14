@@ -37,6 +37,8 @@ import com.paidang.daoEx.model.OrgBalanceLogEx;
 import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.service.*;
 import com.paidang.utils.CostGenerator;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableSupport;
 import com.util.ApiStoreBankUtil;
 import com.util.PaidangConst;
 import com.util.PaidangMessage;
@@ -108,16 +110,14 @@ public class ApiMyAppController extends ApiBaseController{
     @ApiOperation(value = "我参与的竞拍(竞拍标签页)",notes="我参与的竞拍(竞拍中)")
     @RequestMapping(value = "/getMyBiddingList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true,isPage = true)
-    public List<PawnDetail> getMyBiddingList(MobileInfo mobileInfo, PageLimit pageLimit){
+    public List<PawnDetail> getMyBiddingList(MobileInfo mobileInfo){
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
-
-        if (pageLimit.getPage() == null || pageLimit.getLimit() == null) {
-            throw new ApiException(MErrorEnum.PAGE_LIMIT_NONG);
-        }
-        Integer limit = pageLimit.getLimit();
-        Integer page = pageLimit.getPage();
         //获得我竞拍过的pawnId
 //        PaginationSupport.byPage(pageLimit.getPage(), pageLimit.getLimit(), false);
+        startPage();
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer page = pageDomain.getPageNum();
+        Integer limit = pageDomain.getPageSize();
         List<String> myAuctionList = pawnAuctionService.getMyBidPawnIdByOrgId(orgId.toString());
         List<PawnDetail> list = new ArrayList<>();
         for (String pawnId:myAuctionList){

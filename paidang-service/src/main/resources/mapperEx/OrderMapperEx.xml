@@ -51,6 +51,7 @@
   <select id="selectOrderAdminList" resultMap="BaseResultMap">
     select
     A.*,
+    u.name user_name,
     (
     select DISTINCT B.express_data from p_express B where A.ship_code = B.express_code and B.fid = A.id
     )as expressData,
@@ -60,6 +61,7 @@
     left join
     p_pawn_org D
     on A.org_id = D.id
+    LEFT JOIN  b_user u on A.user_id = u.id
     where 1 = 1
     <if test="goodsSource == 1">
       and A.goods_source = 3
@@ -87,6 +89,12 @@
     </if>
     <if test="payType !=null and payType!= ''">
       and A.pay_type = #{payType}
+    </if>
+    <if test="createTimeEnd!=null">
+      and A.create_time &lt;=#{createTimeEnd}
+    </if>
+    <if test="createTimeStart!=null">
+      and A.create_time &gt;=#{createTimeStart}
     </if>
     order by A.create_time desc
   </select>
@@ -296,4 +304,32 @@
     t.create_time desc
   </select>
 
+
+  <select id="findList" parameterType="com.paidang.domain.qo.OrderQo" resultMap="BaseResultMap">
+        select  a.* from p_order a
+        where 1=1
+        <if test="state!=null">
+            and a.state= #{state}
+        </if>
+
+        <if test="orgId!=null">
+          and a.org_id= #{orgId}
+        </if>
+        <if test="states!=null and states.size()>0">
+          and a.state in
+          <foreach collection="states" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+          </foreach>
+        </if>
+        <if test="refState!=null">
+          and a.ref_state= #{refState}
+        </if>
+        <if test="refStates!=null and refStates.size()>0">
+          and a.ref_state in
+          <foreach collection="refStates" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+          </foreach>
+        </if>
+        order by a.create_time desc
+  </select>
 </mapper>

@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.paidang.daoEx.GoodsAuctionMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.GoodsAuctionEx" extends="com.paidang.dao.GoodsAuctionMapper.BaseResultMap">
+      <result column="userName" property="userName"/>
+      <result column="headImg" property="headImg"/>
   </resultMap>
 
   <select id="selectMaxPrice" resultType="java.math.BigDecimal">
@@ -11,7 +13,8 @@
     <select id="selectByAuctionUser" resultMap="BaseResultMap">
         select
         A.*,
-        B.name as userName
+        B.name as userName,
+        B.head_img as headImg
         from p_goods_auction A
         left join b_user B
         on A.user_id = B.id

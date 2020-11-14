@@ -37,12 +37,12 @@
         <result column="spec" property="spec" jdbcType="VARCHAR" />
         <result column="weight" property="weight" jdbcType="VARCHAR" />
         <result column="material" property="material" jdbcType="VARCHAR" />
-        <result column="main_material" property="mainMaterial" jdbcType="VARCHAR" />
-        <result column="other_material" property="otherMaterial" jdbcType="VARCHAR" />
-        <result column="cc_length" property="ccLength" jdbcType="VARCHAR" />
         <result column="cc_width" property="ccWidth" jdbcType="VARCHAR" />
         <result column="cc_height" property="ccHeight" jdbcType="VARCHAR" />
         <result column="cc_all" property="ccAll" jdbcType="VARCHAR" />
+        <result column="main_material" property="mainMaterial" jdbcType="VARCHAR" />
+        <result column="other_material" property="otherMaterial" jdbcType="VARCHAR" />
+        <result column="cc_length" property="ccLength" jdbcType="VARCHAR" />
         <result column="create_year" property="createYear" jdbcType="VARCHAR" />
         <result column="brand" property="brand" jdbcType="VARCHAR" />
         <result column="new_percent" property="newPercent" jdbcType="VARCHAR" />
@@ -52,6 +52,18 @@
         <result column="word_descript" property="wordDescript" jdbcType="VARCHAR" />
         <result column="banner_video" property="bannerVideo" jdbcType="VARCHAR" />
         <result column="banner_video_face" property="bannerVideoFace" jdbcType="VARCHAR" />
+        <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+        <result column="goods_attribute" property="goodsAttribute" jdbcType="VARCHAR" />
+        <result column="deal_type" property="dealType" jdbcType="INTEGER" />
+        <result column="online_time" property="onlineTime" jdbcType="TIMESTAMP" />
+        <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP" />
+        <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+        <result column="start_price" property="startPrice" jdbcType="DECIMAL" />
+        <result column="raise_price_range" property="raisePriceRange" jdbcType="DECIMAL" />
+        <result column="labels" property="labels" jdbcType="VARCHAR" />
+        <result column="pv" property="pv" jdbcType="INTEGER" />
+        <result column="uv" property="uv" jdbcType="INTEGER" />
+        <result column="nv" property="nv" jdbcType="INTEGER" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.Goods" extends="BaseResultMap" >
@@ -119,7 +131,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,source,type,goods_owner,cate_code,cate_code_son,org_id,goods_id,name,cost,price,total,sold_out,is_online,reason_of_dismounting,is_verfiy,imgs,img,width,height,create_time,modify_time,state,max_aution_id,max_auction,user_id,platform_rate,platform_money,platform_state,sort_order,is_suggest,refuse_info,spec,weight,material,main_material,other_material,cc_length,cc_width,cc_height,cc_all,create_year,brand,new_percent,theme,style,material_name,word_descript,banner_video,banner_video_face
+        id,source,type,goods_owner,cate_code,cate_code_son,org_id,goods_id,name,cost,price,total,sold_out,is_online,reason_of_dismounting,is_verfiy,imgs,img,width,height,create_time,modify_time,state,max_aution_id,max_auction,user_id,platform_rate,platform_money,platform_state,sort_order,is_suggest,refuse_info,spec,weight,material,cc_width,cc_height,cc_all,main_material,other_material,cc_length,create_year,brand,new_percent,theme,style,material_name,word_descript,banner_video,banner_video_face,introduction,goods_attribute,deal_type,online_time,auction_start_time,auction_end_time,start_price,raise_price_range,labels,pv,uv,nv
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -192,11 +204,15 @@
         platform_rate,platform_money,platform_state,
         sort_order,is_suggest,refuse_info,
         spec,weight,material,
-        main_material,other_material,cc_length,
         cc_width,cc_height,cc_all,
+        main_material,other_material,cc_length,
         create_year,brand,new_percent,
         theme,style,material_name,
-        word_descript,banner_video,banner_video_face
+        word_descript,banner_video,banner_video_face,
+        introduction,goods_attribute,deal_type,
+        online_time,auction_start_time,auction_end_time,
+        start_price,raise_price_range,labels,
+        pv,uv,nv
         )
         values (#{source,jdbcType=TINYINT},#{type,jdbcType=TINYINT},
         #{goodsOwner,jdbcType=INTEGER},#{cateCode,jdbcType=INTEGER},#{cateCodeSon,jdbcType=VARCHAR},
@@ -210,11 +226,15 @@
         #{platformRate,jdbcType=DECIMAL},#{platformMoney,jdbcType=DECIMAL},#{platformState,jdbcType=TINYINT},
         #{sortOrder,jdbcType=INTEGER},#{isSuggest,jdbcType=TINYINT},#{refuseInfo,jdbcType=VARCHAR},
         #{spec,jdbcType=VARCHAR},#{weight,jdbcType=VARCHAR},#{material,jdbcType=VARCHAR},
-        #{mainMaterial,jdbcType=VARCHAR},#{otherMaterial,jdbcType=VARCHAR},#{ccLength,jdbcType=VARCHAR},
         #{ccWidth,jdbcType=VARCHAR},#{ccHeight,jdbcType=VARCHAR},#{ccAll,jdbcType=VARCHAR},
+        #{mainMaterial,jdbcType=VARCHAR},#{otherMaterial,jdbcType=VARCHAR},#{ccLength,jdbcType=VARCHAR},
         #{createYear,jdbcType=VARCHAR},#{brand,jdbcType=VARCHAR},#{newPercent,jdbcType=VARCHAR},
         #{theme,jdbcType=VARCHAR},#{style,jdbcType=VARCHAR},#{materialName,jdbcType=VARCHAR},
-        #{wordDescript,jdbcType=VARCHAR},#{bannerVideo,jdbcType=VARCHAR},#{bannerVideoFace,jdbcType=VARCHAR}
+        #{wordDescript,jdbcType=VARCHAR},#{bannerVideo,jdbcType=VARCHAR},#{bannerVideoFace,jdbcType=VARCHAR},
+        #{introduction,jdbcType=VARCHAR},#{goodsAttribute,jdbcType=VARCHAR},#{dealType,jdbcType=INTEGER},
+        #{onlineTime,jdbcType=TIMESTAMP},#{auctionStartTime,jdbcType=TIMESTAMP},#{auctionEndTime,jdbcType=TIMESTAMP},
+        #{startPrice,jdbcType=DECIMAL},#{raisePriceRange,jdbcType=DECIMAL},#{labels,jdbcType=VARCHAR},
+        #{pv,jdbcType=INTEGER},#{uv,jdbcType=INTEGER},#{nv,jdbcType=INTEGER}
         )
     </insert>
 
@@ -326,15 +346,6 @@
             <if test="material != null" >
                 material,
             </if>
-            <if test="mainMaterial != null" >
-                main_material,
-            </if>
-            <if test="otherMaterial != null" >
-                other_material,
-            </if>
-            <if test="ccLength != null" >
-                cc_length,
-            </if>
             <if test="ccWidth != null" >
                 cc_width,
             </if>
@@ -343,6 +354,15 @@
             </if>
             <if test="ccAll != null" >
                 cc_all,
+            </if>
+            <if test="mainMaterial != null" >
+                main_material,
+            </if>
+            <if test="otherMaterial != null" >
+                other_material,
+            </if>
+            <if test="ccLength != null" >
+                cc_length,
             </if>
             <if test="createYear != null" >
                 create_year,
@@ -370,6 +390,42 @@
             </if>
             <if test="bannerVideoFace != null" >
                 banner_video_face,
+            </if>
+            <if test="introduction != null" >
+                introduction,
+            </if>
+            <if test="goodsAttribute != null" >
+                goods_attribute,
+            </if>
+            <if test="dealType != null" >
+                deal_type,
+            </if>
+            <if test="onlineTime != null" >
+                online_time,
+            </if>
+            <if test="auctionStartTime != null" >
+                auction_start_time,
+            </if>
+            <if test="auctionEndTime != null" >
+                auction_end_time,
+            </if>
+            <if test="startPrice != null" >
+                start_price,
+            </if>
+            <if test="raisePriceRange != null" >
+                raise_price_range,
+            </if>
+            <if test="labels != null" >
+                labels,
+            </if>
+            <if test="pv != null" >
+                pv,
+            </if>
+            <if test="uv != null" >
+                uv,
+            </if>
+            <if test="nv != null" >
+                nv,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -478,15 +534,6 @@
             <if test="material != null" >
                 #{material,jdbcType=VARCHAR},
             </if>
-            <if test="mainMaterial != null" >
-                #{mainMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="otherMaterial != null" >
-                #{otherMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="ccLength != null" >
-                #{ccLength,jdbcType=VARCHAR},
-            </if>
             <if test="ccWidth != null" >
                 #{ccWidth,jdbcType=VARCHAR},
             </if>
@@ -495,6 +542,15 @@
             </if>
             <if test="ccAll != null" >
                 #{ccAll,jdbcType=VARCHAR},
+            </if>
+            <if test="mainMaterial != null" >
+                #{mainMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="otherMaterial != null" >
+                #{otherMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="ccLength != null" >
+                #{ccLength,jdbcType=VARCHAR},
             </if>
             <if test="createYear != null" >
                 #{createYear,jdbcType=VARCHAR},
@@ -522,6 +578,42 @@
             </if>
             <if test="bannerVideoFace != null" >
                 #{bannerVideoFace,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null" >
+                #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsAttribute != null" >
+                #{goodsAttribute,jdbcType=VARCHAR},
+            </if>
+            <if test="dealType != null" >
+                #{dealType,jdbcType=INTEGER},
+            </if>
+            <if test="onlineTime != null" >
+                #{onlineTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auctionStartTime != null" >
+                #{auctionStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auctionEndTime != null" >
+                #{auctionEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startPrice != null" >
+                #{startPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePriceRange != null" >
+                #{raisePriceRange,jdbcType=DECIMAL},
+            </if>
+            <if test="labels != null" >
+                #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="pv != null" >
+                #{pv,jdbcType=INTEGER},
+            </if>
+            <if test="uv != null" >
+                #{uv,jdbcType=INTEGER},
+            </if>
+            <if test="nv != null" >
+                #{nv,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -644,15 +736,6 @@
             <if test="record.material != null" >
                 material = #{record.material,jdbcType=VARCHAR},
             </if>
-            <if test="record.mainMaterial != null" >
-                main_material = #{record.mainMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="record.otherMaterial != null" >
-                other_material = #{record.otherMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="record.ccLength != null" >
-                cc_length = #{record.ccLength,jdbcType=VARCHAR},
-            </if>
             <if test="record.ccWidth != null" >
                 cc_width = #{record.ccWidth,jdbcType=VARCHAR},
             </if>
@@ -661,6 +744,15 @@
             </if>
             <if test="record.ccAll != null" >
                 cc_all = #{record.ccAll,jdbcType=VARCHAR},
+            </if>
+            <if test="record.mainMaterial != null" >
+                main_material = #{record.mainMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="record.otherMaterial != null" >
+                other_material = #{record.otherMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="record.ccLength != null" >
+                cc_length = #{record.ccLength,jdbcType=VARCHAR},
             </if>
             <if test="record.createYear != null" >
                 create_year = #{record.createYear,jdbcType=VARCHAR},
@@ -688,6 +780,42 @@
             </if>
             <if test="record.bannerVideoFace != null" >
                 banner_video_face = #{record.bannerVideoFace,jdbcType=VARCHAR},
+            </if>
+            <if test="record.introduction != null" >
+                introduction = #{record.introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="record.goodsAttribute != null" >
+                goods_attribute = #{record.goodsAttribute,jdbcType=VARCHAR},
+            </if>
+            <if test="record.dealType != null" >
+                deal_type = #{record.dealType,jdbcType=INTEGER},
+            </if>
+            <if test="record.onlineTime != null" >
+                online_time = #{record.onlineTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.auctionStartTime != null" >
+                auction_start_time = #{record.auctionStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.auctionEndTime != null" >
+                auction_end_time = #{record.auctionEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.startPrice != null" >
+                start_price = #{record.startPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="record.raisePriceRange != null" >
+                raise_price_range = #{record.raisePriceRange,jdbcType=DECIMAL},
+            </if>
+            <if test="record.labels != null" >
+                labels = #{record.labels,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pv != null" >
+                pv = #{record.pv,jdbcType=INTEGER},
+            </if>
+            <if test="record.uv != null" >
+                uv = #{record.uv,jdbcType=INTEGER},
+            </if>
+            <if test="record.nv != null" >
+                nv = #{record.nv,jdbcType=INTEGER},
             </if>
         </set>
         <if test="_parameter != null" >
@@ -733,12 +861,12 @@
         spec = #{spec,jdbcType=VARCHAR},
         weight = #{weight,jdbcType=VARCHAR},
         material = #{material,jdbcType=VARCHAR},
-        main_material = #{mainMaterial,jdbcType=VARCHAR},
-        other_material = #{otherMaterial,jdbcType=VARCHAR},
-        cc_length = #{ccLength,jdbcType=VARCHAR},
         cc_width = #{ccWidth,jdbcType=VARCHAR},
         cc_height = #{ccHeight,jdbcType=VARCHAR},
         cc_all = #{ccAll,jdbcType=VARCHAR},
+        main_material = #{mainMaterial,jdbcType=VARCHAR},
+        other_material = #{otherMaterial,jdbcType=VARCHAR},
+        cc_length = #{ccLength,jdbcType=VARCHAR},
         create_year = #{createYear,jdbcType=VARCHAR},
         brand = #{brand,jdbcType=VARCHAR},
         new_percent = #{newPercent,jdbcType=VARCHAR},
@@ -747,7 +875,19 @@
         material_name = #{materialName,jdbcType=VARCHAR},
         word_descript = #{wordDescript,jdbcType=VARCHAR},
         banner_video = #{bannerVideo,jdbcType=VARCHAR},
-        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR}
+        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR},
+        introduction = #{introduction,jdbcType=VARCHAR},
+        goods_attribute = #{goodsAttribute,jdbcType=VARCHAR},
+        deal_type = #{dealType,jdbcType=INTEGER},
+        online_time = #{onlineTime,jdbcType=TIMESTAMP},
+        auction_start_time = #{auctionStartTime,jdbcType=TIMESTAMP},
+        auction_end_time = #{auctionEndTime,jdbcType=TIMESTAMP},
+        start_price = #{startPrice,jdbcType=DECIMAL},
+        raise_price_range = #{raisePriceRange,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        pv = #{pv,jdbcType=INTEGER},
+        uv = #{uv,jdbcType=INTEGER},
+        nv = #{nv,jdbcType=INTEGER}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -790,12 +930,12 @@
         spec = #{spec,jdbcType=VARCHAR},
         weight = #{weight,jdbcType=VARCHAR},
         material = #{material,jdbcType=VARCHAR},
-        main_material = #{mainMaterial,jdbcType=VARCHAR},
-        other_material = #{otherMaterial,jdbcType=VARCHAR},
-        cc_length = #{ccLength,jdbcType=VARCHAR},
         cc_width = #{ccWidth,jdbcType=VARCHAR},
         cc_height = #{ccHeight,jdbcType=VARCHAR},
         cc_all = #{ccAll,jdbcType=VARCHAR},
+        main_material = #{mainMaterial,jdbcType=VARCHAR},
+        other_material = #{otherMaterial,jdbcType=VARCHAR},
+        cc_length = #{ccLength,jdbcType=VARCHAR},
         create_year = #{createYear,jdbcType=VARCHAR},
         brand = #{brand,jdbcType=VARCHAR},
         new_percent = #{newPercent,jdbcType=VARCHAR},
@@ -804,7 +944,19 @@
         material_name = #{materialName,jdbcType=VARCHAR},
         word_descript = #{wordDescript,jdbcType=VARCHAR},
         banner_video = #{bannerVideo,jdbcType=VARCHAR},
-        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR}
+        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR},
+        introduction = #{introduction,jdbcType=VARCHAR},
+        goods_attribute = #{goodsAttribute,jdbcType=VARCHAR},
+        deal_type = #{dealType,jdbcType=INTEGER},
+        online_time = #{onlineTime,jdbcType=TIMESTAMP},
+        auction_start_time = #{auctionStartTime,jdbcType=TIMESTAMP},
+        auction_end_time = #{auctionEndTime,jdbcType=TIMESTAMP},
+        start_price = #{startPrice,jdbcType=DECIMAL},
+        raise_price_range = #{raisePriceRange,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        pv = #{pv,jdbcType=INTEGER},
+        uv = #{uv,jdbcType=INTEGER},
+        nv = #{nv,jdbcType=INTEGER}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -918,15 +1070,6 @@
             <if test="material != null" >
                 material = #{material,jdbcType=VARCHAR},
             </if>
-            <if test="mainMaterial != null" >
-                main_material = #{mainMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="otherMaterial != null" >
-                other_material = #{otherMaterial,jdbcType=VARCHAR},
-            </if>
-            <if test="ccLength != null" >
-                cc_length = #{ccLength,jdbcType=VARCHAR},
-            </if>
             <if test="ccWidth != null" >
                 cc_width = #{ccWidth,jdbcType=VARCHAR},
             </if>
@@ -935,6 +1078,15 @@
             </if>
             <if test="ccAll != null" >
                 cc_all = #{ccAll,jdbcType=VARCHAR},
+            </if>
+            <if test="mainMaterial != null" >
+                main_material = #{mainMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="otherMaterial != null" >
+                other_material = #{otherMaterial,jdbcType=VARCHAR},
+            </if>
+            <if test="ccLength != null" >
+                cc_length = #{ccLength,jdbcType=VARCHAR},
             </if>
             <if test="createYear != null" >
                 create_year = #{createYear,jdbcType=VARCHAR},
@@ -962,6 +1114,42 @@
             </if>
             <if test="bannerVideoFace != null" >
                 banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null" >
+                introduction = #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsAttribute != null" >
+                goods_attribute = #{goodsAttribute,jdbcType=VARCHAR},
+            </if>
+            <if test="dealType != null" >
+                deal_type = #{dealType,jdbcType=INTEGER},
+            </if>
+            <if test="onlineTime != null" >
+                online_time = #{onlineTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auctionStartTime != null" >
+                auction_start_time = #{auctionStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="auctionEndTime != null" >
+                auction_end_time = #{auctionEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startPrice != null" >
+                start_price = #{startPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePriceRange != null" >
+                raise_price_range = #{raisePriceRange,jdbcType=DECIMAL},
+            </if>
+            <if test="labels != null" >
+                labels = #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="pv != null" >
+                pv = #{pv,jdbcType=INTEGER},
+            </if>
+            <if test="uv != null" >
+                uv = #{uv,jdbcType=INTEGER},
+            </if>
+            <if test="nv != null" >
+                nv = #{nv,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id}
@@ -1004,12 +1192,12 @@
         spec = #{spec,jdbcType=VARCHAR},
         weight = #{weight,jdbcType=VARCHAR},
         material = #{material,jdbcType=VARCHAR},
-        main_material = #{mainMaterial,jdbcType=VARCHAR},
-        other_material = #{otherMaterial,jdbcType=VARCHAR},
-        cc_length = #{ccLength,jdbcType=VARCHAR},
         cc_width = #{ccWidth,jdbcType=VARCHAR},
         cc_height = #{ccHeight,jdbcType=VARCHAR},
         cc_all = #{ccAll,jdbcType=VARCHAR},
+        main_material = #{mainMaterial,jdbcType=VARCHAR},
+        other_material = #{otherMaterial,jdbcType=VARCHAR},
+        cc_length = #{ccLength,jdbcType=VARCHAR},
         create_year = #{createYear,jdbcType=VARCHAR},
         brand = #{brand,jdbcType=VARCHAR},
         new_percent = #{newPercent,jdbcType=VARCHAR},
@@ -1018,7 +1206,19 @@
         material_name = #{materialName,jdbcType=VARCHAR},
         word_descript = #{wordDescript,jdbcType=VARCHAR},
         banner_video = #{bannerVideo,jdbcType=VARCHAR},
-        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR}
+        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR},
+        introduction = #{introduction,jdbcType=VARCHAR},
+        goods_attribute = #{goodsAttribute,jdbcType=VARCHAR},
+        deal_type = #{dealType,jdbcType=INTEGER},
+        online_time = #{onlineTime,jdbcType=TIMESTAMP},
+        auction_start_time = #{auctionStartTime,jdbcType=TIMESTAMP},
+        auction_end_time = #{auctionEndTime,jdbcType=TIMESTAMP},
+        start_price = #{startPrice,jdbcType=DECIMAL},
+        raise_price_range = #{raisePriceRange,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        pv = #{pv,jdbcType=INTEGER},
+        uv = #{uv,jdbcType=INTEGER},
+        nv = #{nv,jdbcType=INTEGER}
         where id = #{id}
     </update>
 
@@ -1058,12 +1258,12 @@
         spec = #{spec,jdbcType=VARCHAR},
         weight = #{weight,jdbcType=VARCHAR},
         material = #{material,jdbcType=VARCHAR},
-        main_material = #{mainMaterial,jdbcType=VARCHAR},
-        other_material = #{otherMaterial,jdbcType=VARCHAR},
-        cc_length = #{ccLength,jdbcType=VARCHAR},
         cc_width = #{ccWidth,jdbcType=VARCHAR},
         cc_height = #{ccHeight,jdbcType=VARCHAR},
         cc_all = #{ccAll,jdbcType=VARCHAR},
+        main_material = #{mainMaterial,jdbcType=VARCHAR},
+        other_material = #{otherMaterial,jdbcType=VARCHAR},
+        cc_length = #{ccLength,jdbcType=VARCHAR},
         create_year = #{createYear,jdbcType=VARCHAR},
         brand = #{brand,jdbcType=VARCHAR},
         new_percent = #{newPercent,jdbcType=VARCHAR},
@@ -1072,7 +1272,19 @@
         material_name = #{materialName,jdbcType=VARCHAR},
         word_descript = #{wordDescript,jdbcType=VARCHAR},
         banner_video = #{bannerVideo,jdbcType=VARCHAR},
-        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR}
+        banner_video_face = #{bannerVideoFace,jdbcType=VARCHAR},
+        introduction = #{introduction,jdbcType=VARCHAR},
+        goods_attribute = #{goodsAttribute,jdbcType=VARCHAR},
+        deal_type = #{dealType,jdbcType=INTEGER},
+        online_time = #{onlineTime,jdbcType=TIMESTAMP},
+        auction_start_time = #{auctionStartTime,jdbcType=TIMESTAMP},
+        auction_end_time = #{auctionEndTime,jdbcType=TIMESTAMP},
+        start_price = #{startPrice,jdbcType=DECIMAL},
+        raise_price_range = #{raisePriceRange,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        pv = #{pv,jdbcType=INTEGER},
+        uv = #{uv,jdbcType=INTEGER},
+        nv = #{nv,jdbcType=INTEGER}
         where id = #{id}
     </update>
 

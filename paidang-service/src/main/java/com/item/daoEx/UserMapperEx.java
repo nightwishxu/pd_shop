@@ -41,7 +41,7 @@ public interface UserMapperEx{
 	int updateUserCount(@Param("id") Integer id,@Param("type")Integer type);
 
 
-	List<UserEx> findListBack(@Param("nickname")String nickname,@Param("username")String username
+	List<UserEx> findListBack(@Param("nickName")String nickName,@Param("username")String username
 			,@Param("isHealthCounselor")String isHealthCounselor,@Param("isInsuranceCounselor") String isInsuranceCounselor);
 
 	UserEx getCounselor(@Param("type")String type);

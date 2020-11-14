@@ -3,7 +3,7 @@
 <mapper namespace="com.paidang.dao.PrivateMessageMapper" >
     <resultMap id="BaseResultMap" type="com.paidang.dao.model.PrivateMessage" >
         <id column="id" property="id" jdbcType="INTEGER" />
-        <result column="member_id" property="memberId" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
         <result column="friend_id" property="friendId" jdbcType="INTEGER" />
         <result column="sender_id" property="senderId" jdbcType="INTEGER" />
         <result column="receiver_id" property="receiverId" jdbcType="INTEGER" />
@@ -76,7 +76,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,member_id,friend_id,sender_id,receiver_id,type,message_type,message_content,send_time,status,delete_time
+        id,user_id,friend_id,sender_id,receiver_id,type,message_type,message_content,send_time,status,delete_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -114,12 +114,12 @@
     </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_private_message (member_id,friend_id,
+        insert into t_private_message (user_id,friend_id,
         sender_id,receiver_id,type,
         message_type,message_content,send_time,
         status,delete_time
         )
-        values (#{memberId,jdbcType=INTEGER},#{friendId,jdbcType=INTEGER},
+        values (#{userId,jdbcType=INTEGER},#{friendId,jdbcType=INTEGER},
         #{senderId,jdbcType=INTEGER},#{receiverId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},
         #{messageType,jdbcType=INTEGER},#{messageContent,jdbcType=VARCHAR},#{sendTime,jdbcType=TIMESTAMP},
         #{status,jdbcType=INTEGER},#{deleteTime,jdbcType=TIMESTAMP}
@@ -129,8 +129,8 @@
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
         insert into t_private_message
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="memberId != null" >
-                member_id,
+            <if test="userId != null" >
+                user_id,
             </if>
             <if test="friendId != null" >
                 friend_id,
@@ -161,8 +161,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="memberId != null" >
-                #{memberId,jdbcType=INTEGER},
+            <if test="userId != null" >
+                #{userId,jdbcType=INTEGER},
             </if>
             <if test="friendId != null" >
                 #{friendId,jdbcType=INTEGER},
@@ -207,8 +207,8 @@
             <if test="record.id != null" >
                 id = #{record.id,jdbcType=INTEGER},
             </if>
-            <if test="record.memberId != null" >
-                member_id = #{record.memberId,jdbcType=INTEGER},
+            <if test="record.userId != null" >
+                user_id = #{record.userId,jdbcType=INTEGER},
             </if>
             <if test="record.friendId != null" >
                 friend_id = #{record.friendId,jdbcType=INTEGER},
@@ -246,7 +246,7 @@
     <update id="updateByExample" >
         update t_private_message
         set id = #{id,jdbcType=INTEGER},
-        member_id = #{memberId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=INTEGER},
         friend_id = #{friendId,jdbcType=INTEGER},
         sender_id = #{senderId,jdbcType=INTEGER},
         receiver_id = #{receiverId,jdbcType=INTEGER},
@@ -264,8 +264,8 @@
     <update id="updateByPrimaryKeySelective" >
         update t_private_message
         <set >
-            <if test="memberId != null" >
-                member_id = #{memberId,jdbcType=INTEGER},
+            <if test="userId != null" >
+                user_id = #{userId,jdbcType=INTEGER},
             </if>
             <if test="friendId != null" >
                 friend_id = #{friendId,jdbcType=INTEGER},
@@ -300,7 +300,7 @@
 
     <update id="updateByPrimaryKey" >
         update t_private_message
-        set member_id = #{memberId,jdbcType=INTEGER},
+        set user_id = #{userId,jdbcType=INTEGER},
         friend_id = #{friendId,jdbcType=INTEGER},
         sender_id = #{senderId,jdbcType=INTEGER},
         receiver_id = #{receiverId,jdbcType=INTEGER},

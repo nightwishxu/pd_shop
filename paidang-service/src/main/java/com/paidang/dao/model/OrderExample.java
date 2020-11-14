@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrderExample {
 	protected String orderByClause;
@@ -731,6 +731,66 @@ public class OrderExample {
 
 		public Criteria andGoodsCostNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
 			addCriterion("goods_cost not between", value1, value2, "goodsCost");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceIsNull() {
+			addCriterion("total_price is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceIsNotNull() {
+			addCriterion("total_price is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceEqualTo(java.math.BigDecimal value) {
+			addCriterion("total_price =", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("total_price <>", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceGreaterThan(java.math.BigDecimal value) {
+			addCriterion("total_price >", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("total_price >=", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceLessThan(java.math.BigDecimal value) {
+			addCriterion("total_price <", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("total_price <=", value, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceIn(List<java.math.BigDecimal> values) {
+			addCriterion("total_price in", values, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("total_price not in", values, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("total_price between", value1, value2, "totalPrice");
+			return (Criteria) this;
+		}
+
+		public Criteria andTotalPriceNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("total_price not between", value1, value2, "totalPrice");
 			return (Criteria) this;
 		}
 

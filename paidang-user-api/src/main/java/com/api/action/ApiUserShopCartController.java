@@ -108,6 +108,9 @@ public class ApiUserShopCartController extends ApiBaseController {
         if(goods.getIsOnline()==0){
             throw new ApiException(-1,"该商品已经下架！");
         }
+        if (num>0 && goods.getDealType()!=null && goods.getDealType()==2){
+            throw new ApiException(-1,"竞拍商品无法加入购物车！");
+        }
         if (list!=null && list.size()>0){
 
             //购物车有商品修改

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,13 +63,16 @@ public class OrderController extends CoreController{
 
 	@RequestMapping("/orderAdminList")
 	@ResponseBody
-	public TableDataInfo orderAdminList(Integer page, Integer rows, String goodsName, Integer goodsSource, String orderCode, Integer state,Integer payType){
+	public TableDataInfo orderAdminList(Date createTimeStart, Date createTimeEnd, String goodsName,
+										Integer goodsSource, String orderCode, Integer state, Integer payType){
 		startPage();
 		Map<String, Object> map = new HashMap<>();
 		map.put("goodsSource",goodsSource);  //goodsSource =1 --平台  =2  --宝祥  3淘宝贝
 		map.put("goodsName",goodsName);
 		map.put("orderCode",orderCode);
 		map.put("payType",payType);
+		map.put("createTimeStart",createTimeStart);
+		map.put("createTimeEnd",createTimeEnd);
 		if(null != state){
 			map.put("state",state);
 		}

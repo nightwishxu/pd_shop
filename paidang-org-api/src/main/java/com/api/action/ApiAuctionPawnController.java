@@ -139,11 +139,12 @@ public class ApiAuctionPawnController extends ApiBaseController {
     @RequestMapping(value = "/doAuction", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
     public Integer doAuction(@ApiParam(value = "典当表id",required = true) String pawnId, MobileInfo mobileInfo,
-                         @ApiParam(value = "当号",required=true)String pawnTicketCode,
                          @ApiParam(value = "机构放贷金额",required=true)String money,
                          @ApiParam(value = "综合利率",required=true)String rate,
                          @ApiParam(value = "利息利率",required=true)String moneyRate
                             ){
+//        @ApiParam(value = "当号",required=true)String pawnTicketCode,
+
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
         if(orgId==-1){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
@@ -167,32 +168,32 @@ public class ApiAuctionPawnController extends ApiBaseController {
             throw new ApiException(MEnumError.BID_OUT_OF_TIME);
         }
         //已经使用过的当号排除
-        UserPawnExample userPawnExample = new UserPawnExample();
-        userPawnExample.createCriteria().andPawnTicketCodeEqualTo(pawnTicketCode).andStateGreaterThanOrEqualTo(2);
-        Integer cnt = userPawnService.countByExample(userPawnExample);
-        if (cnt > 0){
-            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
-        }
+//        UserPawnExample userPawnExample = new UserPawnExample();
+//        userPawnExample.createCriteria().andPawnTicketCodeEqualTo(pawnTicketCode).andStateGreaterThanOrEqualTo(2);
+//        Integer cnt = userPawnService.countByExample(userPawnExample);
+//        if (cnt > 0){
+//            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
+//        }
         //检查机构竞拍同一pawnId时输入的当号，确保没有和其他机构竞拍此pawnId输入的当号重复
-        PawnAuctionExample pawnAuctionExample = new PawnAuctionExample();
-        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andPawnCodeEqualTo(pawnTicketCode).andOrgIdNotEqualTo(orgId);
-        Integer c = pawnAuctionService.countByExample(pawnAuctionExample);
-        if(c != 0){
-            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
-        }
-        pawnAuctionExample.clear();
-        //对同一物品的可能的前后数次竞拍当号要保持一致
-        pawnAuctionExample.setOrderByClause("create_time");
-        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andOrgIdEqualTo(orgId);
-        List<PawnAuction> auctions = pawnAuctionService.selectByExample(pawnAuctionExample);
-        if (auctions.size() != 0){
-            PawnAuction record = auctions.get(0);
-            if (record != null){
-                if (!record.getPawnCode().equals(pawnTicketCode)){
-                    throw new ApiException(MEnumError.PAWNTICKETCODE_NOTSAME);
-                }
-            }
-        }
+//        PawnAuctionExample pawnAuctionExample = new PawnAuctionExample();
+//        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andPawnCodeEqualTo(pawnTicketCode).andOrgIdNotEqualTo(orgId);
+//        Integer c = pawnAuctionService.countByExample(pawnAuctionExample);
+//        if(c != 0){
+//            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
+//        }
+//        pawnAuctionExample.clear();
+//        //对同一物品的可能的前后数次竞拍当号要保持一致
+//        pawnAuctionExample.setOrderByClause("create_time");
+//        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andOrgIdEqualTo(orgId);
+//        List<PawnAuction> auctions = pawnAuctionService.selectByExample(pawnAuctionExample);
+//        if (auctions.size() != 0){
+//            PawnAuction record = auctions.get(0);
+//            if (record != null){
+//                if (!record.getPawnCode().equals(pawnTicketCode)){
+//                    throw new ApiException(MEnumError.PAWNTICKETCODE_NOTSAME);
+//                }
+//            }
+//        }
         BigDecimal m ;
         BigDecimal r ;
         BigDecimal mr ;
@@ -206,7 +207,7 @@ public class ApiAuctionPawnController extends ApiBaseController {
         }
         PawnAuction pawnAuction = new PawnAuction();
         pawnAuction.setPawnId(Integer.valueOf(pawnId));
-        pawnAuction.setPawnCode(pawnTicketCode);
+//        pawnAuction.setPawnCode(pawnTicketCode);
         pawnAuction.setOrgId(orgId);
         pawnAuction.setMoney(m);
         pawnAuction.setRate(r);

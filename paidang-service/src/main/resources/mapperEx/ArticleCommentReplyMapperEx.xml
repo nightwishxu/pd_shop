@@ -26,7 +26,7 @@
     c.from_uid as userId ,
     c.create_time, c.is_show,
     c.is_author, c.like_num, c.status,
-    c.is_report, c.reply_num from t_article_comment_reply c left join ums_user u on c.from_uid=u.id where c.status!=-1
+    c.is_report, c.reply_num from t_article_comment_reply c left join b_user u on c.from_uid=u.id where c.status!=-1
     <if test="content!=null and content!=''">
       and c.content like CONTACT ('%',#{content},'%')
     </if>

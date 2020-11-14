@@ -46,7 +46,7 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
     @ApiOperation(value = "票据列表*", notes = "登陆")
     @RequestMapping(value = "/pawnTicketList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public TableDataInfo pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
+    public List<PawnTicket> pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
         Integer userid = mobileInfo.getUserId();
         User user = userService.selectByPrimaryKey(userid);
         PawnTicketExample pawnTicketExample = new PawnTicketExample();
@@ -68,7 +68,7 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
         pawnTicketExample.setOrderByClause("create_time desc");
         startPage();
         List<PawnTicket> pawnTickets = pawnTicketService.selectByExample(pawnTicketExample);
-        return getDataTable(pawnTickets);
+        return pawnTickets;
     }
 
     /**

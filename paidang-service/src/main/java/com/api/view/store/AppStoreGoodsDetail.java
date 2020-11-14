@@ -1,10 +1,14 @@
 package com.api.view.store;
 
+import com.paidang.daoEx.model.GoodsAuctionEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
 import javax.persistence.Column;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 拍档商城商品详情
@@ -95,6 +99,78 @@ public class AppStoreGoodsDetail {
 	@ApiModelProperty(value="下架原因")
 	private String reasonOfDismounting;
 
+
+	/**
+	 *简介
+	 */
+	@ApiModelProperty(value="简介")
+	private String introduction;
+
+	/**
+	 *商品属性
+	 */
+	@ApiModelProperty(value="商品属性")
+	private String goodsAttribute;
+
+	/**
+	 *1 一口价 2 竞拍
+	 */
+	@ApiModelProperty(value="1 一口价 2 竞拍")
+	private Integer dealType;
+
+	/**
+	 *定时上架时间
+	 */
+	@ApiModelProperty(value="定时上架时间")
+	private java.util.Date onlineTime;
+
+	/**
+	 *拍卖开始时间
+	 */
+	@ApiModelProperty(value="拍卖开始时间")
+	private java.util.Date auctionStartTime;
+
+	/**
+	 *拍卖结束时间
+	 */
+	@ApiModelProperty(value="拍卖结束时间")
+	private java.util.Date auctionEndTime;
+
+	/**
+	 *起拍价
+	 */
+	@ApiModelProperty(value="起拍价")
+	private java.math.BigDecimal startPrice;
+
+	/**
+	 *加价幅度
+	 */
+	@ApiModelProperty(value="加价幅度")
+	private java.math.BigDecimal raisePriceRange;
+
+	/**
+	 *标签
+	 */
+	@ApiModelProperty(value="标签")
+	private String labels;
+
+	/**
+	 *最新出价id
+	 */
+	@ApiModelProperty(value="最新出价id")
+	private Integer maxAutionId;
+
+	/**
+	 *竞拍(最新出价)
+	 */
+	@ApiModelProperty(value="竞拍(最新出价)")
+	private java.math.BigDecimal maxAuction;
+
+	@ApiModelProperty(value="竞拍出价列表")
+	private List<GoodsAuctionEx> goodsAuctionList;
+
+	@ApiModelProperty(value="竞拍商品距离竞拍结束时间(秒)")
+	private Long leftTime;
 
 
 	public String getBannerVideo() {
@@ -408,5 +484,115 @@ public class AppStoreGoodsDetail {
 
 	public void setReasonOfDismounting(String reasonOfDismounting) {
 		this.reasonOfDismounting = reasonOfDismounting;
+	}
+
+	public String getIntroduction() {
+		return introduction;
+	}
+
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
+
+	public String getGoodsAttribute() {
+		return goodsAttribute;
+	}
+
+	public void setGoodsAttribute(String goodsAttribute) {
+		this.goodsAttribute = goodsAttribute;
+	}
+
+	public Integer getDealType() {
+		return dealType;
+	}
+
+	public void setDealType(Integer dealType) {
+		this.dealType = dealType;
+	}
+
+	public Date getOnlineTime() {
+		return onlineTime;
+	}
+
+	public void setOnlineTime(Date onlineTime) {
+		this.onlineTime = onlineTime;
+	}
+
+	public Date getAuctionStartTime() {
+		return auctionStartTime;
+	}
+
+	public void setAuctionStartTime(Date auctionStartTime) {
+		this.auctionStartTime = auctionStartTime;
+	}
+
+	public Date getAuctionEndTime() {
+		return auctionEndTime;
+	}
+
+	public void setAuctionEndTime(Date auctionEndTime) {
+		this.auctionEndTime = auctionEndTime;
+	}
+
+	public BigDecimal getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(BigDecimal startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public BigDecimal getRaisePriceRange() {
+		return raisePriceRange;
+	}
+
+	public void setRaisePriceRange(BigDecimal raisePriceRange) {
+		this.raisePriceRange = raisePriceRange;
+	}
+
+	public String getLabels() {
+		return labels;
+	}
+
+	public void setLabels(String labels) {
+		this.labels = labels;
+	}
+
+	public Integer getMaxAutionId() {
+		return maxAutionId;
+	}
+
+	public void setMaxAutionId(Integer maxAutionId) {
+		this.maxAutionId = maxAutionId;
+	}
+
+	public BigDecimal getMaxAuction() {
+		return maxAuction;
+	}
+
+	public void setMaxAuction(BigDecimal maxAuction) {
+		this.maxAuction = maxAuction;
+	}
+
+	public List<GoodsAuctionEx> getGoodsAuctionList() {
+		return goodsAuctionList;
+	}
+
+	public void setGoodsAuctionList(List<GoodsAuctionEx> goodsAuctionList) {
+		this.goodsAuctionList = goodsAuctionList;
+	}
+
+	public Long getLeftTime() {
+		Date date = new Date();
+		if (getAuctionEndTime()!=null && getAuctionStartTime()!=null &&
+		date.compareTo(getAuctionStartTime())>=0 && date.compareTo(getAuctionEndTime())<=0){
+			long l = (getAuctionEndTime().getTime() - System.currentTimeMillis()) / 1000;
+			return l;
+		}
+		return leftTime;
+	}
+
+	public void setLeftTime(Long leftTime) {
+		this.leftTime = leftTime;
 	}
 }

@@ -59,6 +59,10 @@ export function changeState(data) {
 }
 
 
-
+export function getAttribute(cateCode){
+  return request({
+    url: '/goodsAttribute/list?cateCode='+cateCode,
+  })
+}
 
 

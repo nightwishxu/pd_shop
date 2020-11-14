@@ -48,6 +48,18 @@
     <update id="changeState">
         update p_pawn_org set state =#{state} where id=#{id}
     </update>
+    
+    <update id="updateCommentCount">
+        update p_pawn_org set comment_count = (select count(1) from p_user_comment where status=1 and org_id = #{orgId}) where id =#{orgId}
+    </update>
+
+    <update id="updateCommentScore">
+        update p_pawn_org
+        set score = ((select  sum(score) from p_user_comment where status=1 and org_id = #{orgId})/comment_count),
+         express_score = ((select  sum(express_score) from p_user_comment where status=1 and org_id = #{orgId})/comment_count),
+         service_score = ((select  sum(service_score) from p_user_comment where status=1 and org_id = #{orgId})/comment_count)
+          where id =#{orgId} and comment_count>0
+    </update>
 
   
 </mapper>

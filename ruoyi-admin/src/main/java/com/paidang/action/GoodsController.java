@@ -81,20 +81,22 @@ public class GoodsController extends CoreController{
 			goods.setCateCode(Integer.parseInt(goods.getCateCodeSon()));
 			goods.setCateCodeSon(null);
 		}
-		goods.setImgs(BaseUtils.removeUrl(goods.getImgs()));
-		goods.setImg(BaseUtils.removeUrl(goods.getImg()));
-		goods.setBannerVideo(BaseUtils.removeUrl(goods.getBannerVideo()));
-		goods.setBannerVideoFace(BaseUtils.removeUrl(goods.getBannerVideoFace()));
+//		goods.setImgs(BaseUtils.removeUrl(goods.getImgs()));
+//		goods.setImg(BaseUtils.removeUrl(goods.getImg()));
+//		goods.setBannerVideo(BaseUtils.removeUrl(goods.getBannerVideo()));
+//		goods.setBannerVideoFace(BaseUtils.removeUrl(goods.getBannerVideoFace()));
 		if (goods.getId() == null){
 			if (goods.getSoldOut()==null){
 				goods.setSoldOut(0);
 
 			}
+			goods.setState(1);//(针对竞拍)- 0已失效 1有效；现后台只能上传3万以下物品，且不是拍卖，是直接买卖
+			goods.setSoldOut(0);//已售
 			if (goods.getIsOnline()==null){
 				goods.setIsOnline(1);
 			}
 			if (goods.getIsVerfiy() ==null){
-				goods.setIsVerfiy(1);
+				goods.setIsVerfiy(2);
 			}
 			goods.setCreateTime(new Date());
 			goodsService.insert(goods);

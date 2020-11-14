@@ -81,7 +81,7 @@
     c.is_top,
     c.is_hot, c.like_num, c.reply_num,
     c.is_reply, c.status, c.is_show,
-    c.create_time, c.is_author, c.is_report,0 as commentType,u.icon,u.nickname,u.username from t_article_comment c left join ums_user u on c.user_id=u.id where c.status!=-1
+    c.create_time, c.is_author, c.is_report,0 as commentType,u.head_img,u.nick_name from t_article_comment c left join b_user u on c.user_id=u.id where c.status!=-1
     <if test="content!=null and content!=''">
       and c.content like CONTACT ('%',#{content},'%')
     </if>

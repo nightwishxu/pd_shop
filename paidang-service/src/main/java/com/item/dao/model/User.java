@@ -1,11 +1,13 @@
 package com.item.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -253,6 +255,14 @@ public class User implements Serializable {
 	@Column(name = "qq_openid")
 	private String qqOpenid;
 
+	/**
+	 *推荐顺序
+	 */
+	@ApiModelProperty(value="推荐顺序")
+	@ApiParam(value="推荐顺序")
+	@Column(name = "recommend_sort")
+	private Integer recommendSort;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -491,6 +501,14 @@ public class User implements Serializable {
 
 	public String getQqOpenid() {
 		return qqOpenid;
+	}
+
+	public void setRecommendSort(Integer recommendSort) {
+		this.recommendSort=recommendSort;
+	}
+
+	public Integer getRecommendSort() {
+		return recommendSort;
 	}
 
 }

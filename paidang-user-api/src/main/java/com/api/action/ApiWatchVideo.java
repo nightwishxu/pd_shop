@@ -49,7 +49,7 @@ public class ApiWatchVideo extends ApiBaseController {
     @ApiOperation(value = "视频列表", notes = "分页")
     @RequestMapping("/videoList")
     @ApiMethod(isPage = true, isLogin = false)
-    public TableDataInfo list(MobileInfo mobileInfo, PageLimit page){
+    public  List<AppVideoOnline> list(MobileInfo mobileInfo, PageLimit page){
 //        VideoOnlineExample example = new VideoOnlineExample();
 //        example.createCriteria();
 //        example.setOrderByClause("create_time desc");
@@ -72,13 +72,13 @@ public class ApiWatchVideo extends ApiBaseController {
             record.setState(ex.getState());
             ret.add(record);
         }
-        return getDataTable(ret);
+        return ret;
     }
 
     @ApiOperation(value = "视频评论列表", notes = "分页")
     @RequestMapping("/videoCommentList")
     @ApiMethod(isPage = true, isLogin = false)
-    public TableDataInfo videoCommentList(MobileInfo mobileInfo,
+    public  List<AppNewsComment> videoCommentList(MobileInfo mobileInfo,
                                                  PageLimit pageLimit,
                                                  @ApiParam(value = "视频id",required = true)Integer id){
         //查询待完善
@@ -98,7 +98,7 @@ public class ApiWatchVideo extends ApiBaseController {
             c.setTime(DateUtil.dateToStr(ex.getCreateTime()));
             ret.add(c);
         }
-        return getDataTable(ret);
+        return ret;
     }
 
     @ApiOperation(value = "视频评论数量", notes = "分页")

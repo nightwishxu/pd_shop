@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item
+        label="商品名称"
+        prop="name"
+      >
         <el-input
           v-model="queryParams.name"
           placeholder="请输入商品名称"
@@ -17,8 +20,17 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -42,7 +54,7 @@
           v-hasPermi="['admin:goods:edit']"
         >修改</el-button>
       </el-col> -->
-      <!-- <el-col :span="1.5">
+    <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -61,28 +73,68 @@
           v-hasPermi="['admin:goods:export']"
         >导出</el-button>
       </el-col>-->
-      <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-          <el-button size="mini" circle icon="el-icon-refresh" @click="handleQuery" />
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="showSearch ? '隐藏搜索' : '显示搜索'"
-          placement="top"
-        >
-          <el-button size="mini" circle icon="el-icon-search" @click="showSearch=!showSearch" />
-        </el-tooltip>
-      </div>
+    <div class="top-right-btn">
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="刷新"
+        placement="top"
+      >
+        <el-button
+          size="mini"
+          circle
+          icon="el-icon-refresh"
+          @click="handleQuery"
+        />
+      </el-tooltip>
+      <el-tooltip
+        class="item"
+        effect="dark"
+        :content="showSearch ? '隐藏搜索' : '显示搜索'"
+        placement="top"
+      >
+        <el-button
+          size="mini"
+          circle
+          icon="el-icon-search"
+          @click="showSearch=!showSearch"
+        />
+      </el-tooltip>
+    </div>
     </el-row>
 
-    <el-table v-loading="loading" :data="goodsList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="分类" align="center" prop="cateCode" :formatter="handleCateCode" />
-      <el-table-column label="商品名称" align="center" prop="name" />
-      <el-table-column columnlabel="商品封面" align="center" prop="img">
+    <el-table
+      v-loading="loading"
+      :data="goodsList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="分类"
+        align="center"
+        prop="cateCode"
+        :formatter="handleCateCode"
+      />
+      <el-table-column
+        label="商品名称"
+        align="center"
+        prop="name"
+      />
+      <el-table-column
+        columnlabel="商品封面"
+        align="center"
+        prop="img"
+      >
         <template scope="scope">
-          <el-popover placement="right" title trigger="click">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
             <el-image
               slot="reference"
               :src="scope.row.img"
@@ -94,10 +146,21 @@
           <!-- <img :src="scope.row.img" width="40" height="40" class="head_pic" /> -->
         </template>
       </el-table-column>
-      <el-table-column label="组图" align="center" prop="imgs">
+      <el-table-column
+        label="组图"
+        align="center"
+        prop="imgs"
+      >
         <template scope="scope">
-          <span v-for="(item,index) in scope.row.imgs.split(',')" :key="index">
-            <el-popover placement="left" trigger="click" width="300">
+          <span
+            v-for="(item,index) in scope.row.imgs.split(',')"
+            :key="index"
+          >
+            <el-popover
+              placement="left"
+              trigger="click"
+              width="300"
+            >
               <el-image :src="item" />
               <el-image
                 slot="reference"
@@ -109,12 +172,31 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="成本" align="center" prop="cost" />
-      <el-table-column label="售价" align="center" prop="price" />
-      <el-table-column label="库存" align="center" prop="total" />
-      <el-table-column label="已售" align="center" prop="soldOut" />
+      <el-table-column
+        label="成本"
+        align="center"
+        prop="cost"
+      />
+      <el-table-column
+        label="售价"
+        align="center"
+        prop="price"
+      />
+      <el-table-column
+        label="库存"
+        align="center"
+        prop="total"
+      />
+      <el-table-column
+        label="已售"
+        align="center"
+        prop="soldOut"
+      />
       <!-- <el-table-column label="状态" align="center" prop="isOnline" :formatter="handleIsOnline" /> -->
-      <el-table-column label="审核" align="center">
+      <el-table-column
+        label="审核"
+        align="center"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -136,8 +218,16 @@
           >审核不通过</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="排序(倒序)" align="center" prop="sortOrder" />
-      <el-table-column label="是否设置为推荐" align="center" prop="isSuggest">
+      <el-table-column
+        label="排序(倒序)"
+        align="center"
+        prop="sortOrder"
+      />
+      <el-table-column
+        label="是否设置为推荐"
+        align="center"
+        prop="isSuggest"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -145,11 +235,24 @@
             v-if="(scope.row.isSuggest===1)"
             @click="handleIsSuggest(scope.row)"
           >取消首页推荐</el-button>
-          <el-button type="text" size="mini" v-else @click="handleIsSuggest(scope.row)">设置为首页推荐</el-button>
+          <el-button
+            type="text"
+            size="mini"
+            v-else
+            @click="handleIsSuggest(scope.row)"
+          >设置为首页推荐</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="审核不通过原因" align="center" prop="refuseInfo" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="审核不通过原因"
+        align="center"
+        prop="refuseInfo"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template scope="scope">
           <el-button
             size="mini"
@@ -176,14 +279,36 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="title1" :visible.sync="open1" width="400px" append-to-body>
-      <el-form ref="form1" :model="form1" label-width="150px">
-        <el-form-item label="原因" prop="refuseInfo" id="refuseInfo">
-          <el-input v-model="form1.refuseInfo" placeholder="请输入原因" />
+    <el-dialog
+      :title="title1"
+      :visible.sync="open1"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="原因"
+          prop="refuseInfo"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form1.refuseInfo"
+            placeholder="请输入原因"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="changeStateBtn">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="changeStateBtn"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -196,10 +321,18 @@
       append-to-body
       v-if="isRouterAlive"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="120px"
+      >
         <el-row>
           <el-col :span="8">
-            <el-form-item label="分类" prop="cateCode">
+            <el-form-item
+              label="分类"
+              prop="cateCode"
+            >
               <el-select
                 v-model="form.cateCode"
                 placeholder="请选择下拉选择"
@@ -219,7 +352,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="子分类" prop="cateCodeSoncateCodeSon">
+            <el-form-item
+              label="子分类"
+              prop="cateCodeSoncateCodeSon"
+            >
               <el-select
                 ref="cateCodeSon"
                 v-model="form.cateCodeSon"
@@ -238,19 +374,46 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="商品名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入商品名称" />
+        <el-form-item
+          label="商品名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="请输入商品名称"
+          />
         </el-form-item>
-        <el-form-item label="成本" prop="cost">
-          <el-input v-model="form.cost" placeholder="请输入成本" />
+        <el-form-item
+          label="成本"
+          prop="cost"
+        >
+          <el-input
+            v-model="form.cost"
+            placeholder="请输入成本"
+          />
         </el-form-item>
-        <el-form-item label="售价" prop="price">
-          <el-input v-model="form.price" placeholder="请输入售价" />
+        <el-form-item
+          label="售价"
+          prop="price"
+        >
+          <el-input
+            v-model="form.price"
+            placeholder="请输入售价"
+          />
         </el-form-item>
-        <el-form-item label="库存" prop="total">
-          <el-input v-model="form.total" placeholder="请输入库存" />
+        <el-form-item
+          label="库存"
+          prop="total"
+        >
+          <el-input
+            v-model="form.total"
+            placeholder="请输入库存"
+          />
         </el-form-item>
-        <el-form-item label="商品封面" prop="img">
+        <el-form-item
+          label="商品封面"
+          prop="img"
+        >
           <single-upload
             v-model="form.img"
             style="width: 300px;display: inline-block;margin-left: 10px"
@@ -258,51 +421,120 @@
         </el-form-item>
         <el-form-item label="图片">
           <!-- <el-input v-model="form.imgs" placeholder="请输入图片" /> -->
-          <multi-upload ref="upload" v-model="imgfileList"></multi-upload>
+          <multi-upload
+            ref="upload"
+            v-model="imgfileList"
+          ></multi-upload>
         </el-form-item>
-        <el-form-item label="轮播图视频封面" prop="bannerVideoFace">
+        <el-form-item
+          label="轮播图视频封面"
+          prop="bannerVideoFace"
+        >
           <single-upload
             v-model="form.bannerVideoFace"
             style="width: 300px;display: inline-block;margin-left: 10px"
           ></single-upload>
         </el-form-item>
-        <el-form-item label="轮播图视频" prop="bannerVideo">
+        <el-form-item
+          label="轮播图视频"
+          prop="bannerVideo"
+        >
           <video-upload
             v-model="form.bannerVideo"
             style="width: 300px;display: inline-block;margin-left: 10px"
           ></video-upload>
         </el-form-item>
-        <el-form-item label="封面宽度" prop="width">
-          <el-input v-model="form.width" placeholder="请输入封面宽度" />
+        <el-form-item
+          label="封面宽度"
+          prop="width"
+        >
+          <el-input
+            v-model="form.width"
+            placeholder="请输入封面宽度"
+          />
         </el-form-item>
-        <el-form-item label="封面高度" prop="height">
-          <el-input v-model="form.height" placeholder="请输入封面高度" />
+        <el-form-item
+          label="封面高度"
+          prop="height"
+        >
+          <el-input
+            v-model="form.height"
+            placeholder="请输入封面高度"
+          />
         </el-form-item>
-        <el-form-item label="商品描述" prop="info">
-          <el-input v-model="form.info" placeholder="请输入商品描述" />
+        <el-form-item
+          label="商品描述"
+          prop="info"
+        >
+          <el-input
+            v-model="form.info"
+            placeholder="请输入商品描述"
+          />
         </el-form-item>
 
-        <el-form-item label="排序(倒序)" prop="sortOrder">
-          <el-input v-model="form.sortOrder" placeholder="请输入排序(倒序)" />
+        <el-form-item
+          label="排序(倒序)"
+          prop="sortOrder"
+        >
+          <el-input
+            v-model="form.sortOrder"
+            placeholder="请输入排序(倒序)"
+          />
         </el-form-item>
 
-        <el-form-item label="规格" prop="spec">
-          <el-input v-model="form.spec" placeholder="请输入规格" />
+        <el-form-item
+          label="规格"
+          prop="spec"
+        >
+          <el-input
+            v-model="form.spec"
+            placeholder="请输入规格"
+          />
         </el-form-item>
-        <el-form-item label="尺寸--长" prop="ccLength">
-          <el-input v-model="form.ccLength" placeholder="请输入尺寸--长" />
+        <el-form-item
+          label="尺寸--长"
+          prop="ccLength"
+        >
+          <el-input
+            v-model="form.ccLength"
+            placeholder="请输入尺寸--长"
+          />
         </el-form-item>
-        <el-form-item label="尺寸--宽" prop="ccWidth">
-          <el-input v-model="form.ccWidth" placeholder="请输入尺寸--宽" />
+        <el-form-item
+          label="尺寸--宽"
+          prop="ccWidth"
+        >
+          <el-input
+            v-model="form.ccWidth"
+            placeholder="请输入尺寸--宽"
+          />
         </el-form-item>
-        <el-form-item label="尺寸--高" prop="ccHeight">
-          <el-input v-model="form.ccHeight" placeholder="请输入尺寸--高" />
+        <el-form-item
+          label="尺寸--高"
+          prop="ccHeight"
+        >
+          <el-input
+            v-model="form.ccHeight"
+            placeholder="请输入尺寸--高"
+          />
         </el-form-item>
-        <el-form-item label="重量" prop="weight">
-          <el-input v-model="form.weight" placeholder="请输入重量" />
+        <el-form-item
+          label="重量"
+          prop="weight"
+        >
+          <el-input
+            v-model="form.weight"
+            placeholder="请输入重量"
+          />
         </el-form-item>
-        <el-form-item label="材质" prop="material">
-          <el-input v-model="form.material" placeholder="请输入材质" />
+        <el-form-item
+          label="材质"
+          prop="material"
+        >
+          <el-input
+            v-model="form.material"
+            placeholder="请输入材质"
+          />
         </el-form-item>
       </el-form>
       <!-- <div slot="footer" class="dialog-footer">
@@ -841,7 +1073,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          this.form.source = 3;
+          this.form.source = 4;
           this.form.type = 1;
           // this.form.imgs = this.imgfileList.join(",")
 

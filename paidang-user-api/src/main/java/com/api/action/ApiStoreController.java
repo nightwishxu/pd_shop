@@ -13,6 +13,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.base.util.StringUtil;
 import com.item.daoEx.model.AdEx;
@@ -23,10 +24,12 @@ import com.paidang.daoEx.model.GoodsAuctionEx;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.util.PaidangConst;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,6 +62,9 @@ public class ApiStoreController extends ApiBaseController {
     @Autowired
     private AuthEnterpriseService authEnterpriseService;
 
+    @Autowired
+    private RedisCache redisCache;
+
 
     public enum MStoreGoodsCateList {
         zb("1","钟表","0"),
@@ -76,7 +82,34 @@ public class ApiStoreController extends ApiBaseController {
         hlbs("12","红蓝宝石","6"),
         zml("13","祖母绿","6"),
         zz("14","珍珠","6"),
-        bx("15","碧玺","6");
+        bx("15","碧玺","6"),
+
+
+        yczb("101","玉翠珠宝","0"),
+        gyzp("102","工艺作品","0"),
+        wwzx("103","文玩杂项","0"),
+        zstc("104","紫砂陶瓷","0"),
+        qbyp("105","钱币邮票","0"),
+        shzk("106","书画篆刻","0"),
+        hnwy("107","花鸟文娱","0"),
+        qt("108","其他","0"),
+
+        ;
+
+        public static MStoreGoodsCateList getByCode(String type) {
+            if (StringUtils.isBlank(type)) {
+                return null;
+            }
+
+            MStoreGoodsCateList result = null;
+            for (MStoreGoodsCateList tmp : MStoreGoodsCateList.values()) {
+                if (Objects.equals(tmp.getCode(), type)) {
+                    result = tmp;
+                    break;
+                }
+            }
+            return result;
+        }
 
         private String code;
         private String name;
@@ -85,6 +118,18 @@ public class ApiStoreController extends ApiBaseController {
             this.code = code;
             this.name = name;
             this.fid = fid;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getFid() {
+            return fid;
         }
     }
 
@@ -150,9 +195,9 @@ public class ApiStoreController extends ApiBaseController {
     @ApiOperation(value = "认证商场列表", notes = "分页")
     @RequestMapping("/storeGoodsList")
     @ApiMethod(isLogin = false)
-    public TableDataInfo storeGoodsList(MobileInfo mobileInfo,
-                                        @ApiParam(value="code(1钟表，2翡翠，3和田玉，4古董艺术品，5书画，6彩色珠宝，7钻石，8其他，9明清砚台，10文玩，" +
-                                                            "11杂项,12红蓝宝石，13祖母绿，14珍珠，15碧玺)",required = true) Integer type,
+    public List<AppStoreGoodsDetail> storeGoodsList(MobileInfo mobileInfo,
+                                        @ApiParam(value="旧类型(1钟表，2翡翠，3和田玉，4古董艺术品，5书画，6彩色珠宝，7钻石，8其他，9明清砚台，10文玩，" +
+                                                            "11杂项,12红蓝宝石，13祖母绿，14珍珠，15碧玺)， 新类型（101:玉翠珠宝,102:工艺作品,103:文玩杂项,104:紫砂陶瓷,105:钱币邮票,106:书画篆刻,107:花鸟文娱,108:其他）",required = true) Integer type,
                                         PageLimit pageLimit){
         startPage();
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
@@ -183,9 +228,10 @@ public class ApiStoreController extends ApiBaseController {
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
+            record.setOrgId(ex.getOrgId());
             list2.add(record);
         }
-        return getDataTable(list2);
+        return list2;
     }
 
     /**
@@ -195,7 +241,7 @@ public class ApiStoreController extends ApiBaseController {
     @RequestMapping("/storeJDGoodsLists")
     @ApiMethod(isLogin = false)
     public List<AppStoreGoodsDetail> storeJDGoodsLists(MobileInfo mobileInfo,
-                                                       @ApiParam(value="code(1奢侈品珠宝，2手表，3钻石，4贵金属，5翡翠玉石，6和田玉，7其他)",required = true) Integer type,
+                                                       @ApiParam(value="code(1奢侈品珠宝，2手表，3钻石，4贵金属，5翡翠玉石，6和田玉，7其他) 新类型（101:玉翠珠宝,102:工艺作品,103:文玩杂项,104:紫砂陶瓷,105:钱币邮票,106:书画篆刻,107:花鸟文娱,108:其他）",required = true) Integer type,
                                                        PageLimit pageLimit){
         startPage();
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
@@ -213,6 +259,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
+            record.setOrgId(ex.getOrgId());
             list2.add(record);
         }
         return list2;
@@ -249,14 +296,61 @@ public class ApiStoreController extends ApiBaseController {
             record.setPrice(ex.getPrice() + "");
             record.setAuthPrice(ex.getPrice()+"");
             record.setSource(ex.getSource());
+            record.setOrgId(ex.getOrgId());
             list2.add(record);
         }
         return list2;
     }
 
-    /**
-     * 认证商场物品详情
-     */
+    @ApiOperation(value = "物品详情", notes = "不需要登录")
+    @RequestMapping("/goodsDetail")
+    @ApiMethod(isLogin = false)
+    public AppStoreGoodsDetail goodsDetail(@ApiParam(value="id",required = true) Integer id){
+        AppStoreGoodsDetail appStoreGoodsDetail = new AppStoreGoodsDetail();
+        Goods ex = goodsService.selectByPrimaryKey(id);
+        appStoreGoodsDetail.setId(ex.getId());
+        appStoreGoodsDetail.setImages(ex.getImgs());
+        appStoreGoodsDetail.setTitle(ex.getName());
+        appStoreGoodsDetail.setPrice(ex.getPrice()+"");
+        appStoreGoodsDetail.setAuthPrice(ex.getCost()+"");
+        appStoreGoodsDetail.setDeclare(ex.getInfo());
+        appStoreGoodsDetail.setGoodsDescription(getPage(id.toString(),1));
+        appStoreGoodsDetail.setSource(ex.getSource());
+        appStoreGoodsDetail.setBannerVideoFace(ex.getBannerVideoFace());
+        appStoreGoodsDetail.setBannerVideo(ex.getBannerVideo());
+        appStoreGoodsDetail.setIntroduction(ex.getIntroduction());
+        appStoreGoodsDetail.setGoodsAttribute(ex.getGoodsAttribute());
+        appStoreGoodsDetail.setOnlineTime(ex.getOnlineTime());
+        appStoreGoodsDetail.setAuctionStartTime(ex.getAuctionStartTime());
+        appStoreGoodsDetail.setAuctionEndTime(ex.getAuctionEndTime());
+        appStoreGoodsDetail.setStartPrice(ex.getStartPrice());
+        appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
+        appStoreGoodsDetail.setLabels(ex.getLabels());
+
+        appStoreGoodsDetail.setCateCode(ex.getCateCode());
+        PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
+        appStoreGoodsDetail.setOrgId(pawnOrg.getId());
+        appStoreGoodsDetail.setOrgName(pawnOrg.getName());
+        appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
+        appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
+        appStoreGoodsDetail.setImg(ex.getImg());
+
+
+        if (ex.getDealType()!=null &&  ex.getDealType()==2){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("goods_id",id);
+            List<GoodsAuctionEx> goodsAuctionExes = goodsAuctionService.selectByAuctionUser(map);
+            appStoreGoodsDetail.setGoodsAuctionList(goodsAuctionExes);
+        }
+
+        return  appStoreGoodsDetail;
+    }
+
+
+
+        /**
+         * 认证商场物品详情
+         */
     @ApiOperation(value = "认证商场物品详情", notes = "不需要登录")
     @RequestMapping("/storeGoodsDetail")
     @ApiMethod(isLogin = false)
@@ -273,6 +367,14 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setSource(ex.getSource());
         appStoreGoodsDetail.setBannerVideoFace(ex.getBannerVideoFace());
         appStoreGoodsDetail.setBannerVideo(ex.getBannerVideo());
+        appStoreGoodsDetail.setIntroduction(ex.getIntroduction());
+        appStoreGoodsDetail.setGoodsAttribute(ex.getGoodsAttribute());
+        appStoreGoodsDetail.setOnlineTime(ex.getOnlineTime());
+        appStoreGoodsDetail.setAuctionStartTime(ex.getAuctionStartTime());
+        appStoreGoodsDetail.setAuctionEndTime(ex.getAuctionEndTime());
+        appStoreGoodsDetail.setStartPrice(ex.getStartPrice());
+        appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
+        appStoreGoodsDetail.setLabels(ex.getLabels());
         //机构上传
 //        if(!ObjectUtils.isEmpty(ex.getOrgId())){
             PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
@@ -504,7 +606,7 @@ public class ApiStoreController extends ApiBaseController {
         for(Goods ex : goodsList){
             AppStoreGoodsDetail c = new AppStoreGoodsDetail();
             c.setSource(ex.getSource());
-
+            c.setOrgId(ex.getOrgId());
                 if(ex.getPrice().compareTo(new BigDecimal("30000")) == -1 || null == ex.getGoodsId()){
                     //普通绝当商品
                     c.setType(0);
@@ -548,14 +650,68 @@ public class ApiStoreController extends ApiBaseController {
         return ret;
     }
 
+    @ApiOperation(value = "绝当商城竞拍出价", notes = "登陆")
+    @RequestMapping("/autionBid")
+    @ApiMethod(isLogin = true)
+    public void auctionBid(MobileInfo mobileInfo,
+                              @ApiParam(value="商品id",required = true) Integer id,
+                              @ApiParam(value="出价",required = true) BigDecimal price){
+        if (redisCache.exists("auctionBid:"+id)){
+            throw new ApiException(400,"请求频繁，请稍后");
+        }
+        redisCache.expire("auctionBid:"+id,6);
+        Goods goods = goodsService.selectByPrimaryKey(id);
+        BaseUtils.check(goods==null,"商品不存在");
+
+        BaseUtils.check(goods.getDealType()!=2,"该商品不允许竞拍");
+
+        Date date = new Date();
+
+        BaseUtils.check(date.compareTo(goods.getAuctionEndTime())>=0,"竞拍已结束");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("goods_id",id);
+        BigDecimal maxPrice = goodsAuctionService.selectMaxPrice(map);
+        BigDecimal raise = BigDecimal.ZERO;
+        if (maxPrice == null){
+            raise = price.subtract(goods.getStartPrice());
+
+        }else {
+            raise = price.subtract(maxPrice);
+        }
+        BaseUtils.check(raise.compareTo(BigDecimal.ZERO)<=0,"出价不能小于起拍价");
+        BigDecimal divide = raise.divide(goods.getRaisePriceRange(), 0, BigDecimal.ROUND_HALF_UP);
+        BaseUtils.check(new BigDecimal(divide.intValue()).compareTo(divide)!=0,"出价必须是加价幅度的倍数");
+        BaseUtils.check(divide.intValue()>2 || divide.intValue()<1,"出价必须是加价幅度的1-2倍");
+
+
+        //插入竞拍表 goods_auction
+        GoodsAuction c = new GoodsAuction();
+        c.setGoodsId(id);
+        c.setUserId(mobileInfo.getUserId());
+        c.setPrice(price);
+        int result = goodsAuctionService.insert(c);
+        if(result == 0){
+            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
+        }
+        //更新商品表的最新消息
+        goods.setMaxAutionId(c.getId());
+        goods.setMaxAuction(price);
+        goods.setUserId(mobileInfo.getUserId());
+        int result2 = goodsService.updateByPrimaryKey(goods);
+        if(result2 == 0){
+            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
+        }
+    }
+
     /**
      * 绝当商城竞拍--出价
      * @param mobileInfo
      * @return
      */
-    @ApiOperation(value = "绝当商城竞拍出价", notes = "登陆")
-    @RequestMapping("/storeJDGoodsJp")
-    @ApiMethod(isLogin = true)
+//    @ApiOperation(value = "绝当商城竞拍出价", notes = "登陆")
+//    @RequestMapping("/storeJDGoodsJp")
+//    @ApiMethod(isLogin = true)
     public Ret storeJDGoodsJp(MobileInfo mobileInfo,
                               @ApiParam(value="id",required = true) Integer id,
                               @ApiParam(value="出价",required = true) String price)throws Exception{
@@ -700,37 +856,7 @@ public class ApiStoreController extends ApiBaseController {
                     c.setImg(ex.getImg());
                     c.setTitle(ex.getName());
                     c.setState(1);
-                    if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zb.code)){
-                        c.setGoodsType(MStoreGoodsCateList.zb.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.fc.code)){
-                        c.setGoodsType(MStoreGoodsCateList.fc.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hty.code)){
-                        c.setGoodsType(MStoreGoodsCateList.hty.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.gdysp.code)){
-                        c.setGoodsType(MStoreGoodsCateList.gdysp.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.sh.code)){
-                        c.setGoodsType(MStoreGoodsCateList.sh.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.cszb.code)){
-                        c.setGoodsType(MStoreGoodsCateList.cszb.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zs.code)){
-                        c.setGoodsType(MStoreGoodsCateList.zs.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.other.code)){
-                        c.setGoodsType(MStoreGoodsCateList.other.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.mqyt.code)){
-                        c.setGoodsType(MStoreGoodsCateList.mqyt.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.ww.code)){
-                        c.setGoodsType(MStoreGoodsCateList.ww.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zx.code)){
-                        c.setGoodsType(MStoreGoodsCateList.zx.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hlbs.code)){
-                        c.setGoodsType(MStoreGoodsCateList.hlbs.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zml.code)){
-                        c.setGoodsType(MStoreGoodsCateList.zml.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zz.code)){
-                        c.setGoodsType(MStoreGoodsCateList.zz.name);
-                    }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.bx.code)){
-                        c.setGoodsType(MStoreGoodsCateList.bx.name);
-                    }
+                    c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
                     cnt++;
                 }else{
                     continue;
@@ -747,37 +873,7 @@ public class ApiStoreController extends ApiBaseController {
                         c.setPrice(ex.getPrice()+"");
                         c.setTitle(ex.getName());
                         c.setState(2);
-                        if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zb.code)){
-                            c.setGoodsType(MStoreGoodsCateList.zb.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.fc.code)){
-                            c.setGoodsType(MStoreGoodsCateList.fc.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hty.code)){
-                            c.setGoodsType(MStoreGoodsCateList.hty.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.gdysp.code)){
-                            c.setGoodsType(MStoreGoodsCateList.gdysp.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.sh.code)){
-                            c.setGoodsType(MStoreGoodsCateList.sh.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.cszb.code)){
-                            c.setGoodsType(MStoreGoodsCateList.cszb.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zs.code)){
-                            c.setGoodsType(MStoreGoodsCateList.zs.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.other.code)){
-                            c.setGoodsType(MStoreGoodsCateList.other.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.mqyt.code)){
-                            c.setGoodsType(MStoreGoodsCateList.mqyt.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.ww.code)){
-                            c.setGoodsType(MStoreGoodsCateList.ww.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zx.code)){
-                            c.setGoodsType(MStoreGoodsCateList.zx.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hlbs.code)){
-                            c.setGoodsType(MStoreGoodsCateList.hlbs.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zml.code)){
-                            c.setGoodsType(MStoreGoodsCateList.zml.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zz.code)){
-                            c.setGoodsType(MStoreGoodsCateList.zz.name);
-                        }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.bx.code)){
-                            c.setGoodsType(MStoreGoodsCateList.bx.name);
-                        }
+                        c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
                         cnt2++;
                     }else{
                         continue;
@@ -799,37 +895,7 @@ public class ApiStoreController extends ApiBaseController {
                             int count = goodsAuctionService.countByExample(goodsAuctionExample);
                             c.setAucCount(count);
                             c.setState(3);
-                            if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zb.code)){
-                                c.setGoodsType(MStoreGoodsCateList.zb.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.fc.code)){
-                                c.setGoodsType(MStoreGoodsCateList.fc.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hty.code)){
-                                c.setGoodsType(MStoreGoodsCateList.hty.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.gdysp.code)){
-                                c.setGoodsType(MStoreGoodsCateList.gdysp.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.sh.code)){
-                                c.setGoodsType(MStoreGoodsCateList.sh.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.cszb.code)){
-                                c.setGoodsType(MStoreGoodsCateList.cszb.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zs.code)){
-                                c.setGoodsType(MStoreGoodsCateList.zs.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.other.code)){
-                                c.setGoodsType(MStoreGoodsCateList.other.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.mqyt.code)){
-                                c.setGoodsType(MStoreGoodsCateList.mqyt.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.ww.code)){
-                                c.setGoodsType(MStoreGoodsCateList.ww.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zx.code)){
-                                c.setGoodsType(MStoreGoodsCateList.zx.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.hlbs.code)){
-                                c.setGoodsType(MStoreGoodsCateList.hlbs.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zml.code)){
-                                c.setGoodsType(MStoreGoodsCateList.zml.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.zz.code)){
-                                c.setGoodsType(MStoreGoodsCateList.zz.name);
-                            }else if(ex.getCateCode().toString().equals(MStoreGoodsCateList.bx.code)){
-                                c.setGoodsType(MStoreGoodsCateList.bx.name);
-                            }
+                            c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
                             cnt2++;
                         }else{
                             //超过时间不显示，并且修改他为竞拍失效

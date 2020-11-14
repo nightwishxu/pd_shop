@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -22,10 +24,10 @@ public class Goods implements Serializable {
 	private Integer id;
 
 	/**
-	 *1平台2机构3服务商4供应商5寄拍6个人7企业
+	 *1平台2机构3服务商4供应商5寄拍6个人7企业8龙城画库
 	 */
-	@ApiModelProperty(value="1平台2机构3服务商4供应商5寄拍6个人7企业")
-	@ApiParam(value="1平台2机构3服务商4供应商5寄拍6个人7企业")
+	@ApiModelProperty(value="1平台2机构3服务商4供应商5寄拍6个人7企业8龙城画库")
+	@ApiParam(value="1平台2机构3服务商4供应商5寄拍6个人7企业8龙城画库")
 	@Column(name = "source")
 	private Integer source;
 
@@ -48,7 +50,7 @@ public class Goods implements Serializable {
 	/**
 	 *分类code
 	 */
-	@ApiModelProperty(value="分类code")
+	@ApiModelProperty(value="分类code,101:玉翠珠宝,102:工艺作品,103:文玩杂项,104:紫砂陶瓷,105:钱币邮票,106:书画篆刻,107:花鸟文娱,108:其他")
 	@ApiParam(value="分类code")
 	@Column(name = "cate_code")
 	private Integer cateCode;
@@ -118,10 +120,10 @@ public class Goods implements Serializable {
 	private Integer soldOut;
 
 	/**
-	 *1上架0下架-1删除 2新增待上架
+	 *1上架0下架-1删除 2新增待上架3定时上架
 	 */
-	@ApiModelProperty(value="1上架0下架-1删除 2新增待上架")
-	@ApiParam(value="1上架0下架-1删除 2新增待上架")
+	@ApiModelProperty(value="1上架0下架-1删除 2新增待上架3定时上架")
+	@ApiParam(value="1上架0下架-1删除 2新增待上架3定时上架")
 	@Column(name = "is_online")
 	private Integer isOnline;
 
@@ -302,30 +304,6 @@ public class Goods implements Serializable {
 	private String material;
 
 	/**
-	 *主材
-	 */
-	@ApiModelProperty(value="主材")
-	@ApiParam(value="主材")
-	@Column(name = "main_material")
-	private String mainMaterial;
-
-	/**
-	 *辅材
-	 */
-	@ApiModelProperty(value="辅材")
-	@ApiParam(value="辅材")
-	@Column(name = "other_material")
-	private String otherMaterial;
-
-	/**
-	 *尺寸--长
-	 */
-	@ApiModelProperty(value="尺寸--长")
-	@ApiParam(value="尺寸--长")
-	@Column(name = "cc_length")
-	private String ccLength;
-
-	/**
 	 *尺寸--宽
 	 */
 	@ApiModelProperty(value="尺寸--宽")
@@ -348,6 +326,30 @@ public class Goods implements Serializable {
 	@ApiParam(value="尺寸（长*宽*高）")
 	@Column(name = "cc_all")
 	private String ccAll;
+
+	/**
+	 *主材
+	 */
+	@ApiModelProperty(value="主材")
+	@ApiParam(value="主材")
+	@Column(name = "main_material")
+	private String mainMaterial;
+
+	/**
+	 *辅材
+	 */
+	@ApiModelProperty(value="辅材")
+	@ApiParam(value="辅材")
+	@Column(name = "other_material")
+	private String otherMaterial;
+
+	/**
+	 *尺寸--长
+	 */
+	@ApiModelProperty(value="尺寸--长")
+	@ApiParam(value="尺寸--长")
+	@Column(name = "cc_length")
+	private String ccLength;
 
 	/**
 	 *创作年代
@@ -420,6 +422,102 @@ public class Goods implements Serializable {
 	@ApiParam(value="轮播图视频封面")
 	@Column(name = "banner_video_face")
 	private String bannerVideoFace;
+
+	/**
+	 *简介
+	 */
+	@ApiModelProperty(value="简介")
+	@ApiParam(value="简介")
+	@Column(name = "introduction")
+	private String introduction;
+
+	/**
+	 *商品属性
+	 */
+	@ApiModelProperty(value="商品属性")
+	@ApiParam(value="商品属性")
+	@Column(name = "goods_attribute")
+	private String goodsAttribute;
+
+	/**
+	 *1 一口价 2 竞拍
+	 */
+	@ApiModelProperty(value="1 一口价 2 竞拍")
+	@ApiParam(value="1 一口价 2 竞拍")
+	@Column(name = "deal_type")
+	private Integer dealType;
+
+	/**
+	 *定时上架时间
+	 */
+	@ApiModelProperty(value="定时上架时间")
+	@ApiParam(value="定时上架时间")
+	@Column(name = "online_time")
+	private java.util.Date onlineTime;
+
+	/**
+	 *拍卖开始时间
+	 */
+	@ApiModelProperty(value="拍卖开始时间")
+	@ApiParam(value="拍卖开始时间")
+	@Column(name = "auction_start_time")
+	private java.util.Date auctionStartTime;
+
+	/**
+	 *拍卖结束时间
+	 */
+	@ApiModelProperty(value="拍卖结束时间")
+	@ApiParam(value="拍卖结束时间")
+	@Column(name = "auction_end_time")
+	private java.util.Date auctionEndTime;
+
+	/**
+	 *起拍价
+	 */
+	@ApiModelProperty(value="起拍价")
+	@ApiParam(value="起拍价")
+	@Column(name = "start_price")
+	private java.math.BigDecimal startPrice;
+
+	/**
+	 *加价幅度
+	 */
+	@ApiModelProperty(value="加价幅度")
+	@ApiParam(value="加价幅度")
+	@Column(name = "raise_price_range")
+	private java.math.BigDecimal raisePriceRange;
+
+	/**
+	 *标签
+	 */
+	@ApiModelProperty(value="标签")
+	@ApiParam(value="标签")
+	@Column(name = "labels")
+	private String labels;
+
+	/**
+	 *访问量
+	 */
+	@ApiModelProperty(value="访问量")
+	@ApiParam(value="访问量")
+	@Column(name = "pv")
+	private Integer pv;
+
+	/**
+	 *独立用户
+	 */
+	@ApiModelProperty(value="独立用户")
+	@ApiParam(value="独立用户")
+	@Column(name = "uv")
+	private Integer uv;
+
+	/**
+	 *新用户
+	 */
+	@ApiModelProperty(value="新用户")
+	@ApiParam(value="新用户")
+	@Column(name = "nv")
+	private Integer nv;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -709,30 +807,6 @@ public class Goods implements Serializable {
 		return material;
 	}
 
-	public void setMainMaterial(String mainMaterial) {
-		this.mainMaterial=mainMaterial == null ? mainMaterial : mainMaterial.trim();
-	}
-
-	public String getMainMaterial() {
-		return mainMaterial;
-	}
-
-	public void setOtherMaterial(String otherMaterial) {
-		this.otherMaterial=otherMaterial == null ? otherMaterial : otherMaterial.trim();
-	}
-
-	public String getOtherMaterial() {
-		return otherMaterial;
-	}
-
-	public void setCcLength(String ccLength) {
-		this.ccLength=ccLength == null ? ccLength : ccLength.trim();
-	}
-
-	public String getCcLength() {
-		return ccLength;
-	}
-
 	public void setCcWidth(String ccWidth) {
 		this.ccWidth=ccWidth == null ? ccWidth : ccWidth.trim();
 	}
@@ -755,6 +829,30 @@ public class Goods implements Serializable {
 
 	public String getCcAll() {
 		return ccAll;
+	}
+
+	public void setMainMaterial(String mainMaterial) {
+		this.mainMaterial=mainMaterial == null ? mainMaterial : mainMaterial.trim();
+	}
+
+	public String getMainMaterial() {
+		return mainMaterial;
+	}
+
+	public void setOtherMaterial(String otherMaterial) {
+		this.otherMaterial=otherMaterial == null ? otherMaterial : otherMaterial.trim();
+	}
+
+	public String getOtherMaterial() {
+		return otherMaterial;
+	}
+
+	public void setCcLength(String ccLength) {
+		this.ccLength=ccLength == null ? ccLength : ccLength.trim();
+	}
+
+	public String getCcLength() {
+		return ccLength;
 	}
 
 	public void setCreateYear(String createYear) {
@@ -827,6 +925,102 @@ public class Goods implements Serializable {
 
 	public String getBannerVideoFace() {
 		return bannerVideoFace;
+	}
+
+	public void setIntroduction(String introduction) {
+		this.introduction=introduction == null ? introduction : introduction.trim();
+	}
+
+	public String getIntroduction() {
+		return introduction;
+	}
+
+	public void setGoodsAttribute(String goodsAttribute) {
+		this.goodsAttribute=goodsAttribute == null ? goodsAttribute : goodsAttribute.trim();
+	}
+
+	public String getGoodsAttribute() {
+		return goodsAttribute;
+	}
+
+	public void setDealType(Integer dealType) {
+		this.dealType=dealType;
+	}
+
+	public Integer getDealType() {
+		return dealType;
+	}
+
+	public void setOnlineTime(java.util.Date onlineTime) {
+		this.onlineTime=onlineTime;
+	}
+
+	public java.util.Date getOnlineTime() {
+		return onlineTime;
+	}
+
+	public void setAuctionStartTime(java.util.Date auctionStartTime) {
+		this.auctionStartTime=auctionStartTime;
+	}
+
+	public java.util.Date getAuctionStartTime() {
+		return auctionStartTime;
+	}
+
+	public void setAuctionEndTime(java.util.Date auctionEndTime) {
+		this.auctionEndTime=auctionEndTime;
+	}
+
+	public java.util.Date getAuctionEndTime() {
+		return auctionEndTime;
+	}
+
+	public void setStartPrice(java.math.BigDecimal startPrice) {
+		this.startPrice=startPrice;
+	}
+
+	public java.math.BigDecimal getStartPrice() {
+		return startPrice;
+	}
+
+	public void setRaisePriceRange(java.math.BigDecimal raisePriceRange) {
+		this.raisePriceRange=raisePriceRange;
+	}
+
+	public java.math.BigDecimal getRaisePriceRange() {
+		return raisePriceRange;
+	}
+
+	public void setLabels(String labels) {
+		this.labels=labels == null ? labels : labels.trim();
+	}
+
+	public String getLabels() {
+		return labels;
+	}
+
+	public void setPv(Integer pv) {
+		this.pv=pv;
+	}
+
+	public Integer getPv() {
+		return pv;
+	}
+
+	public void setUv(Integer uv) {
+		this.uv=uv;
+	}
+
+	public Integer getUv() {
+		return uv;
+	}
+
+	public void setNv(Integer nv) {
+		this.nv=nv;
+	}
+
+	public Integer getNv() {
+		return nv;
 	}
 
 }

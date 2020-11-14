@@ -164,7 +164,6 @@ public class Article implements Serializable {
 	 */
 	@ApiModelProperty(value="")
 	@ApiParam(value="")
-	@Column(name = "create_time")
 	private java.util.Date createTime;
 
 	/**
@@ -198,6 +197,22 @@ public class Article implements Serializable {
 	@ApiParam(value="公告描述")
 	@Column(name = "description")
 	private String description;
+
+	/**
+	 *1 富文本 2其它动态 3 商品 4 h5链接
+	 */
+	@ApiModelProperty(value="1 富文本 2其它动态 3 商品 4 h5链接")
+	@ApiParam(value="1 富文本 2其它动态 3 商品 4 h5链接")
+	@Column(name = "ref_type")
+	private Integer refType;
+
+	/**
+	 *
+	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "ref_url")
+	private String refUrl;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -381,6 +396,22 @@ public class Article implements Serializable {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public void setRefType(Integer refType) {
+		this.refType=refType;
+	}
+
+	public Integer getRefType() {
+		return refType;
+	}
+
+	public void setRefUrl(String refUrl) {
+		this.refUrl=refUrl == null ? refUrl : refUrl.trim();
+	}
+
+	public String getRefUrl() {
+		return refUrl;
 	}
 
 }

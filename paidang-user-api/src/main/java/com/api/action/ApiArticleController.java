@@ -65,7 +65,9 @@ public class ApiArticleController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public Integer add(MobileInfo mobileInfo,
                             @RequestParam @ApiParam(value = "内容", required = true) String content,
+                            @RequestParam @ApiParam(value = "1 用户帖子 3用户视频", required = true) Integer type,
                             @RequestParam(required = false) @ApiParam(value = "图片", required = false) String imgs,
+                            @RequestParam(required = false) @ApiParam(value = "视频", required = false) String video,
 //                            @RequestParam @ApiParam(value = "标签信息", required = false)String labels,
                             @RequestParam @ApiParam(value = "状态：2发布", required = true) Integer status){
 
@@ -88,7 +90,8 @@ public class ApiArticleController extends ApiBaseController {
         article.setPraiseCount(0);
         article.setContent(StringUtils.unescapeXss(content));
         article.setImgs(StringUtils.unescapeXss(imgs));
-        article.setType(1);
+        article.setType(type);
+        article.setVideo(video);
 //        article.setLabels(labels);
         article.setCreateTime(date);
         article.setReleaseTime(date);
@@ -107,6 +110,7 @@ public class ApiArticleController extends ApiBaseController {
     public Integer edit(MobileInfo mobileInfo,
                         @RequestParam(required = false) @ApiParam(value = "内容", required = false)String content,
                         @RequestParam(required = false) @ApiParam(value = "图片", required = false)String imgs,
+                        @RequestParam(required = false) @ApiParam(value = "视频", required = false)String video,
 //                        @RequestParam @ApiParam(value = "标签信息", required = false)String labels,
                         @RequestParam @ApiParam(value = "状态：2发布", required = true)Integer status,
                         @RequestParam @ApiParam(value = "动态id", required = true) Integer id){
@@ -116,6 +120,7 @@ public class ApiArticleController extends ApiBaseController {
 //        article.setLabels(labels);
         article.setStatus(status);
         article.setUpdateTime(new Date());
+        article.setVideo(video);
 //        wxMemberInfoService.updateArticleCount(mobileInfo.getMemberid());
         return articleService.updateByPrimaryKeyWithBLOBs(article);
     }
@@ -163,7 +168,7 @@ public class ApiArticleController extends ApiBaseController {
     public Integer praise(MobileInfo mobileInfo,
                            @RequestParam @ApiParam(value = "0取消点赞，1点赞",required = true) Integer type,
                           @RequestParam(required = false) @ApiParam(value = "用户头像",required = false) String icon,
-                          @RequestParam @ApiParam(value = "昵称",required = true) String nickname,
+                          @RequestParam @ApiParam(value = "昵称",required = true) String nickName,
                           @RequestParam(required = false) @ApiParam(value = "动态图片",required = false) String img,
                           @RequestParam @ApiParam(value = "动态作者id",required = true) Integer authorId,
                            @RequestParam @ApiParam(value = "动态id", required = true)Integer id){
@@ -187,7 +192,7 @@ public class ApiArticleController extends ApiBaseController {
                 entity.setType(0);
                 entity.setIcon(StringUtils.unescapeXss(icon));
                 entity.setStatus(1);
-                entity.setNickname(nickname);
+                entity.setNickName(nickName);
                 entity.setImg(StringUtils.unescapeXss(img));
                 entity.setAuthorId(authorId);
                 articleCollectPraiseService.insert(entity);
@@ -241,6 +246,21 @@ public class ApiArticleController extends ApiBaseController {
         return articleEx;
     }
 
+    @ApiOperation(value = "最新动态列表", notes = "")
+    @RequestMapping(value = "/list",method = {RequestMethod.POST})
+    @ApiMethod(isLogin = false,isPage = true)
+    public List<ArticleEx> list(MobileInfo mobileInfo,
+                                @ApiParam(value = "类型 1用户帖子 2后台帖子 3用户视频", required = true)Integer type){
+        startPage();
+        ArticleEx ex = new ArticleEx();
+        ex.setIsShow(1);
+        ex.setStatus(2);
+        ex.setType(type);
+        ex.setUserId(mobileInfo.getUserId());
+        List<ArticleEx> list = articleService.findList(ex);
+        return list;
+    }
+
 
     @ApiOperation(value = "举报动态", notes = "登陆")
     @RequestMapping(value = "/report",method = {RequestMethod.POST})
@@ -248,11 +268,11 @@ public class ApiArticleController extends ApiBaseController {
     public Integer report(MobileInfo mobileInfo,@RequestParam @ApiParam(value = "动态id", required = true)Integer articleId,
     @RequestParam @ApiParam(value = "举报信息", required = true)String info,
 //    @RequestParam @ApiParam(value = "图片", required = true)String imgs,
-    @RequestParam @ApiParam(value = "昵称", required = true)String nickname
+    @RequestParam @ApiParam(value = "昵称", required = true)String nickName
     ){
         UserReport report=new UserReport();
         report.setArticleId(articleId);
-        report.setNickname(nickname);
+        report.setNickName(nickName);
         report.setCreateTime(new Date());
 //        report.setImgs(imgs);
         report.setStatus(1);
@@ -457,7 +477,7 @@ public class ApiArticleController extends ApiBaseController {
     }
 
 
-    @ApiOperation(value = "公告首页", notes = "")
+    @ApiOperation(value = "推荐鉴定首页", notes = "")
     @RequestMapping(value = "/notice/index",method = {RequestMethod.POST})
     @ApiMethod(isLogin = false)
     public List<ArticleEx> noticeIndex(){
@@ -471,10 +491,10 @@ public class ApiArticleController extends ApiBaseController {
 
 
 
-    @ApiOperation(value = "搜动态、用户、公告", notes = "分页")
+    @ApiOperation(value = "搜动态、用户、推荐鉴定", notes = "分页")
     @RequestMapping(value = "/search",method = {RequestMethod.POST})
     @ApiMethod(isLogin = false,isPage = true)
-    public Object searchMemberArticle(@RequestParam @ApiParam(value = "搜索类型 1公告2动态3用户",required = true)Integer type,
+    public Object searchMemberArticle(@RequestParam @ApiParam(value = "搜索类型 1推荐鉴定2动态3用户",required = true)Integer type,
                                             MobileInfo mobileInfo,
                                             @RequestParam @ApiParam(value = "搜索内容",required = true)String keyword,PageLimit pageLimit){
         if (type==null || StringUtils.isBlank(keyword)) {

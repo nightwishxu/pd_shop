@@ -39,7 +39,7 @@ public class ApiUserVideo extends ApiBaseController {
     @ApiOperation(value = "典当监控列表", notes = "分页,登陆")
     @RequestMapping("/myVideoList")
     @ApiMethod(isPage = true, isLogin = true)
-    public TableDataInfo myVideoList(MobileInfo mobileInfo,
+    public List<AppMyVideo> myVideoList(MobileInfo mobileInfo,
                                      PageLimit pageLimit) {
         startPage();
         List<AppMyVideo> ret = new ArrayList<AppMyVideo>();
@@ -79,7 +79,7 @@ public class ApiUserVideo extends ApiBaseController {
             c.setImg(str[0]);
             ret.add(c);
         }
-        return getDataTable(ret);
+        return ret;
     }
 
     /**

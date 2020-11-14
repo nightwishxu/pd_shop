@@ -65,8 +65,8 @@ public class ApiArticleCommentController  extends ApiBaseController {
     @ApiMethod(isLogin = true)
     public Integer add(MobileInfo mobileInfo,
                             @RequestParam @ApiParam(value = "评论", required = true)String content,
-                            @RequestParam(required = false) @ApiParam(value = "头像", required =false)String icon,
-                            @RequestParam @ApiParam(value = "昵称", required = true)String nickname,
+                            @RequestParam(required = false) @ApiParam(value = "头像", required =false)String headImg,
+                            @RequestParam @ApiParam(value = "昵称", required = true)String nickName,
                             @RequestParam @ApiParam(value = "动态id", required = true)Integer articleId
                       ){
 
@@ -87,8 +87,8 @@ public class ApiArticleCommentController  extends ApiBaseController {
         entity.setIsReply(0);
         entity.setReplyNum(0);
         entity.setIsTop(0);
-        entity.setIcon(icon);
-        entity.setNickname(nickname);
+        entity.setHeadImg(headImg);
+        entity.setNickName(nickName);
         entity.setArticleId(articleId);
         entity.setType(1);
         entity.setStatus(1);
@@ -113,7 +113,7 @@ public class ApiArticleCommentController  extends ApiBaseController {
                       @RequestParam @ApiParam(value = "评论", required = true)String content,
                         @RequestParam @ApiParam(value = "动态id", required = true)Integer articleId,
                       @RequestParam(required = false) @ApiParam(value = "头像", required = false)String icon,
-                      @RequestParam @ApiParam(value = "昵称", required = true)String nickname,
+                      @RequestParam @ApiParam(value = "昵称", required = true)String nickName,
                       @RequestParam @ApiParam(value = "评论id", required = true)Integer commentId,
                       @RequestParam @ApiParam(value = "1为回复评论，2为回复别人的回复", required = true)Integer replyType,
                       @RequestParam(required = false) @ApiParam(value = "replyType为2时传值，回复评论id", required = false)Integer replyId
@@ -157,10 +157,10 @@ public class ApiArticleCommentController  extends ApiBaseController {
         }else {
             entity.setReplyId(commentId);
             entity.setToUid(comment.getUserId());
-            entity.setToNickname(comment.getNickname());
+            entity.setToNickname(comment.getNickName());
         }
         entity.setFromUid(mobileInfo.getUserId());
-        entity.setFromNickname(nickname);
+        entity.setFromNickname(nickName);
         entity.setFromThumbImg(icon);
         entity.setCreateTime(new Date());
         entity.setIsReport(0);

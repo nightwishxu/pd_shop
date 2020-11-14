@@ -78,4 +78,8 @@ public class AdService {
     public List<AdEx> selectRzList(Map<String, Object> map) {
 		return this.adMapperEx.selectRzList(map);
     }
+
+	public List<AdEx> findList(List<Integer> locations) {
+		return this.adMapperEx.findList(locations);
+	}
 }

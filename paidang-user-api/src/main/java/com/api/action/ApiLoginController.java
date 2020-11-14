@@ -412,6 +412,71 @@ public class ApiLoginController extends ApiBaseController {
 		return mobileInfo;
 	}
 
+
+	/**
+	 * @api 密码登录
+	 * @param phone
+	 *            手机号
+	 * @param password
+	 *            密码(需要加密)
+	 * @param deviceType
+	 *            设备类型 1:android 2:ios
+	 * @param cid
+	 *            //推送cid
+	 */
+	@ApiOperation(value = "验证码登录")
+	@RequestMapping(value = "/loginByCode", method = RequestMethod.POST)
+	@ApiMethod
+	public MobileInfo loginByCode(
+			@ApiParam(value = "手机号", required = true) String phone,
+			@ApiParam(value = "验证码", required = true) String code,
+			@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType,
+			@ApiParam(value = "设备唯一识别码", required = false) String deviceid,
+			@ApiParam(value = "推送cid", required = false) String cid)
+			throws Exception {
+		// 参数校验
+		if (StringUtils.isBlank(phone)) {
+			throw new ApiException("phone");
+		}
+		if (StringUtils.isBlank(code)) {
+			throw new ApiException("code");
+		}
+		if (deviceType == null) {
+			throw new ApiException("deviceType");
+		}
+		if (StringUtils.isBlank(deviceid)) {
+			throw new ApiException("deviceid");
+		}
+		// 校验登录
+		UserExample example = new UserExample();
+		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(0);
+		List<User> list = userService.selectByExample(example);
+		if (list.size() == 0) {
+			throw new ApiException(MEnumError.LOGIN_FAILURE_ERROR);
+		}
+		User user = list.get(0);
+		// 验证码验证
+		String value = redisCache.getCacheObject(MobileMsgEnum.LOGIN.getPhone(phone));
+
+		if (!code.equals(value)) {
+			throw new ApiException(MEnumError.MOBILE_CODE_ERROR);
+		} else {
+			redisCache.deleteObject(MobileMsgEnum.LOGIN.getPhone(phone));
+		}
+		// 禁用
+		if (user.getState() == 0) {
+			throw new ApiException(MEnumError.ACCOUNT_STOP_ERROR);
+		}
+		MobileInfo mobileInfo = new MobileInfo();
+		mobileInfo.setUserId(user.getId());
+		mobileInfo.setDeviceid(deviceid);
+		mobileInfo.setDeviceType(deviceType);
+		String verify = verifyService.updateMobileVerify(mobileInfo,
+				deviceType, cid);
+		mobileInfo.setToken(verify);
+		return mobileInfo;
+	}
+
 	/**
 	 * 忘记密码
 	 * 

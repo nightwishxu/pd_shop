@@ -104,6 +104,11 @@ public class GoodsService {
 		return goodsMapperEx.getMostThreeGoods(orgId);
 	}
 
+
+	public List<GoodsEx> getOrgGoodsBySoldOut(Integer orgId){
+		return goodsMapperEx.getOrgGoodsBySoldOut(orgId);
+	}
+
 	public List<GoodsEx> findList(GoodsEx goodsEx){
 		return goodsMapperEx.findList(goodsEx);
 	}

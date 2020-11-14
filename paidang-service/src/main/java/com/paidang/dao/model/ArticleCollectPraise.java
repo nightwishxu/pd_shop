@@ -60,8 +60,8 @@ public class ArticleCollectPraise implements Serializable {
 	 */
 	@ApiModelProperty(value="昵称")
 	@ApiParam(value="昵称")
-	@Column(name = "nickname")
-	private String nickname;
+	@Column(name = "nick_name")
+	private String nickName;
 
 	/**
 	 *动态图片
@@ -135,12 +135,12 @@ public class ArticleCollectPraise implements Serializable {
 		return icon;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname=nickname == null ? nickname : nickname.trim();
+	public void setNickName(String nickName) {
+		this.nickName=nickName == null ? nickName : nickName.trim();
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getNickName() {
+		return nickName;
 	}
 
 	public void setImg(String img) {

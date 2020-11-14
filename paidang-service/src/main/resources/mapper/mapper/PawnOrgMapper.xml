@@ -25,6 +25,12 @@
         <result column="org_images" property="orgImages" jdbcType="VARCHAR" />
         <result column="org_logo" property="orgLogo" jdbcType="VARCHAR" />
         <result column="redeem_overrate" property="redeemOverrate" jdbcType="DECIMAL" />
+        <result column="labels" property="labels" jdbcType="VARCHAR" />
+        <result column="integral" property="integral" jdbcType="DECIMAL" />
+        <result column="score" property="score" jdbcType="DECIMAL" />
+        <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
+        <result column="express_score" property="expressScore" jdbcType="DECIMAL" />
+        <result column="service_score" property="serviceScore" jdbcType="DECIMAL" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.PawnOrg" extends="BaseResultMap" >
@@ -92,7 +98,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate
+        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -160,7 +166,9 @@
         phone,balance,create_time,
         modify_time,state,pawn_state,
         overdue_rate,seal,introduction,
-        org_images,org_logo,redeem_overrate
+        org_images,org_logo,redeem_overrate,
+        labels,integral,score,
+        comment_count,express_score,service_score
         )
         values (#{roleCode,jdbcType=VARCHAR},#{type,jdbcType=TINYINT},
         #{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
@@ -169,7 +177,9 @@
         #{phone,jdbcType=VARCHAR},#{balance,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP},
         #{modifyTime,jdbcType=TIMESTAMP},#{state,jdbcType=TINYINT},#{pawnState,jdbcType=TINYINT},
         #{overdueRate,jdbcType=DECIMAL},#{seal,jdbcType=VARCHAR},#{introduction,jdbcType=LONGVARCHAR},
-        #{orgImages,jdbcType=VARCHAR},#{orgLogo,jdbcType=VARCHAR},#{redeemOverrate,jdbcType=DECIMAL}
+        #{orgImages,jdbcType=VARCHAR},#{orgLogo,jdbcType=VARCHAR},#{redeemOverrate,jdbcType=DECIMAL},
+        #{labels,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL},#{score,jdbcType=DECIMAL},
+        #{commentCount,jdbcType=INTEGER},#{expressScore,jdbcType=DECIMAL},#{serviceScore,jdbcType=DECIMAL}
         )
     </insert>
 
@@ -245,6 +255,24 @@
             <if test="redeemOverrate != null" >
                 redeem_overrate,
             </if>
+            <if test="labels != null" >
+                labels,
+            </if>
+            <if test="integral != null" >
+                integral,
+            </if>
+            <if test="score != null" >
+                score,
+            </if>
+            <if test="commentCount != null" >
+                comment_count,
+            </if>
+            <if test="expressScore != null" >
+                express_score,
+            </if>
+            <if test="serviceScore != null" >
+                service_score,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="roleCode != null" >
@@ -315,6 +343,24 @@
             </if>
             <if test="redeemOverrate != null" >
                 #{redeemOverrate,jdbcType=DECIMAL},
+            </if>
+            <if test="labels != null" >
+                #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="integral != null" >
+                #{integral,jdbcType=DECIMAL},
+            </if>
+            <if test="score != null" >
+                #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="commentCount != null" >
+                #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="expressScore != null" >
+                #{expressScore,jdbcType=DECIMAL},
+            </if>
+            <if test="serviceScore != null" >
+                #{serviceScore,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
@@ -401,6 +447,24 @@
             <if test="record.redeemOverrate != null" >
                 redeem_overrate = #{record.redeemOverrate,jdbcType=DECIMAL},
             </if>
+            <if test="record.labels != null" >
+                labels = #{record.labels,jdbcType=VARCHAR},
+            </if>
+            <if test="record.integral != null" >
+                integral = #{record.integral,jdbcType=DECIMAL},
+            </if>
+            <if test="record.score != null" >
+                score = #{record.score,jdbcType=DECIMAL},
+            </if>
+            <if test="record.commentCount != null" >
+                comment_count = #{record.commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="record.expressScore != null" >
+                express_score = #{record.expressScore,jdbcType=DECIMAL},
+            </if>
+            <if test="record.serviceScore != null" >
+                service_score = #{record.serviceScore,jdbcType=DECIMAL},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -432,7 +496,13 @@
         introduction = #{introduction,jdbcType=LONGVARCHAR},
         org_images = #{orgImages,jdbcType=VARCHAR},
         org_logo = #{orgLogo,jdbcType=VARCHAR},
-        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL}
+        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL},
+        score = #{score,jdbcType=DECIMAL},
+        comment_count = #{commentCount,jdbcType=INTEGER},
+        express_score = #{expressScore,jdbcType=DECIMAL},
+        service_score = #{serviceScore,jdbcType=DECIMAL}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -462,7 +532,13 @@
         seal = #{seal,jdbcType=VARCHAR},
         org_images = #{orgImages,jdbcType=VARCHAR},
         org_logo = #{orgLogo,jdbcType=VARCHAR},
-        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL}
+        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL},
+        score = #{score,jdbcType=DECIMAL},
+        comment_count = #{commentCount,jdbcType=INTEGER},
+        express_score = #{expressScore,jdbcType=DECIMAL},
+        service_score = #{serviceScore,jdbcType=DECIMAL}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -540,6 +616,24 @@
             <if test="redeemOverrate != null" >
                 redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL},
             </if>
+            <if test="labels != null" >
+                labels = #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="integral != null" >
+                integral = #{integral,jdbcType=DECIMAL},
+            </if>
+            <if test="score != null" >
+                score = #{score,jdbcType=DECIMAL},
+            </if>
+            <if test="commentCount != null" >
+                comment_count = #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="expressScore != null" >
+                express_score = #{expressScore,jdbcType=DECIMAL},
+            </if>
+            <if test="serviceScore != null" >
+                service_score = #{serviceScore,jdbcType=DECIMAL},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -568,7 +662,13 @@
         introduction = #{introduction,jdbcType=LONGVARCHAR},
         org_images = #{orgImages,jdbcType=VARCHAR},
         org_logo = #{orgLogo,jdbcType=VARCHAR},
-        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL}
+        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL},
+        score = #{score,jdbcType=DECIMAL},
+        comment_count = #{commentCount,jdbcType=INTEGER},
+        express_score = #{expressScore,jdbcType=DECIMAL},
+        service_score = #{serviceScore,jdbcType=DECIMAL}
         where id = #{id}
     </update>
 
@@ -595,8 +695,44 @@
         seal = #{seal,jdbcType=VARCHAR},
         org_images = #{orgImages,jdbcType=VARCHAR},
         org_logo = #{orgLogo,jdbcType=VARCHAR},
-        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL}
+        redeem_overrate = #{redeemOverrate,jdbcType=DECIMAL},
+        labels = #{labels,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL},
+        score = #{score,jdbcType=DECIMAL},
+        comment_count = #{commentCount,jdbcType=INTEGER},
+        express_score = #{expressScore,jdbcType=DECIMAL},
+        service_score = #{serviceScore,jdbcType=DECIMAL}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_pawn_org
+        ${sqlSegment}
+    </select>
+
+    <select id="selectByWrapperWithBLOBs" resultMap="ResultMapWithBLOBs" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+                ,
+                <include refid="Blob_Column_List" />
+            </otherwise>
+        </choose>
+        from p_pawn_org
+        ${sqlSegment}
+    </select>
 
 </mapper>

@@ -214,7 +214,7 @@ public class ApiUserPawnController extends ApiBaseController {
     @ApiOperation(value = "我的典当列表--竞拍中", notes = "分页,登陆")
     @RequestMapping("/myPawnList")
     @ApiMethod(isPage = true, isLogin = true)
-    public TableDataInfo myPawnList(MobileInfo mobileInfo,
+    public List<AppMyPawnList> myPawnList(MobileInfo mobileInfo,
                                     PageLimit pageLimit) {
         startPage();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -239,7 +239,7 @@ public class ApiUserPawnController extends ApiBaseController {
             ret.add(detail);
         }
 
-        return getDataTable(ret);
+        return ret;
 
     }
 
@@ -249,7 +249,7 @@ public class ApiUserPawnController extends ApiBaseController {
     @ApiOperation(value = "我的典当列表--已典当", notes = "分页,登陆")
     @RequestMapping("/myPawnedList")
     @ApiMethod(isPage = true, isLogin = true)
-    public TableDataInfo myPawnedList(MobileInfo mobileInfo,
+    public  List<AppMyPawnList> myPawnedList(MobileInfo mobileInfo,
                                             PageLimit pageLimit) {
         startPage();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -320,7 +320,7 @@ public class ApiUserPawnController extends ApiBaseController {
         ret.add(detail);
         }
 
-        return getDataTable(ret);
+        return ret;
     }
 
     /**
@@ -383,7 +383,7 @@ public class ApiUserPawnController extends ApiBaseController {
     @ApiOperation(value = "未典当列表", notes = "登陆,分页")
     @RequestMapping("/noPawnList")
     @ApiMethod(isPage = true, isLogin = true)
-    public TableDataInfo noPawnList(MobileInfo mobileInfo,
+    public  List<AppMyPawnNoDetail> noPawnList(MobileInfo mobileInfo,
                                               PageLimit pageLimit){
         startPage();
 //        UserGoodsExample example = new UserGoodsExample();
@@ -396,7 +396,7 @@ public class ApiUserPawnController extends ApiBaseController {
 
         List<AppMyPawnNoDetail> list2 = new ArrayList<AppMyPawnNoDetail>();
         if(list.size() == 0){
-            return getDataTable(list2);
+            return list2;
         }
         for(UserGoodsEx ex :list){
             AppMyPawnNoDetail detail = new AppMyPawnNoDetail();
@@ -433,13 +433,13 @@ public class ApiUserPawnController extends ApiBaseController {
             detail.setPawnId(ex.getPawnId());
             list2.add(detail);
         }
-        return getDataTable(list2);
+        return list2;
     }
 
     @ApiOperation(value = "已取消列表", notes = "登陆,分页")
     @RequestMapping("/cancelPawnList")
     @ApiMethod(isPage = true, isLogin = true)
-    public TableDataInfo cancelPawnList(MobileInfo mobileInfo,
+    public List<AppMyPawnNoDetail> cancelPawnList(MobileInfo mobileInfo,
                                                   PageLimit pageLimit){
         startPage();
        Map<String, Object> map = new HashMap<String, Object>();
@@ -486,7 +486,7 @@ public class ApiUserPawnController extends ApiBaseController {
 
        }
 
-        return getDataTable(list2);
+        return list2;
     }
 
     /**
@@ -495,7 +495,7 @@ public class ApiUserPawnController extends ApiBaseController {
     @ApiOperation(value = "未典当的商品--去典当", notes = "登陆")
     @RequestMapping("/gotoPawn")
     @ApiMethod(isLogin = true)
-    public Ret gotoPawn(MobileInfo mobileInfo,
+    public void gotoPawn(MobileInfo mobileInfo,
                         @ApiParam(value="id",required = true)Integer id,
                         @ApiParam(value="贷款额度",required = true)String loansPrice,
                         @ApiParam(value="期望利率",required = true)String loansRate,
@@ -546,7 +546,6 @@ public class ApiUserPawnController extends ApiBaseController {
             }
         }
 
-        return ok();
     }
 
     /**

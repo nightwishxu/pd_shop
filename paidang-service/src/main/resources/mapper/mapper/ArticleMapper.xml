@@ -24,6 +24,8 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="sort" property="sort" jdbcType="INTEGER" />
         <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="ref_type" property="refType" jdbcType="INTEGER" />
+        <result column="ref_url" property="refUrl" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.Article" extends="BaseResultMap" >
@@ -91,7 +93,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,cover,type,status,is_show,title,imgs,video,comment_count,collect_count,praise_count,click_count,report_count,labels,release_time,create_name,create_time,update_name,update_time,sort,description
+        id,user_id,cover,type,status,is_show,title,imgs,video,comment_count,collect_count,praise_count,click_count,report_count,labels,release_time,create_name,create_time,update_name,update_time,sort,description,ref_type,ref_url
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -159,7 +161,8 @@
         praise_count,click_count,report_count,
         labels,release_time,create_name,
         create_time,update_name,update_time,
-        sort,description
+        sort,description,ref_type,
+        ref_url
         )
         values (#{userId,jdbcType=INTEGER},#{cover,jdbcType=VARCHAR},
         #{type,jdbcType=INTEGER},#{status,jdbcType=INTEGER},#{isShow,jdbcType=INTEGER},
@@ -168,7 +171,8 @@
         #{praiseCount,jdbcType=INTEGER},#{clickCount,jdbcType=INTEGER},#{reportCount,jdbcType=INTEGER},
         #{labels,jdbcType=VARCHAR},#{releaseTime,jdbcType=TIMESTAMP},#{createName,jdbcType=VARCHAR},
         #{createTime,jdbcType=TIMESTAMP},#{updateName,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},
-        #{sort,jdbcType=INTEGER},#{description,jdbcType=VARCHAR}
+        #{sort,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{refType,jdbcType=INTEGER},
+        #{refUrl,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -241,6 +245,12 @@
             <if test="description != null" >
                 description,
             </if>
+            <if test="refType != null" >
+                ref_type,
+            </if>
+            <if test="refUrl != null" >
+                ref_url,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="userId != null" >
@@ -308,6 +318,12 @@
             </if>
             <if test="description != null" >
                 #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="refType != null" >
+                #{refType,jdbcType=INTEGER},
+            </if>
+            <if test="refUrl != null" >
+                #{refUrl,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -391,6 +407,12 @@
             <if test="record.description != null" >
                 description = #{record.description,jdbcType=VARCHAR},
             </if>
+            <if test="record.refType != null" >
+                ref_type = #{record.refType,jdbcType=INTEGER},
+            </if>
+            <if test="record.refUrl != null" >
+                ref_url = #{record.refUrl,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -421,7 +443,9 @@
         update_name = #{updateName,jdbcType=VARCHAR},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         sort = #{sort,jdbcType=INTEGER},
-        description = #{description,jdbcType=VARCHAR}
+        description = #{description,jdbcType=VARCHAR},
+        ref_type = #{refType,jdbcType=INTEGER},
+        ref_url = #{refUrl,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -450,7 +474,9 @@
         update_name = #{updateName,jdbcType=VARCHAR},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         sort = #{sort,jdbcType=INTEGER},
-        description = #{description,jdbcType=VARCHAR}
+        description = #{description,jdbcType=VARCHAR},
+        ref_type = #{refType,jdbcType=INTEGER},
+        ref_url = #{refUrl,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -525,6 +551,12 @@
             <if test="description != null" >
                 description = #{description,jdbcType=VARCHAR},
             </if>
+            <if test="refType != null" >
+                ref_type = #{refType,jdbcType=INTEGER},
+            </if>
+            <if test="refUrl != null" >
+                ref_url = #{refUrl,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -552,7 +584,9 @@
         update_name = #{updateName,jdbcType=VARCHAR},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         sort = #{sort,jdbcType=INTEGER},
-        description = #{description,jdbcType=VARCHAR}
+        description = #{description,jdbcType=VARCHAR},
+        ref_type = #{refType,jdbcType=INTEGER},
+        ref_url = #{refUrl,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
@@ -578,7 +612,9 @@
         update_name = #{updateName,jdbcType=VARCHAR},
         update_time = #{updateTime,jdbcType=TIMESTAMP},
         sort = #{sort,jdbcType=INTEGER},
-        description = #{description,jdbcType=VARCHAR}
+        description = #{description,jdbcType=VARCHAR},
+        ref_type = #{refType,jdbcType=INTEGER},
+        ref_url = #{refUrl,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

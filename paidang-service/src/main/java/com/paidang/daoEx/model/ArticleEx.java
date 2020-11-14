@@ -17,14 +17,14 @@ public class ArticleEx extends Article {
     private Date endTime;
 
     @ApiModelProperty(value = "昵称")
-    private String nickname;
+    private String nickName;
 
     private String account;
 
     private String username;
 
     @ApiModelProperty(value = "头像")
-    private String icon;
+    private String headImg;
 
     @ApiModelProperty(value = "发布时间中文格式")
     private String releaseTimeInfo;
@@ -59,6 +59,8 @@ public class ArticleEx extends Article {
     @ApiModelProperty(value = "动态作者id 后台搜索用")
     private Integer authorId;
 
+    //举报状态
+    private Integer userReportStatus;
 
     public Date getStartTime() {
         return startTime;
@@ -76,13 +78,7 @@ public class ArticleEx extends Article {
         this.endTime = endTime;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
 
     public String getAccount() {
         return account;
@@ -100,13 +96,6 @@ public class ArticleEx extends Article {
         this.username = username;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
 
     public String getReleaseTimeInfo() {
         return releaseTimeInfo;
@@ -197,5 +186,29 @@ public class ArticleEx extends Article {
 
     public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
+    }
+
+    public Integer getUserReportStatus() {
+        return userReportStatus;
+    }
+
+    public void setUserReportStatus(Integer userReportStatus) {
+        this.userReportStatus = userReportStatus;
     }
 }

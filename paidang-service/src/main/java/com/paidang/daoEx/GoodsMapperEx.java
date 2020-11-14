@@ -32,6 +32,8 @@ public interface GoodsMapperEx {
      */
     List<GoodsEx> getMostThreeGoods(Integer orgId);
 
+    List<GoodsEx> getOrgGoodsBySoldOut(Integer orgId);
+
     List<GoodsEx> findList(GoodsEx goodsEx);
 
     List<GoodsEx> selectBusinessGoodsList(@Param("goodsName") String goodsName);

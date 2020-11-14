@@ -16,7 +16,7 @@
 	p.send_time,
 	p.message_content,
 	u.nickname AS receiverNickname,
-	u.icon AS receiverIcon
+	u.head_img AS receiverIcon
 	from (SELECT max(id) id,count(1) as messageCount FROM t_private_message where user_id=#{userId} and status!=3 GROUP BY friend_id  ORDER BY id DESC) t
 	left join t_private_message p on t.id = p.id  left join b_user  u ON u.id = p.friend_id
   </select>
@@ -30,7 +30,7 @@
 	p.receiver_id,
 	p.send_time,
 	u.nickname AS senderNickname,
-	u.icon AS senderIcon,
+	u.head_img AS senderIcon,
 	uu.nickname AS receiverNickname
 FROM
 	t_private_message p

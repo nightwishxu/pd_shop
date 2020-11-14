@@ -11,6 +11,7 @@ import com.paidang.dao.model.OrgBalanceLog;
 import com.paidang.dao.model.PlatformBalanceLog;
 import com.paidang.daoEx.OrderMapperEx;
 import com.paidang.daoEx.model.OrderEx;
+import com.paidang.domain.qo.OrderQo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -186,6 +187,10 @@ public class OrderService {
 	}
 	public List<OrderEx> getAfterSalesOrder(String userId,String goodsName){
 		return this.orderMapperEx.getAfterSalesOrder(userId,goodsName);
+	}
+
+	public List<OrderEx> findList(OrderQo qo){
+		return orderMapperEx.findList(qo);
 	}
 
 }

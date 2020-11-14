@@ -8,8 +8,8 @@
         <result column="type" property="type" jdbcType="TINYINT" />
         <result column="content" property="content" jdbcType="VARCHAR" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="nickname" property="nickname" jdbcType="VARCHAR" />
-        <result column="icon" property="icon" jdbcType="VARCHAR" />
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+        <result column="head_img" property="headImg" jdbcType="VARCHAR" />
         <result column="is_top" property="isTop" jdbcType="INTEGER" />
         <result column="is_hot" property="isHot" jdbcType="INTEGER" />
         <result column="like_num" property="likeNum" jdbcType="INTEGER" />
@@ -83,7 +83,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,article_id,author_id,type,content,user_id,nickname,icon,is_top,is_hot,like_num,reply_num,is_reply,status,is_show,create_time,is_author,is_report
+        id,article_id,author_id,type,content,user_id,nick_name,head_img,is_top,is_hot,like_num,reply_num,is_reply,status,is_show,create_time,is_author,is_report
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -123,14 +123,14 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
         insert into t_article_comment (article_id,author_id,
         type,content,user_id,
-        nickname,icon,is_top,
+        nick_name,head_img,is_top,
         is_hot,like_num,reply_num,
         is_reply,status,is_show,
         create_time,is_author,is_report
         )
         values (#{articleId,jdbcType=INTEGER},#{authorId,jdbcType=INTEGER},
         #{type,jdbcType=TINYINT},#{content,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},
-        #{nickname,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR},#{isTop,jdbcType=INTEGER},
+        #{nickName,jdbcType=VARCHAR},#{headImg,jdbcType=VARCHAR},#{isTop,jdbcType=INTEGER},
         #{isHot,jdbcType=INTEGER},#{likeNum,jdbcType=INTEGER},#{replyNum,jdbcType=INTEGER},
         #{isReply,jdbcType=TINYINT},#{status,jdbcType=TINYINT},#{isShow,jdbcType=INTEGER},
         #{createTime,jdbcType=TIMESTAMP},#{isAuthor,jdbcType=INTEGER},#{isReport,jdbcType=INTEGER}
@@ -155,11 +155,11 @@
             <if test="userId != null" >
                 user_id,
             </if>
-            <if test="nickname != null" >
-                nickname,
+            <if test="nickName != null" >
+                nick_name,
             </if>
-            <if test="icon != null" >
-                icon,
+            <if test="headImg != null" >
+                head_img,
             </if>
             <if test="isTop != null" >
                 is_top,
@@ -208,11 +208,11 @@
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="nickname != null" >
-                #{nickname,jdbcType=VARCHAR},
+            <if test="nickName != null" >
+                #{nickName,jdbcType=VARCHAR},
             </if>
-            <if test="icon != null" >
-                #{icon,jdbcType=VARCHAR},
+            <if test="headImg != null" >
+                #{headImg,jdbcType=VARCHAR},
             </if>
             <if test="isTop != null" >
                 #{isTop,jdbcType=INTEGER},
@@ -275,11 +275,11 @@
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
-            <if test="record.nickname != null" >
-                nickname = #{record.nickname,jdbcType=VARCHAR},
+            <if test="record.nickName != null" >
+                nick_name = #{record.nickName,jdbcType=VARCHAR},
             </if>
-            <if test="record.icon != null" >
-                icon = #{record.icon,jdbcType=VARCHAR},
+            <if test="record.headImg != null" >
+                head_img = #{record.headImg,jdbcType=VARCHAR},
             </if>
             <if test="record.isTop != null" >
                 is_top = #{record.isTop,jdbcType=INTEGER},
@@ -325,8 +325,8 @@
         type = #{type,jdbcType=TINYINT},
         content = #{content,jdbcType=VARCHAR},
         user_id = #{userId,jdbcType=INTEGER},
-        nickname = #{nickname,jdbcType=VARCHAR},
-        icon = #{icon,jdbcType=VARCHAR},
+        nick_name = #{nickName,jdbcType=VARCHAR},
+        head_img = #{headImg,jdbcType=VARCHAR},
         is_top = #{isTop,jdbcType=INTEGER},
         is_hot = #{isHot,jdbcType=INTEGER},
         like_num = #{likeNum,jdbcType=INTEGER},
@@ -360,11 +360,11 @@
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="nickname != null" >
-                nickname = #{nickname,jdbcType=VARCHAR},
+            <if test="nickName != null" >
+                nick_name = #{nickName,jdbcType=VARCHAR},
             </if>
-            <if test="icon != null" >
-                icon = #{icon,jdbcType=VARCHAR},
+            <if test="headImg != null" >
+                head_img = #{headImg,jdbcType=VARCHAR},
             </if>
             <if test="isTop != null" >
                 is_top = #{isTop,jdbcType=INTEGER},
@@ -407,8 +407,8 @@
         type = #{type,jdbcType=TINYINT},
         content = #{content,jdbcType=VARCHAR},
         user_id = #{userId,jdbcType=INTEGER},
-        nickname = #{nickname,jdbcType=VARCHAR},
-        icon = #{icon,jdbcType=VARCHAR},
+        nick_name = #{nickName,jdbcType=VARCHAR},
+        head_img = #{headImg,jdbcType=VARCHAR},
         is_top = #{isTop,jdbcType=INTEGER},
         is_hot = #{isHot,jdbcType=INTEGER},
         like_num = #{likeNum,jdbcType=INTEGER},

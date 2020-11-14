@@ -7,10 +7,14 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiException;
 
 import com.base.util.DateUtil;
+import com.base.util.IPUtil;
+import com.base.util.JSONUtils;
 import com.base.web.ParameterRequestWrapper;
 import com.item.dao.model.MobileVerify;
 import com.item.service.MobileVerifyService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -19,12 +23,18 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 权限(Token)验证
  */
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationInterceptor.class);
+
     @Autowired
     private MobileVerifyService mobileVerifyService;
     
@@ -37,11 +47,33 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(handler instanceof HandlerMethod) {
+
+        String userId = request.getParameter(USER_ID);
+        if(StringUtils.isBlank(userId)){
+            userId = request.getHeader(USER_ID);
+        }
+        String url = request.getRequestURI();
+        // 获取客户端IP
+        String startIp = IPUtil.getClientIP(request);
+
+        // 获取所有参数名称
+        Enumeration<String> enu = request.getParameterNames();
+        // 获取所有参数的集合
+        Map<String, Object> paramsMap = new HashMap<>();
+        while (enu.hasMoreElements()) {
+            String paraName = enu.nextElement();
+            paramsMap.put(paraName, request.getParameter(paraName));
+        }
+
+
+            if(handler instanceof HandlerMethod) {
         	ApiMethod annotation = ((HandlerMethod) handler).getMethodAnnotation(ApiMethod.class);
             if (annotation == null) return true;
-            
-        	//从header中获取token
+
+            String time = DateUtil.getCurrentTime("yyyy-MM-dd HH:mm:ss");
+            logger.info("[限流入口统计] |date={}|memberId={}|apiName={}|params={}|jsonParam={}|startIp={}", time, userId, url, JSONUtils.serialize(paramsMap), null,startIp);
+
+            //从header中获取token
             String token = request.getHeader(TOKEN);
             //如果header中不存在token，则从参数中获取token
             if(StringUtils.isBlank(token)){

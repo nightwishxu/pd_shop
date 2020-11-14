@@ -12,6 +12,7 @@
         <result column="org_id" property="orgId" jdbcType="INTEGER" />
         <result column="goods_price" property="goodsPrice" jdbcType="DECIMAL" />
         <result column="goods_cost" property="goodsCost" jdbcType="DECIMAL" />
+        <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
         <result column="price" property="price" jdbcType="DECIMAL" />
         <result column="video" property="video" jdbcType="VARCHAR" />
         <result column="state" property="state" jdbcType="TINYINT" />
@@ -103,7 +104,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_not_verify_reason,back_code,back_address,back_user,back_phone,back_state,pay_type,comment_state
+        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,total_price,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_not_verify_reason,back_code,back_address,back_user,back_phone,back_state,pay_type,comment_state
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -144,30 +145,30 @@
         insert into p_order (code,user_id,
         goods_id,goods_name,goods_img,
         goods_source,org_id,goods_price,
-        goods_cost,price,video,
-        state,ref_state,pay_log_id,
-        is_balance,create_time,modify_time,
-        balance_time,pay_time,ship_user,
-        ship_firm,ship_code,ship_address,
-        ship_phone,coupon_id,coupon_value,
-        coupon_info,is_del,refund_reason,
-        refund_not_verify_reason,back_code,back_address,
-        back_user,back_phone,back_state,
-        pay_type,comment_state
+        goods_cost,total_price,price,
+        video,state,ref_state,
+        pay_log_id,is_balance,create_time,
+        modify_time,balance_time,pay_time,
+        ship_user,ship_firm,ship_code,
+        ship_address,ship_phone,coupon_id,
+        coupon_value,coupon_info,is_del,
+        refund_reason,refund_not_verify_reason,back_code,
+        back_address,back_user,back_phone,
+        back_state,pay_type,comment_state
         )
         values (#{code,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},
         #{goodsId,jdbcType=INTEGER},#{goodsName,jdbcType=VARCHAR},#{goodsImg,jdbcType=VARCHAR},
         #{goodsSource,jdbcType=TINYINT},#{orgId,jdbcType=INTEGER},#{goodsPrice,jdbcType=DECIMAL},
-        #{goodsCost,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL},#{video,jdbcType=VARCHAR},
-        #{state,jdbcType=TINYINT},#{refState,jdbcType=TINYINT},#{payLogId,jdbcType=VARCHAR},
-        #{isBalance,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
-        #{balanceTime,jdbcType=TIMESTAMP},#{payTime,jdbcType=TIMESTAMP},#{shipUser,jdbcType=VARCHAR},
-        #{shipFirm,jdbcType=VARCHAR},#{shipCode,jdbcType=VARCHAR},#{shipAddress,jdbcType=VARCHAR},
-        #{shipPhone,jdbcType=VARCHAR},#{couponId,jdbcType=INTEGER},#{couponValue,jdbcType=DECIMAL},
-        #{couponInfo,jdbcType=VARCHAR},#{isDel,jdbcType=TINYINT},#{refundReason,jdbcType=VARCHAR},
-        #{refundNotVerifyReason,jdbcType=VARCHAR},#{backCode,jdbcType=VARCHAR},#{backAddress,jdbcType=VARCHAR},
-        #{backUser,jdbcType=VARCHAR},#{backPhone,jdbcType=VARCHAR},#{backState,jdbcType=TINYINT},
-        #{payType,jdbcType=TINYINT},#{commentState,jdbcType=INTEGER}
+        #{goodsCost,jdbcType=DECIMAL},#{totalPrice,jdbcType=DECIMAL},#{price,jdbcType=DECIMAL},
+        #{video,jdbcType=VARCHAR},#{state,jdbcType=TINYINT},#{refState,jdbcType=TINYINT},
+        #{payLogId,jdbcType=VARCHAR},#{isBalance,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP},
+        #{modifyTime,jdbcType=TIMESTAMP},#{balanceTime,jdbcType=TIMESTAMP},#{payTime,jdbcType=TIMESTAMP},
+        #{shipUser,jdbcType=VARCHAR},#{shipFirm,jdbcType=VARCHAR},#{shipCode,jdbcType=VARCHAR},
+        #{shipAddress,jdbcType=VARCHAR},#{shipPhone,jdbcType=VARCHAR},#{couponId,jdbcType=INTEGER},
+        #{couponValue,jdbcType=DECIMAL},#{couponInfo,jdbcType=VARCHAR},#{isDel,jdbcType=TINYINT},
+        #{refundReason,jdbcType=VARCHAR},#{refundNotVerifyReason,jdbcType=VARCHAR},#{backCode,jdbcType=VARCHAR},
+        #{backAddress,jdbcType=VARCHAR},#{backUser,jdbcType=VARCHAR},#{backPhone,jdbcType=VARCHAR},
+        #{backState,jdbcType=TINYINT},#{payType,jdbcType=TINYINT},#{commentState,jdbcType=INTEGER}
         )
     </insert>
 
@@ -200,6 +201,9 @@
             </if>
             <if test="goodsCost != null" >
                 goods_cost,
+            </if>
+            <if test="totalPrice != null" >
+                total_price,
             </if>
             <if test="price != null" >
                 price,
@@ -313,6 +317,9 @@
             </if>
             <if test="goodsCost != null" >
                 #{goodsCost,jdbcType=DECIMAL},
+            </if>
+            <if test="totalPrice != null" >
+                #{totalPrice,jdbcType=DECIMAL},
             </if>
             <if test="price != null" >
                 #{price,jdbcType=DECIMAL},
@@ -441,6 +448,9 @@
             <if test="record.goodsCost != null" >
                 goods_cost = #{record.goodsCost,jdbcType=DECIMAL},
             </if>
+            <if test="record.totalPrice != null" >
+                total_price = #{record.totalPrice,jdbcType=DECIMAL},
+            </if>
             <if test="record.price != null" >
                 price = #{record.price,jdbcType=DECIMAL},
             </if>
@@ -543,6 +553,7 @@
         org_id = #{orgId,jdbcType=INTEGER},
         goods_price = #{goodsPrice,jdbcType=DECIMAL},
         goods_cost = #{goodsCost,jdbcType=DECIMAL},
+        total_price = #{totalPrice,jdbcType=DECIMAL},
         price = #{price,jdbcType=DECIMAL},
         video = #{video,jdbcType=VARCHAR},
         state = #{state,jdbcType=TINYINT},
@@ -605,6 +616,9 @@
             </if>
             <if test="goodsCost != null" >
                 goods_cost = #{goodsCost,jdbcType=DECIMAL},
+            </if>
+            <if test="totalPrice != null" >
+                total_price = #{totalPrice,jdbcType=DECIMAL},
             </if>
             <if test="price != null" >
                 price = #{price,jdbcType=DECIMAL},
@@ -705,6 +719,7 @@
         org_id = #{orgId,jdbcType=INTEGER},
         goods_price = #{goodsPrice,jdbcType=DECIMAL},
         goods_cost = #{goodsCost,jdbcType=DECIMAL},
+        total_price = #{totalPrice,jdbcType=DECIMAL},
         price = #{price,jdbcType=DECIMAL},
         video = #{video,jdbcType=VARCHAR},
         state = #{state,jdbcType=TINYINT},
@@ -735,5 +750,19 @@
         comment_state = #{commentState,jdbcType=INTEGER}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_order
+        ${sqlSegment}
+    </select>
 
 </mapper>

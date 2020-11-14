@@ -13,6 +13,7 @@ import com.paidang.dao.model.Order;
 import com.paidang.dao.model.OrderExample;
 import com.paidang.service.GoodsService;
 import com.paidang.service.OrderService;
+import com.paidang.service.PawnOrgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,6 +47,9 @@ public class ApiUserCommentController extends ApiBaseController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private PawnOrgService pawnOrgService;
 
     @ApiOperation(value = "新增用户评价", notes = "登陆")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -98,6 +102,8 @@ public class ApiUserCommentController extends ApiBaseController {
             order.setCommentState(1);
             orderService.updateByExampleSelective(order,example);
         }
+        pawnOrgService.updateCommentCount(userComment.getOrgId());
+        pawnOrgService.updateCommentScore(userComment.getOrgId());
         return result;
     }
 

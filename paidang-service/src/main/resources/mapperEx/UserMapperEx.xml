@@ -73,7 +73,7 @@
 		<if test="userId!=null">
 			,t.status as followStatus
 		</if>
-		from (select u.* from b_user u where u.nick_name like  CONCAT('%',#{keyword},'%') and u.status!=0 ) a
+		from (select u.* from b_user u where u.nick_name like  CONCAT('%',#{keyword},'%') and u.state!=0 ) a
 		<if test="userId!=null">
 			left join t_user_follow t on a.id=t.follow_id
 			and t.user_id=#{userId}
@@ -94,8 +94,8 @@
 			,(SELECT count(*) from t_user_counselor where counselor_id=m.id and counselor_type=2) as insuranceCount
 		</if>
 		from b_user m where 1=1
-		<if test="nick_name!=null and nick_name!=''">
-			and m.nick_name like CONCAT('%',#{nick_name},'%')
+		<if test="nickName!=null and nickName!=''">
+			and m.nick_name like CONCAT('%',#{nickName},'%')
 		</if>
 		<if test="username!=null and username!=''">
 			and m.username like CONCAT('%',#{username},'%')
@@ -109,44 +109,44 @@
 		order by m.create_time desc
 	</select>
 
-	<select id="getCounselor" resultType="com.item.daoEx.model.UserEx">
-		SELECT
-		id,username,nick_name,icon,real_name realName,is_health_counselor,is_insurance_counselor,status
-		FROM
-		b_user
-		WHERE
-		b_user.id >= FLOOR(
-		RAND() * (
-		( SELECT MAX( U1.id ) FROM b_user AS U1 ) - ( SELECT MIN( U2.id ) FROM b_user AS U2 )
-		) + ( SELECT MIN( U3.id ) FROM b_user AS U3 )
-		) and b_user.status=1
-		<if test="type!=null and  type=='1'.toString()">
-			and b_user.is_health_counselor=1
-		</if>
-		<if test="type!=null and type=='2'.toString()">
-			and b_user.is_insurance_counselor=1
-		</if>
-		ORDER BY
-		b_user.id ASC
-		LIMIT 1
-	</select>
+<!--	<select id="getCounselor" resultType="com.item.daoEx.model.UserEx">-->
+<!--		SELECT-->
+<!--		id,username,nick_name,icon,real_name realName,is_health_counselor,is_insurance_counselor,status-->
+<!--		FROM-->
+<!--		b_user-->
+<!--		WHERE-->
+<!--		b_user.id >= FLOOR(-->
+<!--		RAND() * (-->
+<!--		( SELECT MAX( U1.id ) FROM b_user AS U1 ) - ( SELECT MIN( U2.id ) FROM b_user AS U2 )-->
+<!--		) + ( SELECT MIN( U3.id ) FROM b_user AS U3 )-->
+<!--		) and b_user.status=1-->
+<!--		<if test="type!=null and  type=='1'.toString()">-->
+<!--			and b_user.is_health_counselor=1-->
+<!--		</if>-->
+<!--		<if test="type!=null and type=='2'.toString()">-->
+<!--			and b_user.is_insurance_counselor=1-->
+<!--		</if>-->
+<!--		ORDER BY-->
+<!--		b_user.id ASC-->
+<!--		LIMIT 1-->
+<!--	</select>-->
 
 
 	<select id="findFollowList" resultType="com.item.daoEx.model.UserEx">
              SELECT
-        u.id, u.nick_name, u.phone, u.icon,u.city, u.age
+        u.id, u.nick_name, u.phone, u.head_img,u.city, u.age
         FROM
             t_user_follow t left join b_user u on t.follow_id = u.id
-        where t.status=1 and u.status=1 and t.user_id=#{userId} order by t.create_time desc
+        where t.status=1 and u.state=1 and t.user_id=#{userId} order by t.create_time desc
 
     </select>
 
 	<select id="findFansList" resultType="com.item.daoEx.model.UserEx">
         SELECT
-        u.id, u.nick_name, u.phone, u.icon,u.city, u.age
+        u.id, u.nick_name, u.phone, u.head_img,u.city, u.age
         FROM
         t_user_follow t left join b_user u on t.user_id = u.id
-        where t.status=1 and u.status=1 and t.follow_id=#{userId} order by t.create_time desc
+        where t.status=1 and u.state=1 and t.follow_id=#{userId} order by t.create_time desc
 
     </select>
 
@@ -169,7 +169,7 @@
 		FROM
 		b_user u
 		WHERE
-		u.recommend_sort IS NOT NULL and u.status=1
+		u.recommend_sort IS NOT NULL and u.state=1
 		<if test="userId!=null">
 			and u.id not in (select follow_id from t_user_follow where user_id=#{userId}) and u.id!=#{userId}
 		</if>

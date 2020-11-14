@@ -36,6 +36,13 @@ public enum MEnumError implements IMError {
 	NEWS_NOT_EXIST(20002,"新闻不存在"),
 
 
+	//商家端
+	MULTIPLE_SUBMISSIONS(40001,"存在多次提交认证"),
+	NONE_SUBMISSIONS(40002,"您还未提交认证"),
+	APPROVAL_ERROR(40003,"申请审核发生异常"),
+	DISMOUNT_STATE(40004,"商品已经处于下架状态或者还是待上架状态"),
+	ONLINE_STATE(40005,"商品已经处于上架状态"),
+	DELETE_STATE(40006,"商品已经已被删除"),
 
 
 

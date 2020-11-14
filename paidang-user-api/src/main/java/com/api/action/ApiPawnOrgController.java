@@ -5,6 +5,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.dao.model.PawnOrg;
+import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.service.GoodsService;
 import com.paidang.service.PawnOrgService;
 import io.swagger.annotations.Api;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -30,7 +33,7 @@ public class ApiPawnOrgController extends ApiBaseController {
     @ApiOperation(value = "店铺详情", notes = "不用登陆")
     @RequestMapping(value = "/get", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
-    public Object get(@ApiParam(value = "机构id", required = true) Integer orgId) {
+    public PawnOrg get(@ApiParam(value = "机构id", required = true) Integer orgId) {
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
         pawnOrg.setPassword(null);
         return pawnOrg;
@@ -46,6 +49,15 @@ public class ApiPawnOrgController extends ApiBaseController {
     @ApiMethod(isLogin = false)
     public Object getMostThreeGoods(@ApiParam(value = "机构id", required = true) Integer orgId) {
         return goodsService.getMostThreeGoods(orgId);
+    }
+
+
+    @ApiOperation(value = "店铺首页商品", notes = "不用登陆")
+    @RequestMapping(value = "/goods/inex", method = RequestMethod.POST)
+    @ApiMethod(isLogin = false)
+    public List<GoodsEx> getOrgGoodsBySoldOut(@ApiParam(value = "机构id", required = true) Integer orgId) {
+        startPage();
+        return goodsService.getOrgGoodsBySoldOut(orgId);
     }
 
 
@@ -67,7 +79,7 @@ public class ApiPawnOrgController extends ApiBaseController {
         } else {
             goodsExample.setOrderByClause("sold_out desc");
         }
-        return getDataTable(goodsService.selectByExample(goodsExample));
+        return goodsService.selectByExample(goodsExample);
 
     }
 

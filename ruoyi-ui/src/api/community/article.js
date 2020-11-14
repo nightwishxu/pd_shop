@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询动态列表
 export function listArticle(query) {
   return request({
-    url: '/community/article/list',
+    url: '/article/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listArticle(query) {
 // 查询动态详细
 export function getArticle(id) {
   return request({
-    url: '/community/article/' + id,
+    url: '/article/findById?id=' + id,
     method: 'get'
   })
 }
@@ -20,25 +20,24 @@ export function getArticle(id) {
 // 新增动态
 export function addArticle(data) {
   return request({
-    url: '/community/article',
-    method: 'post',
-    data: data
+    url: '/article/save',
+    params: data
   })
 }
 
 // 修改动态
 export function updateArticle(data) {
   return request({
-    url: '/community/article',
+    url: '/article/save',
     method: 'put',
-    data: data
+    params: data
   })
 }
 
 // 删除动态
 export function delArticle(id) {
   return request({
-    url: '/community/article/' + id,
+    url: '/article/del?id=' + id,
     method: 'delete'
   })
 }
@@ -46,7 +45,7 @@ export function delArticle(id) {
 // 导出动态
 export function exportArticle(query) {
   return request({
-    url: '/community/article/export',
+    url: '/article/export',
     method: 'get',
     params: query
   })

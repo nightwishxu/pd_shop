@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PawnOrgExample {
 	protected String orderByClause;
@@ -1681,6 +1681,376 @@ public class PawnOrgExample {
 
 		public Criteria andRedeemOverrateNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
 			addCriterion("redeem_overrate not between", value1, value2, "redeemOverrate");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIsNull() {
+			addCriterion("labels is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIsNotNull() {
+			addCriterion("labels is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsEqualTo(String value) {
+			addCriterion("labels =", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotEqualTo(String value) {
+			addCriterion("labels <>", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsGreaterThan(String value) {
+			addCriterion("labels >", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsGreaterThanOrEqualTo(String value) {
+			addCriterion("labels >=", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLessThan(String value) {
+			addCriterion("labels <", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLessThanOrEqualTo(String value) {
+			addCriterion("labels <=", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLike(String value) {
+			addCriterion("labels like", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotLike(String value) {
+			addCriterion("labels not like", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIn(List<String> values) {
+			addCriterion("labels in", values, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotIn(List<String> values) {
+			addCriterion("labels not in", values, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsBetween(String value1, String value2) {
+			addCriterion("labels between", value1, value2, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotBetween(String value1, String value2) {
+			addCriterion("labels not between", value1, value2, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralIsNull() {
+			addCriterion("integral is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralIsNotNull() {
+			addCriterion("integral is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral =", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral <>", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralGreaterThan(java.math.BigDecimal value) {
+			addCriterion("integral >", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral >=", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralLessThan(java.math.BigDecimal value) {
+			addCriterion("integral <", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral <=", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralIn(List<java.math.BigDecimal> values) {
+			addCriterion("integral in", values, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("integral not in", values, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("integral between", value1, value2, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("integral not between", value1, value2, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreIsNull() {
+			addCriterion("score is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreIsNotNull() {
+			addCriterion("score is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreEqualTo(java.math.BigDecimal value) {
+			addCriterion("score =", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("score <>", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreGreaterThan(java.math.BigDecimal value) {
+			addCriterion("score >", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("score >=", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreLessThan(java.math.BigDecimal value) {
+			addCriterion("score <", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("score <=", value, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreIn(List<java.math.BigDecimal> values) {
+			addCriterion("score in", values, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("score not in", values, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("score between", value1, value2, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andScoreNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("score not between", value1, value2, "score");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountIsNull() {
+			addCriterion("comment_count is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountIsNotNull() {
+			addCriterion("comment_count is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountEqualTo(Integer value) {
+			addCriterion("comment_count =", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountNotEqualTo(Integer value) {
+			addCriterion("comment_count <>", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountGreaterThan(Integer value) {
+			addCriterion("comment_count >", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountGreaterThanOrEqualTo(Integer value) {
+			addCriterion("comment_count >=", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountLessThan(Integer value) {
+			addCriterion("comment_count <", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountLessThanOrEqualTo(Integer value) {
+			addCriterion("comment_count <=", value, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountIn(List<Integer> values) {
+			addCriterion("comment_count in", values, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountNotIn(List<Integer> values) {
+			addCriterion("comment_count not in", values, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountBetween(Integer value1, Integer value2) {
+			addCriterion("comment_count between", value1, value2, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andCommentCountNotBetween(Integer value1, Integer value2) {
+			addCriterion("comment_count not between", value1, value2, "commentCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreIsNull() {
+			addCriterion("express_score is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreIsNotNull() {
+			addCriterion("express_score is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreEqualTo(java.math.BigDecimal value) {
+			addCriterion("express_score =", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("express_score <>", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreGreaterThan(java.math.BigDecimal value) {
+			addCriterion("express_score >", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("express_score >=", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreLessThan(java.math.BigDecimal value) {
+			addCriterion("express_score <", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("express_score <=", value, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreIn(List<java.math.BigDecimal> values) {
+			addCriterion("express_score in", values, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("express_score not in", values, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("express_score between", value1, value2, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andExpressScoreNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("express_score not between", value1, value2, "expressScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreIsNull() {
+			addCriterion("service_score is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreIsNotNull() {
+			addCriterion("service_score is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreEqualTo(java.math.BigDecimal value) {
+			addCriterion("service_score =", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("service_score <>", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreGreaterThan(java.math.BigDecimal value) {
+			addCriterion("service_score >", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("service_score >=", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreLessThan(java.math.BigDecimal value) {
+			addCriterion("service_score <", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("service_score <=", value, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreIn(List<java.math.BigDecimal> values) {
+			addCriterion("service_score in", values, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("service_score not in", values, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("service_score between", value1, value2, "serviceScore");
+			return (Criteria) this;
+		}
+
+		public Criteria andServiceScoreNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("service_score not between", value1, value2, "serviceScore");
 			return (Criteria) this;
 		}
 

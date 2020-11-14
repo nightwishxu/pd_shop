@@ -10,10 +10,16 @@
     <result column="goodsOwnerAccount" property="goodsOwnerAccount"/>
     <result column="goodsOwnerNick" property="goodsOwnerNick"/>
     <result column="goodsOwnerName" property="goodsOwnerName"/>
+    <result column="orgName" property="orgName"/>
   </resultMap>
 
     <select id="getMostThreeGoods" resultMap="BaseResultMap">
         SELECT * from p_goods where org_id=#{orgId} and is_online=1 and is_verfiy=2 order by sold_out desc limit 3
+    </select>
+
+
+    <select id="getOrgGoodsBySoldOut" resultMap="BaseResultMap">
+        SELECT * from p_goods where org_id=#{orgId} and is_online=1 and is_verfiy=2 order by sold_out desc
     </select>
 
   <select id="selectGoodsList" resultMap="BaseResultMap">
@@ -24,11 +30,13 @@
       WHEN 3 then '审核未通过'
       ELSE '状态未知'
       END ) good_estate,
-      g.cost AS good_soldPrice , cate.name AS cate_name
+      g.cost AS good_soldPrice , cate.name AS cate_name,
+      c.name as orgName
     FROM p_goods g
       LEFT JOIN p_pawn_cate cate
       ON g.cate_code = cate.code
-    <where>
+      left join p_pawn_org c on g.org_id = c.id
+      <where>
       <if test="source != null">
         g.source = #{source}
       </if>

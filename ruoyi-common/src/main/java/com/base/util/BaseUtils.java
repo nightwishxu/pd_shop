@@ -1,6 +1,7 @@
 package com.base.util;
 
 import cn.hutool.http.HttpUtil;
+import com.base.api.ApiException;
 
 import java.util.*;
 
@@ -158,5 +159,28 @@ public class BaseUtils {
             return String.join(",",paths);
         }
         return imgs;
+    }
+
+
+    /**
+     * 检查不同过则抛出异常
+     *
+     * @param flag
+     * @param error
+     */
+    public static void check(boolean flag, String error) {
+        if (flag) {
+            throw new ApiException(400,error);
+        }
+    }
+
+    /**
+     * 检查参数是否为空并抛一次
+     *
+     * @param objs
+     */
+    public static void checkBlankParam(Object... objs) {
+        check(isAnyBlank(objs), "缺少必要参数");
+
     }
 }

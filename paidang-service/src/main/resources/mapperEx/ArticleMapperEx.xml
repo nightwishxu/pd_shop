@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.paidang.daoEx.ArticleMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.ArticleEx" extends="com.paidang.dao.ArticleMapper.BaseResultMap">
+    <result column="followStatus" property="followStatus" jdbcType="INTEGER" />
+    <result column="praiseStatus" property="praiseStatus" jdbcType="INTEGER" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="headImg" property="headImg" jdbcType="VARCHAR" />
   </resultMap>
 
 
@@ -33,7 +37,7 @@
   </select>
 
 
-  <select id="findList" parameterType="com.paidang.daoEx.model.ArticleEx" resultType="com.paidang.daoEx.model.ArticleEx">
+  <select id="findList" parameterType="com.paidang.daoEx.model.ArticleEx" resultMap="BaseResultMap">
     SELECT  b.*
     <if test="userId!=null">
       ,t.status as followStatus
@@ -41,10 +45,11 @@
     </if>
     from (SELECT
     a.*,
-    u.nickname as nickname,
-    u.username as username,
-    u.icon
-    from t_article a LEFT JOIN  ums_user u on a.user_id = u.id
+    u.nick_name as nickName,
+    u.head_img headImg,
+    (select count(1) from t_user_report where article_id = a.id and status!=0) userReportStatus
+    from t_article a LEFT JOIN  b_user u on a.user_id = u.id
+    LEFT JOIN  t_user_report c on a.id =c.article_id
     where a.status!=0
     <if test="id!=null">
       and a.id=#{id}
@@ -81,7 +86,14 @@
     </if>
     <if test="endTime!=null">
       and a.create_time &lt;=#{endTime}
-    </if>) b
+    </if>
+    <if test="userReportStatus!=null and userReportStatus==0">
+      having userReportStatus=0
+    </if>
+    <if test="userReportStatus!=null and userReportStatus==1">
+      having userReportStatus>1
+    </if>
+    ) b
     <if test="userId!=null">
       left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}
       left join t_article_collect_praise p on p.article_id = b.id and p.type=0 and p.user_id=#{userId}
@@ -100,10 +112,10 @@
     from (SELECT
     a.*,
     m.info,
-    u.nickname as nickname,
-    u.username as username,
-    u.icon
-    from t_user_report m left join t_article a on m.article_id=a.id LEFT JOIN  ums_user u on a.user_id = u.id
+    u.nick_name as nickName,
+    u.name as username,
+    u.head_img
+    from t_user_report m left join t_article a on m.article_id=a.id LEFT JOIN  b_user u on a.user_id = u.id
     where a.status!=0 and m.status!=0
     <if test="id!=null">
       and a.id=#{id}
@@ -219,14 +231,14 @@
 
   <select id="recommendList" resultType="com.paidang.daoEx.model.ArticleEx">
     <if test="userIds!=null and userIds.size()>0">
-      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article  t  LEFT JOIN  ums_user u on t.user_id = u.id  left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article  t  LEFT JOIN  b_user u on t.user_id = u.id  left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
       and t.user_id in
       <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
         #{item}
       </foreach>
       order by t.create_time desc limit 0,1000) a
       union
-      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article t  LEFT JOIN  ums_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t  LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
       and t.user_id not  in
       <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
         #{item}
@@ -234,15 +246,15 @@
       order by t.create_time desc limit 0,1000) a
     </if>
     <if test="(userIds==null or  userIds.size()==0) and userId==null">
-      select a.* from (select t.*,u.nickname,u.icon from t_article t LEFT JOIN  ums_user u on t.user_id = u.id where t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+      select a.* from (select t.*,u.nick_name,u.head_img from t_article t LEFT JOIN  b_user u on t.user_id = u.id where t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
     </if>
     <if test="(userIds==null or  userIds.size()==0)  and userId!=null">
-      select a.* from (select t.*,u.nickname,u.icon,p.status as praiseStatus from t_article t LEFT JOIN  ums_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId}  where t.user_id!=#{userId} and  t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId}  where t.user_id!=#{userId} and  t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
     </if>
   </select>
 
   <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx">
-    SELECT a.*,m.icon,m.nickname  from t_article a left join ums_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1 and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId}) order by a.create_time desc
+    SELECT a.*,m.icon,m.nick_name  from t_article a left join b_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1 and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId}) order by a.create_time desc
   </select>
 
 

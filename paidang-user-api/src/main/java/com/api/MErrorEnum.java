@@ -7,7 +7,7 @@ public enum MErrorEnum implements IMError {
 	TOKEN_NOTEXISTS_ERROR(101,"缺少token信息"), 
 	LOGIN_FAIL_ERROR(102,"登录失效，请重新登录"), 
 	FILE_NOT_EXISTS(103,"文件不存在"), 
-	PAGE_LIMIT_NONG(104,"缺少分页参数page,limit"), 
+	PAGE_LIMIT_NONG(104,"缺少分页参数"),
 	SERVER_BUSY_ERROR(10000,"服务器忙，请稍后再试"),
 	UPLOAD_FAILURE_ERROR(10001,"文件上传失败"),
 	USER_NOEXIST_ERROR(10002,"用户不存在"), 

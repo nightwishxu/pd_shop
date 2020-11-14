@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.paidang.dao.model.UserReport" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
         <result column="article_id" property="articleId" jdbcType="INTEGER" />
         <result column="info" property="info" jdbcType="VARCHAR" />
         <result column="imgs" property="imgs" jdbcType="VARCHAR" />
@@ -73,7 +73,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,nickname,article_id,info,imgs,status,create_time
+        id,user_id,nick_name,article_id,info,imgs,status,create_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -111,11 +111,11 @@
     </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_user_report (user_id,nickname,
+        insert into t_user_report (user_id,nick_name,
         article_id,info,imgs,
         status,create_time
         )
-        values (#{userId,jdbcType=INTEGER},#{nickname,jdbcType=VARCHAR},
+        values (#{userId,jdbcType=INTEGER},#{nickName,jdbcType=VARCHAR},
         #{articleId,jdbcType=INTEGER},#{info,jdbcType=VARCHAR},#{imgs,jdbcType=VARCHAR},
         #{status,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP}
         )
@@ -127,8 +127,8 @@
             <if test="userId != null" >
                 user_id,
             </if>
-            <if test="nickname != null" >
-                nickname,
+            <if test="nickName != null" >
+                nick_name,
             </if>
             <if test="articleId != null" >
                 article_id,
@@ -150,8 +150,8 @@
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="nickname != null" >
-                #{nickname,jdbcType=VARCHAR},
+            <if test="nickName != null" >
+                #{nickName,jdbcType=VARCHAR},
             </if>
             <if test="articleId != null" >
                 #{articleId,jdbcType=INTEGER},
@@ -187,8 +187,8 @@
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
-            <if test="record.nickname != null" >
-                nickname = #{record.nickname,jdbcType=VARCHAR},
+            <if test="record.nickName != null" >
+                nick_name = #{record.nickName,jdbcType=VARCHAR},
             </if>
             <if test="record.articleId != null" >
                 article_id = #{record.articleId,jdbcType=INTEGER},
@@ -215,7 +215,7 @@
         update t_user_report
         set id = #{id,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
-        nickname = #{nickname,jdbcType=VARCHAR},
+        nick_name = #{nickName,jdbcType=VARCHAR},
         article_id = #{articleId,jdbcType=INTEGER},
         info = #{info,jdbcType=VARCHAR},
         imgs = #{imgs,jdbcType=VARCHAR},
@@ -232,8 +232,8 @@
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="nickname != null" >
-                nickname = #{nickname,jdbcType=VARCHAR},
+            <if test="nickName != null" >
+                nick_name = #{nickName,jdbcType=VARCHAR},
             </if>
             <if test="articleId != null" >
                 article_id = #{articleId,jdbcType=INTEGER},
@@ -257,7 +257,7 @@
     <update id="updateByPrimaryKey" >
         update t_user_report
         set user_id = #{userId,jdbcType=INTEGER},
-        nickname = #{nickname,jdbcType=VARCHAR},
+        nick_name = #{nickName,jdbcType=VARCHAR},
         article_id = #{articleId,jdbcType=INTEGER},
         info = #{info,jdbcType=VARCHAR},
         imgs = #{imgs,jdbcType=VARCHAR},

@@ -68,16 +68,16 @@ public class ArticleComment implements Serializable {
 	 */
 	@ApiModelProperty(value="冗余用户昵称")
 	@ApiParam(value="冗余用户昵称")
-	@Column(name = "nickname")
-	private String nickname;
+	@Column(name = "nick_name")
+	private String nickName;
 
 	/**
 	 *冗余用户头像
 	 */
 	@ApiModelProperty(value="冗余用户头像")
 	@ApiParam(value="冗余用户头像")
-	@Column(name = "icon")
-	private String icon;
+	@Column(name = "head_img")
+	private String headImg;
 
 	/**
 	 *是否置顶评论，1为置顶，0为不置顶
@@ -207,20 +207,20 @@ public class ArticleComment implements Serializable {
 		return userId;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname=nickname == null ? nickname : nickname.trim();
+	public void setNickName(String nickName) {
+		this.nickName=nickName == null ? nickName : nickName.trim();
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getNickName() {
+		return nickName;
 	}
 
-	public void setIcon(String icon) {
-		this.icon=icon == null ? icon : icon.trim();
+	public void setHeadImg(String headImg) {
+		this.headImg=headImg == null ? headImg : headImg.trim();
 	}
 
-	public String getIcon() {
-		return icon;
+	public String getHeadImg() {
+		return headImg;
 	}
 
 	public void setIsTop(Integer isTop) {

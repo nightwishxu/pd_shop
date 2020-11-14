@@ -488,7 +488,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "我的个人信息中--我的银行卡--资金明细列表", notes = "登陆")
     @RequestMapping(value = "/getMyPayeeList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public TableDataInfo getMyPayeeList(MobileInfo mobileInfo,
+    public List<AppUserCapital> getMyPayeeList(MobileInfo mobileInfo,
                                         PageLimit pageLimit) {
         UserBalanceLogExample example = new UserBalanceLogExample();
         example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
@@ -511,7 +511,7 @@ public class ApiHomeController extends ApiBaseController {
             record.setState(ex.getItem());
             ret.add(record);
         }
-        return getDataTable(ret);
+        return ret;
     }
 
     /**
@@ -524,7 +524,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "交易记录列表", notes = "登陆")
     @RequestMapping(value = "/tradeRecordList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public TableDataInfo tradeRecordList(MobileInfo mobileInfo,
+    public List<ApiUserTradeRecord> tradeRecordList(MobileInfo mobileInfo,
                                                     PageLimit pageLimit,
                                                     @ApiParam(value = "是否是赎回商品 0不是 1是", required = true) Integer state) {
         List<ApiUserTradeRecord> ret = new ArrayList<>();
@@ -545,7 +545,7 @@ public class ApiHomeController extends ApiBaseController {
             c.setType(ex.getUserPawnState());
             ret.add(c);
         }
-        return getDataTable(ret);
+        return ret;
     }
 
     /**
@@ -616,7 +616,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "商场订单列表", notes = "登陆")
     @RequestMapping(value = "/myStoreGoodsList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public TableDataInfo myStoreGoodsList(MobileInfo mobileInfo,
+    public List<AppMyStoreGoods> myStoreGoodsList(MobileInfo mobileInfo,
                                                   PageLimit pageLimit,
                                                   @ApiParam(value = "状态 0全部 1待付款 3待收货 4完成(确认收货) 5退款", required = true) Integer orderState
             , @ApiParam(value = "评价状态0未评价，1已经评价", required = true)Integer commentState) {
@@ -668,7 +668,7 @@ public class ApiHomeController extends ApiBaseController {
             }
             list.add(record);
         }
-        return getDataTable(list);
+        return list;
     }
 
     @ApiOperation(value = "商场订单 -- 申请退款", notes = "登陆")

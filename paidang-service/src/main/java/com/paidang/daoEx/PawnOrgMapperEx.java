@@ -20,4 +20,8 @@ public interface PawnOrgMapperEx {
 
     Integer changeState(PawnOrg pawnOrg);
 
+    int updateCommentCount(@Param("orgId") Integer orgId);
+
+    int updateCommentScore(@Param("orgId") Integer orgId);
+
 }

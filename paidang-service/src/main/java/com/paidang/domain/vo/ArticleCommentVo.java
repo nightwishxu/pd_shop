@@ -21,7 +21,7 @@ public class ArticleCommentVo {
     private Integer userId;
 
     @ApiModelProperty(value = "冗余用户昵称")
-    private String nickname;
+    private String nickName;
 
     @ApiModelProperty(value = "冗余用户头像")
     private String icon;
@@ -100,12 +100,13 @@ public class ArticleCommentVo {
         this.userId = userId;
     }
 
-    public String getNickname() {
-        return nickname;
+
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getIcon() {

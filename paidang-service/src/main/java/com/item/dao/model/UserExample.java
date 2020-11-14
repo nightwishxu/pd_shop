@@ -1,7 +1,7 @@
 package com.item.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserExample {
 	protected String orderByClause;
@@ -2071,6 +2071,66 @@ public class UserExample {
 
 		public Criteria andQqOpenidNotBetween(String value1, String value2) {
 			addCriterion("qq_openid not between", value1, value2, "qqOpenid");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortIsNull() {
+			addCriterion("recommend_sort is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortIsNotNull() {
+			addCriterion("recommend_sort is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortEqualTo(Integer value) {
+			addCriterion("recommend_sort =", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortNotEqualTo(Integer value) {
+			addCriterion("recommend_sort <>", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortGreaterThan(Integer value) {
+			addCriterion("recommend_sort >", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortGreaterThanOrEqualTo(Integer value) {
+			addCriterion("recommend_sort >=", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortLessThan(Integer value) {
+			addCriterion("recommend_sort <", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortLessThanOrEqualTo(Integer value) {
+			addCriterion("recommend_sort <=", value, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortIn(List<Integer> values) {
+			addCriterion("recommend_sort in", values, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortNotIn(List<Integer> values) {
+			addCriterion("recommend_sort not in", values, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortBetween(Integer value1, Integer value2) {
+			addCriterion("recommend_sort between", value1, value2, "recommendSort");
+			return (Criteria) this;
+		}
+
+		public Criteria andRecommendSortNotBetween(Integer value1, Integer value2) {
+			addCriterion("recommend_sort not between", value1, value2, "recommendSort");
 			return (Criteria) this;
 		}
 
