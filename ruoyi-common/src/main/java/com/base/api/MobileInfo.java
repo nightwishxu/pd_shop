@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiParam;
 @ApiModel(value="mobileInfo")
 public class MobileInfo {
     @ApiModelProperty(name="userId",value="用户id")
-    @ApiParam(hidden = true)
     private Integer userId;
 
     @ApiModelProperty(name="deviceid",value="设备Id",hidden=true)

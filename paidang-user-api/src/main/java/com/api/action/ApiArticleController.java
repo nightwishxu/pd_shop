@@ -16,6 +16,7 @@ import com.paidang.daoEx.model.ArticleEx;
 import com.paidang.domain.pojo.FollowArticleResult;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
+import com.ruoyi.common.core.page.PageDomain;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -97,9 +100,9 @@ public class ApiArticleController extends ApiBaseController {
         article.setReleaseTime(date);
         article.setCreateName(String.valueOf(mobileInfo.getUserId()));
         int num=articleService.insert(article);
-//        if (num>0){
-//            memberService.updateMemberCount(mobileInfo.getMemberId(),1);
-//        }
+        if (num>0){
+            userService.updateUserCount(mobileInfo.getUserId(),1);
+        }
 //        return CommonResult.success(num);
         return num;
     }
@@ -246,12 +249,13 @@ public class ApiArticleController extends ApiBaseController {
         return articleEx;
     }
 
-    @ApiOperation(value = "最新动态列表", notes = "")
+    @ApiOperation(value = "最新动态列表", notes = "分页")
     @RequestMapping(value = "/list",method = {RequestMethod.POST})
     @ApiMethod(isLogin = false,isPage = true)
     public List<ArticleEx> list(MobileInfo mobileInfo,
-                                @ApiParam(value = "类型 1用户帖子 2后台帖子 3用户视频", required = true)Integer type){
-        startPage();
+                                @ApiParam(value = "类型 1用户帖子 2后台帖子 3用户视频", required = true)Integer type
+        , PageDomain page){
+//        startPage();
         ArticleEx ex = new ArticleEx();
         ex.setIsShow(1);
         ex.setStatus(2);
@@ -478,7 +482,7 @@ public class ApiArticleController extends ApiBaseController {
 
 
     @ApiOperation(value = "推荐鉴定首页", notes = "")
-    @RequestMapping(value = "/notice/index",method = {RequestMethod.POST})
+    @RequestMapping(value = "/recommendAppraise/index",method = {RequestMethod.POST})
     @ApiMethod(isLogin = false)
     public List<ArticleEx> noticeIndex(){
         ArticleEx ex = new ArticleEx();
@@ -551,7 +555,27 @@ public class ApiArticleController extends ApiBaseController {
         return result;
     }
 
-
+    @ApiOperation(value = "动态关注首页", notes = "返回 map , key = followArticleList 关注列表 ，key = recommendArticleList 推荐列表")
+    @RequestMapping(value = "/focus/index",method = {RequestMethod.POST})
+    @ApiMethod(isLogin = false)
+    public Map<String,Object> focusIndex(MobileInfo mobileInfo){
+        ArticleEx ex = new ArticleEx();
+        ex.setIsShow(1);
+        ex.setStatus(2);
+        ex.setType(2);
+        List<ArticleEx> list = articleService.findNoticeIndex(ex);
+        List<ArticleEx> followArticleList = null;
+        if (mobileInfo.getUserId()!=null){
+            //最近7天关注用户动态
+            followArticleList = articleService.followArticleList(mobileInfo.getUserId(),null);
+        }
+        //这边推荐的是以动态为推荐，不是推荐用户，都是近7天点赞排在前20名的动态随机8条
+        List<ArticleEx> recommendArticleList = articleService.recommendNewList(mobileInfo.getUserId(),8);
+        Map<String,Object> result = new HashMap<>();
+        result.put("followArticleList",followArticleList);
+        result.put("recommendArticleList",recommendArticleList);
+        return result;
+    }
 
 
 }

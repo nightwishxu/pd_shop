@@ -11,17 +11,28 @@
       :on-progress="uploadVideoProcess"
       :on-success="handleUploadSuccess"
     >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过10MB</div>
+      <el-button
+        size="small"
+        type="primary"
+      >点击上传</el-button>
+      <div
+        slot="tip"
+        class="el-upload__tip"
+      >只能上传mp4文件，且不超过10MB</div>
     </el-upload>
 
     <video
       v-if="fileList[0].url!='' && fileList[0].url!=null && fileList[0].url!=undifined"
       :src="fileList[0].url"
       class="avatar"
+      width="320"
+      height="240"
       controls="controls"
     ></video>
-    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    <i
+      v-else
+      class="el-icon-plus avatar-uploader-icon"
+    ></i>
     <!-- <p v-if='load'> 上传中</p> -->
     <P style="color:#000000">请保证视频格式正确，且不超过20M</P>
     <!-- <video

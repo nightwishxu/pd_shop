@@ -2134,6 +2134,246 @@ public class UserExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andArticleCountIsNull() {
+			addCriterion("article_count is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountIsNotNull() {
+			addCriterion("article_count is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountEqualTo(Integer value) {
+			addCriterion("article_count =", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountNotEqualTo(Integer value) {
+			addCriterion("article_count <>", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountGreaterThan(Integer value) {
+			addCriterion("article_count >", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountGreaterThanOrEqualTo(Integer value) {
+			addCriterion("article_count >=", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountLessThan(Integer value) {
+			addCriterion("article_count <", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountLessThanOrEqualTo(Integer value) {
+			addCriterion("article_count <=", value, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountIn(List<Integer> values) {
+			addCriterion("article_count in", values, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountNotIn(List<Integer> values) {
+			addCriterion("article_count not in", values, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountBetween(Integer value1, Integer value2) {
+			addCriterion("article_count between", value1, value2, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andArticleCountNotBetween(Integer value1, Integer value2) {
+			addCriterion("article_count not between", value1, value2, "articleCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountIsNull() {
+			addCriterion("follow_count is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountIsNotNull() {
+			addCriterion("follow_count is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountEqualTo(Integer value) {
+			addCriterion("follow_count =", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountNotEqualTo(Integer value) {
+			addCriterion("follow_count <>", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountGreaterThan(Integer value) {
+			addCriterion("follow_count >", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountGreaterThanOrEqualTo(Integer value) {
+			addCriterion("follow_count >=", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountLessThan(Integer value) {
+			addCriterion("follow_count <", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountLessThanOrEqualTo(Integer value) {
+			addCriterion("follow_count <=", value, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountIn(List<Integer> values) {
+			addCriterion("follow_count in", values, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountNotIn(List<Integer> values) {
+			addCriterion("follow_count not in", values, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountBetween(Integer value1, Integer value2) {
+			addCriterion("follow_count between", value1, value2, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFollowCountNotBetween(Integer value1, Integer value2) {
+			addCriterion("follow_count not between", value1, value2, "followCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountIsNull() {
+			addCriterion("fans_count is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountIsNotNull() {
+			addCriterion("fans_count is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountEqualTo(Integer value) {
+			addCriterion("fans_count =", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountNotEqualTo(Integer value) {
+			addCriterion("fans_count <>", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountGreaterThan(Integer value) {
+			addCriterion("fans_count >", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountGreaterThanOrEqualTo(Integer value) {
+			addCriterion("fans_count >=", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountLessThan(Integer value) {
+			addCriterion("fans_count <", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountLessThanOrEqualTo(Integer value) {
+			addCriterion("fans_count <=", value, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountIn(List<Integer> values) {
+			addCriterion("fans_count in", values, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountNotIn(List<Integer> values) {
+			addCriterion("fans_count not in", values, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountBetween(Integer value1, Integer value2) {
+			addCriterion("fans_count between", value1, value2, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andFansCountNotBetween(Integer value1, Integer value2) {
+			addCriterion("fans_count not between", value1, value2, "fansCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountIsNull() {
+			addCriterion("order_count is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountIsNotNull() {
+			addCriterion("order_count is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountEqualTo(Integer value) {
+			addCriterion("order_count =", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountNotEqualTo(Integer value) {
+			addCriterion("order_count <>", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountGreaterThan(Integer value) {
+			addCriterion("order_count >", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountGreaterThanOrEqualTo(Integer value) {
+			addCriterion("order_count >=", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountLessThan(Integer value) {
+			addCriterion("order_count <", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountLessThanOrEqualTo(Integer value) {
+			addCriterion("order_count <=", value, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountIn(List<Integer> values) {
+			addCriterion("order_count in", values, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountNotIn(List<Integer> values) {
+			addCriterion("order_count not in", values, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountBetween(Integer value1, Integer value2) {
+			addCriterion("order_count between", value1, value2, "orderCount");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrderCountNotBetween(Integer value1, Integer value2) {
+			addCriterion("order_count not between", value1, value2, "orderCount");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

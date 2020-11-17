@@ -4,6 +4,7 @@ import com.paidang.dao.model.PawnOrg;
 import com.paidang.daoEx.model.PawnOrgEx;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,7 @@ public interface PawnOrgMapperEx {
     int updateCommentCount(@Param("orgId") Integer orgId);
 
     int updateCommentScore(@Param("orgId") Integer orgId);
+
+    int addIntegral(@Param("orgId") Integer orgId, @Param("integral")BigDecimal integral);
 
 }

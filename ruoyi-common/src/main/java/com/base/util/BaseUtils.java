@@ -126,21 +126,22 @@ public class BaseUtils {
 
 
     public static String removeUrl(String url){
-        if (isAnyBlank(url)){
-            return url;
-        }
-        String[] urls = url.split(",");
-        for (int i=0;i<urls.length;i++){
-            String s = urls[i];
-            if (s.startsWith("http")){
-                int index = s.lastIndexOf("=");
-                if (index>=0){
-                    s = s.substring(index+1,s.length());
-                }
-                urls[i] = s;
-            }
-        }
-        return  String.join(",",urls);
+        return url;
+//        if (isAnyBlank(url)){
+//            return url;
+//        }
+//        String[] urls = url.split(",");
+//        for (int i=0;i<urls.length;i++){
+//            String s = urls[i];
+//            if (s.startsWith("http")){
+//                int index = s.lastIndexOf("=");
+//                if (index>=0){
+//                    s = s.substring(index+1,s.length());
+//                }
+//                urls[i] = s;
+//            }
+//        }
+//        return  String.join(",",urls);
     }
 
     public static String processImg(String path){

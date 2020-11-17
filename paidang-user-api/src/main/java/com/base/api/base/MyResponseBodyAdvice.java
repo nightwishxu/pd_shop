@@ -5,6 +5,7 @@ import com.base.ConstantsCode;
 import com.base.annotation.ApiMethod;
 import com.base.dao.model.Result;
 import com.base.util.JSONUtils;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.Ret;
 import com.util.PaidangSecureUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import springfox.documentation.spring.web.json.Json;
+
+import java.util.List;
 
 @ControllerAdvice
 @Slf4j
@@ -47,6 +50,10 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 body = JSON.parse(body.toString());
             }
             Result<Object> ret = new Result<>(body);
+            if (api.isPage() && body!=null){
+                List list = (List)body;
+                ret.setTotal(new PageInfo(list).getTotal());
+            }
             if(Result.class.isAssignableFrom(body.getClass())){
                 ret = (Result<Object>) body;
             }

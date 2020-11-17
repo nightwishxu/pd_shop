@@ -122,8 +122,24 @@ public class ArticleService {
 		return articleMapperEx.recommendList(userIds,userId);
 	}
 
-	public List<ArticleEx> followArticleList(Integer userId){
-		return articleMapperEx.followArticleList(userId);
+	/**
+	 * 关注用户近7天动态
+	 * @param userId
+	 * @param limit
+	 * @return
+	 */
+	public List<ArticleEx> followArticleList(Integer userId,Integer limit){
+		return articleMapperEx.followArticleList(userId,limit);
 	}
 
+
+	/**
+	 * 非关注用户近7天动态（点赞前20 随机8）
+	 * @param userId
+	 * @param limit
+	 * @return
+	 */
+	public List<ArticleEx> recommendNewList(Integer userId,Integer limit){
+		return articleMapperEx.recommendNewList(userId,limit);
+	}
 }

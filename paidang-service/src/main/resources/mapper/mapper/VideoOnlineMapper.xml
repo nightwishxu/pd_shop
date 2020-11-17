@@ -10,6 +10,7 @@
         <result column="state" property="state" jdbcType="TINYINT" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="is_suggest" property="isSuggest" jdbcType="TINYINT" />
+        <result column="labels" property="labels" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -73,7 +74,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,title,img,video,view_cnt,state,create_time,is_suggest
+        id,title,img,video,view_cnt,state,create_time,is_suggest,labels
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -113,11 +114,11 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
         insert into p_video_online (title,img,
         video,view_cnt,state,
-        create_time,is_suggest
+        create_time,is_suggest,labels
         )
         values (#{title,jdbcType=VARCHAR},#{img,jdbcType=VARCHAR},
         #{video,jdbcType=VARCHAR},#{viewCnt,jdbcType=INTEGER},#{state,jdbcType=TINYINT},
-        #{createTime,jdbcType=TIMESTAMP},#{isSuggest,jdbcType=TINYINT}
+        #{createTime,jdbcType=TIMESTAMP},#{isSuggest,jdbcType=TINYINT},#{labels,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -145,6 +146,9 @@
             <if test="isSuggest != null" >
                 is_suggest,
             </if>
+            <if test="labels != null" >
+                labels,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="title != null" >
@@ -167,6 +171,9 @@
             </if>
             <if test="isSuggest != null" >
                 #{isSuggest,jdbcType=TINYINT},
+            </if>
+            <if test="labels != null" >
+                #{labels,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -205,6 +212,9 @@
             <if test="record.isSuggest != null" >
                 is_suggest = #{record.isSuggest,jdbcType=TINYINT},
             </if>
+            <if test="record.labels != null" >
+                labels = #{record.labels,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -220,7 +230,8 @@
         view_cnt = #{viewCnt,jdbcType=INTEGER},
         state = #{state,jdbcType=TINYINT},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        is_suggest = #{isSuggest,jdbcType=TINYINT}
+        is_suggest = #{isSuggest,jdbcType=TINYINT},
+        labels = #{labels,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -250,6 +261,9 @@
             <if test="isSuggest != null" >
                 is_suggest = #{isSuggest,jdbcType=TINYINT},
             </if>
+            <if test="labels != null" >
+                labels = #{labels,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -262,8 +276,23 @@
         view_cnt = #{viewCnt,jdbcType=INTEGER},
         state = #{state,jdbcType=TINYINT},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        is_suggest = #{isSuggest,jdbcType=TINYINT}
+        is_suggest = #{isSuggest,jdbcType=TINYINT},
+        labels = #{labels,jdbcType=VARCHAR}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_video_online
+        ${sqlSegment}
+    </select>
 
 </mapper>

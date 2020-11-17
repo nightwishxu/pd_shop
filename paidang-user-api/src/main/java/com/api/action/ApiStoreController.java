@@ -16,11 +16,14 @@ import com.base.api.MobileInfo;
 import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.base.util.StringUtil;
+import com.google.common.collect.Lists;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
 import com.item.service.FocusService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.GoodsAuctionEx;
+import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.domain.qo.GoodsQo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -203,22 +206,41 @@ public class ApiStoreController extends ApiBaseController {
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
         GoodsExample goodsExample = new GoodsExample();
 
-        if(null != type){
-            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(3).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(4).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(2).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(6).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(7).andTotalGreaterThanOrEqualTo(1);
-        }else{
-            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(4).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(6).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
-            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(7).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
-        }
+        GoodsQo qo = new GoodsQo();
+        qo.setStartTotal(1);
+        qo.setType(type);
+        qo.setState(1);
+        qo.setIsOnline(1);
+        qo.setIsVerfiy(2);
+        qo.setType(1);
+        qo.setStartTotal(1);
+        List<Integer> sources = Lists.newArrayList();
+        sources.add(2);
+        sources.add(3);
+        sources.add(4);
+        sources.add(6);
+        sources.add(7);
+        qo.setSources(sources);
 
-        List<Goods> list = goodsService.selectByExample(goodsExample);
-        for(Goods ex : list){
+        List<GoodsEx> list = goodsService.findListEx(qo);
+
+//
+//        if(null != type){
+//            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(3).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(4).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(2).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(6).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andCateCodeEqualTo(type).andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andTypeEqualTo(1).andSourceEqualTo(7).andTotalGreaterThanOrEqualTo(1);
+//        }else{
+//            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(4).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(6).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
+//            goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(7).andTypeEqualTo(1).andTotalGreaterThanOrEqualTo(1);
+//        }
+//
+//        List<Goods> list = goodsService.selectByExample(goodsExample);
+        for(GoodsEx ex : list){
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();
             record.setId(ex.getId());
             record.setTitle(ex.getName());
@@ -229,6 +251,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
+            record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
         return list2;
@@ -245,11 +268,22 @@ public class ApiStoreController extends ApiBaseController {
                                                        PageLimit pageLimit){
         startPage();
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
-        GoodsExample goodsExample = new GoodsExample();
-        goodsExample.or().andCateCodeEqualTo(type).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(2);
-        goodsExample.or().andCateCodeEqualTo(type).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(2);
-        List<Goods> list = goodsService.selectByExample(goodsExample);
-        for(Goods ex : list){
+//        GoodsExample goodsExample = new GoodsExample();
+//        goodsExample.or().andCateCodeEqualTo(type).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(2);
+//        goodsExample.or().andCateCodeEqualTo(type).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(2);
+//        List<Goods> list = goodsService.selectByExample(goodsExample);
+        GoodsQo qo = new GoodsQo();
+        qo.setType(type);
+        qo.setIsOnline(1);
+        qo.setIsVerfiy(2);
+        qo.setType(2);
+        List<Integer> sources = Lists.newArrayList();
+        sources.add(2);
+        sources.add(3);
+        qo.setSources(sources);
+
+        List<GoodsEx> list = goodsService.findListEx(qo);
+        for(GoodsEx ex : list){
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();
             record.setId(ex.getId());
             record.setTitle(ex.getName());
@@ -260,6 +294,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
+            record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
         return list2;
@@ -275,17 +310,32 @@ public class ApiStoreController extends ApiBaseController {
                                                        PageLimit pageLimit){
         startPage();
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
-        GoodsExample goodsExample = new GoodsExample();
-        //goodsExample.createCriteria().andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTotalGreaterThanOrEqualTo(1);
+//        GoodsExample goodsExample = new GoodsExample();
+//        //goodsExample.createCriteria().andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTotalGreaterThanOrEqualTo(1);
+//
+//        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(1);
+//        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(1);
+//        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(4).andTypeEqualTo(1);
+//        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(6).andTypeEqualTo(1);
+//        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(7).andTypeEqualTo(1);
+//        goodsExample.setOrderByClause("sort_order desc,is_suggest desc,create_time desc");
+//        List<Goods> list = goodsService.selectByExample(goodsExample);
 
-        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(3).andTypeEqualTo(1);
-        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(1);
-        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(4).andTypeEqualTo(1);
-        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(6).andTypeEqualTo(1);
-        goodsExample.or().andStateEqualTo(1).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(7).andTypeEqualTo(1);
-        goodsExample.setOrderByClause("sort_order desc,is_suggest desc,create_time desc");
-        List<Goods> list = goodsService.selectByExample(goodsExample);
-        for(Goods ex : list) {
+        GoodsQo qo = new GoodsQo();
+        qo.setState(1);
+        qo.setIsOnline(1);
+        qo.setIsVerfiy(2);
+        qo.setType(1);
+        List<Integer> sources = Lists.newArrayList();
+        sources.add(2);
+        sources.add(3);
+        sources.add(4);
+        sources.add(6);
+        sources.add(7);
+        qo.setSources(sources);
+
+        List<GoodsEx> list = goodsService.findListEx(qo);
+        for(GoodsEx ex : list) {
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();
             record.setId(ex.getId());
             record.setImg(ex.getImg());
@@ -297,6 +347,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setSource(ex.getSource());
             record.setOrgId(ex.getOrgId());
+            record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
         return list2;
@@ -334,6 +385,7 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
         appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
         appStoreGoodsDetail.setImg(ex.getImg());
+        appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
 
 
         if (ex.getDealType()!=null &&  ex.getDealType()==2){
@@ -341,6 +393,7 @@ public class ApiStoreController extends ApiBaseController {
             map.put("goods_id",id);
             List<GoodsAuctionEx> goodsAuctionExes = goodsAuctionService.selectByAuctionUser(map);
             appStoreGoodsDetail.setGoodsAuctionList(goodsAuctionExes);
+            appStoreGoodsDetail.setHotScore(goodsAuctionExes.size()*15);
         }
 
         return  appStoreGoodsDetail;
@@ -383,6 +436,7 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
             appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
             appStoreGoodsDetail.setImg(ex.getImg());
+            appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
 //        }
 //        //商家端(个人)
 //        if(ex.getSource()==6){
@@ -848,6 +902,7 @@ public class ApiStoreController extends ApiBaseController {
         int cnt2 = 1;
         for(Goods ex : goodsList){
             ApiIndexMenu c = new ApiIndexMenu();
+            c.setOrgId(ex.getOrgId());
             if(3 == ex.getSource()||4 == ex.getSource()){
                 if(cnt <= 6){
                     //如果是认证商场商品

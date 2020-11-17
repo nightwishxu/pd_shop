@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.item.dao.MobileVerifyMapper" >
-    <resultMap id="BaseResultMap" type="com.item.dao.model.MobileVerify" >
-        <id column="device_id" property="deviceId" jdbcType="VARCHAR" />
+<mapper namespace="com.paidang.dao.IntegralLogMapper" >
+    <resultMap id="BaseResultMap" type="com.paidang.dao.model.IntegralLog" >
+        <id column="id" property="id" jdbcType="INTEGER" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="verify" property="verify" jdbcType="VARCHAR" />
-        <result column="cid" property="cid" jdbcType="VARCHAR" />
-        <result column="device_type" property="deviceType" jdbcType="INTEGER" />
-        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+        <result column="integral" property="integral" jdbcType="DECIMAL" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="log_id" property="logId" jdbcType="VARCHAR" />
+        <result column="info" property="info" jdbcType="VARCHAR" />
+        <result column="create_account" property="createAccount" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="account_type" property="accountType" jdbcType="INTEGER" />
+        <result column="integral_new" property="integralNew" jdbcType="DECIMAL" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -73,7 +75,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        device_id,user_id,verify,cid,device_type,update_time,expire_time,create_time
+        id,user_id,integral,type,log_id,info,create_account,create_time,account_type,integral_new
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -82,7 +84,7 @@
             distinct
         </if>
         <include refid="Base_Column_List" />
-        from b_mobile_verify
+        from t_integral_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
@@ -94,122 +96,136 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List" />
-        from b_mobile_verify
-        where device_id = #{deviceId}
+        from t_integral_log
+        where id = #{id}
     </select>
 
     <delete id="deleteByPrimaryKey" >
-        delete from b_mobile_verify
-        where device_id = #{deviceId}
+        delete from t_integral_log
+        where id = #{id}
     </delete>
 
     <delete id="deleteByExample" >
-        delete from b_mobile_verify
+        delete from t_integral_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
     </delete>
 
-    <insert id="insert" >
-        insert into b_mobile_verify (device_id,user_id,verify,
-        cid,device_type,update_time,
-        expire_time,create_time
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_integral_log (user_id,integral,
+        type,log_id,info,
+        create_account,create_time,account_type,
+        integral_new
         )
-        values (#{deviceId,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{verify,jdbcType=VARCHAR},
-        #{cid,jdbcType=VARCHAR},#{deviceType,jdbcType=INTEGER},#{updateTime,jdbcType=TIMESTAMP},
-        #{expireTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}
+        values (#{userId,jdbcType=INTEGER},#{integral,jdbcType=DECIMAL},
+        #{type,jdbcType=INTEGER},#{logId,jdbcType=VARCHAR},#{info,jdbcType=VARCHAR},
+        #{createAccount,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{accountType,jdbcType=INTEGER},
+        #{integralNew,jdbcType=DECIMAL}
         )
     </insert>
 
-    <insert id="insertSelective" >
-        insert into b_mobile_verify
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_integral_log
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="deviceId != null" >
-                device_id,
-            </if>
             <if test="userId != null" >
                 user_id,
             </if>
-            <if test="verify != null" >
-                verify,
+            <if test="integral != null" >
+                integral,
             </if>
-            <if test="cid != null" >
-                cid,
+            <if test="type != null" >
+                type,
             </if>
-            <if test="deviceType != null" >
-                device_type,
+            <if test="logId != null" >
+                log_id,
             </if>
-            <if test="updateTime != null" >
-                update_time,
+            <if test="info != null" >
+                info,
             </if>
-            <if test="expireTime != null" >
-                expire_time,
+            <if test="createAccount != null" >
+                create_account,
             </if>
             <if test="createTime != null" >
                 create_time,
             </if>
+            <if test="accountType != null" >
+                account_type,
+            </if>
+            <if test="integralNew != null" >
+                integral_new,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="deviceId != null" >
-                #{deviceId,jdbcType=VARCHAR},
-            </if>
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="verify != null" >
-                #{verify,jdbcType=VARCHAR},
+            <if test="integral != null" >
+                #{integral,jdbcType=DECIMAL},
             </if>
-            <if test="cid != null" >
-                #{cid,jdbcType=VARCHAR},
+            <if test="type != null" >
+                #{type,jdbcType=INTEGER},
             </if>
-            <if test="deviceType != null" >
-                #{deviceType,jdbcType=INTEGER},
+            <if test="logId != null" >
+                #{logId,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                #{updateTime,jdbcType=TIMESTAMP},
+            <if test="info != null" >
+                #{info,jdbcType=VARCHAR},
             </if>
-            <if test="expireTime != null" >
-                #{expireTime,jdbcType=TIMESTAMP},
+            <if test="createAccount != null" >
+                #{createAccount,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountType != null" >
+                #{accountType,jdbcType=INTEGER},
+            </if>
+            <if test="integralNew != null" >
+                #{integralNew,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
 
     <select id="countByExample" resultType="java.lang.Integer" >
-        select count(*) from b_mobile_verify
+        select count(*) from t_integral_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
     </select>
 
     <update id="updateByExampleSelective" >
-        update b_mobile_verify
+        update t_integral_log
         <set >
-            <if test="record.deviceId != null" >
-                device_id = #{record.deviceId,jdbcType=VARCHAR},
+            <if test="record.id != null" >
+                id = #{record.id,jdbcType=INTEGER},
             </if>
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
-            <if test="record.verify != null" >
-                verify = #{record.verify,jdbcType=VARCHAR},
+            <if test="record.integral != null" >
+                integral = #{record.integral,jdbcType=DECIMAL},
             </if>
-            <if test="record.cid != null" >
-                cid = #{record.cid,jdbcType=VARCHAR},
+            <if test="record.type != null" >
+                type = #{record.type,jdbcType=INTEGER},
             </if>
-            <if test="record.deviceType != null" >
-                device_type = #{record.deviceType,jdbcType=INTEGER},
+            <if test="record.logId != null" >
+                log_id = #{record.logId,jdbcType=VARCHAR},
             </if>
-            <if test="record.updateTime != null" >
-                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            <if test="record.info != null" >
+                info = #{record.info,jdbcType=VARCHAR},
             </if>
-            <if test="record.expireTime != null" >
-                expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
+            <if test="record.createAccount != null" >
+                create_account = #{record.createAccount,jdbcType=VARCHAR},
             </if>
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.accountType != null" >
+                account_type = #{record.accountType,jdbcType=INTEGER},
+            </if>
+            <if test="record.integralNew != null" >
+                integral_new = #{record.integralNew,jdbcType=DECIMAL},
             </if>
         </set>
         <if test="_parameter != null" >
@@ -218,58 +234,82 @@
     </update>
 
     <update id="updateByExample" >
-        update b_mobile_verify
-        set device_id = #{deviceId,jdbcType=VARCHAR},
+        update t_integral_log
+        set id = #{id,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
-        verify = #{verify,jdbcType=VARCHAR},
-        cid = #{cid,jdbcType=VARCHAR},
-        device_type = #{deviceType,jdbcType=INTEGER},
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-        expire_time = #{expireTime,jdbcType=TIMESTAMP},
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        integral = #{integral,jdbcType=DECIMAL},
+        type = #{type,jdbcType=INTEGER},
+        log_id = #{logId,jdbcType=VARCHAR},
+        info = #{info,jdbcType=VARCHAR},
+        create_account = #{createAccount,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        account_type = #{accountType,jdbcType=INTEGER},
+        integral_new = #{integralNew,jdbcType=DECIMAL}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
     </update>
 
     <update id="updateByPrimaryKeySelective" >
-        update b_mobile_verify
+        update t_integral_log
         <set >
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="verify != null" >
-                verify = #{verify,jdbcType=VARCHAR},
+            <if test="integral != null" >
+                integral = #{integral,jdbcType=DECIMAL},
             </if>
-            <if test="cid != null" >
-                cid = #{cid,jdbcType=VARCHAR},
+            <if test="type != null" >
+                type = #{type,jdbcType=INTEGER},
             </if>
-            <if test="deviceType != null" >
-                device_type = #{deviceType,jdbcType=INTEGER},
+            <if test="logId != null" >
+                log_id = #{logId,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="info != null" >
+                info = #{info,jdbcType=VARCHAR},
             </if>
-            <if test="expireTime != null" >
-                expire_time = #{expireTime,jdbcType=TIMESTAMP},
+            <if test="createAccount != null" >
+                create_account = #{createAccount,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="accountType != null" >
+                account_type = #{accountType,jdbcType=INTEGER},
+            </if>
+            <if test="integralNew != null" >
+                integral_new = #{integralNew,jdbcType=DECIMAL},
+            </if>
         </set>
-        where device_id = #{deviceId}
+        where id = #{id}
     </update>
 
     <update id="updateByPrimaryKey" >
-        update b_mobile_verify
+        update t_integral_log
         set user_id = #{userId,jdbcType=INTEGER},
-        verify = #{verify,jdbcType=VARCHAR},
-        cid = #{cid,jdbcType=VARCHAR},
-        device_type = #{deviceType,jdbcType=INTEGER},
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-        expire_time = #{expireTime,jdbcType=TIMESTAMP},
-        create_time = #{createTime,jdbcType=TIMESTAMP}
-        where device_id = #{deviceId}
+        integral = #{integral,jdbcType=DECIMAL},
+        type = #{type,jdbcType=INTEGER},
+        log_id = #{logId,jdbcType=VARCHAR},
+        info = #{info,jdbcType=VARCHAR},
+        create_account = #{createAccount,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        account_type = #{accountType,jdbcType=INTEGER},
+        integral_new = #{integralNew,jdbcType=DECIMAL}
+        where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from t_integral_log
+        ${sqlSegment}
+    </select>
 
 </mapper>

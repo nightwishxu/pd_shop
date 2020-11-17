@@ -14,10 +14,8 @@ import com.base.api.MobileInfo;
 import com.base.util.DateUtil;
 import com.base.util.StringUtil;
 import com.item.dao.model.*;
-import com.item.service.CodeService;
-import com.item.service.PayLogService;
-import com.item.service.UserNotifyService;
-import com.item.service.UserService;
+import com.item.service.*;
+import com.paidang.dao.OrgIntegralEnum;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.OrderEx;
@@ -86,6 +84,9 @@ public class ApiHomeController extends ApiBaseController {
     private BusinessUserInfoService businessUserInfoService;
     @Autowired
     private BusinessUserBalanceLogService businessUserBalanceLogService;
+
+    @Autowired
+    private IntegralLogService integralLogService;
 
     /**
      * 个人资料
@@ -843,6 +844,10 @@ public class ApiHomeController extends ApiBaseController {
         }
         order.setState(4);
         orderService.updateByPrimaryKeySelective(order);
+        OrgIntegralEnum integralEnum = OrgIntegralEnum.getIntegral(order.getPrice());
+        if (integralEnum!=null){
+            integralLogService.addIntegral(order.getOrgId(),integralEnum.getIntegral(),0,1,order.getCode(),integralEnum.getDesc());
+        }
         if (order.getGoodsSource() == 6 || order.getGoodsSource() == 7){
             BigDecimal money = order.getGoodsPrice();
             int goodId = order.getGoodsId();

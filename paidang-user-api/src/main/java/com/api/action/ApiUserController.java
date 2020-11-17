@@ -69,8 +69,8 @@ public class ApiUserController extends ApiBaseController {
             //取消关注
             int num = userFollowService.deleteByExample(example);
             if (num>0){
-//                userService.updateUserCount(followUserId,3);
-//                userService.updateUserCount(mobileInfo.getUserid(),2);
+                userService.updateUserCount(followUserId,3);
+                userService.updateUserCount(mobileInfo.getUserId(),2);
             }
             return 0;
         }else if (type==1){
@@ -83,8 +83,8 @@ public class ApiUserController extends ApiBaseController {
                 follow.setStatus(1);
                 int num = userFollowService.insert(follow);
                 if (num>0){
-//                    umsUserService.updateUserCount(mobileInfo.getUserId(),2);
-//                    umsUserService.updateUserCount(followUserId,3);
+                    userService.updateUserCount(mobileInfo.getUserId(),2);
+                    userService.updateUserCount(followUserId,3);
                 }
                 return 1;
             }
@@ -230,10 +230,9 @@ public class ApiUserController extends ApiBaseController {
 
     @ApiOperation(value = "推荐用户列表")
     @RequestMapping(value = "/recommend/list", method = RequestMethod.POST)
-    @ApiMethod(isLogin = true,isPage = false)
+    @ApiMethod(isLogin = false,isPage = false)
     public List<UserEx> recommendList(PageLimit pageLimit,
             @RequestParam(required = false) @ApiParam(value = "用户id", required = false)Integer userId){
-        startPage();
         List<UserEx> list = userService.recommendList(userId);
         return list;
     }

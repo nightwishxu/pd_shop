@@ -70,21 +70,52 @@
             <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
-	
-	<!-- 系统模块日志级别控制  -->
-	<logger name="com.ruoyi" level="info" />
-	<!-- Spring日志级别控制  -->
-	<logger name="org.springframework" level="warn" />
 
-	<root level="info">
-		<appender-ref ref="console" />
-	</root>
+    <springProfile name="test,dev">
+        <root level="debug">
+            <appender-ref ref="console" />
+            <appender-ref ref="file_info" />
+            <appender-ref ref="file_error" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="file_info" />
+            <appender-ref ref="file_error" />
+        </root>
+    </springProfile>
+
+	<!-- 系统模块日志级别控制  -->
+<!--	<logger name="com" level="info" />-->
+	<!-- Spring日志级别控制  -->
+    <logger name="java.sql.PreparedStatement" level="INFO" />
+    <logger name="org.hibernate.SQL" level="INFO" />
+    <logger name="org.quartz.core" level="WARN" />
+    <logger name="org.apache.velocity" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.directwebremoting" level="WARN" />
+    <logger name="org.apache.commons" level="WARN" />
+    <logger name="org.mybatis" level="WARN" />
+    <logger name="io.netty.buffer" level="WARN" />
+<!--    <logger name="org.hibernate" level="WARN" />-->
+    <logger name="org.apache.activemq" level="WARN" />
+    <logger name="org.apache.kafka" level="WARN" />
+    <logger name="com.opensymphony" level="WARN" />
+    <logger name="com.mchange" level="WARN" />
+    <logger name="java.sql.ResultSet" level="WARN" />
+    <logger name="net.sf.ehcache.distribution" level="WARN" />
+    <logger name="cn.jpush.api.common.connection" level="OFF" />
+
+<!--	<root level="info">-->
+<!--		<appender-ref ref="console" />-->
+<!--	</root>-->
 	
 	<!--系统操作日志-->
-    <root level="info">
-        <appender-ref ref="file_info" />
-        <appender-ref ref="file_error" />
-    </root>
+<!--    <root level="info">-->
+<!--        <appender-ref ref="file_info" />-->
+<!--        <appender-ref ref="file_error" />-->
+<!--    </root>-->
 	
 	<!--系统用户操作日志-->
     <logger name="sys-user" level="info">

@@ -9,6 +9,8 @@ public class BaseResult implements Serializable {
     private int errorCode;
     private String errorMsg;
 
+    private Long total;
+
     public BaseResult() {
     }
 
@@ -40,6 +42,14 @@ public class BaseResult implements Serializable {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
     public String toString() {

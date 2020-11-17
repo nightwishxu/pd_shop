@@ -6,11 +6,13 @@ import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.service.SensitivWordsService;
 import com.item.dao.model.UserComment;
+import com.item.daoEx.model.UserCommentEx;
 import com.item.service.UserCommentService;
 import com.item.service.UserService;
 import com.paidang.dao.model.Goods;
 import com.paidang.dao.model.Order;
 import com.paidang.dao.model.OrderExample;
+import com.paidang.dao.model.PawnOrg;
 import com.paidang.service.GoodsService;
 import com.paidang.service.OrderService;
 import com.paidang.service.PawnOrgService;
@@ -23,8 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -133,10 +138,17 @@ public class ApiUserCommentController extends ApiBaseController {
     @RequestMapping(value = "/getGoodsComment", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
     public Object getGoodsComment(@ApiParam(value = "机构id", required = true)Integer orgId){
+        startPage();
         UserComment comment=new UserComment();
         comment.setOrgId(orgId);
         comment.setExpressScore(1);
-        return userCommentService.findList(comment);
+        List<UserCommentEx> list = userCommentService.findList(comment);
+        Map<String,Object> result = new HashMap<>();
+        result.put("commentList",list);
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+        result.put("commentScore",pawnOrg.getScore()==null? new BigDecimal(5):pawnOrg.getScore());
+        result.put("commentCount",pawnOrg.getCommentCount()==null?0:pawnOrg.getCommentCount());
+        return result;
     }
 
     @ApiOperation(value = "test", notes = "登陆")

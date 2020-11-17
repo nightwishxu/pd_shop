@@ -1,51 +1,91 @@
 package com.paidang.dao.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *
  */
-public class VideoOnline {
+@ApiModel
+@Table(name="p_video_online")
+public class VideoOnline implements Serializable {
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "id")
 	private Integer id;
 
 	/**
 	 *标题
 	 */
+	@ApiModelProperty(value="标题")
+	@ApiParam(value="标题")
+	@Column(name = "title")
 	private String title;
 
 	/**
 	 *封面
 	 */
+	@ApiModelProperty(value="封面")
+	@ApiParam(value="封面")
+	@Column(name = "img")
 	private String img;
 
 	/**
 	 *视频
 	 */
+	@ApiModelProperty(value="视频")
+	@ApiParam(value="视频")
+	@Column(name = "video")
 	private String video;
 
 	/**
 	 *观看人数
 	 */
+	@ApiModelProperty(value="观看人数")
+	@ApiParam(value="观看人数")
+	@Column(name = "view_cnt")
 	private Integer viewCnt;
 
 	/**
 	 *是否首页展示 0:否 1:是
 	 */
+	@ApiModelProperty(value="是否首页展示 0:否 1:是")
+	@ApiParam(value="是否首页展示 0:否 1:是")
+	@Column(name = "state")
 	private Integer state;
 
 	/**
 	 *创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
+	@ApiParam(value="创建时间")
+	@Column(name = "create_time")
 	private java.util.Date createTime;
 
 	/**
 	 *是否设置为视频推荐 0不设置 1设置
 	 */
+	@ApiModelProperty(value="是否设置为视频推荐 0不设置 1设置")
+	@ApiParam(value="是否设置为视频推荐 0不设置 1设置")
+	@Column(name = "is_suggest")
 	private Integer isSuggest;
+
+	/**
+	 *标签
+	 */
+	@ApiModelProperty(value="标签")
+	@ApiParam(value="标签")
+	@Column(name = "labels")
+	private String labels;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -109,6 +149,14 @@ public class VideoOnline {
 
 	public Integer getIsSuggest() {
 		return isSuggest;
+	}
+
+	public void setLabels(String labels) {
+		this.labels=labels == null ? labels : labels.trim();
+	}
+
+	public String getLabels() {
+		return labels;
 	}
 
 }

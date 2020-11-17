@@ -36,6 +36,8 @@ public class CoreConstants {
 
     public static  String SERVER_URL;
 
+    public static  String BOS_URL;
+
     public static String FILE_PATH;
 
     public static String FILE_MAXSIZE;
@@ -84,5 +86,11 @@ public class CoreConstants {
     @Value("${jpush.org.product}")
     public void setJPUSH_ORG_PRODUCT(boolean jpushOrgAppkey) {
         JPUSH_ORG_PRODUCT = jpushOrgAppkey;
+    }
+
+
+    @Value("${bos.url}")
+    public void setBosUrl(String bosUrl) {
+        BOS_URL = bosUrl;
     }
 }

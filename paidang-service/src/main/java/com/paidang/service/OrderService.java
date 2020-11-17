@@ -2,8 +2,10 @@ package com.paidang.service;
 
 import com.base.entity.QueryParams;
 import com.item.service.BaseService;
+import com.item.service.IntegralLogService;
 import com.paidang.dao.OrderMapper;
 import com.paidang.dao.OrgBalanceLogMapper;
+import com.paidang.dao.OrgIntegralEnum;
 import com.paidang.dao.PlatformBalanceLogMapper;
 import com.paidang.dao.model.Order;
 import com.paidang.dao.model.OrderExample;
@@ -31,6 +33,9 @@ public class OrderService {
 	private OrgBalanceLogMapper orgBalanceLogMapper;
 	@Autowired
 	private PlatformBalanceLogMapper platformBalanceLogMapper;
+
+	@Autowired
+	private IntegralLogService integralLogService;
 
 
 	public int countByExample(OrderExample example) {
@@ -109,6 +114,10 @@ public class OrderService {
 		update.setId(id);
 		update.setState(4);
 		orderMapper.updateByPrimaryKeySelective(update);
+		OrgIntegralEnum integralEnum = OrgIntegralEnum.getIntegral(order.getPrice());
+		if (integralEnum!=null){
+			integralLogService.addIntegral(order.getOrgId(),integralEnum.getIntegral(),0,1,order.getCode(),integralEnum.getDesc());
+		}
 		BigDecimal platform = BigDecimal.ZERO;
 		//如果是机构或服务商
 		if (order.getGoodsSource() != 1){

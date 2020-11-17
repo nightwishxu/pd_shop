@@ -1,5 +1,6 @@
 package com.api.view.store;
 
+import com.paidang.dao.OrgIntegralEnum;
 import com.paidang.daoEx.model.GoodsAuctionEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -172,6 +173,17 @@ public class AppStoreGoodsDetail {
 	@ApiModelProperty(value="竞拍商品距离竞拍结束时间(秒)")
 	private Long leftTime;
 
+	@ApiModelProperty(value="店铺评价评分")
+	private BigDecimal orgCommentScore;
+
+	@ApiModelProperty(value="热度")
+	private Integer hotScore;
+
+	@ApiModelProperty(value = "店铺积分")
+	private BigDecimal orgIntegral;
+
+	@ApiModelProperty(value = "店铺等级")
+	private String orgLevel;
 
 	public String getBannerVideo() {
 		return bannerVideo;
@@ -594,5 +606,42 @@ public class AppStoreGoodsDetail {
 
 	public void setLeftTime(Long leftTime) {
 		this.leftTime = leftTime;
+	}
+
+
+	public BigDecimal getOrgCommentScore() {
+		return orgCommentScore;
+	}
+
+	public void setOrgCommentScore(BigDecimal orgCommentScore) {
+		this.orgCommentScore = orgCommentScore;
+	}
+
+
+	public Integer getHotScore() {
+		return hotScore;
+	}
+
+	public void setHotScore(Integer hotScore) {
+		this.hotScore = hotScore;
+	}
+
+	public BigDecimal getOrgIntegral() {
+		return orgIntegral;
+	}
+
+	public void setOrgIntegral(BigDecimal orgIntegral) {
+		this.orgIntegral = orgIntegral;
+	}
+
+	public String getOrgLevel() {
+		BigDecimal integral = getOrgIntegral()==null?BigDecimal.ZERO:getOrgIntegral();
+		OrgIntegralEnum integralEnum = OrgIntegralEnum.getLevel(integral);
+		return integralEnum.getDesc();
+//		return orgLevel;
+	}
+
+	public void setOrgLevel(String orgLevel) {
+		this.orgLevel = orgLevel;
 	}
 }

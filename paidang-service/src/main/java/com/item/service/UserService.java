@@ -167,4 +167,14 @@ public class UserService {
 	public List<UserEx> recommendList(Integer userId){
 		return userMapperEx.recommendList(userId);
 	}
+
+	/**
+	 * 更新用户统计数量
+	 * @param id
+	 * @param type
+	 * @return
+	 */
+	public int updateUserCount(Integer id,Integer type){
+		return userMapperEx.updateUserCount(id,type);
+	}
 }

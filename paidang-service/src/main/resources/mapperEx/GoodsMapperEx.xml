@@ -11,6 +11,7 @@
     <result column="goodsOwnerNick" property="goodsOwnerNick"/>
     <result column="goodsOwnerName" property="goodsOwnerName"/>
     <result column="orgName" property="orgName"/>
+    <result column="orgIntegral" property="orgIntegral"/>
   </resultMap>
 
     <select id="getMostThreeGoods" resultMap="BaseResultMap">
@@ -137,4 +138,44 @@
         ORDER BY
         t.create_time
     </select>
+    
+    <select id="findListEx" parameterType="com.paidang.domain.qo.GoodsQo" resultMap="BaseResultMap">
+        select
+        a.*
+        ,b.integral orgIntegral
+        from p_goods a left join p_pwan_org b
+        where 1=1
+        <if test="cateCode != null" >
+          and  a.cate_code = #{cateCode,jdbcType=INTEGER}
+        </if>
+        <if test="isOnline != null" >
+            and  a.is_online = #{isOnline,jdbcType=TINYINT}
+        </if>
+        <if test="state != null" >
+            and a.state = #{state}
+        </if>
+        <if test="type != null" >
+            and a.type = #{type}
+        </if>
+        <if test="source != null" >
+            and a.source = #{source}
+        </if>
+        <if test="reasonOfDismounting != null" >
+            and   a.reason_of_dismounting = #{reasonOfDismounting,jdbcType=VARCHAR}
+        </if>
+        <if test="isVerfiy != null" >
+            and  a.is_verfiy = #{isVerfiy,jdbcType=TINYINT}
+        </if>
+        <if test="sources!=null and sources.size()>0">
+            and a.source in
+            <foreach collection="sources" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="startTotal!=null">
+            and a.total >=#{startTotal}
+        </if>
+        order by a.sort_order desc,a.is_suggest desc,a.create_time desc
+    </select>
+    
 </mapper>

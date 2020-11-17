@@ -48,7 +48,8 @@ public interface PaidangConst {
     /**
      * 视频压缩
      */
-    String VIDEO_NORMAL = "_normal";
+//    String VIDEO_NORMAL = "_normal";
+    String VIDEO_NORMAL = "";
 
     /**
      * 视频分辨率

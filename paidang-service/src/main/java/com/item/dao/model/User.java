@@ -263,6 +263,38 @@ public class User implements Serializable {
 	@Column(name = "recommend_sort")
 	private Integer recommendSort;
 
+	/**
+	 *动态数量
+	 */
+	@ApiModelProperty(value="动态数量")
+	@ApiParam(value="动态数量")
+	@Column(name = "article_count")
+	private Integer articleCount;
+
+	/**
+	 *关注数量
+	 */
+	@ApiModelProperty(value="关注数量")
+	@ApiParam(value="关注数量")
+	@Column(name = "follow_count")
+	private Integer followCount;
+
+	/**
+	 *粉丝数量
+	 */
+	@ApiModelProperty(value="粉丝数量")
+	@ApiParam(value="粉丝数量")
+	@Column(name = "fans_count")
+	private Integer fansCount;
+
+	/**
+	 *订单数量
+	 */
+	@ApiModelProperty(value="订单数量")
+	@ApiParam(value="订单数量")
+	@Column(name = "order_count")
+	private Integer orderCount;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -509,6 +541,38 @@ public class User implements Serializable {
 
 	public Integer getRecommendSort() {
 		return recommendSort;
+	}
+
+	public void setArticleCount(Integer articleCount) {
+		this.articleCount=articleCount;
+	}
+
+	public Integer getArticleCount() {
+		return articleCount;
+	}
+
+	public void setFollowCount(Integer followCount) {
+		this.followCount=followCount;
+	}
+
+	public Integer getFollowCount() {
+		return followCount;
+	}
+
+	public void setFansCount(Integer fansCount) {
+		this.fansCount=fansCount;
+	}
+
+	public Integer getFansCount() {
+		return fansCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount=orderCount;
+	}
+
+	public Integer getOrderCount() {
+		return orderCount;
 	}
 
 }

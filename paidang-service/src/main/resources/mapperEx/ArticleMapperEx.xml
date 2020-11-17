@@ -226,19 +226,19 @@
     <if test="endTime!=null">
       and a.create_time &lt;=#{endTime}
     </if>
-    ORDER  by a.sort desc,a.create_time desc limit 3
+    ORDER  by a.sort desc,a.create_time desc limit 4
   </select>
 
   <select id="recommendList" resultType="com.paidang.daoEx.model.ArticleEx">
     <if test="userIds!=null and userIds.size()>0">
-      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article  t  LEFT JOIN  b_user u on t.user_id = u.id  left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article  t  LEFT JOIN  b_user u on t.user_id = u.id  left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where 1=1
       and t.user_id in
       <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
         #{item}
       </foreach>
       order by t.create_time desc limit 0,1000) a
       union
-      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t  LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where t.create_time >=(NOW() - interval 24 hour)
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t  LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId} where 1=1
       and t.user_id not  in
       <foreach collection="userIds" item="item" index="index" open="(" close=")" separator=",">
         #{item}
@@ -246,16 +246,36 @@
       order by t.create_time desc limit 0,1000) a
     </if>
     <if test="(userIds==null or  userIds.size()==0) and userId==null">
-      select a.* from (select t.*,u.nick_name,u.head_img from t_article t LEFT JOIN  b_user u on t.user_id = u.id where t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+      select a.* from (select t.*,u.nick_name,u.head_img from t_article t LEFT JOIN  b_user u on t.user_id = u.id) a order by a.create_time desc
     </if>
     <if test="(userIds==null or  userIds.size()==0)  and userId!=null">
-      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId}  where t.user_id!=#{userId} and  t.create_time &gt;=(NOW() - interval 24 hour)) a order by a.create_time desc
+      select a.* from (select t.*,u.nick_name,u.head_img,p.status as praiseStatus from t_article t LEFT JOIN  b_user u on t.user_id = u.id left join t_article_collect_praise p on p.article_id = t.id and p.type=0 and p.user_id=#{userId}  where t.user_id!=#{userId}) a order by a.create_time desc
     </if>
   </select>
 
   <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx">
-    SELECT a.*,m.icon,m.nick_name  from t_article a left join b_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1 and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId}) order by a.create_time desc
+    SELECT a.*,m.head_img,m.nick_name  from t_article a left join b_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1
+    and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId})
+    and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY);
+    order by a.create_time desc
+    <if test="limit!=null">
+      limit #{limit}
+    </if>
   </select>
+
+  <select id="recommendNewList" resultType="com.paidang.daoEx.model.ArticleEx">
+    select  t.* from (SELECT a.*,m.head_img,m.nick_name  from t_article a left join b_user m on a.user_id= m.id
+     where a.is_show=1 and a.status=2 and a.type=1  and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY)
+    <if test="userId!=null">
+      and a.user_id not in (SELECT follow_id from t_user_follow where user_id=#{userId})
+    </if>
+    order by a.praise_count desc,a.comment_count desc limit 20) t
+    order by RAND()
+    <if test="limit!=null">
+      limit #{limit}
+    </if>
+  </select>
+
 
 
 </mapper>

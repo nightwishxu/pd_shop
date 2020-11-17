@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VideoOnlineExample {
 	protected String orderByClause;
@@ -611,6 +611,76 @@ public class VideoOnlineExample {
 
 		public Criteria andIsSuggestNotBetween(Integer value1, Integer value2) {
 			addCriterion("is_suggest not between", value1, value2, "isSuggest");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIsNull() {
+			addCriterion("labels is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIsNotNull() {
+			addCriterion("labels is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsEqualTo(String value) {
+			addCriterion("labels =", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotEqualTo(String value) {
+			addCriterion("labels <>", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsGreaterThan(String value) {
+			addCriterion("labels >", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsGreaterThanOrEqualTo(String value) {
+			addCriterion("labels >=", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLessThan(String value) {
+			addCriterion("labels <", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLessThanOrEqualTo(String value) {
+			addCriterion("labels <=", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsLike(String value) {
+			addCriterion("labels like", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotLike(String value) {
+			addCriterion("labels not like", value, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsIn(List<String> values) {
+			addCriterion("labels in", values, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotIn(List<String> values) {
+			addCriterion("labels not in", values, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsBetween(String value1, String value2) {
+			addCriterion("labels between", value1, value2, "labels");
+			return (Criteria) this;
+		}
+
+		public Criteria andLabelsNotBetween(String value1, String value2) {
+			addCriterion("labels not between", value1, value2, "labels");
 			return (Criteria) this;
 		}
 

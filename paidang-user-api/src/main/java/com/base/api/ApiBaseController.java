@@ -70,7 +70,9 @@ public class ApiBaseController  extends BaseController{
 
     protected String getUrl(String fileid, Integer width, Integer height) {
         if (StringUtils.isNotBlank(fileid)) {
-            String url = CoreConstants.SERVER_URL + "download?id=" + fileid;
+//            String url = CoreConstants.SERVER_URL + "download?id=" + fileid;
+            String url = CoreConstants.BOS_URL + fileid;
+
             if (width != null) {
                 url = url + "&w=" + width;
             }

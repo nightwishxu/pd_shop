@@ -39,6 +39,8 @@ public class GoodsEx extends Goods {
     private String goodsOwnerNick;
     private String goodsOwnerName;
 
+    private BigDecimal orgIntegral;//店铺积分
+
     @Override
     public String getImg() {
         return processImg(super.getImg());
@@ -185,5 +187,13 @@ public class GoodsEx extends Goods {
 
     public void setMyPrice(String myPrice) {
         this.myPrice = myPrice;
+    }
+
+    public BigDecimal getOrgIntegral() {
+        return orgIntegral;
+    }
+
+    public void setOrgIntegral(BigDecimal orgIntegral) {
+        this.orgIntegral = orgIntegral;
     }
 }

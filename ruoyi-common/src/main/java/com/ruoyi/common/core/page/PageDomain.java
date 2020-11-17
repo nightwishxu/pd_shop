@@ -1,6 +1,8 @@
 package com.ruoyi.common.core.page;
 
 import com.ruoyi.common.utils.StringUtils;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
 /**
  * 分页数据
@@ -10,17 +12,22 @@ import com.ruoyi.common.utils.StringUtils;
 public class PageDomain
 {
     /** 当前记录起始索引 */
+    @ApiModelProperty(name="pageNum",value="页数")
     private Integer pageNum;
 
     /** 每页显示记录数 */
+    @ApiModelProperty(name="pageSize",value="每页大小")
     private Integer pageSize;
 
     /** 排序列 */
+    @ApiParam(hidden = true)
     private String orderByColumn;
 
     /** 排序的方向 "desc" 或者 "asc". */
+    @ApiParam(hidden = true)
     private String isAsc;
 
+    @ApiParam(hidden = true)
     public String getOrderBy()
     {
         if (StringUtils.isEmpty(orderByColumn))

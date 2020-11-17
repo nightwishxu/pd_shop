@@ -43,8 +43,8 @@ public class VideoOnlineController extends CoreController{
     @RequestMapping("/save")
 	@ResponseBody
     public Ret save(VideoOnline videoOnline){
-    	videoOnline.setImg(BaseUtils.removeUrl(videoOnline.getImg()));
-    	videoOnline.setVideo(BaseUtils.removeUrl(videoOnline.getVideo()));
+//    	videoOnline.setImg(BaseUtils.removeUrl(videoOnline.getImg()));
+//    	videoOnline.setVideo(BaseUtils.removeUrl(videoOnline.getVideo()));
     	if (videoOnline.getId() == null){
     		videoOnline.setViewCnt(0);
     		videoOnline.setCreateTime(new Date());

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,8 +40,15 @@ public class ArticleController extends CoreController{
 	@ResponseBody 
     public Ret save(Article article){
     	if (article.getId() == null){
+    		article.setCreateTime(new Date());
+			article.setCommentCount(0);
+			article.setCollectCount(0);
+			article.setPraiseCount(0);
+			article.setClickCount(0);
+			article.setReleaseTime(new Date());
     		articleService.insert(article);
     	}else{
+    		article.setUpdateTime(new Date());
     		articleService.updateByPrimaryKeySelective(article);
     	}
        	return ok();

@@ -3,6 +3,7 @@ package com.paidang.daoEx;
 import com.base.entity.QueryParams;
 import com.paidang.dao.model.Goods;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.domain.qo.GoodsQo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public interface GoodsMapperEx {
     List<GoodsEx> getOrgGoodsBySoldOut(Integer orgId);
 
     List<GoodsEx> findList(GoodsEx goodsEx);
+
+    List<GoodsEx> findListEx(GoodsQo qo);
 
     List<GoodsEx> selectBusinessGoodsList(@Param("goodsName") String goodsName);
 

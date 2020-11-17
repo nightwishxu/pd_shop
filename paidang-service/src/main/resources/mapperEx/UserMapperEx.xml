@@ -29,8 +29,8 @@
     	u.*
     from b_user u 
     where u.type = 0
-    <if test="nick_name != null and nick_name !=''">
-    	 and u.nick_name like '%${nick_name}%'
+    <if test="nickName != null and nickName !=''">
+    	 and u.nick_name like '%${nickName}%'
     </if>
 		<if test="account != null and account !=''">
 			and  u.account like '%${account}%'
@@ -164,17 +164,16 @@
     </update>
 
 	<select id="recommendList" resultType="com.item.daoEx.model.UserEx">
-		SELECT
+		select  a.* from (SELECT
 		*
 		FROM
 		b_user u
 		WHERE
-		u.recommend_sort IS NOT NULL and u.state=1
+		u.state=1
 		<if test="userId!=null">
 			and u.id not in (select follow_id from t_user_follow where user_id=#{userId}) and u.id!=#{userId}
 		</if>
-		ORDER BY
-		u.recommend_sort DESC
+		ORDER BY u.fans_count desc limit 200) a order by RAND() LIMIT 6
 	</select>
 
 	<update id="updateUserCount">
@@ -189,7 +188,7 @@
 			t.fans_count = (SELECT count(1) from t_user_follow where follow_id =t.id and status=1)
 		</if>
 		<if test="type!=null and type==4">
-			t.order_count = (SELECT count(1) from oms_order where user_id =t.id and status=4)
+			t.order_count = (SELECT count(1) from p_order where user_id =t.id and status=4)
 		</if>
 		where t.id=#{id}
 	</update>

@@ -1,13 +1,15 @@
 package com.paidang.service;
 
 
-import com.base.util.CoreConstants;
-import com.base.util.FileExportUtils;
-import com.base.util.ImageUtil;
-import com.base.util.Md5;
+import com.baidubce.auth.DefaultBceCredentials;
+import com.baidubce.services.bos.BosClient;
+import com.baidubce.services.bos.BosClientConfiguration;
+import com.baidubce.services.bos.model.PutObjectResponse;
+import com.base.util.*;
 import com.paidang.dao.BFileMapper;
 import com.paidang.dao.model.BFile;
 import com.paidang.dao.model.BFileExample;
+import com.paidang.domain.pojo.FileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Calendar;
@@ -34,6 +35,14 @@ public class BFileService {
 	public static final String LOCAL = "local";
 	public static final String OSS = "oss";
 	public static final String COS = "cos";
+
+	private static final String ACCESS_KEY_ID = PropertySupport.getProperty("baidu.accessKey");
+	private static final String SECRET_ACCESS_KEY = PropertySupport.getProperty("baidu.secretKey");
+	private static final String ENDPOINT = PropertySupport.getProperty("baidu.endPoint");
+
+	private static BosClientConfiguration config = new BosClientConfiguration();
+
+	private static BosClient client =null;
 
 	private static final Logger logger = LoggerFactory.getLogger(BFileService.class);
 
@@ -249,6 +258,73 @@ public class BFileService {
 		}
 	}
 
+
+	public void putObject(byte[] byte1, String fileName){
+//		// 获取指定文件
+//		File file = new File("/path/to/file.zip");
+//		// 获取数据流
+//		InputStream inputStream = new FileInputStream("/path/to/test.zip");
+		if (client ==null){
+			config.setCredentials(new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY));
+			config.setEndpoint(ENDPOINT);
+			client = new BosClient(config);
+		}
+//		// 以文件形式上传Object
+//		PutObjectResponse putObjectFromFileResponse = client.putObject(bucketName, objectKey, file);
+//		// 以数据流形式上传Object
+//		PutObjectResponse putObjectResponseFromInputStream = client.putObject(bucketName, objectKey, inputStream);
+		// 以二进制串上传Object
+		PutObjectResponse putObjectResponseFromByte = client.putObject("paidang", fileName, byte1);
+		// 以字符串上传Object
+//		PutObjectResponse putObjectResponseFromString = client.putObject(bucketName, objectKey, string1);
+//
+//		// 打印ETag
+//		System.out.println(putObjectFromFileResponse.getETag());
+	}
+
+
+	public static void putObjectSimple(byte[] bytes,String fileId) throws FileNotFoundException {
+		// 初始化一个BosClient
+//		BosClientConfiguration config = new BosClientConfiguration();
+//		config.setCredentials(new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY));
+//		config.setEndpoint(ENDPOINT);
+//		BosClient client = new BosClient(config);
+
+		if (client ==null){
+			config.setCredentials(new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY));
+			config.setEndpoint(ENDPOINT);
+			client = new BosClient(config);
+		}
+
+		// 获取指定文件
+//		File file = new File("/path/to/file.zip");
+//		// 获取数据流
+//		InputStream inputStream = new FileInputStream("/path/to/test.zip");
+//		byte[] byte0 = new byte[0];
+//
+//		// 以文件形式上传Object
+//		PutObjectResponse putObjectFromFileResponse =
+//				client.putObject("bucketName", "file-objectKey", file);
+//		// 以数据流形式上传Object
+//		PutObjectResponse putObjectResponseFromInputStream =
+//				client.putObject("bucketName", "inputStream-objectKey", inputStream);
+		// 以二进制串上传Object
+		PutObjectResponse putObjectResponseFromByte =
+				client.putObject("paidang", fileId, bytes);
+		// 以字符串上传Object
+//		PutObjectResponse putObjectResponseFromString =
+//				client.putObject("bucketName", "string-objectKey", "hello world");
+
+		// 打印ETag
+//		System.out.println(putObjectFromFileResponse.getETag());
+//		System.out.println(putObjectResponseFromInputStream.getETag());
+//		System.out.println(putObjectResponseFromByte.getETag());
+//		System.out.println(putObjectResponseFromString.getETag());
+
+		// 关闭客户端
+		client.shutdown();
+	}
+
 	/**
 	 * 文件上传
 	 *
@@ -273,7 +349,7 @@ public class BFileService {
 		example.createCriteria().andFileMd5EqualTo(md5);
 		List<BFile> lf = this.selectByExample(example);
 		if (lf.size() > 0) {
-			return lf.get(0).getFileId();
+			return lf.get(0).getFilePath();
 		}
 		long itemsize = bytes.length;
 		// 检查文件大小
@@ -284,20 +360,27 @@ public class BFileService {
 		String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1)
 				.toLowerCase();
 		String newFileName = UUID.randomUUID().toString().replace("-", "");
+
+		String filePath = null;
 		try {
 			String minetype = FileExportUtils.getMine(bytes);
+			String realdir = null;
+			File uploadedFile = null;
+
 			Calendar cal = Calendar.getInstance();
-			String realdir = minetype + "/" +cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+(cal.get(Calendar.DAY_OF_MONTH));
-			File f = new File(savePath, realdir);
-			if (!f.isDirectory()) {
-				f.mkdirs();
-			}
-			File uploadedFile = new File(f.getPath(), newFileName + "."
-					+ fileExt);
-			FileOutputStream fos = new FileOutputStream(uploadedFile);
-			fos.write(bytes);
-			fos.close();
-			minetype = FileExportUtils.getMineType(uploadedFile.getPath());
+			realdir = minetype + "/" +cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+(cal.get(Calendar.DAY_OF_MONTH));
+//			File f = new File(savePath, realdir);
+//			if (!f.isDirectory()) {
+//				f.mkdirs();
+//			}
+//			uploadedFile = new File(f.getPath(), newFileName + "."
+//						+ fileExt);
+//				FileOutputStream fos = new FileOutputStream(uploadedFile);
+//				fos.write(bytes);
+//				fos.close();
+//				minetype = FileExportUtils.getMineType(uploadedFile.getPath());
+
+
 			BFile ac = new BFile();
 			ac.setFileId(newFileName);
 			ac.setFileMinitype(minetype);
@@ -308,12 +391,12 @@ public class BFileService {
 			ac.setFileCreatetime(new Date());
 			ac.setFileName(fileName);
 			ac.setFileBelong(belong);
-
+			filePath = ac.getFilePath();
 			if (FileExportUtils.isImage(fileName)) {
-				BufferedImage bufferedImage = ImageIO.read(uploadedFile);
-				int width = bufferedImage.getWidth();
-				int height = bufferedImage.getHeight();
-				ac.setFileCreater(width + "x" + height);
+//				BufferedImage bufferedImage = ImageIO.read(uploadedFile);
+//				int width = bufferedImage.getWidth();
+//				int height = bufferedImage.getHeight();
+//				ac.setFileCreater(width + "x" + height);
 			}else if (FileExportUtils.isVideo(minetype)) {
 				//上传截图
 //				if (StringUtil.isNotBlank(ConstantsCode.FFMPEG_PATH)){
@@ -342,9 +425,12 @@ public class BFileService {
 //				}
 			}
 
-//			if (CoreConstants.FILE_MODE.equals(OSS)) {
+			if (FileConstants.FILE_MODE.equals(OSS)) {
 //				boolean b = MyOssClient.putObject(ac.getFilePath(), minetype,
 //						bytes, null, ac.getFileName());
+				putObject(bytes,ac.getFilePath());
+				ac.setFileBelong("paidang."+ENDPOINT);
+				insert(ac);
 //				if (b) {
 //					ac.setFileBelong(MyOssClient.OSS_BUCKET + "."
 //							+ MyOssClient.OSS_ENDPOINT);
@@ -355,16 +441,16 @@ public class BFileService {
 //				} else {
 //					return null;
 //				}
-//			} else {
+			} else {
 				ac.setFileBelong(LOCAL);
 				this.insert(ac);
-//			}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 			return null;
 		}
-		return newFileName;
+		return filePath;
 	}
 
 	/**

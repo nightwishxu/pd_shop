@@ -10,8 +10,12 @@ import com.base.util.DateUtil;
 import com.base.util.IPUtil;
 import com.base.util.JSONUtils;
 import com.base.web.ParameterRequestWrapper;
+import com.github.pagehelper.PageHelper;
 import com.item.dao.model.MobileVerify;
 import com.item.service.MobileVerifyService;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableSupport;
+import com.ruoyi.common.utils.sql.SqlUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +98,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             	if (StringUtils.isBlank(p) || StringUtils.isBlank(l)){
             		throw new ApiException(MErrorEnum.PAGE_LIMIT_NONG);
             	}
+                PageDomain pageDomain = TableSupport.buildPageRequest();
+                Integer pageNum = pageDomain.getPageNum();
+                Integer pageSize = pageDomain.getPageSize();
+                String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
+                PageHelper.startPage(pageNum, pageSize, orderBy);
             }
             
             MobileVerify mobileVerify = null;
@@ -116,11 +125,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             		mobileVerify.setUpdateTime(date);
             		mobileVerifyService.updateByPrimaryKey(mobileVerify);
             	}
-        		ParameterRequestWrapper wrapper =  (ParameterRequestWrapper) request;
-            	wrapper.addParameter(USER_ID, mobileVerify.getUserId());
-            	wrapper.addParameter(DEVICE_ID, mobileVerify.getDeviceId());
-            	wrapper.addParameter(DEVICE_TYPE, mobileVerify.getDeviceType());
-            	wrapper.addParameter(TOKEN, token);
+//        		ParameterRequestWrapper wrapper =  (ParameterRequestWrapper) request;
+//            	wrapper.addParameter(USER_ID, mobileVerify.getUserId());
+//            	wrapper.addParameter(DEVICE_ID, mobileVerify.getDeviceId());
+//            	wrapper.addParameter(DEVICE_TYPE, mobileVerify.getDeviceType());
+//            	wrapper.addParameter(TOKEN, token);
         	}
            
         }

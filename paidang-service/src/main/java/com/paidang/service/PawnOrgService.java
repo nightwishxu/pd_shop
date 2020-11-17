@@ -1,5 +1,6 @@
 package com.paidang.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -129,6 +130,16 @@ public class PawnOrgService {
 	 */
 	public int updateCommentScore(Integer orgId){
 		return pawnOrgMapperEx.updateCommentScore(orgId);
+	}
+
+	/**
+	 * 店铺积分
+	 * @param orgId
+	 * @param integral
+	 * @return
+	 */
+	public  int addIntegral(Integer orgId,BigDecimal integral){
+		return pawnOrgMapperEx.addIntegral(orgId,integral);
 	}
 
 }

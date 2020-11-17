@@ -651,23 +651,6 @@
           />
         </el-form-item>
 
-        <!-- <el-form-item
-          label="标签"
-          prop="labels"
-        >
-          <el-checkbox-group
-            v-model="form.labels"
-            size="medium"
-          >
-            <el-checkbox
-              v-for="(item, index) in labelOptions"
-              :key="index"
-              :label="item.value"
-              :disabled="item.disabled"
-            >{{item.label}}</el-checkbox>
-          </el-checkbox-group>
-        </el-form-item> -->
-
         <el-form-item
           label="标签"
           prop="labels"

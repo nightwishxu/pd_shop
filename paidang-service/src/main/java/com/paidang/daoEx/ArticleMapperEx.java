@@ -2,6 +2,7 @@ package com.paidang.daoEx;
 
 import com.paidang.daoEx.model.ArticleEx;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -36,5 +37,7 @@ public interface ArticleMapperEx {
 
     List<ArticleEx> recommendList(@Param("userIds")List<Integer> userIds,@Param("userId")Integer userId);
 
-    List<ArticleEx> followArticleList(@Param("userId")Integer userId);
+    List<ArticleEx> followArticleList(@Param("userId")Integer userId, @Param("limit")Integer limit);
+
+    List<ArticleEx> recommendNewList(@Param("userId")Integer userId, @Param("limit")Integer limit);
 }

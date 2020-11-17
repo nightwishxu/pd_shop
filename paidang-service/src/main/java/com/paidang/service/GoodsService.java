@@ -6,6 +6,7 @@ import java.util.Map;
 import com.base.entity.QueryParams;
 import com.paidang.daoEx.GoodsMapperEx;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.domain.qo.GoodsQo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,5 +115,9 @@ public class GoodsService {
 	}
 
 	public List<GoodsEx> selectBusinessGoodsList(String goodsName){return this.goodsMapperEx.selectBusinessGoodsList(goodsName);}
+
+	public List<GoodsEx> findListEx(GoodsQo qo){
+		return goodsMapperEx.findListEx(qo);
+	}
 
 }
