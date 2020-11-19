@@ -253,10 +253,12 @@
     </if>
   </select>
 
-  <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx">
+  <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx" parameterType="com.paidang.daoEx.model.ArticleEx">
     SELECT a.*,m.head_img,m.nick_name  from t_article a left join b_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1
     and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId})
-    and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY);
+    <if test="flag!=null and flag==1">
+      and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY)
+    </if>
     order by a.create_time desc
     <if test="limit!=null">
       limit #{limit}

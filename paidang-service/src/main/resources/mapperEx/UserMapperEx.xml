@@ -134,7 +134,7 @@
 
 	<select id="findFollowList" resultType="com.item.daoEx.model.UserEx">
              SELECT
-        u.id, u.nick_name, u.phone, u.head_img,u.city, u.age
+        u.id, u.nick_name, u.phone, u.head_img
         FROM
             t_user_follow t left join b_user u on t.follow_id = u.id
         where t.status=1 and u.state=1 and t.user_id=#{userId} order by t.create_time desc
@@ -173,7 +173,10 @@
 		<if test="userId!=null">
 			and u.id not in (select follow_id from t_user_follow where user_id=#{userId}) and u.id!=#{userId}
 		</if>
-		ORDER BY u.fans_count desc limit 200) a order by RAND() LIMIT 6
+		ORDER BY u.fans_count desc limit 200) a order by RAND()
+		<if test="limit!=null">
+			limit #{limit}
+		</if>
 	</select>
 
 	<update id="updateUserCount">

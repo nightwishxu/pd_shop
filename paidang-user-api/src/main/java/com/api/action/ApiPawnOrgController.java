@@ -6,11 +6,13 @@ import com.base.api.ApiBaseController;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.service.GoodsService;
 import com.paidang.service.PawnOrgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,10 +35,12 @@ public class ApiPawnOrgController extends ApiBaseController {
     @ApiOperation(value = "店铺详情", notes = "不用登陆")
     @RequestMapping(value = "/get", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
-    public PawnOrg get(@ApiParam(value = "机构id", required = true) Integer orgId) {
+    public PawnOrgEx get(@ApiParam(value = "机构id", required = true) Integer orgId) {
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
         pawnOrg.setPassword(null);
-        return pawnOrg;
+        PawnOrgEx ex = new PawnOrgEx();
+        BeanUtils.copyProperties(pawnOrg,ex);
+        return ex;
     }
 
 

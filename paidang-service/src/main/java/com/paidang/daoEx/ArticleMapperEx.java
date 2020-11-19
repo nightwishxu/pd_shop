@@ -37,7 +37,7 @@ public interface ArticleMapperEx {
 
     List<ArticleEx> recommendList(@Param("userIds")List<Integer> userIds,@Param("userId")Integer userId);
 
-    List<ArticleEx> followArticleList(@Param("userId")Integer userId, @Param("limit")Integer limit);
+    List<ArticleEx> followArticleList(@Param("userId")Integer userId, @Param("flag")Integer flag,@Param("limit")Integer limit);
 
     List<ArticleEx> recommendNewList(@Param("userId")Integer userId, @Param("limit")Integer limit);
 }

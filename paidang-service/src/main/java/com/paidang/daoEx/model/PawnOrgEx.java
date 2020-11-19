@@ -1,6 +1,10 @@
 package com.paidang.daoEx.model;
 
+import com.paidang.dao.OrgIntegralEnum;
 import com.paidang.dao.model.PawnOrg;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.math.BigDecimal;
 
 /**
 @author sun
@@ -18,6 +22,20 @@ public class PawnOrgEx extends PawnOrg {
 
     //机构商品照片
     private String goodsImgs;
+
+
+    @ApiModelProperty(value = "店铺等级")
+    private String orgLevel;
+
+
+    public String getOrgLevel() {
+        BigDecimal integral = getIntegral()==null?BigDecimal.ZERO:getIntegral();
+        OrgIntegralEnum integralEnum = OrgIntegralEnum.getLevel(integral);
+        return integralEnum.getDesc();
+//		return orgLevel;
+    }
+
+
 
 
     public String getGoodsImgs() {

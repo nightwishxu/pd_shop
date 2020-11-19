@@ -231,9 +231,8 @@ public class ApiUserController extends ApiBaseController {
     @ApiOperation(value = "推荐用户列表")
     @RequestMapping(value = "/recommend/list", method = RequestMethod.POST)
     @ApiMethod(isLogin = false,isPage = false)
-    public List<UserEx> recommendList(PageLimit pageLimit,
-            @RequestParam(required = false) @ApiParam(value = "用户id", required = false)Integer userId){
-        List<UserEx> list = userService.recommendList(userId);
+    public List<UserEx> recommendList(@RequestParam(required = false) @ApiParam(value = "用户id", required = false)Integer userId){
+        List<UserEx> list = userService.recommendList(userId,6);
         return list;
     }
 
@@ -242,8 +241,7 @@ public class ApiUserController extends ApiBaseController {
     @RequestMapping(value = "/recommend/index", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
     public List<UserEx>  recommendIndex(@RequestParam(required = false) @ApiParam(value = "用户id", required = false)Integer userId){
-        PageHelper.startPage(0,3);
-        List<UserEx> list = userService.recommendList(userId);
+        List<UserEx> list = userService.recommendList(userId,3);
         return list;
     }
 //

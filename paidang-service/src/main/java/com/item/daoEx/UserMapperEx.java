@@ -36,7 +36,7 @@ public interface UserMapperEx{
 
 	int reSumPokeAmount(@Param("id") Integer userId);
 
-	List<UserEx> recommendList(@Param("userId") Integer userId);
+	List<UserEx> recommendList(@Param("userId") Integer userId,@Param("limit") Integer limit);
 
 	int updateUserCount(@Param("id") Integer id,@Param("type")Integer type);
 

@@ -164,8 +164,8 @@ public class UserService {
 		return userMapperEx.findFansList(userId);
 	}
 
-	public List<UserEx> recommendList(Integer userId){
-		return userMapperEx.recommendList(userId);
+	public List<UserEx> recommendList(Integer userId,Integer limit){
+		return userMapperEx.recommendList(userId,limit);
 	}
 
 	/**

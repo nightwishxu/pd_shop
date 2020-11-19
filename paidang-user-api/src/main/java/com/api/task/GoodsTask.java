@@ -48,7 +48,7 @@ public class GoodsTask {
         List<Goods> goods = goodsService.selectByExample(example);
         for (Goods good : goods) {
             try {
-                apiUserPayService.createOrder(good.getMaxAutionId(),good.getId(),null,null);
+                apiUserPayService.createOrder(good.getMaxAutionId(),good.getId(),null,null,1);
             } catch (Exception e) {
                 e.printStackTrace();
             }

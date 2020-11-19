@@ -536,10 +536,9 @@ public class ApiArticleController extends ApiBaseController {
     @ApiOperation(value = "关注动态列表", notes = "分页")
     @RequestMapping(value = "/follow/list",method = {RequestMethod.POST})
     @ApiMethod(isLogin = true,isPage = true)
-    public FollowArticleResult followArticle(MobileInfo mobileInfo, PageLimit pageLimit){
-        FollowArticleResult result = new FollowArticleResult();
+    public List<ArticleEx> followArticle(MobileInfo mobileInfo, PageLimit pageLimit){
         List<ArticleEx> articles =null;
-        User member = userService.selectByPrimaryKey(mobileInfo.getUserId());
+//        User member = userService.selectByPrimaryKey(mobileInfo.getUserId());
         startPage();
 //        if (member.getFollowCount()==null || member.getFollowCount()==0 ){
 //            result.setHasFollow(0);
@@ -548,11 +547,12 @@ public class ApiArticleController extends ApiBaseController {
 //            result.setHasFollow(1);
 //            articles = articleService.followArticleList(mobileInfo.getUserid());
 //        }
-        articles = articleService.recommendList(null,mobileInfo.getUserId());
+//        articles = articleService.recommendList(null,mobileInfo.getUserId());
+        articles = articleService.followArticleList(mobileInfo.getUserId(),null,null);
 
-        result.setArticleList(articles);
+//        result.setArticleList(articles);
 
-        return result;
+        return articles;
     }
 
     @ApiOperation(value = "动态关注首页", notes = "返回 map , key = followArticleList 关注列表 ，key = recommendArticleList 推荐列表")
@@ -567,7 +567,7 @@ public class ApiArticleController extends ApiBaseController {
         List<ArticleEx> followArticleList = null;
         if (mobileInfo.getUserId()!=null){
             //最近7天关注用户动态
-            followArticleList = articleService.followArticleList(mobileInfo.getUserId(),null);
+            followArticleList = articleService.followArticleList(mobileInfo.getUserId(),1,null);
         }
         //这边推荐的是以动态为推荐，不是推荐用户，都是近7天点赞排在前20名的动态随机8条
         List<ArticleEx> recommendArticleList = articleService.recommendNewList(mobileInfo.getUserId(),8);

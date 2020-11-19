@@ -50,7 +50,7 @@ public class ApiUserPayController extends ApiBaseController{
                                  @ApiParam(value = "优惠券id", required = false)Integer couponId,
                                  @ApiParam(value = "地址id", required = true)Integer addressId){
 		logger.info("下单");
-		return apiUserPayService.createOrder(mobileInfo.getUserId(),goodsId,couponId,addressId);
+		return apiUserPayService.createOrder(mobileInfo.getUserId(),goodsId,couponId,addressId,null);
 
 	}
 	

@@ -188,7 +188,7 @@
   </select>
 
   <!-- 订单超过24小时，未付款。设置为已取消 -->
-  <select id="selectTask" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  <select id="selectByTask" resultMap="BaseResultMap" parameterType="java.util.HashMap">
     select
     A.*
     from p_order A
@@ -200,7 +200,7 @@
     select
     A.*
     from p_order A
-    where A.state = 1 and TIMESTAMPDIFF(MINUTE,A.create_time,now()) &gt; 30
+    where A.state = 1 and TIMESTAMPDIFF(MINUTE,A.create_time,now()) &gt; 2880
   </select>
 
 

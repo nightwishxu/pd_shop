@@ -59,7 +59,7 @@ public class ApiUserGoodsService {
             entity.setSellStatus(2);
             entity.setId(userGoodsId);
             userGoodsMapper.updateByPrimaryKeySelective(entity);
-            return apiUserPayService.createOrder(userId,goods.getId(),null,addressId);
+            return apiUserPayService.createOrder(userId,goods.getId(),null,addressId,null);
         }else {
             Goods goods=new Goods();
             goods.setCateCode(Integer.valueOf(userGoods.getSellPawnCode()));
@@ -86,7 +86,7 @@ public class ApiUserGoodsService {
             entity.setSellStatus(2);
             entity.setId(userGoodsId);
             userGoodsMapper.updateByPrimaryKeySelective(entity);
-            return apiUserPayService.createOrder(userId,goods.getId(),null,addressId);
+            return apiUserPayService.createOrder(userId,goods.getId(),null,addressId,null);
         }
     }
 }

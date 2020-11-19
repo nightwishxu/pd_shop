@@ -37,24 +37,24 @@ public class GoodsTask {
      * 订单列表查询
      */
     //每24小时执行一次 0 */1 * * * ?
-    @Scheduled(cron ="0 */2 * * * ?")
-    public void pawn(){
-        long start = System.currentTimeMillis();
-
-        //查询24小时未付款的订单
-        OrderExample example = new OrderExample();
-        example.createCriteria().andStateEqualTo(1);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("time", DateUtil.offsetSecond(new Date(),-PaidangConst.ORDER_TIME));
-        List<OrderEx> list =   orderService.selectByTask(map);
-
-        for (OrderEx ex : list){
-                ex.setState(-1);
-                orderService.updateByPrimaryKeySelective(ex);
-            }
-
-        }
+//    @Scheduled(cron ="0 */2 * * * ?")
+//    public void pawn(){
+//        long start = System.currentTimeMillis();
+//
+//        //查询24小时未付款的订单
+//        OrderExample example = new OrderExample();
+//        example.createCriteria().andStateEqualTo(1);
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("time", DateUtil.offsetSecond(new Date(),-PaidangConst.ORDER_TIME));
+//        List<OrderEx> list =   orderService.selectByTask(map);
+//
+//        for (OrderEx ex : list){
+//                ex.setState(-1);
+//                orderService.updateByPrimaryKeySelective(ex);
+//            }
+//
+//        }
 
 
     /**

@@ -448,7 +448,8 @@ public class PawnTask {
 
 
 	//30分钟释放未付款--释放库存--并改为未付款
-	@Scheduled(cron ="0/30 * * * * ?")
+//	@Scheduled(cron ="0/30 * * * * ?")
+	@Scheduled(cron ="0 0/30 * * * ?")
 	public void release(){
 
 		List<OrderEx> list = orderService.selectRelease();

@@ -1,6 +1,7 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
+import com.base.api.ApiException;
 import com.base.entity.QueryParams;
 import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
@@ -85,6 +86,9 @@ public class GoodsController extends CoreController{
 //		goods.setImg(BaseUtils.removeUrl(goods.getImg()));
 //		goods.setBannerVideo(BaseUtils.removeUrl(goods.getBannerVideo()));
 //		goods.setBannerVideoFace(BaseUtils.removeUrl(goods.getBannerVideoFace()));
+		if (goods.getDealType()==2 && goods.getTotal()!=1){
+			throw new ApiException(400,"竞拍商品数量只能为1");
+		}
 		if (goods.getId() == null){
 			if (goods.getSoldOut()==null){
 				goods.setSoldOut(0);

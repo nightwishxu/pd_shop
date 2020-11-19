@@ -239,9 +239,10 @@ public class ApiUserPayService {
 
     /**
      * 下单
+     * @param type 1 竞拍商品自动下订单
      * @return
      */
-    public PayResult createOrder(Integer userId, Integer goodsId, Integer couponId, Integer addressId){
+    public PayResult createOrder(Integer userId, Integer goodsId, Integer couponId, Integer addressId,Integer type){
         PayResult payResult = new PayResult();
 
         GoodsExample goodsExample = new GoodsExample();
@@ -271,7 +272,10 @@ public class ApiUserPayService {
         if(null == userAddress){
             throw new ApiException(MEnumError.ADDRESS_NOT_EXIST);
         }
-
+        BigDecimal goodsPridce = goods.getPrice();
+        if (type!=null && type==1){
+            goodsPridce = goods.getMaxAuction();
+        }
         Order order = new Order();
         long code = System.currentTimeMillis();
         //订单号生成规则：时间戳加商品编号
@@ -282,16 +286,16 @@ public class ApiUserPayService {
         order.setGoodsImg(goods.getImg());
         order.setGoodsSource(goods.getSource());
         order.setOrgId(goods.getOrgId());
-        order.setGoodsPrice(goods.getPrice());
         order.setGoodsCost(goods.getCost());
+        order.setGoodsPrice(goodsPridce);
         //优惠券
 
         BigDecimal finalPrice = null;
         if(null == userCoupon){
             //没有优惠券
-            finalPrice = goods.getPrice();
+            finalPrice = goodsPridce;
         }else{
-            finalPrice = goods.getPrice().subtract(userCoupon.getFull());
+            finalPrice = goodsPridce.subtract(userCoupon.getFull());
         }
         order.setPrice(finalPrice);
         order.setState(1);

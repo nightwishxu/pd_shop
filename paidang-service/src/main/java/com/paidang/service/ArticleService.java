@@ -128,8 +128,8 @@ public class ArticleService {
 	 * @param limit
 	 * @return
 	 */
-	public List<ArticleEx> followArticleList(Integer userId,Integer limit){
-		return articleMapperEx.followArticleList(userId,limit);
+	public List<ArticleEx> followArticleList(Integer userId,Integer flag,Integer limit){
+		return articleMapperEx.followArticleList(userId,flag,limit);
 	}
 
 

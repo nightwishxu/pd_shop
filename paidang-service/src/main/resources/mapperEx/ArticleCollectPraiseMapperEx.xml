@@ -5,7 +5,7 @@
   </resultMap>
 
   <select id="lastPraiseIcon" resultType="java.lang.String">
-    SELECT icon from t_collect_praise where article_id=#{articleId} and type=0 order by create_time desc limit 5
+    SELECT icon from t_article_collect_praise where article_id=#{articleId} and type=0 order by create_time desc limit 5
   </select>
   
 </mapper>
