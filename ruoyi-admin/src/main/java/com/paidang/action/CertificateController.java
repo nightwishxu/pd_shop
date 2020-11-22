@@ -3,15 +3,14 @@ package com.paidang.action;
 import com.base.action.CoreController;
 import com.base.util.BaseUtils;
 import com.base.util.StringUtil;
-import com.paidang.dao.model.Certificate;
-import com.paidang.dao.model.CertificateExample;
-import com.paidang.dao.model.CertificateLog;
-import com.paidang.dao.model.CertificateLogExample;
+import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.CertificateEx;
 import com.paidang.service.CertificateLogService;
 import com.paidang.service.CertificateService;
+import com.paidang.service.UserGoodsService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +32,10 @@ public class CertificateController extends CoreController{
     private CertificateService certificateService;
 	@Autowired
 	private CertificateLogService certificateLogService;
+
+	@Autowired
+	private UserGoodsService userGoodsService;
+
     
     @RequestMapping("/list")
 	@ResponseBody
@@ -68,6 +71,14 @@ public class CertificateController extends CoreController{
     		certificate.setModifyTime(new Date());
     		certificateService.updateByPrimaryKeySelective(certificate);
     	}
+    	Integer userGoodsId = certificate.getUserGoodsId();
+    	if (userGoodsId!=null){
+    		UserGoods tmp = new UserGoods();
+    		tmp.setId(userGoodsId);
+    		tmp.setAppraisalDsc(certificate.getAppraisalDsc());
+    		tmp.setModifyTime(new Date());
+    		userGoodsService.updateByPrimaryKeySelective(tmp);
+		}
        	return ok();
     }
     
@@ -78,6 +89,19 @@ public class CertificateController extends CoreController{
     	certificate.setImgs(BaseUtils.processImgs(certificate.getImgs()));
        	return ok(certificate);
     }
+
+	@RequestMapping("/getByUserGoodsId")
+	@ResponseBody
+	public Ret getByUserGoodsId(Integer userGoodsId){
+		CertificateExample example = new CertificateExample();
+		example.createCriteria().andUserGoodsIdEqualTo(userGoodsId);
+		List<Certificate> certificates = certificateService.selectByExample(example);
+		Certificate certificate = null;
+		if (CollectionUtils.isNotEmpty(certificates)){
+			certificate = certificates.get(0);
+		}
+		return ok(certificate);
+	}
     
     @RequestMapping("/del")
 	@ResponseBody

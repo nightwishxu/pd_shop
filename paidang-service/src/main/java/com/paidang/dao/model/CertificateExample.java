@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CertificateExample {
 	protected String orderByClause;
@@ -1581,6 +1581,196 @@ public class CertificateExample {
 
 		public Criteria andModifyTimeNotBetween(java.util.Date value1, java.util.Date value2) {
 			addCriterion("modify_time not between", value1, value2, "modifyTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdIsNull() {
+			addCriterion("user_goods_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdIsNotNull() {
+			addCriterion("user_goods_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdEqualTo(Integer value) {
+			addCriterion("user_goods_id =", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdNotEqualTo(Integer value) {
+			addCriterion("user_goods_id <>", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdGreaterThan(Integer value) {
+			addCriterion("user_goods_id >", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdGreaterThanOrEqualTo(Integer value) {
+			addCriterion("user_goods_id >=", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdLessThan(Integer value) {
+			addCriterion("user_goods_id <", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdLessThanOrEqualTo(Integer value) {
+			addCriterion("user_goods_id <=", value, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdIn(List<Integer> values) {
+			addCriterion("user_goods_id in", values, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdNotIn(List<Integer> values) {
+			addCriterion("user_goods_id not in", values, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdBetween(Integer value1, Integer value2) {
+			addCriterion("user_goods_id between", value1, value2, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserGoodsIdNotBetween(Integer value1, Integer value2) {
+			addCriterion("user_goods_id not between", value1, value2, "userGoodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceIsNull() {
+			addCriterion("price is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceIsNotNull() {
+			addCriterion("price is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceEqualTo(java.math.BigDecimal value) {
+			addCriterion("price =", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("price <>", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceGreaterThan(java.math.BigDecimal value) {
+			addCriterion("price >", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("price >=", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceLessThan(java.math.BigDecimal value) {
+			addCriterion("price <", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("price <=", value, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceIn(List<java.math.BigDecimal> values) {
+			addCriterion("price in", values, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("price not in", values, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("price between", value1, value2, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andPriceNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("price not between", value1, value2, "price");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscIsNull() {
+			addCriterion("appraisal_dsc is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscIsNotNull() {
+			addCriterion("appraisal_dsc is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscEqualTo(String value) {
+			addCriterion("appraisal_dsc =", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscNotEqualTo(String value) {
+			addCriterion("appraisal_dsc <>", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscGreaterThan(String value) {
+			addCriterion("appraisal_dsc >", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscGreaterThanOrEqualTo(String value) {
+			addCriterion("appraisal_dsc >=", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscLessThan(String value) {
+			addCriterion("appraisal_dsc <", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscLessThanOrEqualTo(String value) {
+			addCriterion("appraisal_dsc <=", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscLike(String value) {
+			addCriterion("appraisal_dsc like", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscNotLike(String value) {
+			addCriterion("appraisal_dsc not like", value, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscIn(List<String> values) {
+			addCriterion("appraisal_dsc in", values, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscNotIn(List<String> values) {
+			addCriterion("appraisal_dsc not in", values, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscBetween(String value1, String value2) {
+			addCriterion("appraisal_dsc between", value1, value2, "appraisalDsc");
+			return (Criteria) this;
+		}
+
+		public Criteria andAppraisalDscNotBetween(String value1, String value2) {
+			addCriterion("appraisal_dsc not between", value1, value2, "appraisalDsc");
 			return (Criteria) this;
 		}
 

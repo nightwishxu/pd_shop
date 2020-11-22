@@ -112,6 +112,9 @@ public class ApiUserGoodsController extends ApiBaseController {
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private CertificateService certificateService;
+
     public enum MGoodsCateList {
 
 
@@ -1011,15 +1014,15 @@ public class ApiUserGoodsController extends ApiBaseController {
         if(1 == ex.getPostState()){
             //用户没寄出--代表是在线鉴定
             mini.setResult(ex.getAuthResult());
-            mini.setPriceTest(ex.getAuthPriceTest()+"");
-            mini.setPrice(ex.getAuthPrice()+"");
+            mini.setPriceTest(ex.getAuthPriceTest()==null?"":ex.getAuthPriceTest().toString());
+            mini.setPrice(ex.getAuthPrice()==null?"":ex.getAuthPrice().toString());
         }else if(3 == ex.getPostState() || 4 == ex.getPostState()){
             //平台收到宝贝--判断是否有二次鉴定
             if(1 == ex.getIsVerify()){
                 //已经二次鉴定
                 mini.setResult(ex.getAuthResult());
-                mini.setPriceTest(ex.getAuthPriceTest()+"");
-                mini.setPrice(ex.getAuthPrice()+"");
+                mini.setPriceTest(ex.getAuthPriceTest()==null?"":ex.getAuthPriceTest().toString());
+                mini.setPrice(ex.getAuthPrice()==null?"":ex.getAuthPrice().toString());
             }else{
                 //没有二次鉴定 -- 结果是鉴定中，--价格空
                 mini.setResult(1);
@@ -1513,4 +1516,35 @@ public class ApiUserGoodsController extends ApiBaseController {
     }
 
 
+    /**
+     *   <if test="type == 'onLine'.toString()">
+     *          and A.post_state = 1
+     *       </if>
+     *       <if test="type == 'mail'.toString()">
+     *          and (A.post_state = 2 or A.post_state = 3 or A.post_state = 4)
+     *       </if>
+     */
+
+    @ApiOperation(value="获取证书信息", notes = "登录")
+    @RequestMapping("/getCertificateInfo")
+    @ApiMethod( isLogin = true)
+    public Certificate getCertificateInfo(@ApiParam(value="id",required = true)Integer id){
+        CertificateExample example = new CertificateExample();
+        example.createCriteria().andUserGoodsIdEqualTo(id);
+        List<Certificate> certificates = certificateService.selectByExample(example);
+        if (CollectionUtil.isNotEmpty(certificates)){
+            Certificate certificate = certificates.get(0);
+            UserGoods userGoods = userGoodsService.selectByPrimaryKey(id);
+            if (userGoods==null){
+                throw new ApiException(400,"鉴定不存在");
+            }
+            if (userGoods.getPostState()!=null && userGoods.getPostState()==1){
+                certificate.setPrice(userGoods.getAuthPriceTest());
+            }else if (userGoods.getPostState()!=null && (userGoods.getPostState()==2 || userGoods.getPostState()==3 || userGoods.getPostState()==4)){
+                certificate.setPrice(userGoods.getAuthPrice());
+            }
+            return certificate;
+        }
+        return null;
+    }
 }

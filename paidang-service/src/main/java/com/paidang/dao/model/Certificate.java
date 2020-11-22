@@ -1,121 +1,219 @@
 package com.paidang.dao.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *
  */
-public class Certificate {
+@ApiModel
+@Table(name="p_certificate")
+public class Certificate implements Serializable {
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "id")
 	private Integer id;
 
 	/**
 	 *名称
 	 */
+	@ApiModelProperty(value="名称")
+	@ApiParam(value="名称")
+	@Column(name = "name")
 	private String name;
 
 	/**
 	 *编号
 	 */
+	@ApiModelProperty(value="编号")
+	@ApiParam(value="编号")
+	@Column(name = "code")
 	private String code;
 
 	/**
 	 *尺寸--长
 	 */
+	@ApiModelProperty(value="尺寸--长")
+	@ApiParam(value="尺寸--长")
+	@Column(name = "length")
 	private String length;
 
 	/**
 	 *尺寸--宽
 	 */
+	@ApiModelProperty(value="尺寸--宽")
+	@ApiParam(value="尺寸--宽")
+	@Column(name = "width")
 	private String width;
 
 	/**
 	 *尺寸--高
 	 */
+	@ApiModelProperty(value="尺寸--高")
+	@ApiParam(value="尺寸--高")
+	@Column(name = "height")
 	private String height;
 
 	/**
 	 *重量
 	 */
+	@ApiModelProperty(value="重量")
+	@ApiParam(value="重量")
+	@Column(name = "weight")
 	private String weight;
 
 	/**
 	 *材质
 	 */
+	@ApiModelProperty(value="材质")
+	@ApiParam(value="材质")
+	@Column(name = "material")
 	private String material;
 
 	/**
 	 *主体材质
 	 */
+	@ApiModelProperty(value="主体材质")
+	@ApiParam(value="主体材质")
+	@Column(name = "main_material")
 	private String mainMaterial;
 
 	/**
 	 *其他辅材
 	 */
+	@ApiModelProperty(value="其他辅材")
+	@ApiParam(value="其他辅材")
+	@Column(name = "other_material")
 	private String otherMaterial;
 
 	/**
 	 *创作年代
 	 */
+	@ApiModelProperty(value="创作年代")
+	@ApiParam(value="创作年代")
+	@Column(name = "create_year")
 	private String createYear;
 
 	/**
 	 *其他
 	 */
+	@ApiModelProperty(value="其他")
+	@ApiParam(value="其他")
+	@Column(name = "other")
 	private String other;
 
 	/**
 	 *图片概览
 	 */
+	@ApiModelProperty(value="图片概览")
+	@ApiParam(value="图片概览")
+	@Column(name = "imgs")
 	private String imgs;
 
 	/**
 	 *市场流通性0-5分
 	 */
+	@ApiModelProperty(value="市场流通性0-5分")
+	@ApiParam(value="市场流通性0-5分")
+	@Column(name = "market_liquidity")
 	private Integer marketLiquidity;
 
 	/**
 	 *价值稳定性0-5分
 	 */
+	@ApiModelProperty(value="价值稳定性0-5分")
+	@ApiParam(value="价值稳定性0-5分")
+	@Column(name = "value_stability")
 	private Integer valueStability;
 
 	/**
 	 *材质易损性
 	 */
+	@ApiModelProperty(value="材质易损性")
+	@ApiParam(value="材质易损性")
+	@Column(name = "material_vulnerability")
 	private Integer materialVulnerability;
 
 	/**
 	 *存放条件
 	 */
+	@ApiModelProperty(value="存放条件")
+	@ApiParam(value="存放条件")
+	@Column(name = "storage_condition")
 	private String storageCondition;
 
 	/**
 	 *肉眼可见缺陷
 	 */
+	@ApiModelProperty(value="肉眼可见缺陷")
+	@ApiParam(value="肉眼可见缺陷")
+	@Column(name = "naked_eye_defect")
 	private String nakedEyeDefect;
 
 	/**
 	 *金融记录
 	 */
+	@ApiModelProperty(value="金融记录")
+	@ApiParam(value="金融记录")
+	@Column(name = "finance_log")
 	private String financeLog;
 
 	/**
 	 *其他事项
 	 */
+	@ApiModelProperty(value="其他事项")
+	@ApiParam(value="其他事项")
+	@Column(name = "other_business")
 	private String otherBusiness;
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "create_time")
 	private java.util.Date createTime;
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "modify_time")
 	private java.util.Date modifyTime;
+
+	/**
+	 *
+	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "user_goods_id")
+	private Integer userGoodsId;
+
+	/**
+	 *鉴定托底价
+	 */
+	@ApiModelProperty(value="鉴定托底价")
+	@ApiParam(value="鉴定托底价")
+	@Column(name = "price")
+	private java.math.BigDecimal price;
+
+	/**
+	 *鉴定说明
+	 */
+	@ApiModelProperty(value="鉴定说明")
+	@ApiParam(value="鉴定说明")
+	@Column(name = "appraisal_dsc")
+	private String appraisalDsc;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -291,6 +389,30 @@ public class Certificate {
 
 	public java.util.Date getModifyTime() {
 		return modifyTime;
+	}
+
+	public void setUserGoodsId(Integer userGoodsId) {
+		this.userGoodsId=userGoodsId;
+	}
+
+	public Integer getUserGoodsId() {
+		return userGoodsId;
+	}
+
+	public void setPrice(java.math.BigDecimal price) {
+		this.price=price;
+	}
+
+	public java.math.BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setAppraisalDsc(String appraisalDsc) {
+		this.appraisalDsc=appraisalDsc == null ? appraisalDsc : appraisalDsc.trim();
+	}
+
+	public String getAppraisalDsc() {
+		return appraisalDsc;
 	}
 
 }

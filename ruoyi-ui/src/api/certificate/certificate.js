@@ -17,6 +17,13 @@ export function getCertificate(id) {
   })
 }
 
+
+export function getByUserGoodsId(userGoodsId) {
+  return request({
+    url: '/certificate/getByUserGoodsId?userGoodsId=' + userGoodsId,
+    method: 'get'
+  })
+}
 export function checkDetail(id) {
   return request({
     url: '/certificate/checkDetail?id=' + id,

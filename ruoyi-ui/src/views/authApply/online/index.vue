@@ -322,14 +322,164 @@
     <el-dialog
       :title="title3"
       :visible.sync="open3"
-      width="400px"
+      width="800px"
       append-to-body
     >
       <el-form
-        ref="form1"
         :model="form3"
         label-width="100px"
       >
+
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form3.name"
+            placeholder="请输入名称"
+          />
+        </el-form-item>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="长  单位cm"
+              prop="length"
+            >
+              <el-input
+                v-model="form3.length"
+                placeholder="请输入尺寸--长"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="宽  单位cm"
+              prop="width"
+            >
+              <el-input
+                v-model="form3.width"
+                placeholder="请输入尺寸--宽"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="高  单位cm"
+              prop="height"
+            >
+              <el-input
+                v-model="form3.height"
+                placeholder="请输入尺寸--高"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="重量(单位g)"
+              prop="weight"
+            >
+              <el-input
+                v-model="form3.weight"
+                placeholder="请输入重量"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <!-- <el-col :span="12">
+            <el-form-item label="材质" prop="material">
+              <el-input
+                v-model="form3.material"
+                placeholder="请输入材质"
+              /> </el-form-item
+          ></el-col> -->
+          <el-col :span="12">
+            <el-form-item
+              label="主体材质"
+              prop="mainMaterial"
+            >
+              <el-input
+                v-model="form3.mainMaterial"
+                placeholder="请输入主体材质"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="其他辅材"
+              prop="otherMaterial"
+            >
+              <el-input
+                v-model="form3.otherMaterial"
+                placeholder="请输入其他辅材"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="创作年代"
+              prop="createYear"
+            >
+              <el-input
+                v-model="form3.createYear"
+                placeholder="请输入创作年代"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="其他"
+              prop="other"
+            >
+              <el-input
+                v-model="form3.other"
+                placeholder="请输入其他"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-form-item label="图片">
+          <multi-upload ref="upload" v-model="imgfileList"></multi-upload>
+        </el-form-item> -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="市场流通性"
+              prop="marketLiquidity"
+            >
+              <el-rate v-model="form3.marketLiquidity"></el-rate>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item
+              label="价值稳定性"
+              prop="valueStability"
+            >
+              <el-rate v-model="form3.valueStability"></el-rate>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+
+            <el-form-item
+              label="材质易损性"
+              prop="materialVulnerability"
+            >
+              <el-rate v-model="form3.materialVulnerability"></el-rate>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
         <el-form-item
           label="鉴定说明"
           prop="appraisalDsc"
@@ -581,6 +731,11 @@ import { saveInfo } from "@/api/authApply/experterInfo";
 import SingleUpload from "@/components/Upload/singleUpload";
 import VideoUpload from "@/components/Upload/videoUpload";
 import MultiUpload from "@/components/Upload/multiUpload";
+import {
+  getCertificate,
+  updateCertificate,
+  getByUserGoodsId,
+} from "@/api/certificate/certificate";
 
 export default {
   name: "Goods",
@@ -711,6 +866,7 @@ export default {
       },
       domainOptions: [],
       experterOptions: [],
+
       cateCodeOptions: [
         {
           label: "钟表",
@@ -867,9 +1023,19 @@ export default {
     handleForm3(row) {
       this.reset3();
       const id = row.id;
-      this.form3 = { id: id, appraisalDsc: row.appraisalDsc };
-      this.open3 = true;
-      this.title3 = "鉴定说明";
+      getByUserGoodsId(id).then((response) => {
+        console.info(response)
+         if(response.data!=undefined && response.data!=null){
+            this.form3 =response.data;
+         }else{
+            this.form3.userGoodsId = id;
+         }
+
+        this.open3 = true;
+        this.title3 = "鉴定说明";
+
+      });
+     
     },
     handleForm4(row) {
       this.reset4();
@@ -924,7 +1090,7 @@ export default {
       });
     },
     from3Submit() {
-      updateGoods(this.form3).then((response) => {
+      updateCertificate(this.form3).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open3 = false;

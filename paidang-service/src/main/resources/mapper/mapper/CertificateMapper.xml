@@ -24,6 +24,9 @@
         <result column="other_business" property="otherBusiness" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="user_goods_id" property="userGoodsId" jdbcType="INTEGER" />
+        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="appraisal_dsc" property="appraisalDsc" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -87,7 +90,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,name,code,length,width,height,weight,material,main_material,other_material,create_year,other,imgs,market_liquidity,value_stability,material_vulnerability,storage_condition,naked_eye_defect,finance_log,other_business,create_time,modify_time
+        id,name,code,length,width,height,weight,material,main_material,other_material,create_year,other,imgs,market_liquidity,value_stability,material_vulnerability,storage_condition,naked_eye_defect,finance_log,other_business,create_time,modify_time,user_goods_id,price,appraisal_dsc
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -132,7 +135,8 @@
         imgs,market_liquidity,value_stability,
         material_vulnerability,storage_condition,naked_eye_defect,
         finance_log,other_business,create_time,
-        modify_time
+        modify_time,user_goods_id,price,
+        appraisal_dsc
         )
         values (#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},
         #{length,jdbcType=VARCHAR},#{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},
@@ -141,7 +145,8 @@
         #{imgs,jdbcType=VARCHAR},#{marketLiquidity,jdbcType=TINYINT},#{valueStability,jdbcType=TINYINT},
         #{materialVulnerability,jdbcType=TINYINT},#{storageCondition,jdbcType=VARCHAR},#{nakedEyeDefect,jdbcType=VARCHAR},
         #{financeLog,jdbcType=VARCHAR},#{otherBusiness,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
-        #{modifyTime,jdbcType=TIMESTAMP}
+        #{modifyTime,jdbcType=TIMESTAMP},#{userGoodsId,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},
+        #{appraisalDsc,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -211,6 +216,15 @@
             <if test="modifyTime != null" >
                 modify_time,
             </if>
+            <if test="userGoodsId != null" >
+                user_goods_id,
+            </if>
+            <if test="price != null" >
+                price,
+            </if>
+            <if test="appraisalDsc != null" >
+                appraisal_dsc,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="name != null" >
@@ -275,6 +289,15 @@
             </if>
             <if test="modifyTime != null" >
                 #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userGoodsId != null" >
+                #{userGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="price != null" >
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="appraisalDsc != null" >
+                #{appraisalDsc,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -355,6 +378,15 @@
             <if test="record.modifyTime != null" >
                 modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="record.userGoodsId != null" >
+                user_goods_id = #{record.userGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="record.price != null" >
+                price = #{record.price,jdbcType=DECIMAL},
+            </if>
+            <if test="record.appraisalDsc != null" >
+                appraisal_dsc = #{record.appraisalDsc,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -384,7 +416,10 @@
         finance_log = #{financeLog,jdbcType=VARCHAR},
         other_business = #{otherBusiness,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+        user_goods_id = #{userGoodsId,jdbcType=INTEGER},
+        price = #{price,jdbcType=DECIMAL},
+        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -456,6 +491,15 @@
             <if test="modifyTime != null" >
                 modify_time = #{modifyTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="userGoodsId != null" >
+                user_goods_id = #{userGoodsId,jdbcType=INTEGER},
+            </if>
+            <if test="price != null" >
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="appraisalDsc != null" >
+                appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -482,8 +526,25 @@
         finance_log = #{financeLog,jdbcType=VARCHAR},
         other_business = #{otherBusiness,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+        user_goods_id = #{userGoodsId,jdbcType=INTEGER},
+        price = #{price,jdbcType=DECIMAL},
+        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_certificate
+        ${sqlSegment}
+    </select>
 
 </mapper>

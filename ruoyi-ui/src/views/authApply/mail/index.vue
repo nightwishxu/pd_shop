@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item
+        label="商品名称"
+        prop="name"
+      >
         <el-input
           v-model="queryParams.name"
           placeholder="请输入商品名称"
@@ -22,11 +25,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -35,8 +39,16 @@
       :data="goodsList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="宝贝名称" align="center" prop="name">
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="宝贝名称"
+        align="center"
+        prop="name"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -47,26 +59,32 @@
               scope.row.name == ''
             "
             @click="handleForm1(scope.row)"
-            >为宝贝命名</el-button
-          >
+          >为宝贝命名</el-button>
           <el-button
             type="text"
             size="mini"
             v-else
             @click="handleForm1(scope.row)"
-            >{{ scope.row.name }}</el-button
-          >
+          >{{ scope.row.name }}</el-button>
         </template>
       </el-table-column>
 
-      <el-table-column label="宝贝图片" align="center" prop="images">
+      <el-table-column
+        label="宝贝图片"
+        align="center"
+        prop="images"
+      >
         <template slot-scope="scope">
           <div v-if="scope.row.images != null">
             <span
               v-for="(item, index) in scope.row.images.split(',')"
               :key="index"
             >
-              <el-popover placement="left" trigger="click" width="300">
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -80,14 +98,22 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="宝贝附件" align="center" prop="goodsImgs">
+      <el-table-column
+        label="宝贝附件"
+        align="center"
+        prop="goodsImgs"
+      >
         <template slot-scope="scope">
           <div v-if="scope.row.goodsImgs != null">
             <span
               v-for="(item, index) in scope.row.goodsImgs.split(',')"
               :key="index"
             >
-              <el-popover placement="left" trigger="click" width="300">
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -101,7 +127,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="宝贝邮寄打包视频" align="center" prop="video">
+      <el-table-column
+        label="宝贝邮寄打包视频"
+        align="center"
+        prop="video"
+      >
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.goVideo"
@@ -129,7 +159,11 @@
         :formatter="handleAuthResult"
       />
 
-      <el-table-column label="宝贝邮寄打包视频" align="center" prop="video">
+      <el-table-column
+        label="宝贝邮寄打包视频"
+        align="center"
+        prop="video"
+      >
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.openGoodsVideo"
@@ -144,7 +178,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="鉴宝视频" align="center" prop="video">
+      <el-table-column
+        label="鉴宝视频"
+        align="center"
+        prop="video"
+      >
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.platGoodsAuthVideo"
@@ -160,98 +198,96 @@
             size="mini"
             v-else-if="scope.row.authResult == 1 && scope.row.postState == 3"
             @click="handleForm2(scope.row)"
-            >上传鉴宝视频</el-button
-          >
+          >上传鉴宝视频</el-button>
         </template>
       </el-table-column>
 
-      <el-table-column label="鉴定价" align="center" prop="authPrice" />
+      <el-table-column
+        label="鉴定价"
+        align="center"
+        prop="authPrice"
+      />
 
-      <el-table-column label="鉴定说明" align="center" prop="appraisalDsc">
+      <el-table-column
+        label="鉴定说明"
+        align="center"
+        prop="appraisalDsc"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
             size="mini"
             v-if="!scope.row.appraisalDsc"
             @click="handleForm3(scope.row)"
-            >填写鉴定说明</el-button
-          >
+          >填写鉴定说明</el-button>
           <el-button
             type="info"
             size="mini"
             v-else
             @click="handleForm3(scope.row)"
-            >{{ scope.row.appraisalDsc }}</el-button
-          >
+          >{{ scope.row.appraisalDsc }}</el-button>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" prop="appraisalDsc">
+      <el-table-column
+        label="操作"
+        align="center"
+        prop="appraisalDsc"
+      >
         <template slot-scope="scope">
-          <span v-if="getOperation(scope.row) == 1"> 1 </span>
+          <span v-if="getOperation(scope.row) == 1"> </span>
 
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 1"
             @click="handleForm6(scope.row)"
-            >开始拆箱</el-button
-          >
+          >开始拆箱</el-button>
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 2"
             @click="handleForm7(scope.row)"
-            >开始鉴定</el-button
-          >
-          <el-button
+          >开始鉴定</el-button>
+          <!-- <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 2"
             @click="handleForm4(scope.row)"
-            >复制url</el-button
-          >
+          >复制url</el-button> -->
 
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 3"
             @click="handleForm7(scope.row)"
-            >开始鉴定</el-button
-          >
+          >开始鉴定</el-button>
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 3"
             @click="handleForm5(scope.row)"
-            >专家鉴定</el-button
-          >
+          >专家鉴定</el-button>
           <span v-if="getOperation(scope.row) == 4">请先为宝贝命名</span>
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 5"
             @click="handleForm8(scope.row)"
-            >设置鉴定结果</el-button
-          >
+          >设置鉴定结果</el-button>
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 6"
             @click="handleForm7(scope.row)"
-            >再次鉴定</el-button
-          >
-          <span
-            v-if="getOperation(scope.row) == 7 || getOperation(scope.row) == 9"
-            >已经认证！</span
-          >
+          >再次鉴定</el-button>
+          <span v-if="getOperation(scope.row) == 7 || getOperation(scope.row) == 9">已经认证！</span>
           <el-button
             type="primary"
             size="mini"
             v-if="getOperation(scope.row) == 8"
             @click="handleForm9(scope.row)"
-            >确认</el-button
-          >
+          >确认</el-button>
           <span v-if="getOperation(scope.row) == 10">请先鉴定</span>
           <span v-if="getOperation(scope.row) == 11">宝贝已典当</span>
           <!-- <span v-if="scope.row.gotoPawn != 1">
@@ -367,7 +403,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="专家鉴定" align="center" prop="auth">
+      <!-- <el-table-column
+        label="专家鉴定"
+        align="center"
+        prop="auth"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -376,17 +416,15 @@
               scope.row.experterInfoId != null && scope.row.experterInfoId != 0
             "
             @click="handleForm4(scope.row)"
-            >复制url</el-button
-          >
+          >复制url</el-button>
           <el-button
             type="info"
             size="mini"
             v-else
             @click="handleForm5(scope.row)"
-            >专家鉴定</el-button
-          >
+          >专家鉴定</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label
         align="center"
@@ -398,8 +436,7 @@
             type="text"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['admin:goods:edit']"
-            >查看详情</el-button
-          >
+          >查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -418,13 +455,30 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form1" label-width="150px">
-        <el-form-item label="设置宝贝名称" prop="settleMoney" id="refuseInfo">
-          <el-input v-model="form1.name" placeholder="请输名称" />
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="设置宝贝名称"
+          prop="settleMoney"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form1.name"
+            placeholder="请输名称"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from1Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from1Submit"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -435,7 +489,11 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form2" label-width="100px">
+      <el-form
+        ref="form1"
+        :model="form2"
+        label-width="100px"
+      >
         <el-form-item
           label="上传鉴宝视频"
           prop="platGoodsAuthVideo"
@@ -447,8 +505,14 @@
           ></video-upload>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from2Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from2Submit"
+        >确 定</el-button>
         <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
@@ -456,16 +520,182 @@
     <el-dialog
       :title="title3"
       :visible.sync="open3"
-      width="400px"
+      width="800px"
       append-to-body
     >
-      <el-form ref="form1" :model="form3" label-width="100px">
-        <el-form-item label="鉴定说明" prop="appraisalDsc">
-          <el-input v-model="form3.appraisalDsc" placeholder="请输入鉴定说明" />
+      <el-form
+        :model="form3"
+        label-width="100px"
+      >
+
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form3.name"
+            placeholder="请输入名称"
+          />
+        </el-form-item>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="长  单位cm"
+              prop="length"
+            >
+              <el-input
+                v-model="form3.length"
+                placeholder="请输入尺寸--长"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="宽  单位cm"
+              prop="width"
+            >
+              <el-input
+                v-model="form3.width"
+                placeholder="请输入尺寸--宽"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="高  单位cm"
+              prop="height"
+            >
+              <el-input
+                v-model="form3.height"
+                placeholder="请输入尺寸--高"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="重量(单位g)"
+              prop="weight"
+            >
+              <el-input
+                v-model="form3.weight"
+                placeholder="请输入重量"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <!-- <el-col :span="12">
+            <el-form-item label="材质" prop="material">
+              <el-input
+                v-model="form3.material"
+                placeholder="请输入材质"
+              /> </el-form-item
+          ></el-col> -->
+          <el-col :span="12">
+            <el-form-item
+              label="主体材质"
+              prop="mainMaterial"
+            >
+              <el-input
+                v-model="form3.mainMaterial"
+                placeholder="请输入主体材质"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="其他辅材"
+              prop="otherMaterial"
+            >
+              <el-input
+                v-model="form3.otherMaterial"
+                placeholder="请输入其他辅材"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="创作年代"
+              prop="createYear"
+            >
+              <el-input
+                v-model="form3.createYear"
+                placeholder="请输入创作年代"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="其他"
+              prop="other"
+            >
+              <el-input
+                v-model="form3.other"
+                placeholder="请输入其他"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- <el-form-item label="图片">
+          <multi-upload ref="upload" v-model="imgfileList"></multi-upload>
+        </el-form-item> -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="市场流通性"
+              prop="marketLiquidity"
+            >
+              <el-rate v-model="form3.marketLiquidity"></el-rate>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item
+              label="价值稳定性"
+              prop="valueStability"
+            >
+              <el-rate v-model="form3.valueStability"></el-rate>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+
+            <el-form-item
+              label="材质易损性"
+              prop="materialVulnerability"
+            >
+              <el-rate v-model="form3.materialVulnerability"></el-rate>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-form-item
+          label="鉴定说明"
+          prop="appraisalDsc"
+        >
+          <el-input
+            v-model="form3.appraisalDsc"
+            placeholder="请输入鉴定说明"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from3Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from3Submit"
+        >确 定</el-button>
         <el-button @click="cancel3">取 消</el-button>
       </div>
     </el-dialog>
@@ -476,9 +706,19 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form4" label-width="100px">
-        <el-form-item label="链接地址" prop="settleMoney">
-          <el-input v-model="form4.authUrl" disabled />
+      <el-form
+        ref="form1"
+        :model="form4"
+        label-width="100px"
+      >
+        <el-form-item
+          label="链接地址"
+          prop="settleMoney"
+        >
+          <el-input
+            v-model="form4.authUrl"
+            disabled
+          />
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -489,8 +729,15 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form5" :model="form5" label-width="100px">
-        <el-form-item label="领域名称" prop="domainId">
+      <el-form
+        ref="form5"
+        :model="form5"
+        label-width="100px"
+      >
+        <el-form-item
+          label="领域名称"
+          prop="domainId"
+        >
           <el-select
             v-model="form5.domainId"
             placeholder="请选择下拉选择"
@@ -507,7 +754,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="专家姓名" prop="experterId">
+        <el-form-item
+          label="专家姓名"
+          prop="experterId"
+        >
           <el-select
             v-model="form5.experterId"
             placeholder="请选择下拉选择"
@@ -524,8 +774,14 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from5Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from5Submit"
+        >确 定</el-button>
         <el-button @click="cancel5">取 消</el-button>
       </div>
     </el-dialog>
@@ -533,10 +789,13 @@
     <el-dialog
       :title="title6"
       :visible.sync="open6"
-      width="400px"
+      width="600px"
       append-to-body
     >
-      <el-form :model="form6" label-width="100px">
+      <el-form
+        :model="form6"
+        label-width="100px"
+      >
         <el-form-item
           label="上传拆箱视频"
           prop="openGoodsVideo"
@@ -548,8 +807,14 @@
           ></video-upload>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from6Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from6Submit"
+        >确 定</el-button>
         <el-button @click="cancel6">取 消</el-button>
       </div>
     </el-dialog>
@@ -560,8 +825,14 @@
       width="400px"
       append-to-body
     >
-      <el-form :model="form8" label-width="100px">
-        <el-form-item label="鉴定结果" prop="authResult">
+      <el-form
+        :model="form8"
+        label-width="100px"
+      >
+        <el-form-item
+          label="鉴定结果"
+          prop="authResult"
+        >
           <el-select
             v-model="form8.authResult"
             placeholder="请选择下拉选择"
@@ -578,26 +849,53 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="鉴定价" prop="authPrice" v-if="show4">
+        <el-form-item
+          label="鉴定价"
+          prop="authPrice"
+          v-if="show4"
+        >
           <el-input v-model="form8.authPrice" />
         </el-form-item>
-        <el-form-item label="月利率(%)" prop="moneyRate" v-if="show4">
-          <el-input v-model="form8.authPrice" />
+        <el-form-item
+          label="月利率(%)"
+          prop="moneyRate"
+          v-if="show4"
+        >
+          <el-input v-model="form8.moneyRate" />
         </el-form-item>
-        <el-form-item label="月费率(%)" prop="rate" v-if="show4">
-          <el-input v-model="form8.authPrice" />
+        <el-form-item
+          label="月费率(%)"
+          prop="rate"
+          v-if="show4"
+        >
+          <el-input v-model="form8.rate" />
         </el-form-item>
-        <el-form-item label="无法鉴定理由：" prop="authPrice" v-if="show2">
+        <el-form-item
+          label="无法鉴定理由："
+          prop="authPrice"
+          v-if="show2"
+        >
           <el-input v-model="form8.notVerifyReason" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from8Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from8Submit"
+        >确 定</el-button>
         <el-button @click="cancel8">取 消</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title :visible.sync="videoOpen" width="40%" @close="closeDialog">
+    <el-dialog
+      title
+      :visible.sync="videoOpen"
+      width="40%"
+      @close="closeDialog"
+    >
       <video
         :src="videoUrl"
         class="avatar"
@@ -615,28 +913,59 @@
       append-to-body
       v-if="isRouterAlive"
     >
-      <el-form ref="form" :model="form" label-width="150px">
+      <el-form
+        ref="form"
+        :model="form"
+        label-width="150px"
+      >
         <el-col :span="12">
-          <el-form-item label="宝贝原始主人账号" prop="content">
-            <el-input v-model="form.oldAccount" disabled></el-input>
+          <el-form-item
+            label="宝贝原始主人账号"
+            prop="content"
+          >
+            <el-input
+              v-model="form.oldAccount"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用户账号" prop="content">
-            <el-input v-model="form.account" disabled></el-input>
+          <el-form-item
+            label="用户账号"
+            prop="content"
+          >
+            <el-input
+              v-model="form.account"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用户昵称" prop="content">
-            <el-input v-model="form.nickName" disabled></el-input>
+          <el-form-item
+            label="用户昵称"
+            prop="content"
+          >
+            <el-input
+              v-model="form.nickName"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="宝贝名称" prop="content">
-            <el-input v-model="form.name" disabled></el-input>
+          <el-form-item
+            label="宝贝名称"
+            prop="content"
+          >
+            <el-input
+              v-model="form.name"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
-        <el-form-item label="邮寄打包视频" prop="goVideo">
+        <el-form-item
+          label="邮寄打包视频"
+          prop="goVideo"
+        >
           <template slot-scope="scope">
             <video
               v-if="form.goVideo"
@@ -647,7 +976,10 @@
             ></video>
           </template>
         </el-form-item>
-        <el-form-item label="拆箱视频" prop="openGoodsVideo">
+        <el-form-item
+          label="拆箱视频"
+          prop="openGoodsVideo"
+        >
           <template slot-scope="scope">
             <video
               v-if="form.openGoodsVideo"
@@ -659,35 +991,92 @@
           </template>
         </el-form-item>
         <el-col :span="12">
-          <el-form-item label="物流单号" prop="content">
-            <el-input v-model="form.postExpressCode" disabled></el-input>
+          <el-form-item
+            label="物流单号"
+            prop="content"
+          >
+            <el-input
+              v-model="form.postExpressCode"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="顺风保价价格" prop="content">
-            <el-input v-model="form.sfProtectPrice" disabled></el-input>
+          <el-form-item
+            label="顺风保价价格"
+            prop="content"
+          >
+            <el-input
+              v-model="form.sfProtectPrice"
+              disabled
+            ></el-input>
           </el-form-item>
         </el-col>
-        <el-form-item label="无法鉴定理由" prop="content">
-          <el-input v-model="form.notVerifyReason" disabled></el-input>
+        <el-form-item
+          label="无法鉴定理由"
+          prop="content"
+        >
+          <el-input
+            v-model="form.notVerifyReason"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="专家姓名" prop="content" v-if="show">
-          <el-input v-model="form.experterName" disabled></el-input>
+        <el-form-item
+          label="专家姓名"
+          prop="content"
+          v-if="show"
+        >
+          <el-input
+            v-model="form.experterName"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="图片初审预估价" prop="content" v-if="show">
-          <el-input v-model="form.authPriceTest" disabled></el-input>
+        <el-form-item
+          label="图片初审预估价"
+          prop="content"
+          v-if="show"
+        >
+          <el-input
+            v-model="form.authPriceTest"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="专家意见" prop="content" v-if="show">
-          <el-input v-model="form.experterInfo" disabled></el-input>
+        <el-form-item
+          label="专家意见"
+          prop="content"
+          v-if="show"
+        >
+          <el-input
+            v-model="form.experterInfo"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="用户物流数据" prop="content">
-          <el-input v-model="form.expressData" disabled></el-input>
+        <el-form-item
+          label="用户物流数据"
+          prop="content"
+        >
+          <el-input
+            v-model="form.expressData"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="平台回寄单号" prop="content">
-          <el-input v-model="form.backExpressCode" disabled></el-input>
+        <el-form-item
+          label="平台回寄单号"
+          prop="content"
+        >
+          <el-input
+            v-model="form.backExpressCode"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="平台回寄物流数据" prop="content">
-          <el-input v-model="form.expressData2" disabled></el-input>
+        <el-form-item
+          label="平台回寄物流数据"
+          prop="content"
+        >
+          <el-input
+            v-model="form.expressData2"
+            disabled
+          ></el-input>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -714,6 +1103,11 @@ import { saveInfo } from "@/api/authApply/experterInfo";
 import SingleUpload from "@/components/Upload/singleUpload";
 import VideoUpload from "@/components/Upload/videoUpload";
 import MultiUpload from "@/components/Upload/multiUpload";
+import {
+  getCertificate,
+  updateCertificate,
+  getByUserGoodsId,
+} from "@/api/certificate/certificate";
 
 export default {
   name: "Goods",
@@ -1037,9 +1431,18 @@ export default {
     handleForm3(row) {
       this.reset3();
       const id = row.id;
-      this.form3 = { id: id, appraisalDsc: row.appraisalDsc };
-      this.open3 = true;
-      this.title3 = "鉴定说明";
+      getByUserGoodsId(id).then((response) => {
+        console.info(response)
+         if(response.data!=undefined && response.data!=null){
+            this.form3 =response.data;
+         }else{
+            this.form3.userGoodsId = id;
+         }
+
+        this.open3 = true;
+        this.title3 = "鉴定说明";
+
+      });
     },
     handleForm4(row) {
       this.reset4();
@@ -1124,7 +1527,7 @@ export default {
       });
     },
     from3Submit() {
-      updateGoods(this.form3).then((response) => {
+      updateCertificate(this.form3).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open3 = false;
