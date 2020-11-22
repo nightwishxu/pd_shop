@@ -142,4 +142,8 @@ public class ArticleService {
 	public List<ArticleEx> recommendNewList(Integer userId,Integer limit){
 		return articleMapperEx.recommendNewList(userId,limit);
 	}
+
+	public static void main(String[] args) {
+
+	}
 }

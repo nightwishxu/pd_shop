@@ -187,11 +187,11 @@
 
 
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-lang3</artifactId>-->
+<!--            <version>3.11</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/javax.persistence/persistence-api -->
         <dependency>
@@ -255,6 +255,28 @@
             <artifactId>bce-java-sdk</artifactId>
             <version>0.10.137</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>cfca.common</groupId>-->
+<!--            <artifactId>SADK3610Patch</artifactId>-->
+<!--            <version>3.0.1.0</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.cfca/SealSADK -->
+<!--        <dependency>-->
+<!--            <groupId>com.cfca</groupId>-->
+<!--            <artifactId>SealSADK</artifactId>-->
+<!--            <version>3.1.4.0</version>-->
+<!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+<!--            <groupId>cfca.sadk</groupId>-->
+<!--            <artifactId>TimeStampAPIv4</artifactId>-->
+<!--            <version>4.0.3.0</version>-->
+<!--            <systemPath>${project.basedir}/lib/timestampAPI-4.0.3.0.jar</systemPath>-->
+<!--        </dependency>-->
+
 
     </dependencies>
 

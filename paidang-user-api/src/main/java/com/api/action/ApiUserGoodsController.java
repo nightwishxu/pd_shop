@@ -113,6 +113,36 @@ public class ApiUserGoodsController extends ApiBaseController {
     private RedisCache redisCache;
 
     public enum MGoodsCateList {
+
+
+        /**
+         *    zb("1","钟表","0"),
+         *         fc("2","翡翠","0"),
+         *         hty("3","和田玉","0"),
+         *         gdysp("4","古董艺术品","0"),
+         *         sh("5","书画","0"),
+         *         cszb("6","彩色珠宝","0"),
+         *         zs("7","钻石","0"),
+         *         other("8","更多","0"),
+         *
+         *         mqyt("9","明清砚台","4"),
+         *         ww("10","文玩","4"),
+         *         zx("11","杂项","4"),
+         *         hlbs("12","红蓝宝石","6"),
+         *         zml("13","祖母绿","6"),
+         *         zz("14","珍珠","6"),
+         *         bx("15","碧玺","6"),
+         *
+         *
+         *         yczb("101","玉翠珠宝","0"),
+         *         gyzp("102","工艺作品","0"),
+         *         wwzx("103","文玩杂项","0"),
+         *         zstc("104","紫砂陶瓷","0"),
+         *         qbyp("105","钱币邮票","0"),
+         *         shzk("106","书画篆刻","0"),
+         *         hnwy("107","花鸟文娱","0"),
+         *         qt("108","其他","0"),
+         */
         SCPZB("1","奢侈品珠宝"),
         sb("2","手表"),
         zs("3","钻石"),
@@ -120,7 +150,14 @@ public class ApiUserGoodsController extends ApiBaseController {
         fcys("5","翡翠玉石"),
         hty("6","和田玉"),
         qt("7","其他"),
-        csbs("8","彩色宝石");
+        csbs("8","彩色宝石"),
+
+        tc("9","陶瓷"),
+        hh("10","绘画"),
+        sf("11","书法"),
+        wwzx("12","文玩杂项"),
+
+        ;
         private String code;
         private String name;
         private MGoodsCateList(String code,String name) {
@@ -128,30 +165,19 @@ public class ApiUserGoodsController extends ApiBaseController {
             this.name = name;
         }
 
+
+
+
         public static String getNameByCode(String code){
             if (StringUtil.isBlank(code)){
                 return null;
             }
-            switch (code){
-                case "1":
-                    return SCPZB.name;
-                case "2":
-                    return sb.name;
-                case "3":
-                    return zs.name;
-                case "4":
-                    return gjs.name;
-                case "5":
-                    return fcys.name;
-                case "6":
-                    return hty.name;
-                case "7":
-                    return qt.name;
-                case "8":
-                    return csbs.name;
-                default:
-                    return null;
+            for (MGoodsCateList tmp : MGoodsCateList.values()) {
+                if (Objects.equals(code,tmp.code)){
+                    return tmp.name;
+                }
             }
+            return null;
 
         }
     }
@@ -557,6 +583,7 @@ public class ApiUserGoodsController extends ApiBaseController {
                 userGoodsService.updateUserGoodsCount(userGoodsId,1,1);
 
             }
+            entity.setCreateTime(new Date());
             collectPraiseService.insert(entity);
         }
         return ok();
@@ -781,6 +808,7 @@ public class ApiUserGoodsController extends ApiBaseController {
                 userGoods.setVideo(video);
                 userGoods.setInfo(info);
                 userGoods.setIsRedeem(0);
+                userGoods.setCreateTime(new Date());
                 int result = userGoodsService.insert(userGoods);
                 if(result == 0){
                     throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -874,7 +902,17 @@ public class ApiUserGoodsController extends ApiBaseController {
             ret.setMsg(testPrice.format(price1));
 
 
-        }else if(MGoodsCateList.qt.code.equals(pawnCate.getCode())){
+        }else if(MGoodsCateList.qt.code.equals(pawnCate.getCode()) ||
+            MGoodsCateList.tc.code.equals(pawnCate.getCode()) ||
+            MGoodsCateList.hh.code.equals(pawnCate.getCode()) ||
+            MGoodsCateList.sf.code.equals(pawnCate.getCode()) ||
+        MGoodsCateList.wwzx.code.equals(pawnCate.getCode())){
+            /**
+             *  tc("9","陶瓷"),
+             *         hh("10","绘画"),
+             *         sf("11","书法"),
+             *         wwzx("12","文玩杂项"),
+             */
             //其他
             userGoods.setImages(images);
             userGoods.setUserId(mobileInfo.getUserId());
@@ -894,6 +932,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             userGoods.setVideo(video);
             userGoods.setIsVerify(0);
             userGoods.setIsRedeem(0);
+            userGoods.setCreateTime(new Date());
             int result = userGoodsService.insert(userGoods);
             if(result == 0){
                 throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -950,27 +989,10 @@ public class ApiUserGoodsController extends ApiBaseController {
         AppMyGoods mini = new AppMyGoods();
         mini.setId(ex.getId());
         if(null == ex.getName() || "".equals(ex.getName())){
-            if(MGoodsCateList.zs.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.zs.name);
-            }else if(MGoodsCateList.qt.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.qt.name);
-            }else if(MGoodsCateList.gjs.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.gjs.name);
-            }else if(MGoodsCateList.fcys.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.fcys.name);
-            }else if(MGoodsCateList.sb.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.sb.name);
-            }else if(MGoodsCateList.SCPZB.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.SCPZB.name);
-            }else if(MGoodsCateList.hty.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.hty.name);
-            }else if(MGoodsCateList.csbs.code.equals(ex.getCateCode())){
-                mini.setTitle(MGoodsCateList.csbs.name);
-            }
+            mini.setTitle(MGoodsCateList.getNameByCode(ex.getCateCode()));
         }else{
             mini.setTitle(ex.getName());
         }
-        String[] strs = ex.getImages().split(",");
         mini.setImage(ex.getImages());
         mini.setAppraisalDsc(ex.getAppraisalDsc());
 //        if(0 == ex.getPostState()){
@@ -1066,6 +1088,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             platformGoodsBuy.setUserName(user.getName());
             platformGoodsBuy.setUserPhone(user.getAccount());
             platformGoodsBuy.setState(1);
+            platformGoodsBuy.setCreateTime(new Date());
             int result = platformGoodsBuyService.insert(platformGoodsBuy);
             if(result == 0){
                 throw new ApiException(MErrorEnum.SERVER_BUSY_ERROR);
@@ -1221,6 +1244,7 @@ public class ApiUserGoodsController extends ApiBaseController {
 
             record.setCateId(pawnCate.getId());
             record.setIsRedeem(0);
+            record.setCreateTime(new Date());
             int result = userGoodsService.insert(record);
             if(result == 0){
                 throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -1244,6 +1268,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         express.setReceiveName(MPawnMsg.name);
         express.setReceivePhone(MPawnMsg.phone);
         express.setReceviceAddress(MPawnMsg.address);
+        express.setCreateTime(new Date());
         int expressResult = expressService.insert(express);
         if(expressResult == 0){
             throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -1289,6 +1314,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         express.setReceiveName(user.getName());
         express.setReceivePhone(userAddress.getPhone());
         express.setReceviceAddress(userAddress.getArea()+userAddress.getAddress());
+        express.setCreateTime(new Date());
         expressService.insert(express);
         return ok();
     }

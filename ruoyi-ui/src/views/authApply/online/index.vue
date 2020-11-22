@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item
+        label="商品名称"
+        prop="name"
+      >
         <el-input
           v-model="queryParams.name"
           placeholder="请输入商品名称"
@@ -22,11 +25,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -35,15 +39,35 @@
       :data="goodsList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户账号" align="center" prop="account" />
-      <el-table-column label="提交时间" align="center" prop="createTime">
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="用户账号"
+        align="center"
+        prop="account"
+      />
+      <el-table-column
+        label="提交时间"
+        align="center"
+        prop="createTime"
+      >
         <template slot-scope="scope">{{
           scope.row.createTime | dateYMDHMSFormat
         }}</template>
       </el-table-column>
-      <el-table-column label="用户昵称" align="center" prop="nickName" />
-      <el-table-column label="宝贝名称" align="center" prop="name">
+      <el-table-column
+        label="用户昵称"
+        align="center"
+        prop="nickName"
+      />
+      <el-table-column
+        label="宝贝名称"
+        align="center"
+        prop="name"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -54,27 +78,37 @@
               scope.row.name == ''
             "
             @click="handleForm1(scope.row)"
-            >为宝贝命名</el-button
-          >
+          >为宝贝命名</el-button>
           <el-button
             type="text"
             size="mini"
             v-else
             @click="handleForm1(scope.row)"
-            >{{ scope.row.name }}</el-button
-          >
+          >{{ scope.row.name }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="宝贝类别" align="center" prop="cateName" />
+      <el-table-column
+        label="宝贝类别"
+        align="center"
+        prop="cateName"
+      />
 
-      <el-table-column label="宝贝图片" align="center" prop="images">
+      <el-table-column
+        label="宝贝图片"
+        align="center"
+        prop="images"
+      >
         <template slot-scope="scope">
           <div v-if="scope.row.images != null">
             <span
               v-for="(item, index) in scope.row.images.split(',')"
               :key="index"
             >
-              <el-popover placement="left" trigger="click" width="300">
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -87,14 +121,22 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="宝贝附件" align="center" prop="goodsImgs">
+      <el-table-column
+        label="宝贝附件"
+        align="center"
+        prop="goodsImgs"
+      >
         <template slot-scope="scope">
           <div v-if="scope.row.goodsImgs != null">
             <span
               v-for="(item, index) in scope.row.goodsImgs.split(',')"
               :key="index"
             >
-              <el-popover placement="left" trigger="click" width="300">
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -107,7 +149,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="宝贝视频" align="center" prop="video">
+      <el-table-column
+        label="宝贝视频"
+        align="center"
+        prop="video"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -119,43 +165,51 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="估价" align="center" prop="authPriceTest">
+      <el-table-column
+        label="估价"
+        align="center"
+        prop="authPriceTest"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
             size="mini"
             v-if="!scope.row.authPriceTest"
             @click="handleForm2(scope.row)"
-            >估价</el-button
-          >
+          >估价</el-button>
           <el-button
             type="info"
             size="mini"
             v-else
             @click="handleForm2(scope.row)"
-            >{{ scope.row.authPriceTest }}</el-button
-          >
+          >{{ scope.row.authPriceTest }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="鉴定说明" align="center" prop="appraisalDsc">
+      <el-table-column
+        label="鉴定说明"
+        align="center"
+        prop="appraisalDsc"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
             size="mini"
             v-if="!scope.row.appraisalDsc"
             @click="handleForm3(scope.row)"
-            >鉴定说明</el-button
-          >
+          >鉴定说明</el-button>
           <el-button
             type="info"
             size="mini"
             v-else
             @click="handleForm3(scope.row)"
-            >{{ scope.row.appraisalDsc }}</el-button
-          >
+          >{{ scope.row.appraisalDsc }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="专家鉴定" align="center" prop="auth">
+      <el-table-column
+        label="专家鉴定"
+        align="center"
+        prop="auth"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -164,15 +218,13 @@
               scope.row.experterInfoId != null && scope.row.experterInfoId != 0
             "
             @click="handleForm4(scope.row)"
-            >复制url</el-button
-          >
+          >复制url</el-button>
           <el-button
             type="info"
             size="mini"
             v-else
             @click="handleForm5(scope.row)"
-            >专家鉴定</el-button
-          >
+          >专家鉴定</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -186,8 +238,7 @@
             type="text"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['admin:goods:edit']"
-            >查看详情</el-button
-          >
+          >查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -206,13 +257,30 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form1" label-width="150px">
-        <el-form-item label="设置宝贝名称" prop="settleMoney" id="refuseInfo">
-          <el-input v-model="form1.name" placeholder="请输名称" />
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="设置宝贝名称"
+          prop="settleMoney"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form1.name"
+            placeholder="请输名称"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from1Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from1Submit"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -223,13 +291,30 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form2" label-width="100px">
-        <el-form-item label="设置估价" prop="settleMoney" id="refuseInfo">
-          <el-input v-model="form2.authPriceTest" placeholder="请输入价格" />
+      <el-form
+        ref="form1"
+        :model="form2"
+        label-width="100px"
+      >
+        <el-form-item
+          label="设置估价"
+          prop="settleMoney"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form2.authPriceTest"
+            placeholder="请输入价格"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from2Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from2Submit"
+        >确 定</el-button>
         <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
@@ -240,13 +325,29 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form3" label-width="100px">
-        <el-form-item label="鉴定说明" prop="appraisalDsc">
-          <el-input v-model="form3.appraisalDsc" placeholder="请输入鉴定说明" />
+      <el-form
+        ref="form1"
+        :model="form3"
+        label-width="100px"
+      >
+        <el-form-item
+          label="鉴定说明"
+          prop="appraisalDsc"
+        >
+          <el-input
+            v-model="form3.appraisalDsc"
+            placeholder="请输入鉴定说明"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from3Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from3Submit"
+        >确 定</el-button>
         <el-button @click="cancel3">取 消</el-button>
       </div>
     </el-dialog>
@@ -257,9 +358,19 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form1" :model="form4" label-width="100px">
-        <el-form-item label="链接地址" prop="settleMoney">
-          <el-input v-model="form4.authUrl" disabled />
+      <el-form
+        ref="form1"
+        :model="form4"
+        label-width="100px"
+      >
+        <el-form-item
+          label="链接地址"
+          prop="settleMoney"
+        >
+          <el-input
+            v-model="form4.authUrl"
+            disabled
+          />
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -270,8 +381,15 @@
       width="400px"
       append-to-body
     >
-      <el-form ref="form5" :model="form5" label-width="100px">
-        <el-form-item label="领域名称" prop="domainId">
+      <el-form
+        ref="form5"
+        :model="form5"
+        label-width="100px"
+      >
+        <el-form-item
+          label="领域名称"
+          prop="domainId"
+        >
           <el-select
             v-model="form5.domainId"
             placeholder="请选择下拉选择"
@@ -288,7 +406,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="专家姓名" prop="experterId">
+        <el-form-item
+          label="专家姓名"
+          prop="experterId"
+        >
           <el-select
             v-model="form5.experterId"
             placeholder="请选择下拉选择"
@@ -305,13 +426,24 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="from5Submit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from5Submit"
+        >确 定</el-button>
         <el-button @click="cancel5">取 消</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title :visible.sync="videoOpen" width="40%" @close="closeDialog">
+    <el-dialog
+      title
+      :visible.sync="videoOpen"
+      width="40%"
+      @close="closeDialog"
+    >
       <video
         :src="videoUrl"
         class="avatar"
@@ -326,15 +458,72 @@
       :title="title"
       :visible.sync="open"
       width="800px"
+      el-table
       append-to-body
       v-if="isRouterAlive"
     >
-      <el-form ref="form" :model="form" label-width="150px">
-        <el-form-item label="藏品照片" prop="images">
-          <!-- <el-image :src="form.sellImgs"></el-image> -->
+      <el-table
+        v-loading="loading"
+        :data="goodsContent"
+      >
+        <el-table-column
+          align="center"
+          prop="name"
+        />
+
+        <el-table-column align="center">
           <template slot-scope="scope">
-            <span v-for="(item, index) in form.images.split(',')" :key="index">
-              <el-popover placement="left" trigger="click" width="300">
+            <span v-if="scope.row.contentType==1 || scope.row.contentType==2">{{scope.row.content}}</span>
+            <span
+              v-if="scope.row.contentType==3"
+              v-for="(item, index) in scope.row.content.split(',')"
+              :key="index"
+            >
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
+                <el-image :src="item" />
+                <el-image
+                  slot="reference"
+                  :src="item"
+                  :alt="item"
+                  style="max-height: 50px; max-width: 50px; padding: 5px"
+                />
+              </el-popover>
+            </span>
+            <video
+              v-if="scope.row.contentType==4"
+              :src="scope.row.content"
+              class="avatar"
+              preload="auto"
+              controls="controls"
+              width="100%"
+            ></video>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 1普通2时间3图片4视频 -->
+      <!-- <el-form
+        ref="form"
+        :model="form"
+        label-width="150px"
+      >
+        <el-form-item
+          label="藏品照片"
+          prop="images"
+        >
+          <template slot-scope="scope">
+            <span
+              v-for="(item, index) in form.images.split(',')"
+              :key="index"
+            >
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -346,15 +535,12 @@
             </span>
           </template>
         </el-form-item>
-        <el-form-item label="商品视频" prop="sellVideo">
-          <!-- <video class="avatar video-avatar" controls="controls" :src="form.sellVideo"></video> -->
+        <el-form-item
+          label="商品视频"
+          prop="sellVideo"
+        >
           <template slot-scope="scope">
-            <!-- <video
-              v-if="form.sellVideo!=''"
-              　　:src="form.sellVideo"
-              　　class="avatarvideo-avatar"
-              　　controls="controls"
-            >您的浏览器不支持视频播放</video>-->
+      
             <video
               v-if="form.video"
               class="avatar"
@@ -364,10 +550,16 @@
             ></video>
           </template>
         </el-form-item>
-        <el-form-item label="藏品描述及鉴定要求" prop="content">
-          <el-input v-model="form.authenticateRequire" disabled></el-input>
+        <el-form-item
+          label="藏品描述及鉴定要求"
+          prop="content"
+        >
+          <el-input
+            v-model="form.authenticateRequire"
+            disabled
+          ></el-input>
         </el-form-item>
-      </el-form>
+      </el-form> -->
     </el-dialog>
   </div>
 </template>
@@ -412,6 +604,7 @@ export default {
       total: 0,
       // 商品表格数据
       goodsList: [],
+      goodsContent: [],
 
       // 弹出层标题
       title: "",
@@ -421,6 +614,7 @@ export default {
       open2: false,
       open3: false,
       open4: false,
+      open5: false,
       videoOpen: false,
       videoUrl: null,
       title1: "",
@@ -1012,6 +1206,10 @@ export default {
       console.info(row);
       this.open = true;
       this.title = "详情";
+
+      var data = JSON.parse(row.content);
+      this.goodsContent = data;
+      console.info(this.goodsContent)
     },
 
     /** 提交按钮 */

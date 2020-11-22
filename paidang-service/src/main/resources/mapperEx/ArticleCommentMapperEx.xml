@@ -69,7 +69,7 @@
     </if>
     from t_article_comment c
     <if test="userId!=null">
-      left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
+      left join t_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
     </if>
     where c.status=1 and c.article_id=#{articleId} and c.reply_num &gt;=#{replyNum} and c.like_num &gt;=#{likeNum} order by c.reply_num desc,c.like_num desc,c.create_time desc limit 10
   </select>

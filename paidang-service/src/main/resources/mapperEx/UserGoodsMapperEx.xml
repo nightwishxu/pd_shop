@@ -123,7 +123,7 @@
         left join p_experter_info D
         on A.id=D.goods_id
         where A.belong_id = #{belong_id} and A.back_state = 0 and A.goto_pawn = 0 and (sell_status is null or sell_status = 0)
-        order by A.create_time desc;
+        order by A.create_time desc
     </select>
 
     <!-- 查看视频监控-->

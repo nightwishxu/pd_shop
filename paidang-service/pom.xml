@@ -26,14 +26,39 @@
 
 
 
-        <!--<dependency>-->
-            <!--<groupId>com.sun</groupId>-->
-            <!--<artifactId>framework-parent</artifactId>-->
-            <!--<version>1.0.4.v20190225</version>-->
-        <!--</dependency>-->
+<!--                <dependency>-->
+<!--                    <groupId>com.cfca</groupId>-->
+<!--                    <artifactId>Sadk</artifactId>-->
+<!--                    <version>3.6.1.0</version>-->
+<!--                    <scope>system</scope>-->
+<!--                    <systemPath>${project.basedir}/lib/sadk-3.6.1.0.jar</systemPath>-->
+<!--                </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.cfca</groupId>-->
+<!--            <artifactId>timestampAPI</artifactId>-->
+<!--            <version>4.0.3.0</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/timestampAPI-4.0.3.0.jar</systemPath>-->
+<!--        </dependency>-->
 
 
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.cfca/SealSADK &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.cfca</groupId>-->
+<!--                <artifactId>SealSADK</artifactId>-->
+<!--                <version>3.1.4.0</version>-->
+<!--                <scope>system</scope>-->
+<!--                <systemPath>${project.basedir}/lib/SealSADK-3.1.4.0.jar</systemPath>-->
+<!--            </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.hcehk</groupId>-->
+<!--            <artifactId>cfca-common-tsv</artifactId>-->
+<!--            <version>3.5.8.3</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/common-3.5.8.3-tsvo.jar</systemPath>-->
+<!--        </dependency>-->
 
     </dependencies>
-
 </project>

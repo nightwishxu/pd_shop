@@ -232,6 +232,7 @@ public class ApiArticleController extends ApiBaseController {
         articleService.updateArticleCount(id,1,3);
         ArticleEx ex = new ArticleEx();
         ex.setId(id);
+        ex.setUserId(mobileInfo.getUserId());
         List<ArticleEx> list = articleService.findList(ex);
         if (CollectionUtils.isEmpty(list)){
             throw new ApiException(400,"未找到相关内容");

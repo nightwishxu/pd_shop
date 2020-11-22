@@ -89,7 +89,9 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-			
+
+
+
             <!-- swagger2-UI-->
             <dependency>
                 <groupId>io.springfox</groupId>

@@ -1,10 +1,12 @@
 package com.ruoyi.web.core.config;
 
+//import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -31,6 +33,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
+//@EnableKnife4j
+@ConditionalOnExpression("!'${spring.profiles.active}'.equals('prod')")
 public class SwaggerConfig
 {
     /** 系统基础配置 */

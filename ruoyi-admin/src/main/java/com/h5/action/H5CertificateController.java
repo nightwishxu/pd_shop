@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin
 @RequestMapping("/m/pawn")
 @Controller
 public class H5CertificateController extends H5BaseController {
@@ -396,10 +398,18 @@ public class H5CertificateController extends H5BaseController {
     //查看在线鉴定详情
     @RequestMapping("/checkDetail")
     @ResponseBody
-    public String checkDetail(Integer id){
+    public List checkDetail(Integer id){
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id",id);
         List<UserGoodsEx> list = userGoodsService.checkDetail(map);
-        return JSONUtils.serialize(list.get(0));
+        return list;
+    }
+
+
+    @RequestMapping("/getExpertInfo")
+    @ResponseBody
+    public ExperterInfoEx getExpertInfo(Integer id){
+        ExperterInfoEx info = experterInfoService.selectH5List(id);
+        return info;
     }
 }

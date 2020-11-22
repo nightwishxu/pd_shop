@@ -43,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.api.service.AnXinSignService.personRegister;
+
 @RestController
 @RequestMapping(value = "/api/home", produces = {"application/json;charset=UTF-8"})
 @Api(tags = "用户个人中心")
@@ -440,6 +442,7 @@ public class ApiHomeController extends ApiBaseController {
         record.setAddress(address);
         record.setIsDefault(0);
         record.setPhone(phone);
+        record.setCreateTime(new Date());
 
         int result = userAddressService.insert(record);
         if (result == 0) {
@@ -1338,5 +1341,12 @@ public class ApiHomeController extends ApiBaseController {
     public List<String> expressList(MobileInfo mobileInfo) {
         List<String> list= CacheService.expressList;
         return list;
+    }
+
+    @ApiOperation(value = "1", notes = "")
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    @ApiMethod(isLogin = false)
+    public String  test() throws Exception{
+       return personRegister("320400702199112215013","许文炜","18861269725");
     }
 }

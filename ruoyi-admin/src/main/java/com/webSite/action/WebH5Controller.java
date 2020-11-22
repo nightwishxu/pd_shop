@@ -4,17 +4,22 @@ import com.base.api.sms.SmsError;
 import com.base.util.StringUtil;
 import com.item.service.SmsSendLogService;
 import com.ruoyi.common.core.domain.Ret;
+import com.ruoyi.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+@CrossOrigin
 @Controller
 @RequestMapping("/webApi")
 public class WebH5Controller extends WebBaseController{
     @Autowired
     private SmsSendLogService smsSendLogService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @RequestMapping(value = "/account/getMobileMsg",method= RequestMethod.POST)
     @ResponseBody
@@ -30,6 +35,7 @@ public class WebH5Controller extends WebBaseController{
         if ("2".equals(result)) {
             // 发送成功
 //            MobileCodeRedisCache.set(phone, mobileCode,86400L);
+            redisCache.expire(phone,mobileCode,600);
         } else {
             // 发送失败,可以细化错误原因
             String error = SmsError.getSmsError(result);
@@ -40,18 +46,18 @@ public class WebH5Controller extends WebBaseController{
         return new Ret(1);
     }
 
-//    @RequestMapping(value = "/account/checkCode",method= RequestMethod.POST)
-//    @ResponseBody
-//    public Ret checkCode(String phone, String code, String type){
-//        String key = phone;
-//
-//        // 验证码验证
-//        String value = MobileCodeRedisCache.get(key);
-//        if(!code.equals(value)){
-//            return new Ret(-1,"验证码不正确");
-//        }
-//
-//        return new Ret(1,code);
-//    }
+    @RequestMapping(value = "/account/checkCode",method= RequestMethod.POST)
+    @ResponseBody
+    public Ret checkCode(String phone, String code, String type){
+        String key = phone;
+
+        // 验证码验证
+        String value = redisCache.getCacheObject(key);
+        if(!code.equals(value)){
+            return new Ret(-1,"验证码不正确");
+        }
+
+        return new Ret(1,code);
+    }
 
 }

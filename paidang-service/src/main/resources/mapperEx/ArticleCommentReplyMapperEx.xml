@@ -11,7 +11,7 @@
     </if>
     from t_article_comment_reply c
     <if test="userId!=null">
-      left join t_article_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
+      left join t_comment_praise t on c.id=t.comment_id and t.user_id=#{userId}
     </if>
     where c.comment_id=#{commentId} and c.status=1 order by c.create_time desc
   </select>
