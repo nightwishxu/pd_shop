@@ -1,15 +1,20 @@
 package com.api.action;
 
 import com.api.MEnumError;
+import com.api.view.account.SmsCode;
 import com.base.Const;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.api.sms.SmsError;
+import com.base.util.StringUtil;
 import com.item.dao.model.User;
 import com.item.dao.model.UserExample;
 import com.item.service.*;
 import com.paidang.service.BFileService;
+import com.ruoyi.common.core.domain.Ret;
+import com.ruoyi.common.core.redis.RedisCache;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -39,6 +46,9 @@ public class ApiLoginController extends ApiBaseController {
 	@Autowired
 	private SmsSendLogService smsSendLogService;
 
+	@Autowired
+	private RedisCache redisCache;
+
 	private enum MobileMsgEnum {
 		REGIST(1), FORGET(2), LOGIN(3);
 		private int code;
@@ -52,7 +62,7 @@ public class ApiLoginController extends ApiBaseController {
 		}
 		
 		public String getPhone(String phone){
-			return phone+Const.SEP+this.name();
+			return phone+Const.SEP+this.name()+Const.SEP+"org";
 		}
 	}
 
@@ -64,7 +74,7 @@ public class ApiLoginController extends ApiBaseController {
 	 * @param type
 	 *            1:注册,绑定手机 2:忘记密码
 	 */
-/*
+
 	@ApiOperation(value = "获取验证码", notes = "不需要登录")
 	@RequestMapping(value = "/getMobileMsg", method = RequestMethod.POST)
 	@ApiMethod
@@ -85,10 +95,10 @@ public class ApiLoginController extends ApiBaseController {
 
 		// 查询
 		UserExample example = new UserExample();
-		example.createCriteria().andAccountEqualTo(phone);
+		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(1);
 
 		String key = phone;
-		
+
 		if (type == MobileMsgEnum.REGIST.getCode()) {// 注册
 			int count = userService.countByExample(example);
 			if (count > 0) {
@@ -109,13 +119,13 @@ public class ApiLoginController extends ApiBaseController {
 
 		// 发送短信
 		String mobileCode = StringUtil.getRandomNum(6);
-		String content = new String("【宝丰头条】您的验证码是：" + mobileCode + "。请不要把验证码泄露给其他人。请于5分钟内完成验证！回复TD退订");
+		String content = new String("您的验证码是：" + mobileCode + "。不要告诉别人哦~");
 
 		String result = smsSendLogService.sendIdentifySms(phone, deviceid,
 				null, content,type);
 		if ("2".equals(result)) {
 			// 发送成功
-			CacheSupport.put("mobileCodeCache", key, mobileCode);
+			redisCache.expire(key, mobileCode,300L);
 		} else {
 			// 发送失败,可以细化错误原因
 			String error = SmsError.getSmsError(result);
@@ -132,7 +142,7 @@ public class ApiLoginController extends ApiBaseController {
 		return ret;
 	}
 
-	*/
+
 /**
 	 * 验证验证码
 	 * 
@@ -140,34 +150,48 @@ public class ApiLoginController extends ApiBaseController {
 	 *            手机号
 	 * @param code
 	 *            验证码
-	 *//*
+	 */
 
 	@ApiOperation(value = "验证验证码", notes = "不需要登录")
 	@RequestMapping(value = "/checkCode", method = RequestMethod.POST)
 	@ApiMethod
 	public Ret checkCode(
 			@ApiParam(value = "手机号", required = true) String phone,
-			@ApiParam(value = "验证码", required = true) String code)
+			@ApiParam(value = "验证码", required = true) String code,
+			@ApiParam(value = "1:注册,绑定手机 2:忘记密码 3:验证码登陆", required = true) Integer type)
 			throws Exception {
-		if (StringUtils.isBlank(phone)) {
+			if (StringUtils.isBlank(phone)) {
 			throw new ApiException("phone");
 		}
 		if (StringUtils.isBlank(code)) {
 			throw new ApiException("code");
 		}
+		if (type == null) {
+			throw new ApiException("type");
+		}
+		String key = phone;
+
+		if (type == MobileMsgEnum.REGIST.getCode()) {// 注册
+			key = MobileMsgEnum.REGIST.getPhone(phone);
+		} else if (type == MobileMsgEnum.FORGET.getCode()) {
+			key = MobileMsgEnum.FORGET.getPhone(phone);
+		}else if (type == MobileMsgEnum.LOGIN.getCode()) {
+			key = MobileMsgEnum.LOGIN.getPhone(phone);
+		}else {
+			throw new ApiException(-1,"参数错误");
+		}
+//		System.out.println(MobileCodeRedisCache.get(key));
 		// 验证码验证
-		String value = CacheSupport.get("mobileCodeCache", MobileMsgEnum.REGIST.getPhone(phone), String.class);
-		
+		String value = redisCache.getCacheObject(key);
+
 		if (!code.equals(value)) {
 			throw new ApiException(MEnumError.MOBILE_CODE_ERROR);
 		}
-		Ret ret = new Ret();
-		ret.setCode(0);
 
-		return ret;
+		return new Ret(0);
 	}
 
-	*/
+
 /**
 	 * 验证昵称
 	 * 
@@ -210,7 +234,7 @@ public class ApiLoginController extends ApiBaseController {
 	 *            //设备类型 1:android 2:ios
 	 * @param cid
 	 *            //推送cid
-	 *//*
+	 */
 
 	@ApiOperation(value = "注册", notes = "不需要登录")
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
@@ -219,7 +243,6 @@ public class ApiLoginController extends ApiBaseController {
 			@ApiParam(value = "手机号", required = true) String phone,
 			@ApiParam(value = "验证码", required = true) String code,
 			@ApiParam(value = "密码(需要MD5加密)", required = true) String password,
-			@ApiParam(value = "昵称", required = true) String nickName,
 			@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType,
 			@ApiParam(value = "设备唯一识别码", required = false) String deviceid,
 			@ApiParam(value = "推送cid", required = false) String cid)
@@ -235,9 +258,6 @@ public class ApiLoginController extends ApiBaseController {
 		if (StringUtils.isBlank(password)) {
 			throw new ApiException("password");
 		}
-		if (StringUtils.isBlank(nickName)) {
-			throw new ApiException("nickName");
-		}
 		if (StringUtils.isBlank(deviceid)) {
 			throw new ApiException("deviceid");
 		}
@@ -246,56 +266,59 @@ public class ApiLoginController extends ApiBaseController {
 		}
 
 		// 验证码验证
-		String value = CacheSupport.get("mobileCodeCache", MobileMsgEnum.REGIST.getPhone(phone), String.class);
-		
+		String value = redisCache.getCacheObject(MobileMsgEnum.REGIST.getPhone(phone));
+
 		if (!code.equals(value)) {
 			throw new ApiException(MEnumError.MOBILE_CODE_ERROR);
 		} else {
-			CacheSupport.remove("mobileCodeCache", phone);
+			redisCache.deleteObject(MobileMsgEnum.REGIST.getPhone(phone));
 		}
 
 		UserExample example = new UserExample();
-		example.createCriteria().andAccountEqualTo(phone);
+		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(1);
 		int i = userService.countByExample(example);
 		if (i > 0) {
 			throw new ApiException(MEnumError.PHONE_EXISTS_ERROR);
 		}
 
-		example.clear();
-		example.createCriteria().andNickNameEqualTo(nickName);
-		i = userService.countByExample(example);
-		if (i > 0) {
-			throw new ApiException(MEnumError.NICK_EXISTS_ERROR);
-		}
 
-		User record = regist(phone, password, deviceType, deviceid, cid,
-				nickName);
+
+		User record = regist(phone, password, deviceType, deviceid, cid);
 
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(record.getId());
+		mobileInfo.setUserId(record.getId());
 		mobileInfo.setDeviceid(deviceid);
 		String verify = verifyService.updateMobileVerify(mobileInfo,
 				deviceType, cid);
 		mobileInfo.setDeviceType(deviceType);
 		mobileInfo.setToken(verify);
+
+		//融云用户注册
+//		TokenResult imToken = UserRongCloudUtil.getToken(record.getId().toString(),"","");
+//		record.setImToken(imToken.getToken());
+//		userService.updateByPrimaryKeySelective(record);
+
 		return mobileInfo;
 	}
 
 	private User regist(String phone, String password, Integer deviceType,
-			String deviceid, String cid, String nickName) throws Exception {
+						String deviceid, String cid) throws Exception {
 		// 添加数据
 		Date date = new Date();
 		User record = new User();
 		record.setAccount(phone);
+		record.setPhone(phone);
 		record.setCreateTime(date);
 		record.setState(1);
 		record.setPassword(password);
 		record.setNickName("匿名用户");
 		record.setBalance(BigDecimal.ZERO);
 		record.setSex(1);
+		record.setType(1);
 		record.setCredit(0);
+		record.setIsBind(0);
 		record.setLoginTime(date);
-		record.setNickName(nickName);
+
 		// 保存
 		int cnt = userService.insertSelective(record);
 		if (cnt == 0) {
@@ -304,7 +327,7 @@ public class ApiLoginController extends ApiBaseController {
 
 		return record;
 	}
-*/
+
 
 	/**
 	 * @api 密码登录
@@ -384,7 +407,7 @@ public class ApiLoginController extends ApiBaseController {
 	 * @param cid
 	 *            //推送cid
 	 */
-/*	@ApiOperation(value = "短信登录")
+	@ApiOperation(value = "短信登录")
 	@RequestMapping(value = "/loginByCode", method = RequestMethod.POST)
 	@ApiMethod
 	public MobileInfo loginByCode(
@@ -394,7 +417,6 @@ public class ApiLoginController extends ApiBaseController {
 			@ApiParam(value = "设备唯一识别码", required = false) String deviceid,
 			@ApiParam(value = "推送cid", required = false) String cid)
 			throws Exception {
-		// 参数校验
 		if (StringUtils.isBlank(phone)) {
 			throw new ApiException("phone");
 		}
@@ -407,34 +429,28 @@ public class ApiLoginController extends ApiBaseController {
 		if (StringUtils.isBlank(deviceid)) {
 			throw new ApiException("deviceid");
 		}
-
+		// 校验登录
+		UserExample example = new UserExample();
+		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(1);
+		List<User> list = userService.selectByExample(example);
+		if (list.size() == 0) {
+			throw new ApiException(MEnumError.LOGIN_FAILURE_ERROR);
+		}
+		User user = list.get(0);
 		// 验证码验证
-		String value = CacheSupport.get("mobileCodeCache", MobileMsgEnum.LOGIN.getPhone(phone), String.class);
+		String value = redisCache.getCacheObject(MobileMsgEnum.LOGIN.getPhone(phone));
+
 		if (!code.equals(value)) {
 			throw new ApiException(MEnumError.MOBILE_CODE_ERROR);
 		} else {
-			CacheSupport.remove("mobileCodeCache", phone);
+			redisCache.deleteObject(MobileMsgEnum.LOGIN.getPhone(phone));
 		}
-
-		// 校验登录
-		UserExample example = new UserExample();
-		example.createCriteria().andAccountEqualTo(phone);
-		List<User> list = userService.selectByExample(example);
-		User user = null;
-		if (list.size() == 0) {
-			user = regist(phone, null, deviceType, deviceid, cid,
-					StringUtil.formatPhone(phone));
-		} else {
-			user = list.get(0);
-		}
-
 		// 禁用
 		if (user.getState() == 0) {
 			throw new ApiException(MEnumError.ACCOUNT_STOP_ERROR);
 		}
-
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(user.getId());
+		mobileInfo.setUserId(user.getId());
 		mobileInfo.setDeviceid(deviceid);
 		mobileInfo.setDeviceType(deviceType);
 		String verify = verifyService.updateMobileVerify(mobileInfo,
@@ -443,7 +459,7 @@ public class ApiLoginController extends ApiBaseController {
 		return mobileInfo;
 	}
 
-	*//**
+	/**
 	 * @api 第三方登录
 	 * @param type
 	 *            1:qq 2:sina
@@ -543,7 +559,7 @@ public class ApiLoginController extends ApiBaseController {
 
 	*//**
 	 * 忘记密码
-	 * 
+	 *
 	 * @param phone
 	 *            手机号
 	 * @param code
@@ -554,7 +570,7 @@ public class ApiLoginController extends ApiBaseController {
 	 *            //设备类型 1:android 2:ios
 	 * @param cid
 	 *            //推送cid
-	 *//*
+	 */
 	@ApiOperation(value = "忘记密码")
 	@RequestMapping(value = "/forgetPwd", method = RequestMethod.POST)
 	@ApiMethod
@@ -580,16 +596,16 @@ public class ApiLoginController extends ApiBaseController {
 			throw new ApiException("deviceid");
 		}
 		// 验证码验证
-		String value = CacheSupport.get("mobileCodeCache", MobileMsgEnum.FORGET.getPhone(phone), String.class);
+		String value = redisCache.getCacheObject(MobileMsgEnum.FORGET.getPhone(phone));
 		if (!code.equals(value)) {
 			throw new ApiException(MEnumError.MOBILE_CODE_ERROR);
 		} else {
-			CacheSupport.remove("mobileCodeCache", phone);
+			redisCache.deleteObject(MobileMsgEnum.FORGET.getPhone(phone));
 		}
 
 		// 修改数据
 		UserExample uexample = new UserExample();
-		uexample.createCriteria().andAccountEqualTo(phone);
+		uexample.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(1);
 		List<User> list = userService.selectByExample(uexample);
 
 		if (list.size() == 0) {
@@ -602,10 +618,10 @@ public class ApiLoginController extends ApiBaseController {
 		if (cnt == 0) {
 			throw new ApiException(MEnumError.UPDATE_ACCOUNT_ERROR);
 		}
-		
+
 
 		MobileInfo mobileInfo = new MobileInfo();
-		mobileInfo.setUserid(record.getId());
+		mobileInfo.setUserId(record.getId());
 		mobileInfo.setDeviceType(deviceType);
 		mobileInfo.setDeviceid(deviceid);
 		//删除其他登陆设备
@@ -616,7 +632,7 @@ public class ApiLoginController extends ApiBaseController {
 		return mobileInfo;
 	}
 
-	*//**
+	/**
 	 * 修改密码
 	 * 
 	 * @param oldPwd

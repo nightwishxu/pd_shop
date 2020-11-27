@@ -380,12 +380,14 @@ public class ApiStoreController extends ApiBaseController {
 
         appStoreGoodsDetail.setCateCode(ex.getCateCode());
         PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
-        appStoreGoodsDetail.setOrgId(pawnOrg.getId());
-        appStoreGoodsDetail.setOrgName(pawnOrg.getName());
-        appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
-        appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
-        appStoreGoodsDetail.setImg(ex.getImg());
-        appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
+        if (pawnOrg!=null){
+            appStoreGoodsDetail.setOrgId(pawnOrg.getId());
+            appStoreGoodsDetail.setOrgName(pawnOrg.getName());
+            appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
+            appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
+            appStoreGoodsDetail.setImg(ex.getImg());
+            appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
+        }
 
 
         if (ex.getDealType()!=null &&  ex.getDealType()==2){
@@ -429,7 +431,7 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
         appStoreGoodsDetail.setLabels(ex.getLabels());
         //机构上传
-//        if(!ObjectUtils.isEmpty(ex.getOrgId())){
+        if(ex.getOrgId()!=null){
             PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
             appStoreGoodsDetail.setOrgId(pawnOrg.getId());
             appStoreGoodsDetail.setOrgName(pawnOrg.getName());
@@ -437,7 +439,7 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
             appStoreGoodsDetail.setImg(ex.getImg());
             appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
-//        }
+        }
 //        //商家端(个人)
 //        if(ex.getSource()==6){
 //            AuthPersonalExample authPersonalExample = new AuthPersonalExample();

@@ -30,6 +30,7 @@ import com.paidang.utils.CostGenerator;
 import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.util.PaidangConst;
 import com.util.PaidangMessage;
 import io.swagger.annotations.Api;
@@ -80,6 +81,9 @@ public class ApiUserPawnController extends ApiBaseController {
     QysService qysService;
     @Autowired
     LoadDataController loadDataController;
+
+    @Autowired
+    private RedisCache redisCache;
 //    /**
 //     * 我的典当列表--竞拍中，已典当
 //     */
@@ -495,12 +499,18 @@ public class ApiUserPawnController extends ApiBaseController {
     @ApiOperation(value = "未典当的商品--去典当", notes = "登陆")
     @RequestMapping("/gotoPawn")
     @ApiMethod(isLogin = true)
-    public void gotoPawn(MobileInfo mobileInfo,
+    public int gotoPawn(MobileInfo mobileInfo,
                         @ApiParam(value="id",required = true)Integer id,
                         @ApiParam(value="贷款额度",required = true)String loansPrice,
                         @ApiParam(value="期望利率",required = true)String loansRate,
                         @ApiParam(value="典当时长(半个月为1，一个月为2，两个月为4.以此类推)",required = true)Integer pawnTime) {
+        if (!redisCache.getLock("gotoPawn:"+id,5)){
+            throw new ApiException(400,"请求频繁请稍后");
+        }
         UserGoodsEx userGoods = userGoodsService.selectGotoPawn(id);
+        if (userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
+            throw new ApiException(400,"已典当");
+        }
         userGoods.setGotoPawn(1);
 
         int result = userGoodsService.updateByPrimaryKeySelective(userGoods);
@@ -529,6 +539,7 @@ public class ApiUserPawnController extends ApiBaseController {
         userPawn2.setUserPhone(userGoods.getUserPhone());
         userPawn2.setUserIdCard(userGoods.getIdCard());
         userPawn2.setGoodsName(userGoods.getName());
+        userPawn2.setCreateTime(new Date());
         //userPawn2.setOverdueRate(PaidangConst.REDEEM_OVERRATE);
         int reuslt2 = userPawnService.insert(userPawn2);
         if(reuslt2 == 0){
@@ -545,6 +556,7 @@ public class ApiUserPawnController extends ApiBaseController {
                 orgNotifyService.insertByTemplate(org.getId(), "3", PaidangMessage.USER_PAWN_NOTIFY, userGoods.getName());
             }
         }
+        return 1;
 
     }
 
@@ -559,6 +571,9 @@ public class ApiUserPawnController extends ApiBaseController {
                         @ApiParam(value="贷款额度",required = true)String loansPrice,
                         @ApiParam(value="期望利率",required = true)String loansRate,
                         @ApiParam(value="典当时长(半个月为1，一个月为2，两个月为4.以此类推)",required = true)Integer pawnTime) {
+        if (!redisCache.getLock("gotoPawn:"+id,5)){
+            throw new ApiException(400,"请求频繁请稍后");
+        }
         UserPawnExample userPawnExample = new UserPawnExample();
         userPawnExample.createCriteria().andIdEqualTo(id).andStateEqualTo(-1);
         List<UserPawn> list = userPawnService.selectByExample(userPawnExample);
@@ -567,6 +582,9 @@ public class ApiUserPawnController extends ApiBaseController {
         }
         UserPawn userPawn1 = list.get(0);
         UserGoodsEx userGoods = userGoodsService.selectGotoPawn(userPawn1.getGoodsId());
+        if (userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
+            throw new ApiException(400,"已典当");
+        }
         userGoods.setGotoPawn(1);
         //新增典当表
         UserPawn userPawn = new UserPawn();

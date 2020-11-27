@@ -2,17 +2,23 @@ package com.api.action;
 
 import com.api.view.orgHome.OrgInfo;
 import com.base.annotation.ApiMethod;
+import com.google.protobuf.ServiceException;
+import com.paidang.dao.model.PawnOrg;
 import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.service.PawnOrgService;
+import com.ruoyi.common.core.redis.RedisCache;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +48,97 @@ public class ApiHomeController extends ApiBaseController{
 	@Autowired
 	private UserNotifyService userNotifyService;
 
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private PawnOrgService pawnOrgService;
+
+	@Autowired
+	private RedisCache redisCache;
+
+
+
+	@ApiOperation(value = "企业认证",notes="登陆")
+	@RequestMapping(value="/editOrg", method = RequestMethod.POST)
+	@ApiMethod(isLogin = true)
+	public void editOrg(MobileInfo mobileInfo
+			,@ApiParam(value = "机构名称", required = true)String name
+			,@ApiParam(value = "法人名称", required = true)String legalPerson
+			,@ApiParam(value = "身份证号码", required = true)String idCard
+			,@ApiParam(value = "营业执照副本照片", required = true)String businessLicense
+			,@ApiParam(value = "身份证正面", required = true)String idCardImg
+			,@ApiParam(value = "身份证反面", required = true)String idCardReverse
+			,@ApiParam(value = "典当许可证", required = true)String pawnExequatur
+			,@ApiParam(value = "其他辅助文件", required = false)String otherFile
+
+	){
+		if (!redisCache.getLock("editOrg:"+mobileInfo.getUserId(),10)){
+			throw new ApiException(400,"请求频繁，请稍后");
+		}
+		User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+		if (user==null || user.getType()!=1){
+			throw new ApiException(400,"用户信息异常");
+		}
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		PawnOrg pawnOrg  = new PawnOrg();
+		if (orgId==-1){
+			//没有认证企业
+			pawnOrg.setName(name);
+			pawnOrg.setLegalPerson(legalPerson);
+			pawnOrg.setLegalPerson(idCard);
+			pawnOrg.setLegalPerson(businessLicense);
+			pawnOrg.setLegalPerson(idCardImg);
+			pawnOrg.setLegalPerson(idCardReverse);
+			pawnOrg.setLegalPerson(pawnExequatur);
+			pawnOrg.setLegalPerson(otherFile);
+			pawnOrg.setCreateTime(new Date());
+			pawnOrg.setType(1);
+			pawnOrg.setBalance(BigDecimal.ZERO);
+			pawnOrg.setState(2);
+			int i = pawnOrgService.insertSelective(pawnOrg);
+			User tmp = new User();
+			tmp.setId(mobileInfo.getUserId());
+			tmp.setOrgId(i);
+			tmp.setModifyTime(new Date());
+			userService.updateByPrimaryKeySelective(tmp);
+		}else {
+			PawnOrg orgTmp = pawnOrgService.selectByPrimaryKey(orgId);
+			//审核失败才可以修改资料
+			if (orgTmp.getState()==3){
+				pawnOrg.setId(orgId);
+				pawnOrg.setName(name);
+				pawnOrg.setLegalPerson(legalPerson);
+				pawnOrg.setLegalPerson(idCard);
+				pawnOrg.setLegalPerson(businessLicense);
+				pawnOrg.setLegalPerson(idCardImg);
+				pawnOrg.setLegalPerson(idCardReverse);
+				pawnOrg.setLegalPerson(pawnExequatur);
+				pawnOrg.setLegalPerson(otherFile);
+				pawnOrg.setModifyTime(new Date());
+				pawnOrg.setState(2);
+				pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
+			}else {
+				throw new ApiException(400,"当前状态不允许审核");
+			}
+
+		}
+	}
+
+
+	@ApiOperation(value = "获取企业认证资料 返回state = -1 时未认证",notes="登陆")
+	@RequestMapping(value="/getOrgInfo", method = RequestMethod.POST)
+	@ApiMethod(isLogin = true)
+	public PawnOrg getOrgInfo(MobileInfo mobileInfo){
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			PawnOrg pawnOrg = new PawnOrg();
+			pawnOrg.setState(-1);
+			return pawnOrg;
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		return pawnOrg;
+	}
 	
 	/**
 	 * 修改个人资料

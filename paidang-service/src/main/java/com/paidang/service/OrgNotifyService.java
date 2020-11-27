@@ -15,6 +15,7 @@ import com.util.PaidangMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -106,6 +107,7 @@ public class OrgNotifyService {
 //		messageService.pushToSingle(record.getUserId(), record.getContent(), record.getRedirectType(), record.getRedirectContent());
 		//推送给机构下每一个人
 		Integer orgId = record.getOrgId();
+		record.setCreateTime(new Date());
 		UserExample userExample = new UserExample();
 		userExample.createCriteria().andTypeEqualTo(1).andOrgIdEqualTo(orgId);
 		List<User> users = userService.selectByExample(userExample);
@@ -138,6 +140,7 @@ public class OrgNotifyService {
 		userNotify.setOrgId(orgId);
 		userNotify.setContent(StringUtil.format(message.getTemplate(),params));
 		userNotify.setRedirectContent(redirectContent);
+		userNotify.setCreateTime(new Date());
 		LogKit.debug("===============OrgNotifyService.insertByTemplate"+"推送机构：机构id="+orgId+"==================");
 		return this.insertSelective(userNotify);
 	}

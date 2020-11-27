@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="机构名称" prop="name">
+      <el-form-item
+        label="机构名称"
+        prop="name"
+      >
         <el-input
           v-model="queryParams.name"
           placeholder="请输入机构名称"
@@ -22,15 +25,19 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -38,8 +45,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['org:org:add']"
-          >新增</el-button
-        >
+        >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -49,8 +55,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['org:org:edit']"
-          >修改</el-button
-        >
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -60,11 +65,15 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['org:org:remove']"
-          >删除</el-button
-        >
+        >删除</el-button>
       </el-col>
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -93,27 +102,82 @@
       :data="orgList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="机构账号" align="center" prop="account" />
-      <el-table-column label="机构名称" align="center" prop="name" />
-      <el-table-column label="机构法人" align="center" prop="legalPerson" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="机构账号"
+        align="center"
+        prop="account"
+      />
+      <el-table-column
+        label="机构名称"
+        align="center"
+        prop="name"
+      />
+      <el-table-column
+        label="机构法人"
+        align="center"
+        prop="legalPerson"
+      />
       <el-table-column
         label="注册资金"
         align="center"
         prop="registeredCapital"
       />
-      <el-table-column label="机构地址" align="center" prop="adress" />
+      <el-table-column
+        label="机构地址"
+        align="center"
+        prop="adress"
+      />
       <el-table-column
         label="工商许可证"
         align="center"
         prop="businessLicenseCode"
       />
-      <el-table-column label="电话" align="center" prop="phone" />
+      <el-table-column
+        label="电话"
+        align="center"
+        prop="phone"
+      />
       <!-- <el-table-column label="状态" align="center" prop="stateInfo" /> -->
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+      >
         <template slot-scope="scope">{{
           scope.row.createTime | dateYMDHMSFormat
         }}</template>
+      </el-table-column>
+
+      <el-table-column
+        label="操作状态"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            v-if="scope.row.state == 2"
+            @click="handleState(scope.row)"
+          >审核</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            v-else-if="scope.row.state == 1"
+            @click="handleState(scope.row)"
+          >启用</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            v-else-if="scope.row.state == 0"
+            @click="handleState(scope.row)"
+          >禁用</el-button>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -125,10 +189,17 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+          >修改</el-button>
+        </template>
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
             v-if="scope.row.id"
             @click="changePwds(scope.row)"
-            >修改密码</el-button
-          >
+          >修改密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -142,43 +213,138 @@
     />
 
     <!-- 添加或修改机构对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="form.account" placeholder="请输入账号" />
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="800px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-form-item
+          label="账号"
+          prop="account"
+        >
+          <el-input
+            v-model="form.account"
+            placeholder="请输入账号"
+          />
         </el-form-item>
-        <el-form-item label="机构名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入机构名称" />
+        <el-form-item
+          label="机构名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="请输入机构名称"
+          />
         </el-form-item>
-        <el-form-item label="机构法人" prop="legalPerson">
-          <el-input v-model="form.legalPerson" placeholder="请输入机构法人" />
+        <el-form-item
+          label="机构法人"
+          prop="legalPerson"
+        >
+          <el-input
+            v-model="form.legalPerson"
+            placeholder="请输入机构法人"
+          />
         </el-form-item>
-        <el-form-item label="注册资金" prop="adress">
+        <el-form-item
+          label="注册资金"
+          prop="adress"
+        >
           <el-input
             v-model="form.registeredCapital"
             placeholder="请输入注册资金"
           />
         </el-form-item>
-        <el-form-item label="机构地址" prop="adress">
-          <el-input v-model="form.adress" placeholder="请输入机构地址" />
+        <el-form-item
+          label="机构地址"
+          prop="adress"
+        >
+          <el-input
+            v-model="form.adress"
+            placeholder="请输入机构地址"
+          />
         </el-form-item>
-        <el-form-item label="工商许可证号" prop="adress">
+        <el-form-item
+          label="工商许可证号"
+          prop="adress"
+        >
           <el-input
             v-model="form.businessLicenseCode"
             placeholder="请输入工商许可证号"
           />
         </el-form-item>
 
-        <el-form-item label="电话" prop="adress">
-          <el-input v-model="form.phone" placeholder="请输入电话" />
+        <el-form-item
+          label="身份证号码"
+          prop="adresidCards"
+        >
+          <el-input
+            v-model="form.idCard"
+            placeholder="请输入身份证号"
+          />
         </el-form-item>
-        <el-form-item label="工商许可证" prop="businessLicense">
+        <el-form-item
+          label="电话"
+          prop="adress"
+        >
+          <el-input
+            v-model="form.phone"
+            placeholder="请输入电话"
+          />
+        </el-form-item>
+        <el-form-item
+          label="身份证正面"
+          prop="idCardImg"
+        >
+          <single-upload
+            v-model="form.idCardImg"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
+        </el-form-item>
+        <el-form-item
+          label="身份证反面"
+          prop="idCardReverse"
+        >
+          <single-upload
+            v-model="form.idCardReverse"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
+        </el-form-item>
+        <el-form-item
+          label="工商许可证"
+          prop="businessLicense"
+        >
           <single-upload
             v-model="form.businessLicense"
             style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
         </el-form-item>
-        <el-form-item label="店铺logo" prop="orgLogo">
+        <el-form-item
+          label="典当许可证"
+          prop="pawnExequatur"
+        >
+          <single-upload
+            v-model="form.pawnExequatur"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
+        </el-form-item>
+        <el-form-item label="其他辅助文件">
+          <!-- <el-input v-model="form.otherFile" placeholder="请输入图片" /> -->
+          <multi-upload
+            ref="upload"
+            v-model="imgfileList"
+          ></multi-upload>
+        </el-form-item>
+        <el-form-item
+          label="店铺logo"
+          prop="orgLogo"
+        >
           <single-upload
             v-model="form.orgLogo"
             style="width: 300px; display: inline-block; margin-left: 10px"
@@ -186,8 +352,14 @@
         </el-form-item>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -198,14 +370,31 @@
       width="500px"
       append-to-body
     >
-      <el-form ref="form1" :model="form1" :rules="rules" label-width="120px">
-        <el-form-item label="新密码" prop="password">
-          <el-input v-model="form1.password" placeholder="请输入新密码" />
+      <el-form
+        ref="form1"
+        :model="form1"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-form-item
+          label="新密码"
+          prop="password"
+        >
+          <el-input
+            v-model="form1.password"
+            placeholder="请输入新密码"
+          />
         </el-form-item>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submit1Form">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submit1Form"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -226,10 +415,11 @@ import {
   pawnMsg,
 } from "@/api/org/org";
 import SingleUpload from "@/components/Upload/singleUpload";
+import MultiUpload from "@/components/Upload/multiUpload";
 
 export default {
   name: "Org",
-  components: { SingleUpload },
+  components: { SingleUpload,MultiUpload },
   data() {
     return {
       // 遮罩层
@@ -291,6 +481,57 @@ export default {
       },
     };
   },
+    computed: {
+    imgfileList: {
+      get: function () {
+        let pics = [];
+        // if(this.form.img===undefined||this.form.img==null||this.form.img===''){
+        //   return pics;
+        // }
+        // pics.push(this.value.img);
+        if (
+          this.form.otherFile === undefined ||
+          this.form.otherFile == null ||
+          this.form.otherFile === ""
+        ) {
+          return pics;
+        }
+        let albumPics = this.form.otherFile.split(",");
+        for (let i = 0; i < albumPics.length; i++) {
+          pics.push(albumPics[i]);
+        }
+        return pics;
+      },
+      set: function (newValue) {
+        if (newValue == null || newValue.length === 0) {
+          // this.form.img = null;
+          this.form.otherFile = null;
+        } else {
+          // this.form.img = newValue[0];
+          console.info("type = " + Object.prototype.toString.call(newValue));
+          //  var values = newValue.split(",");
+          //  if(values==null || values.length===0){
+          //     this.form.otherFile = null;
+          //  }
+          console.info("otherFile start " + this.form.otherFile);
+          console.info("otherFile newValue " + newValue);
+
+          this.form.otherFile = "";
+          if (newValue.length > 1) {
+            for (let i = 0; i < newValue.length; i++) {
+              this.form.otherFile += newValue[i];
+              if (i !== newValue.length - 1) {
+                this.form.otherFile += ",";
+              }
+            }
+          } else {
+            this.form.otherFile = newValue[0];
+          }
+          console.info("otherFile " + this.form.otherFile);
+        }
+      },
+    },
+  },
   created() {
     this.getList();
   },
@@ -341,6 +582,12 @@ export default {
         orgImages: null,
         orgLogo: null,
         redeemOverrate: null,
+        idCard: null,
+        businessLicense: null,
+        idCardImg: null,
+        idCardReverse: null,
+        pawnExequatur: null,
+        otherFile: null,
       };
       this.resetForm("form");
     },

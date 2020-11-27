@@ -191,8 +191,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     public  Object userGoodsCommentList(MobileInfo mobileInfo, @ApiParam(value = "商品id", required = true)Integer userGoodsId){
         CommentEx commentEx=new CommentEx();
         commentEx.setTopicId(userGoodsId);
-        List<CommentEx> list=commentService.findList(commentEx);
-        return list;
+        return commentService.findList(commentEx);
     }
 
     @ApiOperation(value="获取寄卖商品信息 ", notes = "登录")
@@ -358,10 +357,26 @@ public class ApiUserGoodsController extends ApiBaseController {
     @ApiOperation(value="寄拍详情 ", notes = "不登录")
     @RequestMapping("/sellDetail")
     @ApiMethod(isPage = false, isLogin = false)
-    public UserGoods getSellDetail(MobileInfo mobileInfo, @ApiParam(value="id",required = false)Integer id){
+    public UserGoods getSellDetail(MobileInfo mobileInfo, @ApiParam(value="id",required = true)Integer id){
 
         UserGoodsEx entity=userGoodsService.getById(id);
         if (entity!=null){
+            entity.setCollectStatus(0);
+            entity.setPraiseStatus(0);
+            //收藏点赞信息
+            if (mobileInfo!=null && mobileInfo.getUserId()!=null){
+                CollectPraiseExample example = new CollectPraiseExample();
+                example.createCriteria().andUserGoodsIdEqualTo(id).andUserIdEqualTo(mobileInfo.getUserId()).andStatusEqualTo(1);
+                List<CollectPraise> collectPraises = collectPraiseService.selectByExample(example);
+                for (CollectPraise praise : collectPraises) {
+                    if (praise.getType()==0){
+                        entity.setPraiseStatus(1);
+                    }else if (praise.getType()==1){
+                        entity.setCollectStatus(1);
+                    }
+                }
+
+            }
             ExperterInfoExample example=new ExperterInfoExample();
             example.createCriteria().andGoodsIdEqualTo(id).andStateEqualTo(1);
             List<ExperterInfo> infos=experterInfoService.selectByExample(example);
@@ -592,54 +607,54 @@ public class ApiUserGoodsController extends ApiBaseController {
         return ok();
     }
 
-//    @ApiOperation(value = "新增评价", notes = "登陆")
-//    @RequestMapping(value = "/addUserGoodsComment", method = RequestMethod.POST)
-//    @ApiMethod(isLogin = true)
-//    public Object addUserGoodsComment(MobileInfo mobileInfo,
-//                                      @ApiParam(value = "评论", required = true)String content,
-////                      @ApiParam(value = "头像", required =false)String headImg,
-////                      @ApiParam(value = "昵称", required = true)String nickName,
-//                                      @ApiParam(value = "商品id", required = true)Integer userGoodsId
-//    ){
-//
-//        Comment entity=new Comment();
-//        UserGoods userGoods=userGoodsService.selectByPrimaryKey(userGoodsId);
-//
-//        if (userGoods==null){
-//            throw new ApiException(1100,"商品不存在！");
+    @ApiOperation(value = "新增评价", notes = "登陆")
+    @RequestMapping(value = "/addUserGoodsComment", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Object addUserGoodsComment(MobileInfo mobileInfo,
+                                      @ApiParam(value = "评论", required = true)String content,
+//                      @ApiParam(value = "头像", required =false)String headImg,
+//                      @ApiParam(value = "昵称", required = true)String nickName,
+                                      @ApiParam(value = "商品id", required = true)Integer userGoodsId
+    ){
+
+        Comment entity=new Comment();
+        UserGoods userGoods=userGoodsService.selectByPrimaryKey(userGoodsId);
+
+        if (userGoods==null){
+            throw new ApiException(1100,"商品不存在！");
+        }
+//        if (userBlackService.isBlackUser(mobileInfo.getUserid(),article.getUserId())>0){
+//            throw new ApiException("已被拉黑无法评论动态");
 //        }
-////        if (userBlackService.isBlackUser(mobileInfo.getUserid(),article.getUserId())>0){
-////            throw new ApiException("已被拉黑无法评论动态");
-////        }
-//
-//        //敏感词汇过滤
-//        entity.setContent(sensitivWordsService.relpSensitivWords(content));
-//        User user=userService.selectByPrimaryKey(mobileInfo.getUserid());
-//        if (user==null){
-//            throw new ApiException(1100,"用户不存在");
-//        }
-//        entity.setIsHot(0);
-//        entity.setUserId(mobileInfo.getUserid());
-//        entity.setLikeNum(0);
-//        entity.setIsReply(0);
-//        entity.setReplyNum(0);
-//        entity.setIsTop(0);
-//        entity.setHeadImg(user.getHeadImg());
-//        entity.setNickName(user.getNickName());
-//        entity.setTopicId(userGoodsId);
-//        entity.setType(1);
-//        entity.setStatus(1);
-//        entity.setTopicUserId(userGoods.getUserId());
-//        entity.setCreateTime(new Date());
-//        if (userGoods.getUserId()==mobileInfo.getUserid()){
-//            entity.setIsAuthor(2);
-//        }else {
-//            entity.setIsAuthor(0);
-//        }
-//        //更新评论数
-//        userGoodsService.updateUserGoodsCount(userGoodsId,1,0);
-//        return commentService.insert(entity);
-//    }
+
+        //敏感词汇过滤
+        entity.setContent(sensitivWordsService.relpSensitivWords(content));
+        User user=userService.selectByPrimaryKey(mobileInfo.getUserId());
+        if (user==null){
+            throw new ApiException(1100,"用户不存在");
+        }
+        entity.setIsHot(0);
+        entity.setUserId(mobileInfo.getUserId());
+        entity.setLikeNum(0);
+        entity.setIsReply(0);
+        entity.setReplyNum(0);
+        entity.setIsTop(0);
+        entity.setHeadImg(user.getHeadImg());
+        entity.setNickName(user.getNickName());
+        entity.setTopicId(userGoodsId);
+        entity.setType(1);
+        entity.setStatus(1);
+        entity.setTopicUserId(userGoods.getUserId());
+        entity.setCreateTime(new Date());
+        if (Objects.equals(userGoods.getUserId(),mobileInfo.getUserId())){
+            entity.setIsAuthor(2);
+        }else {
+            entity.setIsAuthor(0);
+        }
+        //更新评论数
+        userGoodsService.updateUserGoodsCount(userGoodsId,1,0);
+        return commentService.insert(entity);
+    }
 
 
     /**
@@ -1298,9 +1313,9 @@ public class ApiUserGoodsController extends ApiBaseController {
         userGoods.setBackUserName(user.getName());
         userGoods.setBackState(1);
         UserAddress userAddress = userAddressService.selectByPrimaryKey(addressId);
-        if(!userAddress.getUserName().equals(user.getName())){
-            throw new ApiException(MEnumError.USER_SELF_NAME);
-        }
+//        if(!userAddress.getUserName().equals(user.getName())){
+//            throw new ApiException(MEnumError.USER_SELF_NAME);
+//        }
         userGoods.setBackUserPhone(userAddress.getPhone());
         userGoods.setBackUserExpress(userAddress.getArea()+userAddress.getAddress());
         int result = userGoodsService.updateByPrimaryKeySelective(userGoods);

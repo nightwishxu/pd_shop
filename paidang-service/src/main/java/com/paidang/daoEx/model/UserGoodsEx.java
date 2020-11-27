@@ -105,6 +105,32 @@ public class UserGoodsEx extends UserGoods {
 
     private String headImg;
 
+    /**
+     * 收藏状态
+     */
+    private Integer collectStatus;
+
+    /**
+     * 点赞状态
+     */
+    private Integer praiseStatus;
+
+
+    public Integer getCollectStatus() {
+        return collectStatus;
+    }
+
+    public void setCollectStatus(Integer collectStatus) {
+        this.collectStatus = collectStatus;
+    }
+
+    public Integer getPraiseStatus() {
+        return praiseStatus;
+    }
+
+    public void setPraiseStatus(Integer praiseStatus) {
+        this.praiseStatus = praiseStatus;
+    }
 
     public Integer getOrderState() {
         return orderState;

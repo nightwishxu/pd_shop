@@ -255,6 +255,46 @@ public class PawnOrg implements Serializable {
 	@Column(name = "service_score")
 	private java.math.BigDecimal serviceScore;
 
+	/**
+	 *身份证正面
+	 */
+	@ApiModelProperty(value="身份证正面")
+	@ApiParam(value="身份证正面")
+	@Column(name = "id_card_img")
+	private String idCardImg;
+
+	/**
+	 *身份证反面
+	 */
+	@ApiModelProperty(value="身份证反面")
+	@ApiParam(value="身份证反面")
+	@Column(name = "id_card_reverse")
+	private String idCardReverse;
+
+	/**
+	 *身份证号
+	 */
+	@ApiModelProperty(value="身份证号")
+	@ApiParam(value="身份证号")
+	@Column(name = "id_card")
+	private String idCard;
+
+	/**
+	 *典当许可证
+	 */
+	@ApiModelProperty(value="典当许可证")
+	@ApiParam(value="典当许可证")
+	@Column(name = "pawn_exequatur")
+	private String pawnExequatur;
+
+	/**
+	 *其他辅助文件
+	 */
+	@ApiModelProperty(value="其他辅助文件")
+	@ApiParam(value="其他辅助文件")
+	@Column(name = "other_file")
+	private String otherFile;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -493,6 +533,46 @@ public class PawnOrg implements Serializable {
 
 	public java.math.BigDecimal getServiceScore() {
 		return serviceScore;
+	}
+
+	public void setIdCardImg(String idCardImg) {
+		this.idCardImg=idCardImg == null ? idCardImg : idCardImg.trim();
+	}
+
+	public String getIdCardImg() {
+		return idCardImg;
+	}
+
+	public void setIdCardReverse(String idCardReverse) {
+		this.idCardReverse=idCardReverse == null ? idCardReverse : idCardReverse.trim();
+	}
+
+	public String getIdCardReverse() {
+		return idCardReverse;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard=idCard == null ? idCard : idCard.trim();
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setPawnExequatur(String pawnExequatur) {
+		this.pawnExequatur=pawnExequatur == null ? pawnExequatur : pawnExequatur.trim();
+	}
+
+	public String getPawnExequatur() {
+		return pawnExequatur;
+	}
+
+	public void setOtherFile(String otherFile) {
+		this.otherFile=otherFile == null ? otherFile : otherFile.trim();
+	}
+
+	public String getOtherFile() {
+		return otherFile;
 	}
 
 }

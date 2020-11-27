@@ -243,4 +243,21 @@ public class RedisCache
     public boolean exists(String key){
        return redisTemplate.hasKey(key);
     }
+
+
+    /**
+     * 临时锁
+     * @param lockId
+     * @param expire
+     * @return
+     */
+    public boolean getLock(String lockId, long expire) {
+        String key = "tmp:lock:" + lockId;
+        boolean result = redisTemplate.boundValueOps(key).setIfAbsent(0);
+        if (result) {
+            redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+        }
+
+        return result;
+    }
 }

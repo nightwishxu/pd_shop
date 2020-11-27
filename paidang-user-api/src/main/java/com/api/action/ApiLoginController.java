@@ -301,7 +301,7 @@ public class ApiLoginController extends ApiBaseController {
 		}
 
 		UserExample example = new UserExample();
-		example.createCriteria().andAccountEqualTo(phone);
+		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(0);
 		int i = userService.countByExample(example);
 		if (i > 0) {
 			throw new ApiException(MEnumError.PHONE_EXISTS_ERROR);
@@ -336,6 +336,7 @@ public class ApiLoginController extends ApiBaseController {
 		record.setPhone(phone);
 		record.setCreateTime(date);
 		record.setState(1);
+		record.setType(0);
 		record.setPassword(password);
 		record.setNickName("匿名用户");
 		record.setBalance(BigDecimal.ZERO);

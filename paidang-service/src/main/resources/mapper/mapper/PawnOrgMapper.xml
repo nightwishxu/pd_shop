@@ -31,6 +31,11 @@
         <result column="comment_count" property="commentCount" jdbcType="INTEGER" />
         <result column="express_score" property="expressScore" jdbcType="DECIMAL" />
         <result column="service_score" property="serviceScore" jdbcType="DECIMAL" />
+        <result column="id_card_img" property="idCardImg" jdbcType="VARCHAR" />
+        <result column="id_card_reverse" property="idCardReverse" jdbcType="VARCHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="pawn_exequatur" property="pawnExequatur" jdbcType="VARCHAR" />
+        <result column="other_file" property="otherFile" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.PawnOrg" extends="BaseResultMap" >
@@ -98,7 +103,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score
+        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -168,7 +173,9 @@
         overdue_rate,seal,introduction,
         org_images,org_logo,redeem_overrate,
         labels,integral,score,
-        comment_count,express_score,service_score
+        comment_count,express_score,service_score,
+        id_card_img,id_card_reverse,id_card,
+        pawn_exequatur,other_file
         )
         values (#{roleCode,jdbcType=VARCHAR},#{type,jdbcType=TINYINT},
         #{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
@@ -179,7 +186,9 @@
         #{overdueRate,jdbcType=DECIMAL},#{seal,jdbcType=VARCHAR},#{introduction,jdbcType=LONGVARCHAR},
         #{orgImages,jdbcType=VARCHAR},#{orgLogo,jdbcType=VARCHAR},#{redeemOverrate,jdbcType=DECIMAL},
         #{labels,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL},#{score,jdbcType=DECIMAL},
-        #{commentCount,jdbcType=INTEGER},#{expressScore,jdbcType=DECIMAL},#{serviceScore,jdbcType=DECIMAL}
+        #{commentCount,jdbcType=INTEGER},#{expressScore,jdbcType=DECIMAL},#{serviceScore,jdbcType=DECIMAL},
+        #{idCardImg,jdbcType=VARCHAR},#{idCardReverse,jdbcType=VARCHAR},#{idCard,jdbcType=VARCHAR},
+        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -273,6 +282,21 @@
             <if test="serviceScore != null" >
                 service_score,
             </if>
+            <if test="idCardImg != null" >
+                id_card_img,
+            </if>
+            <if test="idCardReverse != null" >
+                id_card_reverse,
+            </if>
+            <if test="idCard != null" >
+                id_card,
+            </if>
+            <if test="pawnExequatur != null" >
+                pawn_exequatur,
+            </if>
+            <if test="otherFile != null" >
+                other_file,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="roleCode != null" >
@@ -361,6 +385,21 @@
             </if>
             <if test="serviceScore != null" >
                 #{serviceScore,jdbcType=DECIMAL},
+            </if>
+            <if test="idCardImg != null" >
+                #{idCardImg,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardReverse != null" >
+                #{idCardReverse,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null" >
+                #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnExequatur != null" >
+                #{pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="otherFile != null" >
+                #{otherFile,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -465,6 +504,21 @@
             <if test="record.serviceScore != null" >
                 service_score = #{record.serviceScore,jdbcType=DECIMAL},
             </if>
+            <if test="record.idCardImg != null" >
+                id_card_img = #{record.idCardImg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.idCardReverse != null" >
+                id_card_reverse = #{record.idCardReverse,jdbcType=VARCHAR},
+            </if>
+            <if test="record.idCard != null" >
+                id_card = #{record.idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnExequatur != null" >
+                pawn_exequatur = #{record.pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="record.otherFile != null" >
+                other_file = #{record.otherFile,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -502,7 +556,12 @@
         score = #{score,jdbcType=DECIMAL},
         comment_count = #{commentCount,jdbcType=INTEGER},
         express_score = #{expressScore,jdbcType=DECIMAL},
-        service_score = #{serviceScore,jdbcType=DECIMAL}
+        service_score = #{serviceScore,jdbcType=DECIMAL},
+        id_card_img = #{idCardImg,jdbcType=VARCHAR},
+        id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
+        id_card = #{idCard,jdbcType=VARCHAR},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -538,7 +597,12 @@
         score = #{score,jdbcType=DECIMAL},
         comment_count = #{commentCount,jdbcType=INTEGER},
         express_score = #{expressScore,jdbcType=DECIMAL},
-        service_score = #{serviceScore,jdbcType=DECIMAL}
+        service_score = #{serviceScore,jdbcType=DECIMAL},
+        id_card_img = #{idCardImg,jdbcType=VARCHAR},
+        id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
+        id_card = #{idCard,jdbcType=VARCHAR},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -634,6 +698,21 @@
             <if test="serviceScore != null" >
                 service_score = #{serviceScore,jdbcType=DECIMAL},
             </if>
+            <if test="idCardImg != null" >
+                id_card_img = #{idCardImg,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardReverse != null" >
+                id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null" >
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnExequatur != null" >
+                pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="otherFile != null" >
+                other_file = #{otherFile,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -668,7 +747,12 @@
         score = #{score,jdbcType=DECIMAL},
         comment_count = #{commentCount,jdbcType=INTEGER},
         express_score = #{expressScore,jdbcType=DECIMAL},
-        service_score = #{serviceScore,jdbcType=DECIMAL}
+        service_score = #{serviceScore,jdbcType=DECIMAL},
+        id_card_img = #{idCardImg,jdbcType=VARCHAR},
+        id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
+        id_card = #{idCard,jdbcType=VARCHAR},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
@@ -701,7 +785,12 @@
         score = #{score,jdbcType=DECIMAL},
         comment_count = #{commentCount,jdbcType=INTEGER},
         express_score = #{expressScore,jdbcType=DECIMAL},
-        service_score = #{serviceScore,jdbcType=DECIMAL}
+        service_score = #{serviceScore,jdbcType=DECIMAL},
+        id_card_img = #{idCardImg,jdbcType=VARCHAR},
+        id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
+        id_card = #{idCard,jdbcType=VARCHAR},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

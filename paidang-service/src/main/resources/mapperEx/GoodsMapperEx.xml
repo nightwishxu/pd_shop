@@ -143,7 +143,7 @@
         select
         a.*
         ,b.integral orgIntegral
-        from p_goods a left join p_pwan_org b
+        from p_goods a left join p_pawn_org b on a.org_id = b.id
         where 1=1
         <if test="cateCode != null" >
           and  a.cate_code = #{cateCode,jdbcType=INTEGER}

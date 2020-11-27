@@ -33,6 +33,8 @@ import com.util.WxBankUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1343,10 +1345,43 @@ public class ApiHomeController extends ApiBaseController {
         return list;
     }
 
-    @ApiOperation(value = "1", notes = "")
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
-    @ApiMethod(isLogin = false)
-    public String  test() throws Exception{
-       return personRegister("320400702199112215013","许文炜","18861269725");
+    @ApiOperation(value = "物流详情",notes="物流信息")
+    @RequestMapping(value = "/getExpressDetail", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Express getExpressDetail(@ApiParam(value = "物流id ，id expressCode fid三者必传一个",required = false)Integer id,
+                                   @ApiParam(value = "快递单号",required = false)String expressCode,
+                                   @ApiParam(value = "相关id(藏品或订单id） ",required = false)Integer fid,
+                                   @ApiParam(value = "1寄给平台2取回3商城4平台寄给当户5机构寄给当户6机构取回（绝当品）",required = true)Integer type,
+                                   MobileInfo mobileInfo){
+
+        if (id==null && StringUtils.isBlank(expressCode) && fid==null){
+            throw new ApiException(400,"缺少必要参数");
+        }
+
+        ExpressExample example = new ExpressExample();
+        ExpressExample.Criteria criteria = example.createCriteria();
+        criteria.andTypeEqualTo(type);
+        if (id!=null){
+            criteria.andIdEqualTo(id);
+        }
+        if (StringUtil.isNotBlank(expressCode)){
+            criteria.andExpressCodeEqualTo(expressCode);
+        }
+        if (fid!=null){
+            criteria.andFidEqualTo(fid);
+        }
+        List<Express> expresses = expressService.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(expresses)){
+            return expresses.get(0);
+        }else{
+            throw new ApiException(400,"物流信息不存在");
+        }
     }
+
+//    @ApiOperation(value = "1", notes = "")
+//    @RequestMapping(value = "/test", method = RequestMethod.POST)
+//    @ApiMethod(isLogin = false)
+//    public String  test() throws Exception{
+//       return personRegister("320400702199112215013","许文炜","18861269725");
+//    }
 }

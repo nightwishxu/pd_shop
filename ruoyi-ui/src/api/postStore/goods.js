@@ -115,3 +115,11 @@ export function paltBackToOrg(data) {
     params: data
   })
 }
+
+
+export function saveByBackToUser(data) {
+  return request({
+    url: '/userGoods/saveByBackToUser',
+    params: data
+  })
+}

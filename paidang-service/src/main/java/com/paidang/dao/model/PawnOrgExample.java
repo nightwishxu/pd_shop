@@ -2054,6 +2054,356 @@ public class PawnOrgExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andIdCardImgIsNull() {
+			addCriterion("id_card_img is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgIsNotNull() {
+			addCriterion("id_card_img is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgEqualTo(String value) {
+			addCriterion("id_card_img =", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgNotEqualTo(String value) {
+			addCriterion("id_card_img <>", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgGreaterThan(String value) {
+			addCriterion("id_card_img >", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgGreaterThanOrEqualTo(String value) {
+			addCriterion("id_card_img >=", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgLessThan(String value) {
+			addCriterion("id_card_img <", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgLessThanOrEqualTo(String value) {
+			addCriterion("id_card_img <=", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgLike(String value) {
+			addCriterion("id_card_img like", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgNotLike(String value) {
+			addCriterion("id_card_img not like", value, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgIn(List<String> values) {
+			addCriterion("id_card_img in", values, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgNotIn(List<String> values) {
+			addCriterion("id_card_img not in", values, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgBetween(String value1, String value2) {
+			addCriterion("id_card_img between", value1, value2, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardImgNotBetween(String value1, String value2) {
+			addCriterion("id_card_img not between", value1, value2, "idCardImg");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseIsNull() {
+			addCriterion("id_card_reverse is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseIsNotNull() {
+			addCriterion("id_card_reverse is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseEqualTo(String value) {
+			addCriterion("id_card_reverse =", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseNotEqualTo(String value) {
+			addCriterion("id_card_reverse <>", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseGreaterThan(String value) {
+			addCriterion("id_card_reverse >", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseGreaterThanOrEqualTo(String value) {
+			addCriterion("id_card_reverse >=", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseLessThan(String value) {
+			addCriterion("id_card_reverse <", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseLessThanOrEqualTo(String value) {
+			addCriterion("id_card_reverse <=", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseLike(String value) {
+			addCriterion("id_card_reverse like", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseNotLike(String value) {
+			addCriterion("id_card_reverse not like", value, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseIn(List<String> values) {
+			addCriterion("id_card_reverse in", values, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseNotIn(List<String> values) {
+			addCriterion("id_card_reverse not in", values, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseBetween(String value1, String value2) {
+			addCriterion("id_card_reverse between", value1, value2, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardReverseNotBetween(String value1, String value2) {
+			addCriterion("id_card_reverse not between", value1, value2, "idCardReverse");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardIsNull() {
+			addCriterion("id_card is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardIsNotNull() {
+			addCriterion("id_card is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardEqualTo(String value) {
+			addCriterion("id_card =", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardNotEqualTo(String value) {
+			addCriterion("id_card <>", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardGreaterThan(String value) {
+			addCriterion("id_card >", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardGreaterThanOrEqualTo(String value) {
+			addCriterion("id_card >=", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardLessThan(String value) {
+			addCriterion("id_card <", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardLessThanOrEqualTo(String value) {
+			addCriterion("id_card <=", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardLike(String value) {
+			addCriterion("id_card like", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardNotLike(String value) {
+			addCriterion("id_card not like", value, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardIn(List<String> values) {
+			addCriterion("id_card in", values, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardNotIn(List<String> values) {
+			addCriterion("id_card not in", values, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardBetween(String value1, String value2) {
+			addCriterion("id_card between", value1, value2, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andIdCardNotBetween(String value1, String value2) {
+			addCriterion("id_card not between", value1, value2, "idCard");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIsNull() {
+			addCriterion("pawn_exequatur is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIsNotNull() {
+			addCriterion("pawn_exequatur is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturEqualTo(String value) {
+			addCriterion("pawn_exequatur =", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotEqualTo(String value) {
+			addCriterion("pawn_exequatur <>", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturGreaterThan(String value) {
+			addCriterion("pawn_exequatur >", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturGreaterThanOrEqualTo(String value) {
+			addCriterion("pawn_exequatur >=", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLessThan(String value) {
+			addCriterion("pawn_exequatur <", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLessThanOrEqualTo(String value) {
+			addCriterion("pawn_exequatur <=", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLike(String value) {
+			addCriterion("pawn_exequatur like", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotLike(String value) {
+			addCriterion("pawn_exequatur not like", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIn(List<String> values) {
+			addCriterion("pawn_exequatur in", values, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotIn(List<String> values) {
+			addCriterion("pawn_exequatur not in", values, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturBetween(String value1, String value2) {
+			addCriterion("pawn_exequatur between", value1, value2, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotBetween(String value1, String value2) {
+			addCriterion("pawn_exequatur not between", value1, value2, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIsNull() {
+			addCriterion("other_file is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIsNotNull() {
+			addCriterion("other_file is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileEqualTo(String value) {
+			addCriterion("other_file =", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotEqualTo(String value) {
+			addCriterion("other_file <>", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileGreaterThan(String value) {
+			addCriterion("other_file >", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileGreaterThanOrEqualTo(String value) {
+			addCriterion("other_file >=", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLessThan(String value) {
+			addCriterion("other_file <", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLessThanOrEqualTo(String value) {
+			addCriterion("other_file <=", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLike(String value) {
+			addCriterion("other_file like", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotLike(String value) {
+			addCriterion("other_file not like", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIn(List<String> values) {
+			addCriterion("other_file in", values, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotIn(List<String> values) {
+			addCriterion("other_file not in", values, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileBetween(String value1, String value2) {
+			addCriterion("other_file between", value1, value2, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotBetween(String value1, String value2) {
+			addCriterion("other_file not between", value1, value2, "otherFile");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

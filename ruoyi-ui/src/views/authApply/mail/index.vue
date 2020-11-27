@@ -403,8 +403,8 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column
-        label="专家鉴定"
+      <el-table-column
+        label="回寄给用户"
         align="center"
         prop="auth"
       >
@@ -413,18 +413,14 @@
             type="primary"
             size="mini"
             v-if="
-              scope.row.experterInfoId != null && scope.row.experterInfoId != 0
+              scope.row.backState == 1
             "
-            @click="handleForm4(scope.row)"
-          >复制url</el-button>
-          <el-button
-            type="info"
-            size="mini"
-            v-else
-            @click="handleForm5(scope.row)"
-          >专家鉴定</el-button>
+            @click="handleForm10(scope.row)"
+          >回寄给用户</el-button>
+          <span v-if="scope.row.backState == 2">已经回寄给用户物流单号为：{{scope.row.backExpressCode}}</span>
+          <span v-if="scope.row.backState == 3">用户已签收</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         label
         align="center"
@@ -891,6 +887,93 @@
     </el-dialog>
 
     <el-dialog
+      :title="title10"
+      :visible.sync="open10"
+      width="600px"
+      append-to-body
+    >
+      <el-form
+        :model="form10"
+        label-width="100px"
+      >
+
+        <el-form-item
+          label="收件人名字"
+          prop="backUserName"
+        >
+          <el-input
+            v-model="form10.backUserName"
+            placeholder="请输入收件人名字"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="收件人电话"
+          prop="backUserPhone"
+        >
+          <el-input
+            v-model="form10.backUserPhone"
+            placeholder="请输入收件人电话"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="收件人地址"
+          prop="backUserName"
+        >
+          <el-input
+            v-model="form10.backUserExpress"
+            placeholder="请输入收件人地址"
+          />
+        </el-form-item>
+
+        <el-form-item label="快递公司">
+          顺丰快递
+        </el-form-item>
+
+        <el-form-item
+          label="快递单号"
+          prop="backExpressCode"
+        >
+          <el-input
+            v-model="form10.backExpressCode"
+            placeholder="请输入快递单号"
+          />
+        </el-form-item>
+
+        <el-form-item
+          label="上传物流凭证"
+          prop="backImages"
+        >
+          <single-upload
+            v-model="form10.backImages"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
+        </el-form-item>
+        <el-form-item
+          label="宝贝装箱视频"
+          prop="backVideo"
+          id="refuseInfo"
+        >
+          <video-upload
+            v-model="form10.backVideo"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></video-upload>
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from10Submit"
+        >确 定</el-button>
+        <el-button @click="cancel10">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
       title
       :visible.sync="videoOpen"
       width="40%"
@@ -971,6 +1054,8 @@
               v-if="form.goVideo"
               class="avatar"
               preload="auto"
+              width="320"
+              height="320"
               controls="controls"
               :src="form.goVideo"
             ></video>
@@ -985,6 +1070,8 @@
               v-if="form.openGoodsVideo"
               class="avatar"
               preload="auto"
+              width="320"
+              height="320"
               controls="controls"
               :src="form.openGoodsVideo"
             ></video>
@@ -1094,6 +1181,7 @@ import {
   beginToOper,
   checkDetail,
   settle,
+  saveByBackToUser,
   changeCheck,
   exportGoods,
 } from "@/api/postStore/goods";
@@ -1143,6 +1231,7 @@ export default {
       open5: false,
       open6: false,
       open8: false,
+      open10: false,
       videoOpen: false,
       videoUrl: null,
       show2: true,
@@ -1155,6 +1244,7 @@ export default {
       title5: "",
       title6: "",
       title8: "",
+      title10: "",
 
       isRouterAlive: true,
       // 查询参数
@@ -1211,6 +1301,7 @@ export default {
       form5: {},
       form6: {},
       form8: {},
+      form10: {},
       uploadAction: process.env.BASE_API + "common/fileUplaod",
       // imgfileList:[],
       // 表单校验
@@ -1488,6 +1579,13 @@ export default {
         }
       });
     },
+     handleForm10(row) {
+      this.reset10();
+      const id = row.id;
+      this.form10 = { id: id };
+      this.open10 = true;
+      this.title10 = "回寄给用户";
+    },
     playVideo(row) {
       this.videoOpen = true;
       this.videoUrl = row.video;
@@ -1555,6 +1653,8 @@ export default {
       });
     },
     from6Submit() {
+      this.form6.location=1;
+      this.form6.postState = 3;
       updateGoods(this.form6).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
@@ -1565,10 +1665,23 @@ export default {
     },
 
     from8Submit() {
+      this.form8.isVerify=1;
       beginToOper(this.form8).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open8 = false;
+          this.getList();
+        }
+      });
+    },
+
+     from10Submit() {
+      this.form10.backState=2;
+      this.form10.backExpress='顺丰快递';
+      saveByBackToUser(this.form10).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open10 = false;
           this.getList();
         }
       });
@@ -1725,6 +1838,10 @@ export default {
       this.open8 = false;
       this.reset5();
     },
+      cancel10() {
+      this.open8 = false;
+      this.reset5();
+    },
     closeDialog() {
       this.videoUrl = "";
     },
@@ -1791,6 +1908,12 @@ export default {
         id: null,
       };
       this.resetForm("form8");
+    },
+     reset10() {
+      this.form10 = {
+        id: null,
+      };
+      this.resetForm("form10");
     },
     /** 搜索按钮操作 */
     handleQuery() {

@@ -328,7 +328,7 @@
         <!-- and (A.state = 1 or A.state = -1) 20191209修改-->
         and A.state = 1
         and A.org_id IS NULL and A.user_state !=1
-        order by A.create_time desc;
+        order by A.create_time desc
     </select>
     <!--我的典当列表已典当中-->
     <select id="selectMyPawnedList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
