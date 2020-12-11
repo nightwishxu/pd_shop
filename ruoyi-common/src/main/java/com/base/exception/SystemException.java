@@ -29,7 +29,7 @@ public class SystemException extends RuntimeException {
     }
 
     public SystemException(IMError error) {
-        super(error.getErrorMsg());
-        this.code = error.getErrorCode();
+        super(error.getMsg());
+        this.code = error.getCode();
     }
 }

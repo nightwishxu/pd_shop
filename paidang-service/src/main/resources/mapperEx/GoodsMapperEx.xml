@@ -12,6 +12,7 @@
     <result column="goodsOwnerName" property="goodsOwnerName"/>
     <result column="orgName" property="orgName"/>
     <result column="orgIntegral" property="orgIntegral"/>
+    <result column="onlineCnt" property="onlineCnt"/>
   </resultMap>
 
     <select id="getMostThreeGoods" resultMap="BaseResultMap">
@@ -51,7 +52,7 @@
         and g.name like '%${name}%'
       </if>
     </where>
-    ORDER BY g.sort_order desc,g.create_time desc
+    ORDER BY g.create_time desc
   </select>
 
   <select id="selectMyGoodsList" resultMap="BaseResultMap">
@@ -143,8 +144,11 @@
         select
         a.*
         ,b.integral orgIntegral
+        <if test="isOnlineCnt!=null and isOnlineCnt==1">
+            ,(select  count(1) from p_goods_auction_online_log where status = 1 and now()> auction_start_time and goods_id = a.id) onlineCnt
+        </if>
         from p_goods a left join p_pawn_org b on a.org_id = b.id
-        where 1=1
+        where 1=1 and is_online>-1
         <if test="cateCode != null" >
           and  a.cate_code = #{cateCode,jdbcType=INTEGER}
         </if>
@@ -159,6 +163,12 @@
         </if>
         <if test="source != null" >
             and a.source = #{source}
+        </if>
+        <if test="dealType != null" >
+            and a.deal_type = #{dealType}
+        </if>
+        <if test="goodsOwner != null" >
+            and a.goods_owner = #{goodsOwner}
         </if>
         <if test="reasonOfDismounting != null" >
             and   a.reason_of_dismounting = #{reasonOfDismounting,jdbcType=VARCHAR}
@@ -176,6 +186,14 @@
             and a.total >=#{startTotal}
         </if>
         order by a.sort_order desc,a.is_suggest desc,a.create_time desc
+        <if test="limit!=null">
+            limit #{limit}
+        </if>
     </select>
+
+    <update id="sellAuctionGoods">
+        update p_goods set is_online = #{isOnline},max_aution_id=#{maxAutionId},max_auction=#{maxAuction}
+        where id = #{id}
+    </update>
     
 </mapper>

@@ -4,36 +4,36 @@ import java.io.Serializable;
 
 public class ErrorResult implements Serializable {
     private static final long serialVersionUID = -1593199144254776752L;
-    private int errorCode;
-    private String errorMsg;
+    private int code;
+    private String msg;
 
     public ErrorResult(IMError error) {
-        this.errorCode = error.getErrorCode();
-        this.errorMsg = error.getErrorMsg();
+        this.code = error.getCode();
+        this.msg = error.getMsg();
     }
 
-    public ErrorResult(int errorCode) {
-        this.errorCode = errorCode;
+    public ErrorResult(int code) {
+        this.code = code;
     }
 
-    public ErrorResult(int errorCode, String errorMsg) {
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
+    public ErrorResult(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
-    public int getErrorCode() {
-        return this.errorCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getErrorMsg() {
-        return this.errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

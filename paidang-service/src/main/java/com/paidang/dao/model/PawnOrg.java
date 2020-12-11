@@ -144,10 +144,10 @@ public class PawnOrg implements Serializable {
 	private java.util.Date modifyTime;
 
 	/**
-	 *1启动0禁用
+	 *1启动0禁用2待审核3审核失败
 	 */
-	@ApiModelProperty(value="1启动0禁用")
-	@ApiParam(value="1启动0禁用")
+	@ApiModelProperty(value="1启动0禁用2待审核3审核失败")
+	@ApiParam(value="1启动0禁用2待审核3审核失败")
 	@Column(name = "state")
 	private Integer state;
 
@@ -294,6 +294,14 @@ public class PawnOrg implements Serializable {
 	@ApiParam(value="其他辅助文件")
 	@Column(name = "other_file")
 	private String otherFile;
+
+	/**
+	 *法人电话
+	 */
+	@ApiModelProperty(value="法人电话")
+	@ApiParam(value="法人电话")
+	@Column(name = "legal_person_phone")
+	private String legalPersonPhone;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -573,6 +581,14 @@ public class PawnOrg implements Serializable {
 
 	public String getOtherFile() {
 		return otherFile;
+	}
+
+	public void setLegalPersonPhone(String legalPersonPhone) {
+		this.legalPersonPhone=legalPersonPhone == null ? legalPersonPhone : legalPersonPhone.trim();
+	}
+
+	public String getLegalPersonPhone() {
+		return legalPersonPhone;
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class VideoOnlineCommentController extends CoreController{
 	@ResponseBody
     public Ret save(VideoOnlineComment videoOnlineComment){
     	if (videoOnlineComment.getId() == null){
+    		videoOnlineComment.setCreateTime(new Date());
     		videoOnlineCommentService.insert(videoOnlineComment);
     	}else{
     		videoOnlineCommentService.updateByPrimaryKeySelective(videoOnlineComment);

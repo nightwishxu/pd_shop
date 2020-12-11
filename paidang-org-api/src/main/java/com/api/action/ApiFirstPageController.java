@@ -84,6 +84,7 @@ public class ApiFirstPageController extends ApiBaseController {
         List retList = new ArrayList();
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
+            pawnDetail.setAuctionCount(userPawnEx.getCnt());
             pawnDetail.setId(userPawnEx.getId().toString());
             pawnDetail.setTitle(userPawnEx.getGoodsName1()!=null?userPawnEx.getGoodsName1():"");
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");
@@ -121,7 +122,7 @@ public class ApiFirstPageController extends ApiBaseController {
      */
     @ApiOperation(value = "热门竞拍", notes = "热门竞拍")
     @RequestMapping(value = "/getHotAuctionsList", method = RequestMethod.POST)
-    @ApiMethod(isPage = true,isLogin = true)
+    @ApiMethod(isPage = false,isLogin = true)
     public List<PawnDetail> getHotAuctionsList(PageLimit pageLimit,MobileInfo mobileInfo) {
         startPage();
         List<UserPawnEx> list = userPawnService.hotAuctionsList(PaidangConst.AUCTION_TIME);
@@ -129,6 +130,7 @@ public class ApiFirstPageController extends ApiBaseController {
         List retList = new ArrayList();
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
+            pawnDetail.setAuctionCount(userPawnEx.getCnt());
             pawnDetail.setId(userPawnEx.getId().toString());
             pawnDetail.setTitle(userPawnEx.getGoodsName1()!=null?userPawnEx.getGoodsName1():"");
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");

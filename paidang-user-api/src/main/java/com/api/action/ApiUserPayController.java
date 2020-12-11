@@ -59,9 +59,10 @@ public class ApiUserPayController extends ApiBaseController{
 	@ApiMethod(isLogin = true)
 	public PayResult buyPay(MobileInfo mobileInfo,
                             @ApiParam(value = "支付方式:1:支付宝 2:微信", required = true)Integer platform,
+							@ApiParam(value = "地址id", required = false)Integer addressId,
                             @ApiParam(value = "订单id", required = true)Integer orderId){
 
-		return apiUserPayService.buyPay(mobileInfo,platform,orderId);
+		return apiUserPayService.buyPay(mobileInfo,platform,orderId,addressId);
 	}
 
 	//(2019-07-29 add by laria)

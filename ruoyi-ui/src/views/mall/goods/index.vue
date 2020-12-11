@@ -138,8 +138,8 @@
             ></el-image>
             <el-image :src="scope.row.img"></el-image>
           </el-popover>
-        </template> -->
-      </el-table-column>
+        </template>
+      </el-table-column>  -->
       <el-table-column
         label="图片"
         align="center"
@@ -187,31 +187,36 @@
         prop="soldOut"
       />
       <!-- <el-table-column label="状态" align="center" prop="isOnline" :formatter="handleIsOnline" /> -->
-      <!-- <el-table-column label="审核" align="center">
+      <el-table-column
+        label="审核"
+        align="center"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
             size="mini"
             v-if="scope.row.isVerfiy === 1"
             @click="handleIsVerify(scope.row)"
-            >开始审核</el-button
-          >
+          >开始审核</el-button>
           <el-button
             type="text"
             size="mini"
             v-if="scope.row.isVerfiy === 2"
             @click="handleIsVerify(scope.row)"
-            >审核通过</el-button
-          >
+          >审核通过</el-button>
           <el-button
             type="text"
             size="mini"
             v-if="scope.row.isVerfiy === 3"
             @click="handleIsVerify(scope.row)"
-            >审核不通过</el-button
-          >
+          >审核不通过</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column
+        label="审核不通过原因"
+        align="center"
+        prop="refuseInfo"
+      />
       <!-- <el-table-column label="排序(倒序)" align="center" prop="sortOrder" /> -->
       <!-- <el-table-column label="是否设置为推荐" align="center" prop="isSuggest">
         <template slot-scope="scope">
@@ -231,11 +236,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column
-        label="审核不通过原因"
-        align="center"
-        prop="refuseInfo"
-      /> -->
+      -->
       <!-- <el-table-column label="排序(倒序)" align="center" prop="sortOrder" /> -->
       <el-table-column
         label="创建时间"
@@ -903,9 +904,6 @@ export default {
         "label": "立即上架",
         "value": 1
       }, {
-        "label": "定时上架",
-        "value": 3
-      }, {
         "label": "暂不上架，放入仓库",
         "value": 2
       }],
@@ -952,7 +950,7 @@ export default {
           value: 15,
         },
       ],
-      // ：包邮，假必赔，可鉴定，包退，已鉴定
+      // ：1包邮，2假必赔，3可鉴定，4包退，5已鉴定
       labelOptions: [{
         "label": "包邮",
         "value": "1"
@@ -1177,7 +1175,7 @@ export default {
     /** 查询商品列表 */
     getList() {
       this.loading = true;
-      this.queryParams.type = 1;
+      // this.queryParams.type = 1;
       listGoods(this.queryParams).then((response) => {
         this.goodsList = response.rows;
         this.total = response.total;

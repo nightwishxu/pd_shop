@@ -36,6 +36,7 @@
         <result column="id_card" property="idCard" jdbcType="VARCHAR" />
         <result column="pawn_exequatur" property="pawnExequatur" jdbcType="VARCHAR" />
         <result column="other_file" property="otherFile" jdbcType="VARCHAR" />
+        <result column="legal_person_phone" property="legalPersonPhone" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.PawnOrg" extends="BaseResultMap" >
@@ -103,7 +104,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file
+        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file,legal_person_phone
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -175,7 +176,7 @@
         labels,integral,score,
         comment_count,express_score,service_score,
         id_card_img,id_card_reverse,id_card,
-        pawn_exequatur,other_file
+        pawn_exequatur,other_file,legal_person_phone
         )
         values (#{roleCode,jdbcType=VARCHAR},#{type,jdbcType=TINYINT},
         #{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
@@ -188,7 +189,7 @@
         #{labels,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL},#{score,jdbcType=DECIMAL},
         #{commentCount,jdbcType=INTEGER},#{expressScore,jdbcType=DECIMAL},#{serviceScore,jdbcType=DECIMAL},
         #{idCardImg,jdbcType=VARCHAR},#{idCardReverse,jdbcType=VARCHAR},#{idCard,jdbcType=VARCHAR},
-        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR}
+        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR},#{legalPersonPhone,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -297,6 +298,9 @@
             <if test="otherFile != null" >
                 other_file,
             </if>
+            <if test="legalPersonPhone != null" >
+                legal_person_phone,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="roleCode != null" >
@@ -400,6 +404,9 @@
             </if>
             <if test="otherFile != null" >
                 #{otherFile,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPersonPhone != null" >
+                #{legalPersonPhone,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -519,6 +526,9 @@
             <if test="record.otherFile != null" >
                 other_file = #{record.otherFile,jdbcType=VARCHAR},
             </if>
+            <if test="record.legalPersonPhone != null" >
+                legal_person_phone = #{record.legalPersonPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -561,7 +571,8 @@
         id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
-        other_file = #{otherFile,jdbcType=VARCHAR}
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -602,7 +613,8 @@
         id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
-        other_file = #{otherFile,jdbcType=VARCHAR}
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -713,6 +725,9 @@
             <if test="otherFile != null" >
                 other_file = #{otherFile,jdbcType=VARCHAR},
             </if>
+            <if test="legalPersonPhone != null" >
+                legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -752,7 +767,8 @@
         id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
-        other_file = #{otherFile,jdbcType=VARCHAR}
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
@@ -790,7 +806,8 @@
         id_card_reverse = #{idCardReverse,jdbcType=VARCHAR},
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
-        other_file = #{otherFile,jdbcType=VARCHAR}
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

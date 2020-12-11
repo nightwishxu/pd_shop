@@ -25,6 +25,8 @@ public interface PawnOrgMapperEx {
 
     int updateCommentScore(@Param("orgId") Integer orgId);
 
+    PawnOrgEx getInfo(@Param("orgId") Integer orgId);
+
     int addIntegral(@Param("orgId") Integer orgId, @Param("integral")BigDecimal integral);
 
 }

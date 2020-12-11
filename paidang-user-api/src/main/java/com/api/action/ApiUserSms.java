@@ -114,7 +114,7 @@ public class ApiUserSms
             if (StringUtils.isNotBlank(error))
             {
                 this.logger.debug(error);
-                throw new ApiException(MEnumError.SMS_ERROR.getErrorCode(), error);
+                throw new ApiException(MEnumError.SMS_ERROR.getCode(), error);
             }
             throw new ApiException(MEnumError.SMS_ERROR);
         }

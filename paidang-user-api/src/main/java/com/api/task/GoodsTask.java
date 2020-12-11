@@ -39,16 +39,19 @@ public class GoodsTask {
      */
     @Scheduled(cron ="0 */5 * * * ?")
     public void endAuctionGoods(){
-
         GoodsExample example = new GoodsExample();
-        example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeGreaterThan(new Date())
-                .andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andStateEqualTo(1).andTotalGreaterThan(1)
+        example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeLessThan(new Date())
+                .andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andStateEqualTo(1).andTotalGreaterThanOrEqualTo(1)
                 .andMaxAutionIdIsNotNull().andMaxAuctionIsNotNull();
 
         List<Goods> goods = goodsService.selectByExample(example);
         for (Goods good : goods) {
             try {
                 apiUserPayService.createOrder(good.getMaxAutionId(),good.getId(),null,null,1);
+                good.setIsOnline(0);
+                good.setMaxAuction(null);
+                good.setMaxAutionId(null);
+                goodsService.sellAuctionGoods(good);
             } catch (Exception e) {
                 e.printStackTrace();
             }

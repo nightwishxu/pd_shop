@@ -8,6 +8,5 @@ import lombok.Data;
 */
 @Data
 public class PawnTicketEx extends PawnTicket {
-    String orgId;
 
 }

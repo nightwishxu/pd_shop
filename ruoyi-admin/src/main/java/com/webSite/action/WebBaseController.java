@@ -38,7 +38,7 @@ public class WebBaseController {
 	public void handleExceptionOk(Exception ex, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Ret ret;
 		ApiException se = (ApiException)ex;
-		ret = new Ret(se.getCode(), se.getError().getErrorMsg());
+		ret = new Ret(se.getCode(), se.getError().getMsg());
 		ResponseUtils.renderJson(response, ret);
 	}
 
@@ -102,6 +102,6 @@ public class WebBaseController {
 	}
 
 	protected String msg(IMError error){
-		return msg(error.getErrorCode(),error.getErrorMsg());
+		return msg(error.getCode(),error.getMsg());
 	}
 }

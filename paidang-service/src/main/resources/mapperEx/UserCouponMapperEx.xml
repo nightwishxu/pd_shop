@@ -12,7 +12,7 @@
     (select price from p_goods where id = goodsId) as goodsPrice,
     (select name from p_goods where id = goodsId) as goodsName
     from p_user_coupon A where A.end_time &gt;= now() and A.user_id = #{user_id} and A.state = 1
-    order by A.create_time desc;
+    order by A.create_time desc
 
   </select>
 </mapper>

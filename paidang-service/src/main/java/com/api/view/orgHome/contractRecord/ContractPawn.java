@@ -31,6 +31,11 @@ public class ContractPawn {
     @ApiModelProperty("典当结束时间")
     private String pawnEndTime;
 
+    @ApiModelProperty("签订时间")
+    private String pawnSignTime;
+
+
+
     public String getPawnId() {
         return pawnId;
     }
@@ -93,5 +98,13 @@ public class ContractPawn {
 
     public void setPawnEndTime(String pawnEndTime) {
         this.pawnEndTime = pawnEndTime;
+    }
+
+    public String getPawnSignTime() {
+        return pawnSignTime;
+    }
+
+    public void setPawnSignTime(String pawnSignTime) {
+        this.pawnSignTime = pawnSignTime;
     }
 }

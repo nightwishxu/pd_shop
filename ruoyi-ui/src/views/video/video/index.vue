@@ -13,15 +13,19 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -29,8 +33,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:online:add']"
-          >新增</el-button
-        >
+        >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -40,8 +43,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:online:edit']"
-          >修改</el-button
-        >
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,11 +53,15 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:online:remove']"
-          >删除</el-button
-        >
+        >删除</el-button>
       </el-col>
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -84,11 +90,27 @@
       :data="onlineList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column columnlabel="封面" align="center" prop="img">
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="标题"
+        align="center"
+        prop="title"
+      />
+      <el-table-column
+        columnlabel="封面"
+        align="center"
+        prop="img"
+      >
         <template scope="scope">
-          <el-popover placement="right" title trigger="click">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
             <el-image
               slot="reference"
               :src="scope.row.img"
@@ -99,7 +121,11 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="视频" align="center" prop="video">
+      <el-table-column
+        label="视频"
+        align="center"
+        prop="video"
+      >
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -141,7 +167,12 @@
       @pagination="getList"
     />
 
-       <el-dialog title :visible.sync="videoOpen" width="40%" @close="closeDialog">
+    <el-dialog
+      title
+      :visible.sync="videoOpen"
+      width="40%"
+      @close="closeDialog"
+    >
       <video
         :src="videoUrl"
         class="avatar"
@@ -151,44 +182,109 @@
       ></video>
     </el-dialog>
 
-
     <!-- 添加或修改在线视频对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入标题" />
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="600px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="150px"
+      >
+        <el-form-item
+          label="标题"
+          prop="title"
+        >
+          <el-input
+            v-model="form.title"
+            placeholder="请输入标题"
+          />
         </el-form-item>
-        <el-form-item label="是否设置为首页视频" prop="state">
-              <el-select
-                v-model="form.state"
-                placeholder="请选择下拉选择"
-                clearable
-                :style="{ width: '100%' }"
-              >
-                <el-option
-                  v-for="item in stateOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          <el-form-item label="封面" prop="img">
+        <el-form-item
+          label="是否设置为首页视频"
+          prop="state"
+        >
+          <el-select
+            v-model="form.state"
+            placeholder="请选择下拉选择"
+            clearable
+            :style="{ width: '100%' }"
+          >
+            <el-option
+              v-for="item in stateOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="封面"
+          prop="img"
+        >
           <single-upload
             v-model="form.img"
             style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
-          </el-form-item>
-            <el-form-item label="上传在线视频视频" prop="video">
+        </el-form-item>
+        <el-form-item
+          label="上传在线视频视频"
+          prop="video"
+        >
           <video-upload
             v-model="form.video"
             style="width: 300px; display: inline-block; margin-left: 10px"
           ></video-upload>
         </el-form-item>
+        <el-form-item label="标签">
+          <div style="margin-left: 20px;">
+            <el-input
+              ref="label"
+              v-model="labelValue"
+              placeholder="标签"
+              size="small"
+              :style="{ width: '40%' }"
+            />
+            <el-button
+              id="btn"
+              @click="addLabels"
+            >添加标签</el-button>
+          </div>
+          <draggable
+            :animation="340"
+            group="selectItem"
+            handle=".option-drag"
+          >
+            <div
+              v-for="(item, index) in labelsOptions"
+              :key="index"
+            >
+              <div
+                class="close-btn select-line-icon"
+                @click="labelsOptions.splice(index, 1)"
+              >
+                {{item}}
+                <i class="el-icon-remove-outline" />
+              </div>
+
+            </div>
+          </draggable>
+
+        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -228,6 +324,8 @@ export default {
       onlineList: [],
       // 弹出层标题
       title: "",
+      labelValue:"",
+      labelsOptions: [],
       videoOpen: false,
       videoUrl: null,
       // 是否显示弹出层
@@ -289,8 +387,22 @@ export default {
         state: null,
         createTime: null,
         isSuggest: null,
+        labels: null,
       };
+      this.labelValue = "";
+      this.labelsOptions = [];
       this.resetForm("form");
+    },
+
+     addLabels(){
+      if(this.labelValue==null || this.labelValue==''){
+        return
+      }
+      this.labelsOptions.push(this.labelValue)
+      this.labelValue=''
+    },
+    setOptionValue(item, val) {
+      item.value = isNumberStr(val) ? +val : val
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -326,12 +438,19 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加在线视频";
+      this.form.labels= [];
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.form.labels= [];
       const id = row.id || this.ids;
       getOnline(id).then((response) => {
+         if(response.data.labels==null || response.data.labels==undefined){
+            this.labelsOptions = [];
+        }else{
+            this.labelsOptions = response.data.labels.split(",");
+        }
         this.form = response.data;
         this.open = true;
         this.title = "修改在线视频";
@@ -340,6 +459,8 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
+        console.info(this.form.labels);
+        this.form.labels = this.labelsOptions.join(",")
         if (valid) {
           if (this.form.id != null) {
             updateOnline(this.form).then((response) => {

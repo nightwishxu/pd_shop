@@ -62,7 +62,7 @@ public class ApiHomeController extends ApiBaseController{
 	@ApiOperation(value = "企业认证",notes="登陆")
 	@RequestMapping(value="/editOrg", method = RequestMethod.POST)
 	@ApiMethod(isLogin = true)
-	public void editOrg(MobileInfo mobileInfo
+	public Integer editOrg(MobileInfo mobileInfo
 			,@ApiParam(value = "机构名称", required = true)String name
 			,@ApiParam(value = "法人名称", required = true)String legalPerson
 			,@ApiParam(value = "身份证号码", required = true)String idCard
@@ -71,6 +71,9 @@ public class ApiHomeController extends ApiBaseController{
 			,@ApiParam(value = "身份证反面", required = true)String idCardReverse
 			,@ApiParam(value = "典当许可证", required = true)String pawnExequatur
 			,@ApiParam(value = "其他辅助文件", required = false)String otherFile
+			,@ApiParam(value = "工商许可证号", required = true)String businessLicenseCode
+			,@ApiParam(value = "机构电话", required = true)String phone
+			,@ApiParam(value = "法人电话", required = true)String legalPersonPhone
 
 	){
 		if (!redisCache.getLock("editOrg:"+mobileInfo.getUserId(),10)){
@@ -86,12 +89,15 @@ public class ApiHomeController extends ApiBaseController{
 			//没有认证企业
 			pawnOrg.setName(name);
 			pawnOrg.setLegalPerson(legalPerson);
-			pawnOrg.setLegalPerson(idCard);
-			pawnOrg.setLegalPerson(businessLicense);
-			pawnOrg.setLegalPerson(idCardImg);
-			pawnOrg.setLegalPerson(idCardReverse);
-			pawnOrg.setLegalPerson(pawnExequatur);
-			pawnOrg.setLegalPerson(otherFile);
+			pawnOrg.setIdCard(idCard);
+			pawnOrg.setBusinessLicense(businessLicense);
+			pawnOrg.setIdCardImg(idCardImg);
+			pawnOrg.setIdCardReverse(idCardReverse);
+			pawnOrg.setPawnExequatur(pawnExequatur);
+			pawnOrg.setOtherFile(otherFile);
+			pawnOrg.setBusinessLicenseCode(businessLicenseCode);
+			pawnOrg.setPhone(phone);
+			pawnOrg.setLegalPersonPhone(legalPersonPhone);
 			pawnOrg.setCreateTime(new Date());
 			pawnOrg.setType(1);
 			pawnOrg.setBalance(BigDecimal.ZERO);
@@ -109,12 +115,13 @@ public class ApiHomeController extends ApiBaseController{
 				pawnOrg.setId(orgId);
 				pawnOrg.setName(name);
 				pawnOrg.setLegalPerson(legalPerson);
-				pawnOrg.setLegalPerson(idCard);
-				pawnOrg.setLegalPerson(businessLicense);
-				pawnOrg.setLegalPerson(idCardImg);
-				pawnOrg.setLegalPerson(idCardReverse);
-				pawnOrg.setLegalPerson(pawnExequatur);
-				pawnOrg.setLegalPerson(otherFile);
+				pawnOrg.setIdCard(idCard);
+				pawnOrg.setBusinessLicense(businessLicense);
+				pawnOrg.setIdCardImg(idCardImg);
+				pawnOrg.setIdCardReverse(idCardReverse);
+				pawnOrg.setPawnExequatur(pawnExequatur);
+				pawnOrg.setLegalPersonPhone(legalPersonPhone);
+				pawnOrg.setOtherFile(otherFile);
 				pawnOrg.setModifyTime(new Date());
 				pawnOrg.setState(2);
 				pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
@@ -123,6 +130,7 @@ public class ApiHomeController extends ApiBaseController{
 			}
 
 		}
+		return 1;
 	}
 
 

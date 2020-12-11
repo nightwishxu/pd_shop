@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AuthPersonalExample {
 	protected String orderByClause;
@@ -1041,6 +1041,76 @@ public class AuthPersonalExample {
 
 		public Criteria andOrgIdNotBetween(Integer value1, Integer value2) {
 			addCriterion("org_id not between", value1, value2, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontIsNull() {
+			addCriterion("hand_id_card_front is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontIsNotNull() {
+			addCriterion("hand_id_card_front is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontEqualTo(String value) {
+			addCriterion("hand_id_card_front =", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontNotEqualTo(String value) {
+			addCriterion("hand_id_card_front <>", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontGreaterThan(String value) {
+			addCriterion("hand_id_card_front >", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontGreaterThanOrEqualTo(String value) {
+			addCriterion("hand_id_card_front >=", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontLessThan(String value) {
+			addCriterion("hand_id_card_front <", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontLessThanOrEqualTo(String value) {
+			addCriterion("hand_id_card_front <=", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontLike(String value) {
+			addCriterion("hand_id_card_front like", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontNotLike(String value) {
+			addCriterion("hand_id_card_front not like", value, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontIn(List<String> values) {
+			addCriterion("hand_id_card_front in", values, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontNotIn(List<String> values) {
+			addCriterion("hand_id_card_front not in", values, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontBetween(String value1, String value2) {
+			addCriterion("hand_id_card_front between", value1, value2, "handIdCardFront");
+			return (Criteria) this;
+		}
+
+		public Criteria andHandIdCardFrontNotBetween(String value1, String value2) {
+			addCriterion("hand_id_card_front not between", value1, value2, "handIdCardFront");
 			return (Criteria) this;
 		}
 

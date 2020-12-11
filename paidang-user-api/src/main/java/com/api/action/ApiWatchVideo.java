@@ -70,6 +70,7 @@ public class ApiWatchVideo extends ApiBaseController {
             record.setVideo(ex.getVideo()+ PaidangConst.VIDEO_NORMAL);
             record.setComCnt(ex.getCommCount());
             record.setState(ex.getState());
+            record.setLabels(ex.getLabels());
             ret.add(record);
         }
         return ret;
@@ -134,6 +135,7 @@ public class ApiWatchVideo extends ApiBaseController {
         comment.setUserId(mobileInfo.getUserId());
         comment.setIsDel(0);
         comment.setVideoId(id);
+        comment.setCreateTime(new Date());
         videoOnlineCommentService.insert(comment);
         return ok();
     }

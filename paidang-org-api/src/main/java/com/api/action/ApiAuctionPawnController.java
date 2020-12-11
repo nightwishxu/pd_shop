@@ -213,6 +213,7 @@ public class ApiAuctionPawnController extends ApiBaseController {
         pawnAuction.setRate(r);
         pawnAuction.setMoneyRate(mr);
         pawnAuction.setOrgUserId(mobileInfo.getUserId());
+        pawnAuction.setCreateTime(new Date());
         int result = pawnAuctionService.insert(pawnAuction);
         if (result!=1){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);

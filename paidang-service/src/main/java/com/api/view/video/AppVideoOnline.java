@@ -20,6 +20,9 @@ public class AppVideoOnline {
     @ApiModelProperty(value="是否是首页视频0不是 1是")
     private Integer state;
 
+    @ApiModelProperty(value="视频标签 ,分割")
+    private String labels;
+
     public Integer getId() {
         return id;
     }
@@ -74,5 +77,13 @@ public class AppVideoOnline {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getLabels() {
+        return labels;
+    }
+
+    public void setLabels(String labels) {
+        this.labels = labels;
     }
 }

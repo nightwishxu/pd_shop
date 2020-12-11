@@ -5,6 +5,7 @@
         <result column="org_user_phone" property="orgUserPhone"></result>
         <result column="org_user_id" property="orgUserId"></result>
         <result column="deal_amount" property="dealAmount"></result>
+        <result column="isPersonal" property="isPersonal"></result>
   </resultMap>
 
 
@@ -65,5 +66,13 @@
     <update id="addIntegral">
         update p_pawn_org set integral = ifnull(integral,0) +#{integral} where id = #{orgId}
     </update>
-  
+
+
+    <select id="getInfo" resultMap="BaseResultMap" >
+
+        select  a.*, (select count(1) from b_auth_personal where org_id = a.id) as isPersonal from p_pawn_org a
+        where id =#{orgId}
+
+    </select>
+
 </mapper>

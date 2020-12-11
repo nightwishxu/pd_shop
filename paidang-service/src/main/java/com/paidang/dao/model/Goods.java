@@ -50,7 +50,7 @@ public class Goods implements Serializable {
 	/**
 	 *分类code
 	 */
-	@ApiModelProperty(value="分类code,101:玉翠珠宝,102:工艺作品,103:文玩杂项,104:紫砂陶瓷,105:钱币邮票,106:书画篆刻,107:花鸟文娱,108:其他")
+	@ApiModelProperty(value="分类code")
 	@ApiParam(value="分类code")
 	@Column(name = "cate_code")
 	private Integer cateCode;
@@ -518,6 +518,22 @@ public class Goods implements Serializable {
 	@ApiParam(value="新用户")
 	@Column(name = "nv")
 	private Integer nv;
+
+	/**
+	 *商品编码
+	 */
+	@ApiModelProperty(value="商品编码")
+	@ApiParam(value="商品编码")
+	@Column(name = "goods_code")
+	private String goodsCode;
+
+	/**
+	 *上架日志编号
+	 */
+	@ApiModelProperty(value="上架日志编号")
+	@ApiParam(value="上架日志编号")
+	@Column(name = "auction_online_log_id")
+	private Integer auctionOnlineLogId;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -1021,6 +1037,22 @@ public class Goods implements Serializable {
 
 	public Integer getNv() {
 		return nv;
+	}
+
+	public void setGoodsCode(String goodsCode) {
+		this.goodsCode=goodsCode == null ? goodsCode : goodsCode.trim();
+	}
+
+	public String getGoodsCode() {
+		return goodsCode;
+	}
+
+	public void setAuctionOnlineLogId(Integer auctionOnlineLogId) {
+		this.auctionOnlineLogId=auctionOnlineLogId;
+	}
+
+	public Integer getAuctionOnlineLogId() {
+		return auctionOnlineLogId;
 	}
 
 }

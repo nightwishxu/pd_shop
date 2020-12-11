@@ -152,4 +152,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
     }
+
+    /**
+     * 时间是否再两个时间之间
+     * @param date
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public static boolean isBetween(Date date,Date startTime,Date endTime){
+        return date.compareTo(startTime)>=0 && date.compareTo(endTime)<=0;
+    }
 }

@@ -14,20 +14,20 @@ public class Result<T> extends BaseResult {
         super(error);
     }
 
-    public Result(int errorCode) {
-        super(errorCode);
+    public Result(int code) {
+        super(code);
     }
 
-    public Result(int errorCode, String errorMsg) {
-        super(errorCode, errorMsg);
+    public Result(int code, String errorMsg) {
+        super(code, errorMsg);
     }
 
     public Result(T data) {
         this.data = data;
     }
 
-    public Result(int errorCode, T data) {
-        super(errorCode);
+    public Result(int code, T data) {
+        super(code);
         this.data = data;
     }
 

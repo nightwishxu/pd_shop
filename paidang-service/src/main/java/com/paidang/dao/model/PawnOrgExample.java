@@ -2404,6 +2404,76 @@ public class PawnOrgExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andLegalPersonPhoneIsNull() {
+			addCriterion("legal_person_phone is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneIsNotNull() {
+			addCriterion("legal_person_phone is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneEqualTo(String value) {
+			addCriterion("legal_person_phone =", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneNotEqualTo(String value) {
+			addCriterion("legal_person_phone <>", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneGreaterThan(String value) {
+			addCriterion("legal_person_phone >", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneGreaterThanOrEqualTo(String value) {
+			addCriterion("legal_person_phone >=", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneLessThan(String value) {
+			addCriterion("legal_person_phone <", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneLessThanOrEqualTo(String value) {
+			addCriterion("legal_person_phone <=", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneLike(String value) {
+			addCriterion("legal_person_phone like", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneNotLike(String value) {
+			addCriterion("legal_person_phone not like", value, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneIn(List<String> values) {
+			addCriterion("legal_person_phone in", values, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneNotIn(List<String> values) {
+			addCriterion("legal_person_phone not in", values, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneBetween(String value1, String value2) {
+			addCriterion("legal_person_phone between", value1, value2, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
+		public Criteria andLegalPersonPhoneNotBetween(String value1, String value2) {
+			addCriterion("legal_person_phone not between", value1, value2, "legalPersonPhone");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -381,6 +383,14 @@ public class PawnTicket implements Serializable {
 	@Column(name = "sign_time")
 	private java.util.Date signTime;
 
+	/**
+	 *机构编号
+	 */
+	@ApiModelProperty(value="机构编号")
+	@ApiParam(value="机构编号")
+	@Column(name = "org_id")
+	private Integer orgId;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -747,6 +757,14 @@ public class PawnTicket implements Serializable {
 
 	public java.util.Date getSignTime() {
 		return signTime;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId=orgId;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
 	}
 
 }

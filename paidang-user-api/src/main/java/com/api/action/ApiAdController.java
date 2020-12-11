@@ -1,6 +1,7 @@
 package com.api.action;
 
 import com.base.annotation.ApiMethod;
+import com.base.api.ApiBaseController;
 import com.base.api.MobileInfo;
 import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
@@ -37,7 +38,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/ad", produces = { "application/json;charset=UTF-8" }, method = RequestMethod.POST)
 @Api(tags = "广告位")
-public class ApiAdController {
+public class ApiAdController  extends ApiBaseController {
 
     @Autowired
     private AdService adService;

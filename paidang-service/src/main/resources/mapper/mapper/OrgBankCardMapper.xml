@@ -13,6 +13,7 @@
         <result column="bank_card_type" property="bankCardType" jdbcType="TINYINT" />
         <result column="is_default" property="isDefault" jdbcType="TINYINT" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -76,7 +77,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,org_id,bank_logo,bank_card_no,bank_card_name,bank_card_user_name,bank_card_phone,bank_card_id_card,bank_card_type,is_default,create_time
+        id,org_id,bank_logo,bank_card_no,bank_card_name,bank_card_user_name,bank_card_phone,bank_card_id_card,bank_card_type,is_default,create_time,bank_id
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -117,12 +118,12 @@
         insert into p_org_bank_card (org_id,bank_logo,
         bank_card_no,bank_card_name,bank_card_user_name,
         bank_card_phone,bank_card_id_card,bank_card_type,
-        is_default,create_time
+        is_default,create_time,bank_id
         )
         values (#{orgId,jdbcType=INTEGER},#{bankLogo,jdbcType=VARCHAR},
         #{bankCardNo,jdbcType=VARCHAR},#{bankCardName,jdbcType=VARCHAR},#{bankCardUserName,jdbcType=VARCHAR},
         #{bankCardPhone,jdbcType=VARCHAR},#{bankCardIdCard,jdbcType=VARCHAR},#{bankCardType,jdbcType=TINYINT},
-        #{isDefault,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP}
+        #{isDefault,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP},#{bankId,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -159,6 +160,9 @@
             <if test="createTime != null" >
                 create_time,
             </if>
+            <if test="bankId != null" >
+                bank_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="orgId != null" >
@@ -190,6 +194,9 @@
             </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bankId != null" >
+                #{bankId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -237,6 +244,9 @@
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="record.bankId != null" >
+                bank_id = #{record.bankId,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -255,7 +265,8 @@
         bank_card_id_card = #{bankCardIdCard,jdbcType=VARCHAR},
         bank_card_type = #{bankCardType,jdbcType=TINYINT},
         is_default = #{isDefault,jdbcType=TINYINT},
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        bank_id = #{bankId,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -294,6 +305,9 @@
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="bankId != null" >
+                bank_id = #{bankId,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -309,8 +323,23 @@
         bank_card_id_card = #{bankCardIdCard,jdbcType=VARCHAR},
         bank_card_type = #{bankCardType,jdbcType=TINYINT},
         is_default = #{isDefault,jdbcType=TINYINT},
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        bank_id = #{bankId,jdbcType=VARCHAR}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_org_bank_card
+        ${sqlSegment}
+    </select>
 
 </mapper>

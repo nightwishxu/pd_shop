@@ -19,6 +19,9 @@
         left join b_user B
         on A.user_id = B.id
         where A.goods_id = #{goods_id}
+        <if test="onlineLogId!=null">
+            and A.online_log_id = #{onlineLogId}
+        </if>
         order by A.create_time desc
     </select>
 </mapper>

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -108,6 +110,9 @@ public class ApiUserShopCartController extends ApiBaseController {
         if(goods.getIsOnline()==0){
             throw new ApiException(-1,"该商品已经下架！");
         }
+        if(goods.getIsVerfiy()!=2){
+            throw new ApiException(-1,"该商品审核异常！");
+        }
         if (num>0 && goods.getDealType()!=null && goods.getDealType()==2){
             throw new ApiException(-1,"竞拍商品无法加入购物车！");
         }
@@ -154,11 +159,17 @@ public class ApiUserShopCartController extends ApiBaseController {
     @ApiOperation(value = "删除购物车商品", notes = "登陆")
     @RequestMapping(value = "/delGoods", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Object delGoods(MobileInfo mobileInfo, @ApiParam(value = "商品id", required = true)Integer goodsId) {
+    public Object delGoods(MobileInfo mobileInfo, @ApiParam(value = "商品id,多个以,分割", required = true)String goodsId) {
+        List<String> list = Arrays.asList(goodsId.split(","));
+        List<Integer> ids = new ArrayList<>();
+        for (String s : list) {
+            ids.add(Integer.parseInt(s));
+        }
+
         ShopCartExample entity=new ShopCartExample();
         ShopCartExample.Criteria criteria=entity.createCriteria();
         criteria.andUserIdEqualTo(mobileInfo.getUserId());
-        criteria.andGoodsIdEqualTo(goodsId);
+        criteria.andGoodsIdIn(ids);
         return shopCartService.deleteByExample(entity);
     }
 

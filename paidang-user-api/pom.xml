@@ -126,7 +126,21 @@
             <systemPath>${pom.basedir}/lib/logback-cfca-jdk1.6-3.2.0.0.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov</artifactId>
+            <version>1.46</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/bcprov-jdk15-1.46.jar</systemPath>
+        </dependency>
 
+        <dependency>
+            <groupId>cpcn.dsp</groupId>
+            <artifactId>CPCN-DSP-API</artifactId>
+            <version>v1.6.4.05</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/CPCN-DSP-API-v1.6.4.05.jar</systemPath>
+        </dependency>
     </dependencies>
 
 

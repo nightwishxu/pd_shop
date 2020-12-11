@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.paidang.dao.model.GoodsAuction" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+        <result column="online_log_id" property="onlineLogId" jdbcType="INTEGER" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
         <result column="price" property="price" jdbcType="DECIMAL" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -70,7 +71,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,goods_id,user_id,price,create_time
+        id,goods_id,online_log_id,user_id,price,create_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -108,11 +109,11 @@
     </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into p_goods_auction (goods_id,user_id,
-        price,create_time
+        insert into p_goods_auction (goods_id,online_log_id,
+        user_id,price,create_time
         )
-        values (#{goodsId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
-        #{price,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP}
+        values (#{goodsId,jdbcType=INTEGER},#{onlineLogId,jdbcType=INTEGER},
+        #{userId,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{createTime,jdbcType=TIMESTAMP}
         )
     </insert>
 
@@ -121,6 +122,9 @@
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="goodsId != null" >
                 goods_id,
+            </if>
+            <if test="onlineLogId != null" >
+                online_log_id,
             </if>
             <if test="userId != null" >
                 user_id,
@@ -135,6 +139,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="goodsId != null" >
                 #{goodsId,jdbcType=INTEGER},
+            </if>
+            <if test="onlineLogId != null" >
+                #{onlineLogId,jdbcType=INTEGER},
             </if>
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
@@ -164,6 +171,9 @@
             <if test="record.goodsId != null" >
                 goods_id = #{record.goodsId,jdbcType=INTEGER},
             </if>
+            <if test="record.onlineLogId != null" >
+                online_log_id = #{record.onlineLogId,jdbcType=INTEGER},
+            </if>
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
@@ -183,6 +193,7 @@
         update p_goods_auction
         set id = #{id,jdbcType=INTEGER},
         goods_id = #{goodsId,jdbcType=INTEGER},
+        online_log_id = #{onlineLogId,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
         price = #{price,jdbcType=DECIMAL},
         create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -196,6 +207,9 @@
         <set >
             <if test="goodsId != null" >
                 goods_id = #{goodsId,jdbcType=INTEGER},
+            </if>
+            <if test="onlineLogId != null" >
+                online_log_id = #{onlineLogId,jdbcType=INTEGER},
             </if>
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
@@ -213,10 +227,25 @@
     <update id="updateByPrimaryKey" >
         update p_goods_auction
         set goods_id = #{goodsId,jdbcType=INTEGER},
+        online_log_id = #{onlineLogId,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
         price = #{price,jdbcType=DECIMAL},
         create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_goods_auction
+        ${sqlSegment}
+    </select>
 
 </mapper>

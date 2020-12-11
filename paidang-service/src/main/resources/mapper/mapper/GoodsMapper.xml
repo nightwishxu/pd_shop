@@ -64,6 +64,8 @@
         <result column="pv" property="pv" jdbcType="INTEGER" />
         <result column="uv" property="uv" jdbcType="INTEGER" />
         <result column="nv" property="nv" jdbcType="INTEGER" />
+        <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+        <result column="auction_online_log_id" property="auctionOnlineLogId" jdbcType="INTEGER" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.Goods" extends="BaseResultMap" >
@@ -131,7 +133,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,source,type,goods_owner,cate_code,cate_code_son,org_id,goods_id,name,cost,price,total,sold_out,is_online,reason_of_dismounting,is_verfiy,imgs,img,width,height,create_time,modify_time,state,max_aution_id,max_auction,user_id,platform_rate,platform_money,platform_state,sort_order,is_suggest,refuse_info,spec,weight,material,cc_width,cc_height,cc_all,main_material,other_material,cc_length,create_year,brand,new_percent,theme,style,material_name,word_descript,banner_video,banner_video_face,introduction,goods_attribute,deal_type,online_time,auction_start_time,auction_end_time,start_price,raise_price_range,labels,pv,uv,nv
+        id,source,type,goods_owner,cate_code,cate_code_son,org_id,goods_id,name,cost,price,total,sold_out,is_online,reason_of_dismounting,is_verfiy,imgs,img,width,height,create_time,modify_time,state,max_aution_id,max_auction,user_id,platform_rate,platform_money,platform_state,sort_order,is_suggest,refuse_info,spec,weight,material,cc_width,cc_height,cc_all,main_material,other_material,cc_length,create_year,brand,new_percent,theme,style,material_name,word_descript,banner_video,banner_video_face,introduction,goods_attribute,deal_type,online_time,auction_start_time,auction_end_time,start_price,raise_price_range,labels,pv,uv,nv,goods_code,auction_online_log_id
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -212,7 +214,8 @@
         introduction,goods_attribute,deal_type,
         online_time,auction_start_time,auction_end_time,
         start_price,raise_price_range,labels,
-        pv,uv,nv
+        pv,uv,nv,
+        goods_code,auction_online_log_id
         )
         values (#{source,jdbcType=TINYINT},#{type,jdbcType=TINYINT},
         #{goodsOwner,jdbcType=INTEGER},#{cateCode,jdbcType=INTEGER},#{cateCodeSon,jdbcType=VARCHAR},
@@ -234,7 +237,8 @@
         #{introduction,jdbcType=VARCHAR},#{goodsAttribute,jdbcType=VARCHAR},#{dealType,jdbcType=INTEGER},
         #{onlineTime,jdbcType=TIMESTAMP},#{auctionStartTime,jdbcType=TIMESTAMP},#{auctionEndTime,jdbcType=TIMESTAMP},
         #{startPrice,jdbcType=DECIMAL},#{raisePriceRange,jdbcType=DECIMAL},#{labels,jdbcType=VARCHAR},
-        #{pv,jdbcType=INTEGER},#{uv,jdbcType=INTEGER},#{nv,jdbcType=INTEGER}
+        #{pv,jdbcType=INTEGER},#{uv,jdbcType=INTEGER},#{nv,jdbcType=INTEGER},
+        #{goodsCode,jdbcType=VARCHAR},#{auctionOnlineLogId,jdbcType=INTEGER}
         )
     </insert>
 
@@ -427,6 +431,12 @@
             <if test="nv != null" >
                 nv,
             </if>
+            <if test="goodsCode != null" >
+                goods_code,
+            </if>
+            <if test="auctionOnlineLogId != null" >
+                auction_online_log_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="source != null" >
@@ -614,6 +624,12 @@
             </if>
             <if test="nv != null" >
                 #{nv,jdbcType=INTEGER},
+            </if>
+            <if test="goodsCode != null" >
+                #{goodsCode,jdbcType=VARCHAR},
+            </if>
+            <if test="auctionOnlineLogId != null" >
+                #{auctionOnlineLogId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -817,6 +833,12 @@
             <if test="record.nv != null" >
                 nv = #{record.nv,jdbcType=INTEGER},
             </if>
+            <if test="record.goodsCode != null" >
+                goods_code = #{record.goodsCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.auctionOnlineLogId != null" >
+                auction_online_log_id = #{record.auctionOnlineLogId,jdbcType=INTEGER},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -887,7 +909,9 @@
         labels = #{labels,jdbcType=VARCHAR},
         pv = #{pv,jdbcType=INTEGER},
         uv = #{uv,jdbcType=INTEGER},
-        nv = #{nv,jdbcType=INTEGER}
+        nv = #{nv,jdbcType=INTEGER},
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+        auction_online_log_id = #{auctionOnlineLogId,jdbcType=INTEGER}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -956,7 +980,9 @@
         labels = #{labels,jdbcType=VARCHAR},
         pv = #{pv,jdbcType=INTEGER},
         uv = #{uv,jdbcType=INTEGER},
-        nv = #{nv,jdbcType=INTEGER}
+        nv = #{nv,jdbcType=INTEGER},
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+        auction_online_log_id = #{auctionOnlineLogId,jdbcType=INTEGER}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -1151,6 +1177,12 @@
             <if test="nv != null" >
                 nv = #{nv,jdbcType=INTEGER},
             </if>
+            <if test="goodsCode != null" >
+                goods_code = #{goodsCode,jdbcType=VARCHAR},
+            </if>
+            <if test="auctionOnlineLogId != null" >
+                auction_online_log_id = #{auctionOnlineLogId,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -1218,7 +1250,9 @@
         labels = #{labels,jdbcType=VARCHAR},
         pv = #{pv,jdbcType=INTEGER},
         uv = #{uv,jdbcType=INTEGER},
-        nv = #{nv,jdbcType=INTEGER}
+        nv = #{nv,jdbcType=INTEGER},
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+        auction_online_log_id = #{auctionOnlineLogId,jdbcType=INTEGER}
         where id = #{id}
     </update>
 
@@ -1284,7 +1318,9 @@
         labels = #{labels,jdbcType=VARCHAR},
         pv = #{pv,jdbcType=INTEGER},
         uv = #{uv,jdbcType=INTEGER},
-        nv = #{nv,jdbcType=INTEGER}
+        nv = #{nv,jdbcType=INTEGER},
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+        auction_online_log_id = #{auctionOnlineLogId,jdbcType=INTEGER}
         where id = #{id}
     </update>
 

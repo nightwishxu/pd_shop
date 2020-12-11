@@ -1,5 +1,8 @@
 package com.api.view.store;
 
+import com.base.util.StringUtils;
+import com.google.common.collect.Lists;
+import com.item.domain.enums.OrgLabelsEnum;
 import com.paidang.dao.OrgIntegralEnum;
 import com.paidang.daoEx.model.GoodsAuctionEx;
 import io.swagger.annotations.ApiModel;
@@ -8,8 +11,7 @@ import io.swagger.annotations.ApiParam;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 拍档商城商品详情
@@ -184,6 +186,12 @@ public class AppStoreGoodsDetail {
 
 	@ApiModelProperty(value = "店铺等级")
 	private String orgLevel;
+
+	@ApiModelProperty(value = "店铺标签")
+	private String orgLabels;
+
+	@ApiModelProperty(value = "店铺标签中午,分割")
+	private String orgLabelsInfo;
 
 	public String getBannerVideo() {
 		return bannerVideo;
@@ -644,4 +652,31 @@ public class AppStoreGoodsDetail {
 	public void setOrgLevel(String orgLevel) {
 		this.orgLevel = orgLevel;
 	}
+
+
+	public String getOrgLabels() {
+		return orgLabels;
+	}
+
+	public void setOrgLabels(String orgLabels) {
+		this.orgLabels = orgLabels;
+	}
+
+	public String getOrgLabelsInfo() {
+		if (StringUtils.isNoneBlank(getOrgLabels())){
+			List<String> list = Lists.newArrayList();
+			List<String> labels = Arrays.asList(getOrgLabels().split(","));
+			for (String label : labels) {
+				list.add(OrgLabelsEnum.getName(label).getLabelName());
+			}
+			return String.join(",",list);
+
+		}
+		return orgLabelsInfo;
+	}
+
+	public void setOrgLabelsInfo(String orgLabelsInfo) {
+		this.orgLabelsInfo = orgLabelsInfo;
+	}
 }
+

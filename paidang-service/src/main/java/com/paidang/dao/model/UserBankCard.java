@@ -1,66 +1,115 @@
 package com.paidang.dao.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *
  */
-public class UserBankCard {
+@ApiModel
+@Table(name="p_user_bank_card")
+public class UserBankCard implements Serializable {
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "id")
 	private Integer id;
 
 	/**
 	 *用户id
 	 */
+	@ApiModelProperty(value="用户id")
+	@ApiParam(value="用户id")
+	@Column(name = "user_id")
 	private Integer userId;
 
 	/**
 	 *银行图标
 	 */
+	@ApiModelProperty(value="银行图标")
+	@ApiParam(value="银行图标")
+	@Column(name = "bank_logo")
 	private String bankLogo;
 
 	/**
 	 *银行卡号
 	 */
+	@ApiModelProperty(value="银行卡号")
+	@ApiParam(value="银行卡号")
+	@Column(name = "bank_card_no")
 	private String bankCardNo;
 
 	/**
 	 *所属银行
 	 */
+	@ApiModelProperty(value="所属银行")
+	@ApiParam(value="所属银行")
+	@Column(name = "bank_card_name")
 	private String bankCardName;
 
 	/**
 	 *姓名
 	 */
+	@ApiModelProperty(value="姓名")
+	@ApiParam(value="姓名")
+	@Column(name = "bank_card_user_name")
 	private String bankCardUserName;
 
 	/**
 	 *预留手机号
 	 */
+	@ApiModelProperty(value="预留手机号")
+	@ApiParam(value="预留手机号")
+	@Column(name = "bank_card_phone")
 	private String bankCardPhone;
 
 	/**
 	 *身份证号
 	 */
+	@ApiModelProperty(value="身份证号")
+	@ApiParam(value="身份证号")
+	@Column(name = "bank_card_id_card")
 	private String bankCardIdCard;
 
 	/**
 	 *1储蓄卡2信用卡
 	 */
+	@ApiModelProperty(value="1储蓄卡2信用卡")
+	@ApiParam(value="1储蓄卡2信用卡")
+	@Column(name = "bank_card_type")
 	private Integer bankCardType;
 
 	/**
 	 *1默认0否
 	 */
+	@ApiModelProperty(value="1默认0否")
+	@ApiParam(value="1默认0否")
+	@Column(name = "is_default")
 	private Integer isDefault;
 
 	/**
 	 *创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
+	@ApiParam(value="创建时间")
+	@Column(name = "create_time")
 	private java.util.Date createTime;
+
+	/**
+	 *银行编号
+	 */
+	@ApiModelProperty(value="银行编号")
+	@ApiParam(value="银行编号")
+	@Column(name = "bank_id")
+	private String bankId;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -148,6 +197,14 @@ public class UserBankCard {
 
 	public java.util.Date getCreateTime() {
 		return createTime;
+	}
+
+	public void setBankId(String bankId) {
+		this.bankId=bankId == null ? bankId : bankId.trim();
+	}
+
+	public String getBankId() {
+		return bankId;
 	}
 
 }

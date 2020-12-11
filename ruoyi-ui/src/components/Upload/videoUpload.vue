@@ -34,7 +34,7 @@
       class="el-icon-plus avatar-uploader-icon"
     ></i>
     <!-- <p v-if='load'> 上传中</p> -->
-    <P style="color:#000000">请保证视频格式正确，且不超过20M</P>
+    <!-- <P style="color:#000000">请保证视频格式正确，且不超过20M</P> -->
     <!-- <video
       v-if="fileList[0].url!='' && fileList[0].url!=null && fileList[0].url!=undifined && !dialogVisible"
       class="avatar video-avatar"

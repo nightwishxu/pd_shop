@@ -9,12 +9,15 @@ import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;
 import com.demo.util.TimeUtil;
+import cpcn.dsp.institution.api.security.EncryptAndDecrypt;
+import cpcn.dsp.institution.api.tx.file.Tx3201Request;
+import cpcn.dsp.institution.api.util.GUIDGenerator;
+import cpcn.dsp.institution.api.vo.ImageFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: xww
@@ -49,7 +52,7 @@ public class AnXinSignService {
         head.setTxTime(TimeUtil.getCurrentTime(TimeUtil.FORMAT_14));
 
         PersonVO person = new PersonVO();
-        // person.setPersonName("xrma");
+        // person.setPersonName("xrma");`
         // person.setIdentTypeCode("1");
         // person.setIdentNo("123123");
         person.setPersonName(personName);
@@ -82,11 +85,11 @@ public class AnXinSignService {
 
     /**
      * 企业注册
-     * @param orgName
-     * @param identNo
-     * @param mobilePhone
-     * @param laneLinePhone
-     * @param transactorName
+     * @param orgName  机构名称
+     * @param identNo 证件号码
+     * @param mobilePhone  手机号 电子签章负责人或经办人
+     * @param laneLinePhone  企业联系电话
+     * @param transactorName  经办人名称
      * @param transactorIndentNo
      * @throws Exception
      */
@@ -179,7 +182,7 @@ public class AnXinSignService {
      * @param checkCode
      * @throws Exception
      */
-    public void comfirmSmsCode(String userId,String projectCode,String checkCode) throws Exception{
+    public void confirmSmsCode(String userId,String projectCode,String checkCode) throws Exception{
         HttpConnector httpConnector = new HttpConnector();
         httpConnector.init();
 
@@ -223,26 +226,29 @@ public class AnXinSignService {
         createContract.setContractName(contractName);
         createContract.setSealColor(SealColor.RED);
         // createContract.setSignLocation("Signature1");
-        fieldMap.put("1", "Text1");
-        fieldMap.put("2", "Text2");
-        fieldMap.put("3", "Text3");
-        fieldMap.put("4", "孙一");
-        fieldMap.put("5", "222321199112050001");
-        fieldMap.put("6", "1");
-        fieldMap.put("Text7", "1");
-        fieldMap.put("Text8", "1");
-        fieldMap.put("Text9", "10000");
-        fieldMap.put("Text10", "1");
-        fieldMap.put("Text11", "10000");
-        fieldMap.put("Text12", "1");
-        fieldMap.put("Text13", "10000");
-        fieldMap.put("Text14", "1");
-        fieldMap.put("Text15", "30000");
-        fieldMap.put("Text16", "10000");
-        fieldMap.put("Text17", "10000");
-        fieldMap.put("Text18", "10000");
-        fieldMap.put("Text19", "1");
-        fieldMap.put("Text20", "1");
+//        fieldMap.put("1", "Text1");
+//        fieldMap.put("2", "Text2");
+//        fieldMap.put("3", "Text3");
+//        fieldMap.put("4", "孙一");
+//        fieldMap.put("5", "222321199112050001");
+//        fieldMap.put("6", "1");
+//        fieldMap.put("Text7", "1");
+//        fieldMap.put("Text8", "1");
+//        fieldMap.put("Text9", "10000");
+//        fieldMap.put("Text10", "1");
+//        fieldMap.put("Text11", "10000");
+//        fieldMap.put("Text12", "1");
+//        fieldMap.put("Text13", "10000");
+//        fieldMap.put("Text14", "1");
+//        fieldMap.put("Text15", "30000");
+//        fieldMap.put("Text16", "10000");
+//        fieldMap.put("Text17", "10000");
+//        fieldMap.put("Text18", "10000");
+//        fieldMap.put("Text19", "1");
+//        fieldMap.put("Text20", "1");
+
+        fieldMap.put("Text1", "");
+        fieldMap.put("Text1", "");
 
         // setInvestmentInfo方法废弃，使用setTextValueInfo代替
         // createContract.setInvestmentInfo(fieldMap);

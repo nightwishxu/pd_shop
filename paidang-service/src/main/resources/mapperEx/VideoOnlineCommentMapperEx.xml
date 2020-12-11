@@ -14,6 +14,6 @@
       left join b_user B
       on A.user_id = B.id
       where A.video_id = #{video_id}
-      order by A.create_time desc;
+      order by A.create_time desc
   </select>
 </mapper>

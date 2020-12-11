@@ -79,6 +79,9 @@ public class PawnDetail {
     @ApiModelProperty("典当状态 (0-中标未处理 1-中标已典当)")
     private Integer state;
 
+    @ApiModelProperty("竞拍出价次数)")
+    private Integer auctionCount;
+
     public String getId() {
         return id;
     }
@@ -253,5 +256,14 @@ public class PawnDetail {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+
+    public Integer getAuctionCount() {
+        return auctionCount;
+    }
+
+    public void setAuctionCount(Integer auctionCount) {
+        this.auctionCount = auctionCount;
     }
 }

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -85,6 +86,7 @@ public class UserNotifyService {
         userNotify.setUserId(userId);
         userNotify.setContent(StringUtil.format(message.getTemplate(),params));
         userNotify.setRedirectContent(redirectContent);
+        userNotify.setCreateTime(new Date());
         return this.insertSelective(userNotify);
     }
 

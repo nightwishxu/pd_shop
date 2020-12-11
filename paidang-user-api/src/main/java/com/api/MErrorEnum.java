@@ -38,31 +38,31 @@ public enum MErrorEnum implements IMError {
 	;
 
 	/** 错误编码 */
-	private int errorCode;
+	private int code;
 
 	/** 错误信息 */
-	private String errorMsg;
+	private String msg;
 	
 	/**
 	 * 构造函数
 	 */
-	private MErrorEnum(int errorCode, String errorMsg) {
-		this.errorCode = errorCode;
-		this.errorMsg = errorMsg;
+	private MErrorEnum(int code, String msg) {
+		this.code = code;
+		this.msg = msg;
 	}
 
 	/**
 	 * @return int 错误代码
 	 */
-	public int getErrorCode() {
-		return errorCode;
+	public int getCode() {
+		return code;
 	}
 
 	/**
 	 * @return String 错误信息
 	 */
-	public String getErrorMsg() {
-		return errorMsg;
+	public String getMsg() {
+		return msg;
 	}
 
 }

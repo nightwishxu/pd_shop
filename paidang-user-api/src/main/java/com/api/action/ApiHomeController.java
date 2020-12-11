@@ -2,6 +2,7 @@ package com.api.action;
 
 import com.api.MEnumError;
 import com.api.MErrorEnum;
+import com.api.service.UnionApiService;
 import com.api.util.PageLimit;
 import com.api.view.home.*;
 import com.api.view.store.AppJdGoodsAuc;
@@ -91,6 +92,9 @@ public class ApiHomeController extends ApiBaseController {
 
     @Autowired
     private IntegralLogService integralLogService;
+
+    @Autowired
+    private BankService bankService;
 
     /**
      * 个人资料
@@ -247,12 +251,12 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "添加银行卡", notes = "登陆")
     @RequestMapping(value = "/addMyBankCard", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Ret addMyBankCard(MobileInfo mobileInfo,
+    public Integer addMyBankCard(MobileInfo mobileInfo,
                              @ApiParam(value = "银行卡号", required = true) String bankCardNo,
                              @ApiParam(value = "预留手机号", required = true) String account,
                              @ApiParam(value = "姓名", required = true) String userName,
-                             @ApiParam(value = "身份证号", required = true) String idCard) {
-        Ret ret = new Ret();
+                             @ApiParam(value = "身份证号", required = true) String idCard) throws Exception {
+
         User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
 
@@ -272,60 +276,97 @@ public class ApiHomeController extends ApiBaseController {
 //        System.out.println(bankCardResult.getRealName());
 
         if (0 == user.getIsBind()) {
-            return new Ret(-1,"身份证未绑定，请先绑定身份证");
+            throw new ApiException(400,"身份证未绑定，请先绑定身份证");
         }
         //以下laria add at 2019-09-29
-        BankCardApiResult bankCardApiResult = WxBankUtil.verify(userName, account, idCard, bankCardNo);
-        if (null == bankCardApiResult) {
-            throw new ApiException(MEnumError.BANKCARD_BIND_ERROR);
-        }
-        if(bankCardApiResult.getCode().equals("10000")&&bankCardApiResult.getResult().getCode().equals("0000")){ //查询成功
-            BankCardResult bankCardResult = bankCardApiResult.getResult();
-            System.out.println("result:");
-            System.out.println(bankCardResult.getCode());
-            BankCardInfo bankCardInfo = bankCardResult.getData();
-            String resultCode = bankCardInfo.getResultCode();
-            if(resultCode.equals("R001")) { //查询结果一致
-//                System.out.println("银行卡：" + bankCardInfo.getBankCardNo());
-//                System.out.println("姓名：" + bankCardInfo.getName());
-//                System.out.println("手机号：" + bankCardInfo.getMobile());
-                BankCardBin bankCardBin = bankCardInfo.getBankCardBin();
-//                System.out.println("银行名称：" + bankCardBin.getBankName().replaceAll("\\([0-9]*\\)",""));
-//                System.out.println("银行卡类型：" + (bankCardBin.getCardTy().equals("D") ? 1 : (bankCardBin.getCardTy().equals("C") ? 2 : 1)));
+//        BankCardApiResult bankCardApiResult = WxBankUtil.verify(userName, account, idCard, bankCardNo);
+//        if (null == bankCardApiResult) {
+//            throw new ApiException(MEnumError.BANKCARD_BIND_ERROR);
+//        }
 
-                //
-                UserBankCard record = new UserBankCard();
-                record.setUserId(mobileInfo.getUserId());
+        Map<String, String> map = UnionApiService.validBankCard(UUID.randomUUID().toString(), userName, bankCardNo, idCard, account);
 
-                ///////////////////////laria edit at 2019-09-29 start///////////////////////
-        //        record.setBankLogo(bankCardResult.getInformation().getBankimage());
-        //        record.setBankCardName(bankCardResult.getInformation().getankname());
-        //        record.setBankCardUserName(bankCardResult.getRealName());
-        //        record.setBankCardType(1);
+        String bankId = map.get("bankId");
+        String carType = map.get("carType");
+        UserBankCard record = new UserBankCard();
+        record.setUserId(mobileInfo.getUserId());
+        record.setBankCardNo(bankCardNo);
+        record.setBankCardPhone(account);
+        record.setBankCardIdCard(idCard);
+        record.setIsDefault(0);
+        record.setBankCardUserName(userName);
 
-                record.setBankLogo("");
-                record.setBankCardName(bankCardBin.getBankName().replaceAll("\\([0-9]*\\)",""));
-                record.setBankCardUserName(bankCardInfo.getName());
-                record.setBankCardType((bankCardBin.getCardTy().equals("D") ? 1 : (bankCardBin.getCardTy().equals("C") ? 2 : 1)));
-                /////////////////////////////end////////////////////////////////////
-
-                record.setBankCardNo(bankCardNo);
-                record.setBankCardPhone(account);
-                record.setBankCardIdCard(idCard);
-                record.setIsDefault(0);
-
-                int result = userBankCardService.insert(record);
-                if (result == 0) {
-                    throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
-                }
-
-                return ok();
-
-            }else {
-                return new Ret(-1,(resultCode.equals("R002") ? "银行卡认证"+ bankCardInfo.getResultMsg() : resultCode.equals("R003") ? "无银行卡记录" : bankCardInfo.getResultMsg()) );
-            }
+        Bank bank = bankService.selectByPrimaryKey(bankId);
+        if (bank!=null){
+            bank.setBankName(bank.getBankName());
         }else {
-            return new Ret(-1,bankCardApiResult.getMsg());        }
+            bank.setBankName("未知银行");
+        }
+
+        if ("01".equals(carType)){
+            //借记卡
+            record.setBankCardType(1);
+        }else if ("02".equals(carType)){
+            record.setBankCardType(2);
+        }else {
+            record.setBankCardType(Integer.valueOf(carType));
+        }
+
+        int result = userBankCardService.insert(record);
+        return  result;
+
+
+
+
+
+
+//        if(bankCardApiResult.getCode().equals("10000")&&bankCardApiResult.getResult().getCode().equals("0000")){ //查询成功
+//            BankCardResult bankCardResult = bankCardApiResult.getResult();
+//            System.out.println("result:");
+//            System.out.println(bankCardResult.getCode());
+//            BankCardInfo bankCardInfo = bankCardResult.getData();
+//            String resultCode = bankCardInfo.getResultCode();
+//            if(resultCode.equals("R001")) { //查询结果一致
+////                System.out.println("银行卡：" + bankCardInfo.getBankCardNo());
+////                System.out.println("姓名：" + bankCardInfo.getName());
+////                System.out.println("手机号：" + bankCardInfo.getMobile());
+//                BankCardBin bankCardBin = bankCardInfo.getBankCardBin();
+////                System.out.println("银行名称：" + bankCardBin.getBankName().replaceAll("\\([0-9]*\\)",""));
+////                System.out.println("银行卡类型：" + (bankCardBin.getCardTy().equals("D") ? 1 : (bankCardBin.getCardTy().equals("C") ? 2 : 1)));
+//
+//                //
+//                UserBankCard record = new UserBankCard();
+//                record.setUserId(mobileInfo.getUserId());
+//
+//                ///////////////////////laria edit at 2019-09-29 start///////////////////////
+//        //        record.setBankLogo(bankCardResult.getInformation().getBankimage());
+//        //        record.setBankCardName(bankCardResult.getInformation().getankname());
+//        //        record.setBankCardUserName(bankCardResult.getRealName());
+//        //        record.setBankCardType(1);
+//
+//                record.setBankLogo("");
+//                record.setBankCardName(bankCardBin.getBankName().replaceAll("\\([0-9]*\\)",""));
+//                record.setBankCardUserName(bankCardInfo.getName());
+//                record.setBankCardType((bankCardBin.getCardTy().equals("D") ? 1 : (bankCardBin.getCardTy().equals("C") ? 2 : 1)));
+//                /////////////////////////////end////////////////////////////////////
+//
+//                record.setBankCardNo(bankCardNo);
+//                record.setBankCardPhone(account);
+//                record.setBankCardIdCard(idCard);
+//                record.setIsDefault(0);
+//
+//                int result = userBankCardService.insert(record);
+//                if (result == 0) {
+//                    throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
+//                }
+//
+//                return ok();
+//
+//            }else {
+//                return new Ret(-1,(resultCode.equals("R002") ? "银行卡认证"+ bankCardInfo.getResultMsg() : resultCode.equals("R003") ? "无银行卡记录" : bankCardInfo.getResultMsg()) );
+//            }
+//        }else {
+//            return new Ret(-1,bankCardApiResult.getMsg());        }
     }
 
     /**
@@ -624,8 +665,8 @@ public class ApiHomeController extends ApiBaseController {
     @ApiMethod(isLogin = true, isPage = true)
     public List<AppMyStoreGoods> myStoreGoodsList(MobileInfo mobileInfo,
                                                   PageLimit pageLimit,
-                                                  @ApiParam(value = "状态 0全部 1待付款 3待收货 4完成(确认收货) 5退款", required = true) Integer orderState
-            , @ApiParam(value = "评价状态0未评价，1已经评价", required = true)Integer commentState) {
+                                                  @ApiParam(value = "状态 0全部 1待付款 2代发货 3待收货 4完成(确认收货) 5退款", required = true) Integer orderState
+            , @ApiParam(value = "评价状态0未评价，1已经评价", required = false)Integer commentState) {
         Map<String, Object> map = new HashMap<String, Object>();
         List<AppMyStoreGoods> list = new ArrayList<AppMyStoreGoods>();
         map.put("user_id", mobileInfo.getUserId());

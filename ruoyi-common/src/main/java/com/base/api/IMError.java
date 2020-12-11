@@ -1,7 +1,7 @@
 package com.base.api;
 
 public interface IMError {
-    int getErrorCode();
+    int getCode();
 
-    String getErrorMsg();
+    String getMsg();
 }

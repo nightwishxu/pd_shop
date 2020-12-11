@@ -184,6 +184,14 @@ public class Order implements Serializable {
 	private java.util.Date payTime;
 
 	/**
+	 *地址编号
+	 */
+	@ApiModelProperty(value="地址编号")
+	@ApiParam(value="地址编号")
+	@Column(name = "address_id")
+	private Integer addressId;
+
+	/**
 	 *收件人姓名
 	 */
 	@ApiModelProperty(value="收件人姓名")
@@ -493,6 +501,14 @@ public class Order implements Serializable {
 
 	public java.util.Date getPayTime() {
 		return payTime;
+	}
+
+	public void setAddressId(Integer addressId) {
+		this.addressId=addressId;
+	}
+
+	public Integer getAddressId() {
+		return addressId;
 	}
 
 	public void setShipUser(String shipUser) {

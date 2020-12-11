@@ -16,6 +16,7 @@
         <result column="state" property="state" jdbcType="CHAR" />
         <result column="refuse_info" property="refuseInfo" jdbcType="VARCHAR" />
         <result column="org_id" property="orgId" jdbcType="INTEGER" />
+        <result column="hand_id_card_front" property="handIdCardFront" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -79,7 +80,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,logo,store_name,store_introduce,name,id_card,phone,id_card_front,id_card_back,create_user,create_time,state,refuse_info,org_id
+        id,logo,store_name,store_introduce,name,id_card,phone,id_card_front,id_card_back,create_user,create_time,state,refuse_info,org_id,hand_id_card_front
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -121,13 +122,13 @@
         store_introduce,name,id_card,
         phone,id_card_front,id_card_back,
         create_user,create_time,state,
-        refuse_info,org_id
+        refuse_info,org_id,hand_id_card_front
         )
         values (#{logo,jdbcType=VARCHAR},#{storeName,jdbcType=VARCHAR},
         #{storeIntroduce,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{idCard,jdbcType=VARCHAR},
         #{phone,jdbcType=VARCHAR},#{idCardFront,jdbcType=VARCHAR},#{idCardBack,jdbcType=VARCHAR},
         #{createUser,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{state,jdbcType=CHAR},
-        #{refuseInfo,jdbcType=VARCHAR},#{orgId,jdbcType=INTEGER}
+        #{refuseInfo,jdbcType=VARCHAR},#{orgId,jdbcType=INTEGER},#{handIdCardFront,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -173,6 +174,9 @@
             <if test="orgId != null" >
                 org_id,
             </if>
+            <if test="handIdCardFront != null" >
+                hand_id_card_front,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="logo != null" >
@@ -213,6 +217,9 @@
             </if>
             <if test="orgId != null" >
                 #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="handIdCardFront != null" >
+                #{handIdCardFront,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -269,6 +276,9 @@
             <if test="record.orgId != null" >
                 org_id = #{record.orgId,jdbcType=INTEGER},
             </if>
+            <if test="record.handIdCardFront != null" >
+                hand_id_card_front = #{record.handIdCardFront,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -290,7 +300,8 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
         state = #{state,jdbcType=CHAR},
         refuse_info = #{refuseInfo,jdbcType=VARCHAR},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        hand_id_card_front = #{handIdCardFront,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -338,6 +349,9 @@
             <if test="orgId != null" >
                 org_id = #{orgId,jdbcType=INTEGER},
             </if>
+            <if test="handIdCardFront != null" >
+                hand_id_card_front = #{handIdCardFront,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -356,7 +370,8 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
         state = #{state,jdbcType=CHAR},
         refuse_info = #{refuseInfo,jdbcType=VARCHAR},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        hand_id_card_front = #{handIdCardFront,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

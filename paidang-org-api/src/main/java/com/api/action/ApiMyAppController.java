@@ -401,6 +401,32 @@ public class ApiMyAppController extends ApiBaseController{
     }
 
 
+    @ApiOperation(value = "完善当票信息",notes="已经中标的典当竞拍,完善当票信息")
+    @RequestMapping(value = "/completePawnTicket", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer completePawnTicket(@ApiParam(value = "票据编号",required = true) String pawnTicketId,
+                           @ApiParam(value = "当票号",required = true) String pawnTicketCode,
+                           @ApiParam(value = "复核",required = true) String checker,
+                           @ApiParam(value = "经办",required = true) String handler,
+                           @ApiParam(value = "备注",required = true) String remark,
+                           MobileInfo mobileInfo){
+
+        Integer orgUserId = mobileInfo.getUserId();
+        User orgUser = userService.selectByPrimaryKey(orgUserId);
+        if(orgUser == null){
+            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+        }
+//        UserPawn userPawn = userPawnService.selectByPrimaryKey(Integer.valueOf(pawnId));
+//        if(userPawn == null){
+//            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+//        }
+
+//        Convert.digitToChinese()
+
+        return 1;
+
+    }
+
     @ApiOperation(value = "确认支付贷款按钮",notes="已经中标的典当竞拍,机构支付贷款")
     @RequestMapping(value = "/payLoan", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
@@ -1424,8 +1450,9 @@ public class ApiMyAppController extends ApiBaseController{
             contractPawn.setGoodsName(userPawnEx.getGoodsName1()!=null?userPawnEx.getGoodsName1():"");
             contractPawn.setImages(OrgUtil.getSingleImage(userPawnEx.getImages()));
             contractPawn.setLoanMoney(userPawnEx.getBeginMoney()!=null?userPawnEx.getBeginMoney().toString():"");
-            contractPawn.setPawnBeginTime(userPawnEx.getPawnBeginTime()!=null?DateUtil.dateToStr(userPawnEx.getPawnBeginTime()):"");
-            contractPawn.setPawnEndTime(userPawnEx.getPawnEndTime()!=null?DateUtil.dateToStr(userPawnEx.getPawnEndTime()):"");
+            contractPawn.setPawnBeginTime(userPawnEx.getPawnBeginTime()!=null?DateUtil.dateToStr(userPawnEx.getPawnBeginTime(),"yyyy-MM-dd"):"");
+            contractPawn.setPawnSignTime(userPawnEx.getPawnBeginTime()!=null?DateUtil.dateToStr(userPawnEx.getPawnBeginTime(),"yyyy-MM-dd"):"");
+            contractPawn.setPawnEndTime(userPawnEx.getPawnEndTime()!=null?DateUtil.dateToStr(userPawnEx.getPawnEndTime(),"yyyy-MM-dd"):"");
             retList.add(contractPawn);
         }
         return retList;
@@ -1472,9 +1499,9 @@ public class ApiMyAppController extends ApiBaseController{
 
     @ApiOperation(value = "合同详情",notes="我的->合同记录->第二个页面->合同详情")
     @RequestMapping(value = "/getContractDetail", method = RequestMethod.POST)
-    @ApiMethod(isLogin = true)
+    @ApiMethod(isLogin = false)
     public ContractDetail getContractDetail(@ApiParam(value = "典当id",required = true)String pawnId,
-                                            @ApiParam(value = "续当id",required = true)String repawnId,
+                                            @ApiParam(value = "续当id",required = false)String repawnId,
                                             MobileInfo mobileInfo){
         if (StringUtils.isEmpty(pawnId)){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);

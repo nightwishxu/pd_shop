@@ -15,18 +15,18 @@ public class ApiException extends BaseException {
     }
 
     public ApiException(IMError error) {
-        super(error.getErrorCode(), error.getErrorMsg());
+        super(error.getCode(), error.getMsg());
         this.error = error;
     }
 
     public ApiException(final int code, final String msg) {
         super(code, msg);
         this.error = new IMError() {
-            public String getErrorMsg() {
+            public String getMsg() {
                 return msg;
             }
 
-            public int getErrorCode() {
+            public int getCode() {
                 return code;
             }
         };
@@ -35,11 +35,11 @@ public class ApiException extends BaseException {
     public ApiException(final String name) {
         super(1006, "缺失必要参数:" + name);
         this.error = new IMError() {
-            public String getErrorMsg() {
+            public String getMsg() {
                 return "缺失必要参数:" + name;
             }
 
-            public int getErrorCode() {
+            public int getCode() {
                 return 1006;
             }
         };

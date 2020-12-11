@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -125,6 +127,14 @@ public class AuthPersonal implements Serializable {
 	@Column(name = "org_id")
 	private Integer orgId;
 
+	/**
+	 *手持身份证正面
+	 */
+	@ApiModelProperty(value="手持身份证正面")
+	@ApiParam(value="手持身份证正面")
+	@Column(name = "hand_id_card_front")
+	private String handIdCardFront;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -235,6 +245,14 @@ public class AuthPersonal implements Serializable {
 
 	public Integer getOrgId() {
 		return orgId;
+	}
+
+	public void setHandIdCardFront(String handIdCardFront) {
+		this.handIdCardFront=handIdCardFront == null ? handIdCardFront : handIdCardFront.trim();
+	}
+
+	public String getHandIdCardFront() {
+		return handIdCardFront;
 	}
 
 }

@@ -3,7 +3,10 @@ package com.paidang.daoEx.model;
 import com.base.util.CoreConstants;
 import com.base.util.StringUtils;
 import com.paidang.dao.model.Goods;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 
 /**
@@ -40,6 +43,9 @@ public class GoodsEx extends Goods {
     private String goodsOwnerName;
 
     private BigDecimal orgIntegral;//店铺积分
+
+    @ApiModelProperty(value="上架次数")
+    private Integer onlineCnt;//上架次数
 
     @Override
     public String getImg() {
@@ -195,5 +201,13 @@ public class GoodsEx extends Goods {
 
     public void setOrgIntegral(BigDecimal orgIntegral) {
         this.orgIntegral = orgIntegral;
+    }
+
+    public Integer getOnlineCnt() {
+        return onlineCnt;
+    }
+
+    public void setOnlineCnt(Integer onlineCnt) {
+        this.onlineCnt = onlineCnt;
     }
 }

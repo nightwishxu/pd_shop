@@ -333,6 +333,7 @@ public class ApiDeadPawnController extends ApiBaseController {
             goods.setWidth("20");//app绝当品拍卖页面没有这两个字段，但用户端需要这两字段，先接口写死
             goods.setHeight("30");
             goods.setInfo(goodsDesc);
+            goods.setCreateTime(new Date());
             goodsService.insert(goods);
             return 1;
     }
@@ -425,6 +426,7 @@ public class ApiDeadPawnController extends ApiBaseController {
         platformGoodsBuy.setBankCardName(bankName);
         platformGoodsBuy.setBankCardNo(bankCode);
         platformGoodsBuy.setState(1);//卖给平台
+        platformGoodsBuy.setCreateTime(new Date());
         platformGoodsBuyService.insert(platformGoodsBuy);
         return 1;
     }
@@ -503,7 +505,7 @@ public class ApiDeadPawnController extends ApiBaseController {
     @ApiOperation(value = "添加/修改地址",notes="")
     @RequestMapping(value = "/editAddress", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Ret editAddress(@ApiParam(value = "地址id",required = true) String addressId,
+    public Ret editAddress(@ApiParam(value = "地址id",required = false) String addressId,
                           @ApiParam(value = "收件人姓名",required = true) String recipients,
                           @ApiParam(value = "电话",required = true) String telphone,
                           @ApiParam(value = "省市区",required = true) String area,
@@ -521,6 +523,7 @@ public class ApiDeadPawnController extends ApiBaseController {
             orgAddress.setAddress(address);
             orgAddress.setPhone(telphone);
             orgAddress.setIsDefault(0);
+            orgAddress.setCreateTime(new Date());
             result = orgAddressService.insert(orgAddress);
         }else {
             OrgAddress record = orgAddressService.selectByPrimaryKey(Integer.valueOf(addressId));

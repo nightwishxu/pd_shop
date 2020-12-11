@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GoodsAuctionExample {
 	protected String orderByClause;
@@ -221,6 +221,66 @@ public class GoodsAuctionExample {
 
 		public Criteria andGoodsIdNotBetween(Integer value1, Integer value2) {
 			addCriterion("goods_id not between", value1, value2, "goodsId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdIsNull() {
+			addCriterion("online_log_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdIsNotNull() {
+			addCriterion("online_log_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdEqualTo(Integer value) {
+			addCriterion("online_log_id =", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdNotEqualTo(Integer value) {
+			addCriterion("online_log_id <>", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdGreaterThan(Integer value) {
+			addCriterion("online_log_id >", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdGreaterThanOrEqualTo(Integer value) {
+			addCriterion("online_log_id >=", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdLessThan(Integer value) {
+			addCriterion("online_log_id <", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdLessThanOrEqualTo(Integer value) {
+			addCriterion("online_log_id <=", value, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdIn(List<Integer> values) {
+			addCriterion("online_log_id in", values, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdNotIn(List<Integer> values) {
+			addCriterion("online_log_id not in", values, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdBetween(Integer value1, Integer value2) {
+			addCriterion("online_log_id between", value1, value2, "onlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOnlineLogIdNotBetween(Integer value1, Integer value2) {
+			addCriterion("online_log_id not between", value1, value2, "onlineLogId");
 			return (Criteria) this;
 		}
 

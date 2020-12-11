@@ -1,7 +1,10 @@
 package com.api.view.shopCart;
 
 import com.item.daoEx.model.ShopCartEx;
+import com.paidang.dao.OrgIntegralEnum;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -13,6 +16,15 @@ public class ShopCartVo {
     private String orgLogo;
 
     private List<ShopCartEx> goods;
+
+
+
+    @ApiModelProperty(value = "店铺积分")
+    private BigDecimal orgIntegral;
+
+    @ApiModelProperty(value = "店铺等级")
+    private String orgLevel;
+
 
 
     public Integer getOrgId() {
@@ -45,5 +57,19 @@ public class ShopCartVo {
 
     public void setGoods(List<ShopCartEx> goods) {
         this.goods = goods;
+    }
+
+    public BigDecimal getOrgIntegral() {
+        return orgIntegral;
+    }
+
+    public void setOrgIntegral(BigDecimal orgIntegral) {
+        this.orgIntegral = orgIntegral;
+    }
+
+    public String getOrgLevel() {
+        BigDecimal integral = getOrgIntegral()==null?BigDecimal.ZERO:getOrgIntegral();
+        OrgIntegralEnum integralEnum = OrgIntegralEnum.getLevel(integral);
+        return integralEnum.getDesc();
     }
 }

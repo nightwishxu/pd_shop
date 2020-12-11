@@ -4184,6 +4184,136 @@ public class GoodsExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andGoodsCodeIsNull() {
+			addCriterion("goods_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeIsNotNull() {
+			addCriterion("goods_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeEqualTo(String value) {
+			addCriterion("goods_code =", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeNotEqualTo(String value) {
+			addCriterion("goods_code <>", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeGreaterThan(String value) {
+			addCriterion("goods_code >", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("goods_code >=", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeLessThan(String value) {
+			addCriterion("goods_code <", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeLessThanOrEqualTo(String value) {
+			addCriterion("goods_code <=", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeLike(String value) {
+			addCriterion("goods_code like", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeNotLike(String value) {
+			addCriterion("goods_code not like", value, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeIn(List<String> values) {
+			addCriterion("goods_code in", values, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeNotIn(List<String> values) {
+			addCriterion("goods_code not in", values, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeBetween(String value1, String value2) {
+			addCriterion("goods_code between", value1, value2, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsCodeNotBetween(String value1, String value2) {
+			addCriterion("goods_code not between", value1, value2, "goodsCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdIsNull() {
+			addCriterion("auction_online_log_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdIsNotNull() {
+			addCriterion("auction_online_log_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdEqualTo(Integer value) {
+			addCriterion("auction_online_log_id =", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdNotEqualTo(Integer value) {
+			addCriterion("auction_online_log_id <>", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdGreaterThan(Integer value) {
+			addCriterion("auction_online_log_id >", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdGreaterThanOrEqualTo(Integer value) {
+			addCriterion("auction_online_log_id >=", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdLessThan(Integer value) {
+			addCriterion("auction_online_log_id <", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdLessThanOrEqualTo(Integer value) {
+			addCriterion("auction_online_log_id <=", value, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdIn(List<Integer> values) {
+			addCriterion("auction_online_log_id in", values, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdNotIn(List<Integer> values) {
+			addCriterion("auction_online_log_id not in", values, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdBetween(Integer value1, Integer value2) {
+			addCriterion("auction_online_log_id between", value1, value2, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuctionOnlineLogIdNotBetween(Integer value1, Integer value2) {
+			addCriterion("auction_online_log_id not between", value1, value2, "auctionOnlineLogId");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

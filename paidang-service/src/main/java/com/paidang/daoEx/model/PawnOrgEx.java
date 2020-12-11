@@ -27,6 +27,8 @@ public class PawnOrgEx extends PawnOrg {
     @ApiModelProperty(value = "店铺等级")
     private String orgLevel;
 
+    private Integer isPersonal;
+
 
     public String getOrgLevel() {
         BigDecimal integral = getIntegral()==null?BigDecimal.ZERO:getIntegral();
@@ -68,5 +70,13 @@ public class PawnOrgEx extends PawnOrg {
 
     public void setDealAmount(String dealAmount) {
         this.dealAmount = dealAmount;
+    }
+
+    public Integer getIsPersonal() {
+        return isPersonal;
+    }
+
+    public void setIsPersonal(Integer isPersonal) {
+        this.isPersonal = isPersonal;
     }
 }

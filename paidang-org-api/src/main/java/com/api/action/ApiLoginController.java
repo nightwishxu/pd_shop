@@ -131,7 +131,7 @@ public class ApiLoginController extends ApiBaseController {
 			String error = SmsError.getSmsError(result);
 			if (StringUtils.isNotBlank(error)) {
 				logger.debug(error);
-				throw new ApiException(MEnumError.SMS_ERROR.getErrorCode(),
+				throw new ApiException(MEnumError.SMS_ERROR.getCode(),
 						error);
 			}
 			throw new ApiException(MEnumError.SMS_ERROR);

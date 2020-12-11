@@ -9,7 +9,9 @@ import com.base.api.MobileInfo;
 import com.base.pay.PayMethod;
 import com.base.pay.ali.AlipayConfig;
 import com.base.pay.wx.util.WxPayConfig;
+import com.base.util.BaseUtils;
 import com.base.util.StringUtil;
+import com.base.util.StringUtils;
 import com.item.dao.model.PayLog;
 import com.item.dao.model.PayLogExample;
 import com.item.dao.model.ShopCart;
@@ -19,6 +21,7 @@ import com.item.service.ShopCartService;
 import com.paidang.dao.model.*;
 import com.paidang.service.*;
 import com.util.MPaidangPayType;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +60,7 @@ public class ApiUserPayService {
         }
         List<PayResult> results=new ArrayList<>();
         Date date=new Date();
+//        [{"goodsId":"10","num":"2"},{"goodsId":"10","num":"2"}]
         int i=0;
         for (Map map:mapList){
             PayResult payResult = new PayResult();
@@ -242,6 +246,7 @@ public class ApiUserPayService {
      * @param type 1 竞拍商品自动下订单
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public PayResult createOrder(Integer userId, Integer goodsId, Integer couponId, Integer addressId,Integer type){
         PayResult payResult = new PayResult();
 
@@ -269,9 +274,9 @@ public class ApiUserPayService {
 
 
         UserAddress userAddress = userAddressService.selectByPrimaryKey(addressId);
-        if(null == userAddress){
-            throw new ApiException(MEnumError.ADDRESS_NOT_EXIST);
-        }
+//        if(null == userAddress){
+//            throw new ApiException(MEnumError.ADDRESS_NOT_EXIST);
+//        }
         BigDecimal goodsPridce = goods.getPrice();
         if (type!=null && type==1){
             goodsPridce = goods.getMaxAuction();
@@ -300,9 +305,12 @@ public class ApiUserPayService {
         order.setPrice(finalPrice);
         order.setState(1);
         order.setIsBalance(0);
-        order.setShipUser(userAddress.getUserName());
-        order.setShipPhone(userAddress.getPhone());
-        order.setShipAddress(userAddress.getArea()+userAddress.getAddress());
+        if (userAddress!=null){
+            order.setShipUser(userAddress.getUserName());
+            order.setShipPhone(userAddress.getPhone());
+            order.setShipAddress(userAddress.getArea()+userAddress.getAddress());
+            order.setAddressId(addressId);
+        }
         order.setRefState(0);
         order.setCommentState(0);
         if(null != userCoupon){
@@ -345,7 +353,7 @@ public class ApiUserPayService {
      * @param orderId
      * @return
      */
-    public PayResult buyPay(MobileInfo mobileInfo, Integer platform, Integer orderId){
+    public PayResult buyPay(MobileInfo mobileInfo, Integer platform, Integer orderId,Integer addressId){
 
         if (platform == null){
             throw new ApiException("platform");
@@ -355,6 +363,16 @@ public class ApiUserPayService {
         }
 
         Order order = orderService.selectByPrimaryKey(orderId);
+        if (StringUtils.isAnyBlank(order.getShipUser(), order.getShipAddress(), order.getShipPhone()) && addressId==null){
+            throw new ApiException(400,"请选择收货地址");
+        }
+        if (addressId!=null){
+            UserAddress userAddress = userAddressService.selectByPrimaryKey(addressId);
+            order.setShipUser(userAddress.getUserName());
+            order.setShipPhone(userAddress.getPhone());
+            order.setShipAddress(userAddress.getArea()+userAddress.getAddress());
+            order.setAddressId(addressId);
+        }
         order.setPayType(platform==1?2:1);
         orderService.updateByPrimaryKeySelective(order);
         if (order == null){

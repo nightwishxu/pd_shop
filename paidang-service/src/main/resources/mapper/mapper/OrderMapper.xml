@@ -23,6 +23,7 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
         <result column="balance_time" property="balanceTime" jdbcType="TIMESTAMP" />
         <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="address_id" property="addressId" jdbcType="INTEGER" />
         <result column="ship_user" property="shipUser" jdbcType="VARCHAR" />
         <result column="ship_firm" property="shipFirm" jdbcType="VARCHAR" />
         <result column="ship_code" property="shipCode" jdbcType="VARCHAR" />
@@ -104,7 +105,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,total_price,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_not_verify_reason,back_code,back_address,back_user,back_phone,back_state,pay_type,comment_state
+        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,total_price,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,address_id,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_not_verify_reason,back_code,back_address,back_user,back_phone,back_state,pay_type,comment_state
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -149,12 +150,13 @@
         video,state,ref_state,
         pay_log_id,is_balance,create_time,
         modify_time,balance_time,pay_time,
-        ship_user,ship_firm,ship_code,
-        ship_address,ship_phone,coupon_id,
-        coupon_value,coupon_info,is_del,
-        refund_reason,refund_not_verify_reason,back_code,
-        back_address,back_user,back_phone,
-        back_state,pay_type,comment_state
+        address_id,ship_user,ship_firm,
+        ship_code,ship_address,ship_phone,
+        coupon_id,coupon_value,coupon_info,
+        is_del,refund_reason,refund_not_verify_reason,
+        back_code,back_address,back_user,
+        back_phone,back_state,pay_type,
+        comment_state
         )
         values (#{code,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},
         #{goodsId,jdbcType=INTEGER},#{goodsName,jdbcType=VARCHAR},#{goodsImg,jdbcType=VARCHAR},
@@ -163,12 +165,13 @@
         #{video,jdbcType=VARCHAR},#{state,jdbcType=TINYINT},#{refState,jdbcType=TINYINT},
         #{payLogId,jdbcType=VARCHAR},#{isBalance,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP},
         #{modifyTime,jdbcType=TIMESTAMP},#{balanceTime,jdbcType=TIMESTAMP},#{payTime,jdbcType=TIMESTAMP},
-        #{shipUser,jdbcType=VARCHAR},#{shipFirm,jdbcType=VARCHAR},#{shipCode,jdbcType=VARCHAR},
-        #{shipAddress,jdbcType=VARCHAR},#{shipPhone,jdbcType=VARCHAR},#{couponId,jdbcType=INTEGER},
-        #{couponValue,jdbcType=DECIMAL},#{couponInfo,jdbcType=VARCHAR},#{isDel,jdbcType=TINYINT},
-        #{refundReason,jdbcType=VARCHAR},#{refundNotVerifyReason,jdbcType=VARCHAR},#{backCode,jdbcType=VARCHAR},
-        #{backAddress,jdbcType=VARCHAR},#{backUser,jdbcType=VARCHAR},#{backPhone,jdbcType=VARCHAR},
-        #{backState,jdbcType=TINYINT},#{payType,jdbcType=TINYINT},#{commentState,jdbcType=INTEGER}
+        #{addressId,jdbcType=INTEGER},#{shipUser,jdbcType=VARCHAR},#{shipFirm,jdbcType=VARCHAR},
+        #{shipCode,jdbcType=VARCHAR},#{shipAddress,jdbcType=VARCHAR},#{shipPhone,jdbcType=VARCHAR},
+        #{couponId,jdbcType=INTEGER},#{couponValue,jdbcType=DECIMAL},#{couponInfo,jdbcType=VARCHAR},
+        #{isDel,jdbcType=TINYINT},#{refundReason,jdbcType=VARCHAR},#{refundNotVerifyReason,jdbcType=VARCHAR},
+        #{backCode,jdbcType=VARCHAR},#{backAddress,jdbcType=VARCHAR},#{backUser,jdbcType=VARCHAR},
+        #{backPhone,jdbcType=VARCHAR},#{backState,jdbcType=TINYINT},#{payType,jdbcType=TINYINT},
+        #{commentState,jdbcType=INTEGER}
         )
     </insert>
 
@@ -234,6 +237,9 @@
             </if>
             <if test="payTime != null" >
                 pay_time,
+            </if>
+            <if test="addressId != null" >
+                address_id,
             </if>
             <if test="shipUser != null" >
                 ship_user,
@@ -350,6 +356,9 @@
             </if>
             <if test="payTime != null" >
                 #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="addressId != null" >
+                #{addressId,jdbcType=INTEGER},
             </if>
             <if test="shipUser != null" >
                 #{shipUser,jdbcType=VARCHAR},
@@ -481,6 +490,9 @@
             <if test="record.payTime != null" >
                 pay_time = #{record.payTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="record.addressId != null" >
+                address_id = #{record.addressId,jdbcType=INTEGER},
+            </if>
             <if test="record.shipUser != null" >
                 ship_user = #{record.shipUser,jdbcType=VARCHAR},
             </if>
@@ -564,6 +576,7 @@
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         balance_time = #{balanceTime,jdbcType=TIMESTAMP},
         pay_time = #{payTime,jdbcType=TIMESTAMP},
+        address_id = #{addressId,jdbcType=INTEGER},
         ship_user = #{shipUser,jdbcType=VARCHAR},
         ship_firm = #{shipFirm,jdbcType=VARCHAR},
         ship_code = #{shipCode,jdbcType=VARCHAR},
@@ -650,6 +663,9 @@
             <if test="payTime != null" >
                 pay_time = #{payTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="addressId != null" >
+                address_id = #{addressId,jdbcType=INTEGER},
+            </if>
             <if test="shipUser != null" >
                 ship_user = #{shipUser,jdbcType=VARCHAR},
             </if>
@@ -730,6 +746,7 @@
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         balance_time = #{balanceTime,jdbcType=TIMESTAMP},
         pay_time = #{payTime,jdbcType=TIMESTAMP},
+        address_id = #{addressId,jdbcType=INTEGER},
         ship_user = #{shipUser,jdbcType=VARCHAR},
         ship_firm = #{shipFirm,jdbcType=VARCHAR},
         ship_code = #{shipCode,jdbcType=VARCHAR},

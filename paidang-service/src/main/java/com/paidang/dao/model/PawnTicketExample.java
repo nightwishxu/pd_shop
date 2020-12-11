@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PawnTicketExample {
 	protected String orderByClause;
@@ -3261,6 +3261,66 @@ public class PawnTicketExample {
 
 		public Criteria andSignTimeNotBetween(java.util.Date value1, java.util.Date value2) {
 			addCriterion("sign_time not between", value1, value2, "signTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdIsNull() {
+			addCriterion("org_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdIsNotNull() {
+			addCriterion("org_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdEqualTo(Integer value) {
+			addCriterion("org_id =", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdNotEqualTo(Integer value) {
+			addCriterion("org_id <>", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdGreaterThan(Integer value) {
+			addCriterion("org_id >", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdGreaterThanOrEqualTo(Integer value) {
+			addCriterion("org_id >=", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdLessThan(Integer value) {
+			addCriterion("org_id <", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdLessThanOrEqualTo(Integer value) {
+			addCriterion("org_id <=", value, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdIn(List<Integer> values) {
+			addCriterion("org_id in", values, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdNotIn(List<Integer> values) {
+			addCriterion("org_id not in", values, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdBetween(Integer value1, Integer value2) {
+			addCriterion("org_id between", value1, value2, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgIdNotBetween(Integer value1, Integer value2) {
+			addCriterion("org_id not between", value1, value2, "orgId");
 			return (Criteria) this;
 		}
 

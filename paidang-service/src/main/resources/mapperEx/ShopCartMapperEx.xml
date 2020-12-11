@@ -21,7 +21,8 @@
 	g.spec AS spec,
 	po.NAME AS orgName,
 	g.source AS source,
-	po.org_logo AS orgLogo
+	po.org_logo AS orgLogo,
+	po.integral as orgIntegral
 FROM
 	p_shop_cart sc
 	LEFT JOIN p_goods g ON sc.goods_id = g.id

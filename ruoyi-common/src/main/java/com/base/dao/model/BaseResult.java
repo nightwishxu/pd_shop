@@ -2,12 +2,13 @@ package com.base.dao.model;
 
 import com.base.api.IMError;
 import com.base.util.JSONUtils;
+
 import java.io.Serializable;
 
 public class BaseResult implements Serializable {
     private static final long serialVersionUID = 783054937443211810L;
-    private int errorCode;
-    private String errorMsg;
+    private int code;
+    private String msg;
 
     private Long total;
 
@@ -15,34 +16,36 @@ public class BaseResult implements Serializable {
     }
 
     public BaseResult(IMError error) {
-        this.errorCode = error.getErrorCode();
-        this.errorMsg = error.getErrorMsg();
+        this.code = error.getCode();
+        this.msg = error.getMsg();
     }
 
-    public BaseResult(int errorCode) {
-        this.errorCode = errorCode;
+    public BaseResult(int code) {
+        this.code = code;
     }
 
-    public BaseResult(int errorCode, String errorMsg) {
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
+    public BaseResult(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
-    public int getErrorCode() {
-        return this.errorCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getErrorMsg() {
-        return this.errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
+
+
 
     public Long getTotal() {
         return total;

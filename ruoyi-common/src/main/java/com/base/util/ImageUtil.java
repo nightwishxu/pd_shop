@@ -2,6 +2,7 @@ package com.base.util;
 
 import cn.hutool.core.io.IORuntimeException;
 import com.base.exception.UtilException;
+import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -14,6 +15,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.*;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Iterator;
 
 public class ImageUtil {
@@ -582,7 +585,47 @@ public class ImageUtil {
         return length / 2;
     }
 
+
+
+    /**
+     * 在线图片转换成base64字符串
+     *
+     * @param imgURL    图片线上路径
+     * @return
+     *
+     * @author ZHANGJL
+     * @dateTime 2018-02-23 14:43:18
+     */
+    public static String ImageToBase64ByOnline(String imgURL) {
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        try {
+            // 创建URL
+            URL url = new URL(imgURL);
+            byte[] by = new byte[1024];
+            // 创建链接
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            InputStream is = conn.getInputStream();
+            // 将内容读取内存中
+            int len = -1;
+            while ((len = is.read(by)) != -1) {
+                data.write(by, 0, len);
+            }
+            // 关闭流
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 对字节数组Base64编码
+        BASE64Encoder encoder = new BASE64Encoder();
+        return encoder.encode(data.toByteArray());
+    }
+
     public static void main(String[] args) {
         scale((File)(new File("C:\\Users\\sun\\Pictures\\下载.jpg")), (File)(new File("C:\\Users\\sun\\Pictures\\下载_10.jpg")), 10, 0, (Color)null);
     }
+
+
+
 }

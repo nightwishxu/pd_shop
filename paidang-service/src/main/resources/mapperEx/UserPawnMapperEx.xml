@@ -7,6 +7,7 @@
     <result column="auth_price" property="authPrice"></result>
     <result column="auth_price_test" property="authPriceTest"></result>
     <result column="bidTimes" property="bidTimes"></result>
+    <result column="cnt" property="cnt"></result>
     <result column="totalAmountForPawner" property="totalAmountForPawner"></result>
 <!-- <result column="user_name" property="userName"></result>
     <result column="user_phone" property="phone"></result>
@@ -29,7 +30,9 @@
 
     <!-- 最新当品 -->
   <select id="LatestPawnList" resultMap="BaseResultMap">
-      SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes FROM
+      SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes
+      ,(SELECT COUNT(1) FROM p_pawn_auction WHERE pawn_id = p.id ) cnt
+      FROM
       p_user_pawn p
       LEFT JOIN p_user_goods g ON p.goods_id = g.id
       <!-- 鉴定结果为 真品 -->
@@ -41,12 +44,13 @@
       AND p.user_state != '1'
       <!-- 去掉倒计时过期的 竞拍时间 auctionTimem 秒后过期-->
       AND  SYSDATE() &lt;=  DATE_ADD(p.create_time,INTERVAL #{auctionTime} SECOND)
-      ORDER BY p.create_time desc;
+      ORDER BY p.create_time desc
   </select>
     
     <!--热门竞拍-->
     <select id="hotAuctionsList" resultMap="BaseResultMap">
-        SELECT p.* ,g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes FROM
+        SELECT p.* ,g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes,
+        (SELECT COUNT(1) FROM p_pawn_auction WHERE pawn_id = p.id ) cnt FROM
         p_user_pawn p
         LEFT JOIN p_user_goods g ON p.goods_id = g.id
         <!-- 鉴定结果为 真品 -->
@@ -58,7 +62,7 @@
         AND p.user_state != '1'
         <!-- 去掉倒计时过期的 竞拍时间 auctionTimem 秒后过期-->
         AND  SYSDATE() &lt;=  DATE_ADD(p.create_time,INTERVAL #{auctionTime} SECOND)
-        ORDER BY bidTimes desc;
+        ORDER BY bidTimes desc
     </select>
 
     <!--获取指定id的UserPawnEx扩展类-->
@@ -294,7 +298,7 @@
         on A.goods_id = B.id
         where A.user_id = #{user_id}
         and A.user_state = 1 and B.auth_result = 4 and B.goto_pawn = 1 and B.post_state = 3 and A.state != 5 and A.state = -1 and B.back_state = 0
-        order by A.create_time desc;
+        order by A.create_time desc
 
     </select>
     <select id="selectByGoodsId"  resultMap="BaseResultMap" parameterType="java.util.HashMap">
@@ -302,7 +306,7 @@
         A.*
         from p_user_pawn A
         WHERE A.goods_id = #{goods_id}
-        order by A.create_time desc;
+        order by A.create_time desc
 
     </select>
 

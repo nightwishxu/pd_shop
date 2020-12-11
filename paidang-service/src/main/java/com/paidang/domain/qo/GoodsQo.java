@@ -17,6 +17,10 @@ public class GoodsQo extends Goods {
 
     private Integer startTotal;
 
+    private Integer isOnlineCnt;
+
+    private Integer limit;
+
     public List<Integer> getSources() {
         return sources;
     }
@@ -31,5 +35,22 @@ public class GoodsQo extends Goods {
 
     public void setStartTotal(Integer startTotal) {
         this.startTotal = startTotal;
+    }
+
+
+    public Integer getIsOnlineCnt() {
+        return isOnlineCnt;
+    }
+
+    public void setIsOnlineCnt(Integer isOnlineCnt) {
+        this.isOnlineCnt = isOnlineCnt;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

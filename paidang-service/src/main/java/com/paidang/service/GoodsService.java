@@ -120,4 +120,8 @@ public class GoodsService {
 		return goodsMapperEx.findListEx(qo);
 	}
 
+	public int sellAuctionGoods(Goods goods){
+		return goodsMapperEx.sellAuctionGoods(goods);
+	}
+
 }

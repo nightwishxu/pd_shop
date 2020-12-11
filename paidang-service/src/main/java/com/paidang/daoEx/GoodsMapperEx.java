@@ -41,4 +41,5 @@ public interface GoodsMapperEx {
 
     List<GoodsEx> selectBusinessGoodsList(@Param("goodsName") String goodsName);
 
+    int sellAuctionGoods(Goods goods);
 }

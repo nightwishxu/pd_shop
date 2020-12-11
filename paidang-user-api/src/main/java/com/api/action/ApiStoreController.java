@@ -23,6 +23,7 @@ import com.item.service.FocusService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.GoodsAuctionEx;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.domain.qo.GoodsQo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
@@ -32,6 +33,7 @@ import com.util.PaidangConst;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -251,6 +253,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
+            record.setDealType(ex.getDealType());
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
@@ -294,11 +297,62 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
+            record.setDealType(ex.getDealType());
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
         return list2;
     }
+
+    @ApiOperation(value = "商品推荐", notes = "")
+    @RequestMapping("/recommendGoods")
+    @ApiMethod(isLogin = false)
+    public List<AppStoreGoodsDetail> recommendGoods(MobileInfo mobileInfo
+            ,@ApiParam(value="商品编号",required = true) Integer goodsId
+
+    ){
+        Goods goods = goodsService.selectByPrimaryKey(goodsId);
+        if (goods==null){
+            throw new ApiException(400,"商品不存在");
+        }
+        Integer dealType = goods.getDealType();
+        if (dealType==null){
+            dealType = 1;
+        }
+        GoodsQo qo = new GoodsQo();
+        qo.setDealType(dealType);
+        qo.setOrgId(goods.getOrgId());
+        qo.setIsOnline(1);
+        qo.setIsVerfiy(2);
+        qo.setLimit(6);
+        List<GoodsEx> listEx = goodsService.findListEx(qo);
+        if (listEx.size()<6){
+            qo.setDealType(dealType==1?2:1);
+            qo.setLimit(6-listEx.size());
+            List<GoodsEx> ex = goodsService.findListEx(qo);
+            if (CollectionUtils.isNotEmpty(ex)){
+                listEx.addAll(ex);
+            }
+        }
+        List<AppStoreGoodsDetail> result = new ArrayList<AppStoreGoodsDetail>();
+        for(GoodsEx ex : listEx){
+            AppStoreGoodsDetail record = new AppStoreGoodsDetail();
+            record.setId(ex.getId());
+            record.setTitle(ex.getName());
+            record.setImg(ex.getImg());
+            record.setImages(ex.getImgs());
+            record.setWidth(ex.getWidth());
+            record.setHeight(ex.getHeight());
+            record.setAuthPrice(ex.getPrice()+"");
+            record.setPrice(ex.getPrice()+"");
+            record.setOrgId(ex.getOrgId());
+            record.setDealType(ex.getDealType());
+            record.setOrgIntegral(ex.getOrgIntegral());
+            result.add(record);
+        }
+        return result;
+    }
+
 
     /**
      * 认证商场热门列表
@@ -348,6 +402,14 @@ public class ApiStoreController extends ApiBaseController {
             record.setSource(ex.getSource());
             record.setOrgId(ex.getOrgId());
             record.setOrgIntegral(ex.getOrgIntegral());
+            record.setDealType(ex.getDealType());
+            record.setStartPrice(ex.getStartPrice());
+            record.setGoodsAttribute(ex.getGoodsAttribute());
+            record.setLabels(ex.getLabels());
+            record.setAuctionStartTime(ex.getAuctionStartTime());
+            record.setAuctionEndTime(ex.getAuctionEndTime());
+            record.setRaisePriceRange(ex.getRaisePriceRange());
+            record.setOnlineTime(ex.getOnlineTime());
             list2.add(record);
         }
         return list2;
@@ -377,9 +439,9 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setStartPrice(ex.getStartPrice());
         appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
         appStoreGoodsDetail.setLabels(ex.getLabels());
-
+        appStoreGoodsDetail.setMaxAuction(ex.getMaxAuction());
         appStoreGoodsDetail.setCateCode(ex.getCateCode());
-        PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
+        PawnOrgEx pawnOrg=pawnOrgService.getInfo(ex.getOrgId());
         if (pawnOrg!=null){
             appStoreGoodsDetail.setOrgId(pawnOrg.getId());
             appStoreGoodsDetail.setOrgName(pawnOrg.getName());
@@ -390,9 +452,10 @@ public class ApiStoreController extends ApiBaseController {
         }
 
 
-        if (ex.getDealType()!=null &&  ex.getDealType()==2){
+        if (ex.getDealType()!=null &&  ex.getDealType()==2 && ex.getAuctionOnlineLogId()!=null){
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("goods_id",id);
+            map.put("onlineLogId",ex.getAuctionOnlineLogId());
             List<GoodsAuctionEx> goodsAuctionExes = goodsAuctionService.selectByAuctionUser(map);
             appStoreGoodsDetail.setGoodsAuctionList(goodsAuctionExes);
             appStoreGoodsDetail.setHotScore(goodsAuctionExes.size()*15);
@@ -663,6 +726,15 @@ public class ApiStoreController extends ApiBaseController {
             AppStoreGoodsDetail c = new AppStoreGoodsDetail();
             c.setSource(ex.getSource());
             c.setOrgId(ex.getOrgId());
+            c.setDealType(ex.getDealType());
+            c.setStartPrice(ex.getStartPrice());
+            c.setGoodsAttribute(ex.getGoodsAttribute());
+            c.setLabels(ex.getLabels());
+            c.setAuctionStartTime(ex.getAuctionStartTime());
+            c.setAuctionEndTime(ex.getAuctionEndTime());
+            c.setRaisePriceRange(ex.getRaisePriceRange());
+            c.setOnlineTime(ex.getOnlineTime());
+            c.setMaxAuction(ex.getMaxAuction());
                 if(ex.getPrice().compareTo(new BigDecimal("30000")) == -1 || null == ex.getGoodsId()){
                     //普通绝当商品
                     c.setType(0);
@@ -744,8 +816,10 @@ public class ApiStoreController extends ApiBaseController {
         //插入竞拍表 goods_auction
         GoodsAuction c = new GoodsAuction();
         c.setGoodsId(id);
+        c.setOnlineLogId(goods.getAuctionOnlineLogId());
         c.setUserId(mobileInfo.getUserId());
         c.setPrice(price);
+        c.setCreateTime(new Date());
         int result = goodsAuctionService.insert(c);
         if(result == 0){
             throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
@@ -753,6 +827,7 @@ public class ApiStoreController extends ApiBaseController {
         //更新商品表的最新消息
         goods.setMaxAutionId(c.getId());
         goods.setMaxAuction(price);
+        goods.setModifyTime(new Date());
         goods.setUserId(mobileInfo.getUserId());
         int result2 = goodsService.updateByPrimaryKey(goods);
         if(result2 == 0){
