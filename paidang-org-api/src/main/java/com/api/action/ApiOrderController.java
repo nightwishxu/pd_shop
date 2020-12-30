@@ -8,10 +8,12 @@ import com.base.api.MobileInfo;
 import com.base.util.BaseUtils;
 import com.item.dao.model.User;
 import com.item.dao.model.UserNotify;
+import com.item.service.OrgAmountLogService;
 import com.item.service.UserNotifyService;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.OrderEx;
+import com.paidang.daoEx.model.OrgAmountLogEx;
 import com.paidang.domain.qo.OrderQo;
 import com.paidang.service.ExpressService;
 import com.paidang.service.GoodsService;
@@ -20,6 +22,7 @@ import com.ruoyi.common.core.domain.Ret;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +59,9 @@ public class ApiOrderController extends ApiBaseController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private OrgAmountLogService orgAmountLogService;
 
     //订单状态-1已取消1待付款2已付款3已发货4确认收货5已评价
     //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
@@ -175,29 +181,42 @@ public class ApiOrderController extends ApiBaseController {
             userNotify.setContent(order.getGoodsName() + "退款拒绝"+"原因:"+order.getRefundNotVerifyReason());
             userNotify.setRedirectContent(order.getGoodsName() + "退款拒绝"+"原因:"+order.getRefundNotVerifyReason());
             userNotifyService.insert(userNotify);
+        }else if (refState==2){
+            //同意退款
+            Order order1 = orderService.selectByPrimaryKey(id);
+            if (order1.getGoodsSource()!=5 &&  order1.getState()>=4){
+                OrgAmountLogExample example = new OrgAmountLogExample();
+                example.createCriteria().andFidEqualTo(id).andOrgIdEqualTo(orgId).andItemEqualTo("1");
+                example.setOrderByClause("id desc");
+                List<OrgAmountLog> orgAmountLogs = orgAmountLogService.selectByExample(example);
+                if (CollectionUtils.isNotEmpty(orgAmountLogs)){
+                    OrgAmountLog log = orgAmountLogs.get(0);
+                    orgAmountLogService.saveLog(orgId,log.getAmount(),"4","订单退款："+order.getCode(),id,null);
+                }
+            }
         }
 
 
     }
 
-    //    //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
-    @ApiOperation(value = "售后-同意",notes="订单列表")
-    @RequestMapping(value = "/agreeRefund", method = RequestMethod.POST)
-    @ApiMethod(isLogin = true)
-    public void agreeRefund(MobileInfo mobileInfo,
-                            @ApiParam(value = "订单id",required = true)Integer  id
-    ){
-        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
-        Order tmp = orderService.selectByPrimaryKey(id);
-        if (!Objects.equals(orgId,tmp.getOrgId())){
-            throw new ApiException("机构异常");
-        }
-        Order order = new Order();
-        order.setId(id);
-        order.setModifyTime(new Date());
-        order.setRefState(2);
-
-    }
+//    //    //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
+//    @ApiOperation(value = "售后-同意",notes="订单列表")
+//    @RequestMapping(value = "/agreeRefund", method = RequestMethod.POST)
+//    @ApiMethod(isLogin = true)
+//    public void agreeRefund(MobileInfo mobileInfo,
+//                            @ApiParam(value = "订单id",required = true)Integer  id
+//    ){
+//        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//        Order tmp = orderService.selectByPrimaryKey(id);
+//        if (!Objects.equals(orgId,tmp.getOrgId())){
+//            throw new ApiException("机构异常");
+//        }
+//        Order order = new Order();
+//        order.setId(id);
+//        order.setModifyTime(new Date());
+//        order.setRefState(2);
+//
+//    }
 
 
 

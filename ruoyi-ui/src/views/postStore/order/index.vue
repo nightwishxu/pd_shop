@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="订单号" prop="code">
+      <el-form-item
+        label="订单号"
+        prop="code"
+      >
         <el-input
           v-model="queryParams.orderCode"
           placeholder="请输入订单号"
@@ -16,7 +19,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="商品名称" prop="goodsName">
+      <el-form-item
+        label="商品名称"
+        prop="goodsName"
+      >
         <el-input
           v-model="queryParams.goodsName"
           placeholder="请输入商品名称"
@@ -26,7 +32,10 @@
         />
       </el-form-item>
 
-      <el-form-item label="支付方式" prop="payType">
+      <el-form-item
+        label="支付方式"
+        prop="payType"
+      >
         <el-select
           v-model="queryParams.payType"
           placeholder="请选择支付方式"
@@ -43,7 +52,10 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="订单状态" prop="state">
+      <el-form-item
+        label="订单状态"
+        prop="state"
+      >
         <el-select
           v-model="queryParams.state"
           placeholder="请选择状态"
@@ -66,17 +78,26 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -105,9 +126,21 @@
       :data="orderList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="订单号" align="center" prop="code" />
-      <el-table-column label="商品名称" align="center" prop="goodsName" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="订单号"
+        align="center"
+        prop="code"
+      />
+      <el-table-column
+        label="商品名称"
+        align="center"
+        prop="goodsName"
+      />
       <el-table-column
         label="订单状态"
         align="center"
@@ -120,16 +153,31 @@
         prop="payType"
         :formatter="handlePayType"
       />
-      <el-table-column label="收件人姓名" align="center" prop="shipUser" />
-      <el-table-column label="收件人地址" align="center" prop="shipAddress" />
-      <el-table-column label="收件人电话" align="center" prop="shipPhone" />
+      <el-table-column
+        label="收件人姓名"
+        align="center"
+        prop="shipUser"
+      />
+      <el-table-column
+        label="收件人地址"
+        align="center"
+        prop="shipAddress"
+      />
+      <el-table-column
+        label="收件人电话"
+        align="center"
+        prop="shipPhone"
+      />
       <el-table-column
         label="流水单号"
         align="center"
         prop="payLogId"
         width="200"
       />
-      <el-table-column label="发货" align="center">
+      <el-table-column
+        label="发货"
+        align="center"
+      >
         <template slot-scope="scope">
           <div v-if="scope.row.refState == 0">
             <el-button
@@ -137,41 +185,38 @@
               size="mini"
               v-if="scope.row.state == 1 || scope.row.state == 2"
               @click="delivery(scope.row)"
-              >发货</el-button
-            >
+            >发货</el-button>
             <a v-else-if="scope.row.state == -1">暂无操作</a>
             <a v-else>已发货</a>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="退款" align="center">
+      <el-table-column
+        label="退款"
+        align="center"
+      >
         <template slot-scope="scope">
-          <div
-            v-if="scope.row.refundReason == 1 || scope.row.refundReason == 2"
-          >
+          <div v-if="scope.row.refundReason == 1 || scope.row.refundReason == 2">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="refusing(scope.row)"
-              >拒绝退款</el-button
-            >
+            >拒绝退款</el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-if="scope.row.state == 2"
               @click="agreeRef(scope.row)"
-              >同意退款</el-button
-            >
+            >同意退款</el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-else
               @click="sendBackData(scope.row)"
-              >同意退款</el-button
-            >
+            >同意退款</el-button>
           </div>
           <div v-else-if="scope.row.refundReason == 3"></div>
           <div v-else-if="scope.row.refundReason == 4">
@@ -180,15 +225,13 @@
               type="text"
               icon="el-icon-edit"
               @click="refSuccess(scope.row)"
-              >确认退款</el-button
-            >
+            >确认退款</el-button>
           </div>
           <div v-else-if="scope.row.refundReason == 5">
             <a
               href="javascript:void(0);"
               title="scope.row.refundNotVerifyReason+"
-              >查看</a
-            >
+            >查看</a>
           </div>
         </template>
       </el-table-column>
@@ -198,7 +241,11 @@
         align="center"
         prop="expressData"
       />
-      <el-table-column label="回寄单号" align="center" prop="backCode" />
+      <el-table-column
+        label="回寄单号"
+        align="center"
+        prop="backCode"
+      />
       <el-table-column
         label="创建时间"
         align="center"
@@ -221,8 +268,7 @@
             type="text"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['admin:order:edit']"
-            >查看</el-button
-          >
+          >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -241,13 +287,30 @@
       width="300px"
       append-to-body
     >
-      <el-form ref="form1" :model="form" :rules="rules" label-width="150px">
-        <el-form-item label="快递编号" prop="shipCode">
-          <el-input v-model="form.shipCode" placeholder="请输入快递编号" />
+      <el-form
+        ref="form1"
+        :model="form"
+        :rules="rules"
+        label-width="150px"
+      >
+        <el-form-item
+          label="快递编号"
+          prop="shipCode"
+        >
+          <el-input
+            v-model="form.shipCode"
+            placeholder="请输入快递编号"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updateState">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="updateState"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -258,13 +321,30 @@
       width="300px"
       append-to-body
     >
-      <el-form ref="form2" :model="form" :rules="rules" label-width="15px">
-        <el-form-item label="拒绝原因" prop="refundNotVerifyReason">
-          <el-input v-model="form.shipCode" placeholder="请输入拒绝原因" />
+      <el-form
+        ref="form2"
+        :model="form"
+        :rules="rules"
+        label-width="15px"
+      >
+        <el-form-item
+          label="拒绝原因"
+          prop="refundNotVerifyReason"
+        >
+          <el-input
+            v-model="form.shipCode"
+            placeholder="请输入拒绝原因"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="refusing">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="refusing"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -275,45 +355,82 @@
       width="300px"
       append-to-body
     >
-      <el-form ref="form2" :model="form" :rules="rules" label-width="15px">
-        <el-form-item label="退款回寄地址" prop="refundNotVerifyReason">
+      <el-form
+        ref="form2"
+        :model="form"
+        :rules="rules"
+        label-width="15px"
+      >
+        <el-form-item
+          label="退款回寄地址"
+          prop="refundNotVerifyReason"
+        >
           <el-input
             v-model="form.backAddress"
             placeholder="请输入退款回寄地址"
           />
         </el-form-item>
-        <el-form-item label="退款回寄收件人" prop="refundNotVerifyReason">
+        <el-form-item
+          label="退款回寄收件人"
+          prop="refundNotVerifyReason"
+        >
           <el-input
             v-model="form.backUser"
             placeholder="请输入退款回寄收件人"
           />
         </el-form-item>
-        <el-form-item label="退款回寄联系电话" prop="refundNotVerifyReason">
+        <el-form-item
+          label="退款回寄联系电话"
+          prop="refundNotVerifyReason"
+        >
           <el-input
             v-model="form.backPhone"
             placeholder="请输入退款回寄联系电话"
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="sendRefDatar">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="sendRefDatar"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
 
     <!-- 添加或修改订单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="800px"
+      append-to-body
+    >
       <div style="height: 50vh; overflaow: auto">
-        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form
+          ref="form"
+          :model="form"
+          :rules="rules"
+          label-width="100px"
+        >
           <el-col span="12">
-            <el-form-item label="订单号" prop="code">
+            <el-form-item
+              label="订单号"
+              prop="code"
+            >
               <el-input
                 v-model="form.code"
                 placeholder="请输入订单号"
-              /> </el-form-item
-          ></el-col>
+              />
+            </el-form-item>
+          </el-col>
           <el-col span="12">
-            <el-form-item label="收件人姓名" prop="shipUser">
+            <el-form-item
+              label="收件人姓名"
+              prop="shipUser"
+            >
               <el-input
                 v-model="form.shipUser"
                 placeholder="请输入收件人姓名"
@@ -321,29 +438,59 @@
             </el-form-item>
           </el-col>
           <el-col span="12">
-            <el-form-item label="快递公司" prop="shipFirm">
-              <el-input v-model="form.shipFirm" placeholder="请输入快递公司" />
+            <el-form-item
+              label="快递公司"
+              prop="shipFirm"
+            >
+              <el-input
+                v-model="form.shipFirm"
+                placeholder="请输入快递公司"
+              />
             </el-form-item>
           </el-col>
           <el-col span="12">
-            <el-form-item label="快递编号" prop="shipCode">
-              <el-input v-model="form.shipCode" placeholder="请输入快递编号" />
+            <el-form-item
+              label="快递编号"
+              prop="shipCode"
+            >
+              <el-input
+                v-model="form.shipCode"
+                placeholder="请输入快递编号"
+              />
             </el-form-item>
           </el-col>
-          <el-form-item label="收件人地址" prop="shipAddress">
+          <el-form-item
+            label="收件人地址"
+            prop="shipAddress"
+          >
             <el-input
               v-model="form.shipAddress"
               placeholder="请输入收件人地址"
             />
           </el-form-item>
-          <el-form-item label="收件人电话" prop="shipPhone">
-            <el-input v-model="form.shipPhone" placeholder="请输入收件人电话" />
+          <el-form-item
+            label="收件人电话"
+            prop="shipPhone"
+          >
+            <el-input
+              v-model="form.shipPhone"
+              placeholder="请输入收件人电话"
+            />
           </el-form-item>
-          <el-form-item label="商品名称" prop="goodsName">
-            <el-input v-model="form.goodsName" placeholder="请输入商品名称" />
+          <el-form-item
+            label="商品名称"
+            prop="goodsName"
+          >
+            <el-input
+              v-model="form.goodsName"
+              placeholder="请输入商品名称"
+            />
           </el-form-item>
           <el-col span="12">
-            <el-form-item label="商品价格" prop="goodsPrice">
+            <el-form-item
+              label="商品价格"
+              prop="goodsPrice"
+            >
               <el-input
                 v-model="form.goodsPrice"
                 placeholder="请输入商品价格"
@@ -351,17 +498,29 @@
             </el-form-item>
           </el-col>
           <el-col span="12">
-            <el-form-item label="订单金额" prop="price">
-              <el-input v-model="form.price" placeholder="请输入订单金额" />
+            <el-form-item
+              label="订单金额"
+              prop="price"
+            >
+              <el-input
+                v-model="form.price"
+                placeholder="请输入订单金额"
+              />
             </el-form-item>
           </el-col>
           <el-col span="12">
-            <el-form-item label="订单状态" prop="state">
+            <el-form-item
+              label="订单状态"
+              prop="state"
+            >
               <el-input v-model="form.state" />
             </el-form-item>
           </el-col>
           <el-col span="12">
-            <el-form-item label="结算状态" prop="isBalance">
+            <el-form-item
+              label="结算状态"
+              prop="isBalance"
+            >
               <el-input v-model="form.isBalance" />
             </el-form-item>
           </el-col>
@@ -562,11 +721,11 @@ export default {
 
     //支付方式 1微信 2支付宝 3线下
     handlePayType(row, column) {
-      if (row.state === 1) {
+      if (row.payType === 1) {
         return "微信";
-      } else if (row.state === 2) {
+      } else if (row.payType === 2) {
         return "支付宝";
-      } else if (row.state === 3) {
+      } else if (row.payType === 3) {
         return "线下";
       } else {
         return "--";
@@ -780,7 +939,7 @@ export default {
     //发货
     updateState() {
       console.info(this.form1);
-      this.$refs["form1"].validate((valid) => {
+      this.$refs["form1"].validate((response) => {
         if (valid) {
           updateState(this.form1).then(() => {
             if (response.code === 200) {

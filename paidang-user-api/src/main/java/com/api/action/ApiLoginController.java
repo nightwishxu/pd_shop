@@ -1,6 +1,9 @@
 package com.api.action;
 
+import cn.hutool.core.thread.ThreadUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.api.MEnumError;
+import com.api.util.OauthLoginRunnable;
 import com.api.view.account.SmsCode;
 import com.base.Const;
 import com.base.annotation.ApiMethod;
@@ -9,11 +12,15 @@ import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.api.sms.SmsError;
 
+import com.base.dao.model.Result;
+import com.base.oauthLogin.api.Oauth;
+import com.base.oauthLogin.api.OauthQQ;
+import com.base.oauthLogin.api.OauthSina;
+import com.base.oauthLogin.api.OauthWeixin;
+import com.base.util.DateUtil;
 import com.base.util.StringUtil;
 import com.item.dao.CodeMapper;
-import com.item.dao.model.Code;
-import com.item.dao.model.User;
-import com.item.dao.model.UserExample;
+import com.item.dao.model.*;
 import com.item.service.*;
 import com.paidang.service.BFileService;
 import com.ruoyi.common.core.domain.Ret;
@@ -327,6 +334,7 @@ public class ApiLoginController extends ApiBaseController {
 		return mobileInfo;
 	}
 
+
 	private User regist(String phone, String password, Integer deviceType,
                         String deviceid, String cid) throws Exception {
 		// 添加数据
@@ -572,6 +580,144 @@ public class ApiLoginController extends ApiBaseController {
 		verifyService.logout(mobileInfo);
 		return new Ret();
 	}
+
+
+	/**
+				* @api 第三方登录
+	 * @param type
+	 *            1:qq 2:sina
+	 * @param openid
+	 *            openid
+	 * @param accessToken
+	 *            accessToken
+	 * @param deviceType
+	 *            设备类型 1:android 2:ios
+	 * @param cid
+	 *            //推送cid
+	 */
+	@ApiOperation(value = "第三方登录")
+	@RequestMapping(value = "/oauthLogin", method = RequestMethod.POST)
+	@ApiMethod
+	public MobileInfo oauthLogin(
+			@ApiParam(value = "1:qq 2:sina 3:wx", required = true) Integer type,
+			@ApiParam(value = "openid", required = true) String openid,
+			@ApiParam(value = "accessToken", required = true) String accessToken,
+			@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType,
+			@ApiParam(value = "设备唯一识别码", required = false) String deviceid,
+			@ApiParam(value = "推送cid", required = false) String cid)
+			throws Exception {
+		// 参数校验
+		if (type == null) {
+			throw new ApiException("type");
+		}
+		if (StringUtils.isBlank(openid)) {
+			throw new ApiException("openid");
+		}
+		if (StringUtils.isBlank(accessToken)) {
+			throw new ApiException("accessToken");
+		}
+		if (deviceType == null) {
+			throw new ApiException("deviceType");
+		}
+		if (StringUtils.isBlank(deviceid)) {
+			throw new ApiException("deviceid");
+		}
+
+		UserOauthExample example = new UserOauthExample();
+		example.createCriteria().andTypeEqualTo(type).andOpenIdEqualTo(openid);
+		List<UserOauth> list = oauthService.selectByExample(example);
+		User user = null;
+		boolean insert = false;// 是否需要添加
+		if (list.size() > 0) {
+			UserOauth oauth = list.get(0);
+			user = userService.selectByPrimaryKey(oauth.getUserId());
+			if (user == null) {
+				oauthService.deleteByPrimaryKey(oauth.getId());
+				insert = true;
+				user = null;
+			} else if (user.getState() == 0) {
+				throw new ApiException(MEnumError.ACCOUNT_STOP_ERROR);
+			}
+		} else {
+			insert = true;
+		}
+
+		if (insert) {
+			Date date = new Date();
+			String accout = DateUtil.dateToStr(date, "yyyyMMddHHmmss");
+			if (type == 1) {
+				accout = "qq_" + accout;
+			} else if (type == 2) {
+				accout = "sina_" + accout;
+			} else if (type == 3) {
+				accout = "wx_" + accout;
+			}
+
+			user = regist(accout, null, deviceType, deviceid, cid);
+			// 保存第三方登录信息
+			UserOauth oauth = new UserOauth();
+			oauth.setAccessToken(accessToken);
+			oauth.setCreateTime(new Date());
+			oauth.setOpenId(openid);
+			oauth.setType(type);
+			oauth.setUserId(user.getId());
+			int cnt = oauthService.insert(oauth);
+			if (cnt == 0) {
+				throw new ApiException(MEnumError.CREATE_ACCOUNT_ERROR);
+			}
+			// 第三方登陆获取头像昵称
+			ThreadUtil.execute(new OauthLoginRunnable(user
+					.getId(), type, deviceType, openid, accessToken, userService));
+		}
+
+		MobileInfo mobileInfo = new MobileInfo();
+		mobileInfo.setUserId(user.getId());
+		mobileInfo.setDeviceType(deviceType);
+		mobileInfo.setDeviceid(deviceid);
+		String verify = verifyService.updateMobileVerify(mobileInfo,
+				deviceType, cid);
+		mobileInfo.setToken(verify);
+		return mobileInfo;
+	}
+
+
+	@ApiOperation(value = "第三方登录获取授权url")
+	@RequestMapping(value = "/oauthLogin/getAuthorizeUrl", method = RequestMethod.POST)
+	@ApiMethod
+	public Object oauthLoginGtAuthorizeUrl(
+			@ApiParam(value = "1:qq 2:sina 3:wx", required = true) Integer type){
+		String authorizeUrl = "";
+		if (type==1){
+			authorizeUrl = OauthQQ.me().getAuthorizeUrl("get_user_info");
+		}else if (type==2){
+			authorizeUrl = OauthSina.me().getAuthorizeUrl(null);
+		}else if (type==3){
+			authorizeUrl = OauthWeixin.me().getAuthorizeUrl(null);
+		}else {
+			throw new ApiException(400,"参数异常");
+		}
+		return new Result<>(authorizeUrl);
+	}
+
+
+	@ApiOperation(value = "第三方登录获取用户信息")
+	@RequestMapping(value = "/oauthLogin/getUserInfo", method = RequestMethod.POST)
+	@ApiMethod
+	public JSONObject oauthLoginGetToken(
+			@ApiParam(value = "1:qq 2:sina", required = true) Integer type,
+			@ApiParam(value = "code", required = true) String code
+	){
+		JSONObject info = null;
+		if (type==1){
+			info = OauthQQ.me().getUserInfoByCode(code);
+		}else if (type==2){
+			info = OauthSina.me().getUserInfoByCode(code);
+		}else {
+			throw new ApiException(400,"参数异常");
+		}
+		return info;
+	}
+
 
 	/**
 	 * @api 绑定手机

@@ -85,7 +85,7 @@ public class OrgPay implements PayFilter {
             BigDecimal tradeStatus = null;
             Integer userId = null;
             try {
-                payLog = payLogService.selectByPrimaryKey(Long.parseLong(out_trade_no));
+                payLog = payLogService.selectByPrimaryKey(out_trade_no);
                 tradeStatus = new BigDecimal(payLog.getState());
                 userId = payLog.getUserId();
             } catch (Exception e) {
@@ -209,7 +209,7 @@ public class OrgPay implements PayFilter {
             BigDecimal tradeStatus = null;
             Integer userId = null;
             try {
-                payLog = payLogService.selectByPrimaryKey(Long.parseLong(out_trade_no));
+                payLog = payLogService.selectByPrimaryKey(out_trade_no);
                 tradeStatus = new BigDecimal(payLog.getState());
                 userId = payLog.getUserId();
             } catch (Exception e) {

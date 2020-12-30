@@ -94,8 +94,10 @@ public class OrderController extends CoreController{
     		order.setIsBalance(0);
     		order.setState(1);
 			order.setRefState(0);
+			order.setCreateTime(new Date());
     		orderService.insert(order);
     	}else{
+    		order.setModifyTime(new Date());
     		orderService.updateByPrimaryKeySelective(order);
     	}
        	return ok();
@@ -120,7 +122,7 @@ public class OrderController extends CoreController{
 	@RequestMapping("/updateState")
 	@ResponseBody
 	public Ret updateState(Order order){
-    		order.setState(3);
+    	order.setState(3);
 		order.setShipFirm(MExpressAddress.xfAddress);
 		order.setShipCode(order.getShipCode());
 			//orderService.updateState(order);
@@ -153,6 +155,7 @@ public class OrderController extends CoreController{
 			express.setReceiveName(c.getShipUser());
 			express.setReceviceAddress(c.getShipUser());
 			express.setReceivePhone(c.getShipPhone());
+			express.setCreateTime(new Date());
 			expressService.insert(express);
 		}
 		return ok();
@@ -237,6 +240,7 @@ public class OrderController extends CoreController{
 			userNotify.setContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
 			userNotify.setRedirectContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
 		}
+		userNotify.setCreateTime(new Date());
 		userNotifyService.insert(userNotify);
 		return ok();
 	}

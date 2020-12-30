@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserPawnExample {
 	protected String orderByClause;
@@ -4001,6 +4001,136 @@ public class UserPawnExample {
 
 		public Criteria andContractIdNotBetween(String value1, String value2) {
 			addCriterion("contract_id not between", value1, value2, "contractId");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNull() {
+			addCriterion("project_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNotNull() {
+			addCriterion("project_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeEqualTo(String value) {
+			addCriterion("project_code =", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotEqualTo(String value) {
+			addCriterion("project_code <>", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThan(String value) {
+			addCriterion("project_code >", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("project_code >=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThan(String value) {
+			addCriterion("project_code <", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThanOrEqualTo(String value) {
+			addCriterion("project_code <=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLike(String value) {
+			addCriterion("project_code like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotLike(String value) {
+			addCriterion("project_code not like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIn(List<String> values) {
+			addCriterion("project_code in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotIn(List<String> values) {
+			addCriterion("project_code not in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeBetween(String value1, String value2) {
+			addCriterion("project_code between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotBetween(String value1, String value2) {
+			addCriterion("project_code not between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusIsNull() {
+			addCriterion("pawn_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusIsNotNull() {
+			addCriterion("pawn_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusEqualTo(Integer value) {
+			addCriterion("pawn_status =", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusNotEqualTo(Integer value) {
+			addCriterion("pawn_status <>", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusGreaterThan(Integer value) {
+			addCriterion("pawn_status >", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("pawn_status >=", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusLessThan(Integer value) {
+			addCriterion("pawn_status <", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("pawn_status <=", value, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusIn(List<Integer> values) {
+			addCriterion("pawn_status in", values, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusNotIn(List<Integer> values) {
+			addCriterion("pawn_status not in", values, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusBetween(Integer value1, Integer value2) {
+			addCriterion("pawn_status between", value1, value2, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("pawn_status not between", value1, value2, "pawnStatus");
 			return (Criteria) this;
 		}
 

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,8 @@ public class BFileService {
 	private static final String ACCESS_KEY_ID = PropertySupport.getProperty("baidu.accessKey");
 	private static final String SECRET_ACCESS_KEY = PropertySupport.getProperty("baidu.secretKey");
 	private static final String ENDPOINT = PropertySupport.getProperty("baidu.endPoint");
+
+	private static final String BUCKET_NAME = PropertySupport.getProperty("baidu.bucketName");
 
 	private static BosClientConfiguration config = new BosClientConfiguration();
 
@@ -274,7 +277,7 @@ public class BFileService {
 //		// 以数据流形式上传Object
 //		PutObjectResponse putObjectResponseFromInputStream = client.putObject(bucketName, objectKey, inputStream);
 		// 以二进制串上传Object
-		PutObjectResponse putObjectResponseFromByte = client.putObject("paidang", fileName, byte1);
+		PutObjectResponse putObjectResponseFromByte = client.putObject(BUCKET_NAME, fileName, byte1);
 		// 以字符串上传Object
 //		PutObjectResponse putObjectResponseFromString = client.putObject(bucketName, objectKey, string1);
 //
@@ -310,7 +313,7 @@ public class BFileService {
 //				client.putObject("bucketName", "inputStream-objectKey", inputStream);
 		// 以二进制串上传Object
 		PutObjectResponse putObjectResponseFromByte =
-				client.putObject("paidang", fileId, bytes);
+				client.putObject(BUCKET_NAME, fileId, bytes);
 		// 以字符串上传Object
 //		PutObjectResponse putObjectResponseFromString =
 //				client.putObject("bucketName", "string-objectKey", "hello world");
@@ -336,6 +339,7 @@ public class BFileService {
 	 *            归属
 	 * @return
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	public String uploadFile(byte[] bytes, String fileName, String belong) {
 		// 文件保存目录路径
 		String savePath = CoreConstants.FILE_PATH;
@@ -429,7 +433,7 @@ public class BFileService {
 //				boolean b = MyOssClient.putObject(ac.getFilePath(), minetype,
 //						bytes, null, ac.getFileName());
 				putObject(bytes,ac.getFilePath());
-				ac.setFileBelong("paidang."+ENDPOINT);
+				ac.setFileBelong(BUCKET_NAME+"."+ENDPOINT);
 				insert(ac);
 //				if (b) {
 //					ac.setFileBelong(MyOssClient.OSS_BUCKET + "."
@@ -512,5 +516,20 @@ public class BFileService {
 		}
 		String tomcatWebApps = tomcatWebAppsBuilder.toString();
 		return tomcatWebApps;
+	}
+
+	public String uploadHeadImg(String url) {
+		try {
+			String savePath = UUID.randomUUID().toString();
+			byte[] bytes = URLUtil.download(url);
+			String type = FileTypeUtil.getType(bytes);
+			if (type != null) {
+				savePath = savePath + "." + type.toLowerCase();
+			}
+
+			return this.uploadFile((byte[])bytes, (String)savePath, (String)null);
+		} catch (Exception var5) {
+			return null;
+		}
 	}
 }

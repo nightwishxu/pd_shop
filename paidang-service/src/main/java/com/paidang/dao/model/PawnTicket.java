@@ -376,6 +376,22 @@ public class PawnTicket implements Serializable {
 	private String status;
 
 	/**
+	 *用户签署状态 0未生成合同1待签署2已签署3拒签4作废
+	 */
+	@ApiModelProperty(value="用户签署状态 0未生成合同1待签署2已签署3拒签4作废")
+	@ApiParam(value="用户签署状态 0未生成合同1待签署2已签署3拒签4作废")
+	@Column(name = "user_status")
+	private Integer userStatus;
+
+	/**
+	 *用户ip地址
+	 */
+	@ApiModelProperty(value="用户ip地址")
+	@ApiParam(value="用户ip地址")
+	@Column(name = "user_location")
+	private String userLocation;
+
+	/**
 	 *签署时间
 	 */
 	@ApiModelProperty(value="签署时间")
@@ -390,6 +406,38 @@ public class PawnTicket implements Serializable {
 	@ApiParam(value="机构编号")
 	@Column(name = "org_id")
 	private Integer orgId;
+
+	/**
+	 *机构 0未生成合同1待签署2已签署3拒签4作废
+	 */
+	@ApiModelProperty(value="机构 0未生成合同1待签署2已签署3拒签4作废")
+	@ApiParam(value="机构 0未生成合同1待签署2已签署3拒签4作废")
+	@Column(name = "org_status")
+	private Integer orgStatus;
+
+	/**
+	 *机构签署时间
+	 */
+	@ApiModelProperty(value="机构签署时间")
+	@ApiParam(value="机构签署时间")
+	@Column(name = "org_sign_time")
+	private java.util.Date orgSignTime;
+
+	/**
+	 *项目编号
+	 */
+	@ApiModelProperty(value="项目编号")
+	@ApiParam(value="项目编号")
+	@Column(name = "project_code")
+	private String projectCode;
+
+	/**
+	 *机构ip地址
+	 */
+	@ApiModelProperty(value="机构ip地址")
+	@ApiParam(value="机构ip地址")
+	@Column(name = "org_location")
+	private String orgLocation;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -751,6 +799,22 @@ public class PawnTicket implements Serializable {
 		return status;
 	}
 
+	public void setUserStatus(Integer userStatus) {
+		this.userStatus=userStatus;
+	}
+
+	public Integer getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserLocation(String userLocation) {
+		this.userLocation=userLocation == null ? userLocation : userLocation.trim();
+	}
+
+	public String getUserLocation() {
+		return userLocation;
+	}
+
 	public void setSignTime(java.util.Date signTime) {
 		this.signTime=signTime;
 	}
@@ -765,6 +829,38 @@ public class PawnTicket implements Serializable {
 
 	public Integer getOrgId() {
 		return orgId;
+	}
+
+	public void setOrgStatus(Integer orgStatus) {
+		this.orgStatus=orgStatus;
+	}
+
+	public Integer getOrgStatus() {
+		return orgStatus;
+	}
+
+	public void setOrgSignTime(java.util.Date orgSignTime) {
+		this.orgSignTime=orgSignTime;
+	}
+
+	public java.util.Date getOrgSignTime() {
+		return orgSignTime;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode=projectCode == null ? projectCode : projectCode.trim();
+	}
+
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setOrgLocation(String orgLocation) {
+		this.orgLocation=orgLocation == null ? orgLocation : orgLocation.trim();
+	}
+
+	public String getOrgLocation() {
+		return orgLocation;
 	}
 
 }

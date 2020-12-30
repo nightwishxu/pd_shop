@@ -97,6 +97,8 @@ public class AuthEnterpriseController extends CoreController{
 			pawnOrg.setLegalPerson(authEnterprise1.getLegalPersonName());
 			pawnOrg.setCreateTime(new Date());
 			pawnOrg.setState(1);
+			pawnOrg.setOtherFile(authEnterprise.getOtherFile());
+			pawnOrg.setPawnExequatur(authEnterprise.getPawnExequatur());
 			pawnOrg.setIntroduction(authEnterprise1.getStoreIntroduce());
 			pawnOrg.setOrgLogo(authEnterprise1.getLogo());
 			pawnOrg.setBusinessLicense(authEnterprise1.getBusinessLicensePhoto());

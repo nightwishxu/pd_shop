@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 @author sun
@@ -425,6 +422,7 @@ public class UserGoodsController extends CoreController{
 		express.setReceiveName(userGoods.getPlatUserName());
 		express.setReceivePhone(userGoods.getPlatUserPhone());
 		express.setReceviceAddress(userGoods.getPlatUserAddress());
+		express.setCreateTime(new Date());
 		expressService.insert(express);
 		return ok();
 	}

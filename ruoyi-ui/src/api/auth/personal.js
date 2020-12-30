@@ -12,7 +12,7 @@ export function listPersonal(query) {
 // 查询【请填写功能名称】详细
 export function getPersonal(id) {
   return request({
-    url: '/authPersonal/findById=' + id,
+    url: '/authPersonal/findById?id=' + id,
     method: 'get'
   })
 }
@@ -53,7 +53,7 @@ export function exportPersonal(query) {
 }
 
 
-export function chargeState(data) {
+export function changeState(data) {
   return request({
     url: '/authPersonal/changeState',
     params: data

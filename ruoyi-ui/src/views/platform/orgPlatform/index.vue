@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="宝贝名称" prop="name">
+      <el-form-item
+        label="宝贝名称"
+        prop="name"
+      >
         <el-input
           v-model="queryParams.name"
           clearable
@@ -15,7 +18,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="快递单号" prop="code">
+      <el-form-item
+        label="快递单号"
+        prop="code"
+      >
         <el-input
           v-model="queryParams.code"
           clearable
@@ -29,11 +35,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -42,15 +49,31 @@
       :data="goodsList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="宝贝名称" align="center" prop="name" />
-      <el-table-column label="宝贝图片" align="center" prop="images">
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="宝贝名称"
+        align="center"
+        prop="name"
+      />
+      <el-table-column
+        label="宝贝图片"
+        align="center"
+        prop="images"
+      >
         <template scope="scope">
           <span
             v-for="(item, index) in scope.row.images.split(',')"
             :key="index"
           >
-            <el-popover placement="left" trigger="click" width="300">
+            <el-popover
+              placement="left"
+              trigger="click"
+              width="300"
+            >
               <el-image :src="item" />
               <el-image
                 slot="reference"
@@ -68,21 +91,28 @@
         prop="belongType"
         :formatter="handleBelongType"
       />
-      <el-table-column label="所属机构名称" align="center" prop="orgName" />
+      <el-table-column
+        label="所属机构名称"
+        align="center"
+        prop="orgName"
+      />
       <el-table-column
         label="快递单号"
         align="center"
         prop="platOrgExpressCode"
       />
-      <el-table-column label="机构申请状态" align="center" prop="platOrgState">
+      <el-table-column
+        label="机构申请状态"
+        align="center"
+        prop="platOrgState"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
             size="mini"
             v-if="scope.row.platOrgState == 1"
             @click="handleForm1(scope.row)"
-            >寄给机构</el-button
-          >
+          >寄给机构</el-button>
           <span v-else-if="scope.row.platOrgState == 2">取回中</span>
           <span v-else-if="scope.row.platOrgState == 3">确认收货</span>
           <span v-else>机构未申请取回</span>
@@ -100,17 +130,27 @@
         prop="settleStatus"
         :formatter="handleSettleStatus"
       />
-      <el-table-column label="结算金额" align="center" prop="settleMoney" />
-      <el-table-column label="备注" align="center" prop="sellRemark" />
-      <el-table-column label="操作" align="center">
+      <el-table-column
+        label="结算金额"
+        align="center"
+        prop="settleMoney"
+      />
+      <el-table-column
+        label="备注"
+        align="center"
+        prop="sellRemark"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
             size="mini"
             v-if="scope.row.orderState == 4 || scope.row.orderState == 5"
             @click="handleSettle(scope.row)"
-            >结算</el-button
-          >
+          >结算</el-button>
         </template>
       </el-table-column>
 
@@ -125,8 +165,7 @@
             type="text"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['admin:goods:edit']"
-            >查看详情</el-button
-          >
+          >查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -142,19 +181,29 @@
     <el-dialog
       :title="title1"
       :visible.sync="open1"
-      width="400px"
+      width="600px"
       append-to-body
     >
-      <el-form ref="form1" :model="form1" label-width="150px">
-        <el-form-item label="快递单号" prop="settleMoney" id="refuseInfo">
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="快递单号"
+          prop="settleMoney"
+          id="refuseInfo"
+        >
           <el-input
             v-model="form1.platOrgExpressCode"
             placeholder="请输结算金额"
           />
         </el-form-item>
-        <el-form-item label="上传打包视频" prop="platOrgVideo">
-          <template slot-scope="scope"
-            >>
+        <!-- <el-form-item
+          label="上传打包视频"
+          prop="platOrgVideo"
+        >
+          <template slot-scope="scope">
             <video
               v-if="form1.platOrgVideo"
               class="avatar"
@@ -163,10 +212,25 @@
               :src="form1.platOrgVideo"
             ></video>
           </template>
+        </el-form-item> -->
+        <el-form-item
+          label="上传打包视频"
+          prop="platOrgVideo"
+        >
+          <video-upload
+            v-model="form1.platOrgVideo"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></video-upload>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="settleBtn">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="settleBtn"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -179,15 +243,26 @@
       append-to-body
       v-if="isRouterAlive"
     >
-      <el-form ref="form" :model="form" label-width="150px">
-        <el-form-item label="上传的寄卖图片" prop="sellImgs">
+      <el-form
+        ref="form"
+        :model="form"
+        label-width="150px"
+      >
+        <el-form-item
+          label="上传的寄卖图片"
+          prop="sellImgs"
+        >
           <!-- <el-image :src="form.sellImgs"></el-image> -->
           <template scope="scope">
             <span
               v-for="(item, index) in form.sellImgs.split(',')"
               :key="index"
             >
-              <el-popover placement="left" trigger="click" width="300">
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
                 <el-image :src="item" />
                 <el-image
                   slot="reference"
@@ -199,9 +274,11 @@
             </span>
           </template>
         </el-form-item>
-        <el-form-item label="上传的寄卖视频" prop="sellVideo">
-          <template slot-scope="scope"
-            >>
+        <el-form-item
+          label="上传的寄卖视频"
+          prop="sellVideo"
+        >
+          <template slot-scope="scope">
             <video
               v-if="form.sellVideo"
               class="avatar"
@@ -211,16 +288,37 @@
             ></video>
           </template>
         </el-form-item>
-        <el-form-item label="寄卖商品描述" prop="sellInfo">
-          <el-input v-model="form.sellInfo" disabled></el-input>
+        <el-form-item
+          label="寄卖商品描述"
+          prop="sellInfo"
+        >
+          <el-input
+            v-model="form.sellInfo"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="一口价(元)" prop="sellPrice">
-          <el-input v-model="form.sellPrice" disabled></el-input>
+        <el-form-item
+          label="一口价(元)"
+          prop="sellPrice"
+        >
+          <el-input
+            v-model="form.sellPrice"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="鉴定价(元)" prop="authPrice">
-          <el-input v-model="form.authPrice" disabled></el-input>
+        <el-form-item
+          label="鉴定价(元)"
+          prop="authPrice"
+        >
+          <el-input
+            v-model="form.authPrice"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="邮寄鉴定结果" prop="authResult">
+        <el-form-item
+          label="邮寄鉴定结果"
+          prop="authResult"
+        >
           <el-input
             v-model="form.authResult"
             style="color: red"
@@ -242,6 +340,7 @@ import {
   settle,
   goodsByOrgList,
   changeCheck,
+  paltBackToOrg,
   exportGoods,
 } from "@/api/postStore/goods";
 import SingleUpload from "@/components/Upload/singleUpload";
@@ -758,8 +857,8 @@ export default {
         this.form = response.data;
         // this.form.sellImgs =
         //   "https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg,https://app-cdn.starcharge.com/332E9212-D70D-4345-BC47-1EDB6EF5C612-iOS.jpg";
-        // this.form.sellVideo =
-        //   "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
+        this.form.sellVideo =
+          "http://localhost:8080/download?id=88c54ec55ba4492eaadfa3c46c2fd3df";
         this.open = true;
         this.title = "详情";
       });

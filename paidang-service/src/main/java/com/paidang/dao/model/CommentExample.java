@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CommentExample {
 	protected String orderByClause;
@@ -1154,7 +1154,67 @@ public class CommentExample {
 			return (Criteria) this;
 		}
 
-	}
+		public Criteria andIsReportIsNull() {
+			addCriterion("is_report is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportIsNotNull() {
+			addCriterion("is_report is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportEqualTo(Integer value) {
+			addCriterion("is_report =", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportNotEqualTo(Integer value) {
+			addCriterion("is_report <>", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportGreaterThan(Integer value) {
+			addCriterion("is_report >", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportGreaterThanOrEqualTo(Integer value) {
+			addCriterion("is_report >=", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportLessThan(Integer value) {
+			addCriterion("is_report <", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportLessThanOrEqualTo(Integer value) {
+			addCriterion("is_report <=", value, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportIn(List<Integer> values) {
+			addCriterion("is_report in", values, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportNotIn(List<Integer> values) {
+			addCriterion("is_report not in", values, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportBetween(Integer value1, Integer value2) {
+			addCriterion("is_report between", value1, value2, "isReport");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsReportNotBetween(Integer value1, Integer value2) {
+			addCriterion("is_report not between", value1, value2, "isReport");
+			return (Criteria) this;
+		}
+
+}
 
 	public static class Criteria extends GeneratedCriteria {
 
@@ -1193,7 +1253,7 @@ public class CommentExample {
 		}
 
 		public boolean isNoValue() {
-			return noValue;
+		return noValue;
 		}
 
 		public boolean isSingleValue() {

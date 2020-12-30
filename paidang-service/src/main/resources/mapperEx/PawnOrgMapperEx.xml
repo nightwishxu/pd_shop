@@ -6,6 +6,7 @@
         <result column="org_user_id" property="orgUserId"></result>
         <result column="deal_amount" property="dealAmount"></result>
         <result column="isPersonal" property="isPersonal"></result>
+        <result column="isEnterprise" property="isEnterprise"></result>
   </resultMap>
 
 
@@ -16,17 +17,27 @@
 
 
   <select id="selectList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+     select  t.* from (
       select
-      *
-      from p_pawn_org
+      a.*
+      ,(select count(1) from b_auth_personal where org_id = a.id) as isPersonal
+      ,(select count(1) from b_auth_enterprise where org_id = a.id) as isEnterprise
+      from p_pawn_org a
       where 1=1
       <if test="name != null and name !=''">
-        and name like '%${name}%'
+          and a.name like '%${name}%'
       </if>
       <if test="type != null">
-          and type = #{type}
+          and a.type = #{type}
       </if>
-      order by create_time desc
+      order by a.create_time desc
+     ) t where 1=1
+      <if test="isPersonal != null">
+          and t.isPersonal = #{isPersonal}
+      </if>
+      <if test="isEnterprise != null">
+          and t.isEnterprise = #{isEnterprise}
+      </if>
 
   </select>
 
@@ -74,5 +85,9 @@
         where id =#{orgId}
 
     </select>
+
+    <update id="reSumAmount">
+        update p_pawn_org set amount = (select ifnull(sum(amount_new),0) from p_org_amount_log where org_id = {orgId}) where id = #{orgId}
+    </update>
 
 </mapper>

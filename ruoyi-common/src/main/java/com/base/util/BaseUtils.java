@@ -2,6 +2,7 @@ package com.base.util;
 
 import cn.hutool.http.HttpUtil;
 import com.base.api.ApiException;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class BaseUtils {
      *            文件id
      * @return String
      */
-    public static String getRandomOrderId() {
+    public static String getRandomOrderId(String pre) {
         // 当前日期
         Date date = new Date();
         String dString = DateUtil.dateToStr(date, "yyyyMMddHHmmssSSS");
@@ -28,7 +29,7 @@ public class BaseUtils {
                 break;
         }
 
-        String random = dString + Integer.toString(rndCount);
+        String random = pre +  dString + Integer.toString(rndCount)+StringUtil.getRandomString(2);
 
         return random;
     }
@@ -184,4 +185,31 @@ public class BaseUtils {
         check(isAnyBlank(objs), "缺少必要参数");
 
     }
+
+    public static Integer getDefaultDealType(Integer dealType){
+        return dealType==null?1:dealType;
+    }
+
+
+    /**
+     * 获取分页数据
+     * @param dataList 进行分页的数据集合
+     * @param pageNum  第几页
+     * @param pageSize 每页显示多少条
+     * @return
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static List getPageLimit(List dataList, int pageNum, int pageSize){
+        if(CollectionUtils.isEmpty(dataList)){
+            return dataList;
+        }
+        List resultList = new ArrayList();
+        // 所有dataList数据中的第几条
+        int currIdx = pageNum > 1 ? (pageNum -1) * pageSize : 0;
+        for (int i = 0; i < pageSize && i < dataList.size() - currIdx; i++) {
+            resultList.add(dataList.get(currIdx + i));
+        }
+        return resultList;
+    }
+
 }

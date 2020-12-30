@@ -119,6 +119,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/webApi/**").anonymous()
                 .antMatchers("/common/fileUpload**").anonymous()
                 .antMatchers("/download**").anonymous()
+                .antMatchers("/h5/**").anonymous()
+                .antMatchers("/notify/**").anonymous()
+                .antMatchers("/aliPayNotify").anonymous()
+                .antMatchers("/wxMobileNotify").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

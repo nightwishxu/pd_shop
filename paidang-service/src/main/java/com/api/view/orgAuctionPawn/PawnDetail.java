@@ -2,6 +2,7 @@ package com.api.view.orgAuctionPawn;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
 /**
  * Created by Lee on 2017/9/25.
@@ -81,6 +82,27 @@ public class PawnDetail {
 
     @ApiModelProperty("竞拍出价次数)")
     private Integer auctionCount;
+
+    /**
+     *  0未生成合同1待签署2已签署3拒签4作废
+     */
+//    private Integer continueUserStatus;
+
+    /**
+     *  0未生成合同1待签署2已签署3拒签4作废
+     */
+
+//    private Integer continueOrgStatus;
+    @ApiModelProperty("用户 0未生成合同1待签署2已签署3拒签4作废)")
+    private Integer userStatus;
+
+    @ApiModelProperty("机构 0未生成合同1待签署2已签署3拒签4作废)")
+    private Integer orgStatus;
+
+
+    @ApiModelProperty(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+    @ApiParam(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+    private Integer pawnStatus;
 
     public String getId() {
         return id;
@@ -265,5 +287,29 @@ public class PawnDetail {
 
     public void setAuctionCount(Integer auctionCount) {
         this.auctionCount = auctionCount;
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Integer getOrgStatus() {
+        return orgStatus;
+    }
+
+    public void setOrgStatus(Integer orgStatus) {
+        this.orgStatus = orgStatus;
+    }
+
+    public Integer getPawnStatus() {
+        return pawnStatus;
+    }
+
+    public void setPawnStatus(Integer pawnStatus) {
+        this.pawnStatus = pawnStatus;
     }
 }

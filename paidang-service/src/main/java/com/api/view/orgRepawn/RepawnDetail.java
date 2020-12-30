@@ -81,6 +81,12 @@ public class RepawnDetail extends RepawnMini {
     @ApiModelProperty("是否已经缴纳平台利息 0-否 1-已缴")
     private String isPayPlatMoney;
 
+    @ApiModelProperty(value = "续当 用户 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer continueUserStatus;
+
+    @ApiModelProperty(value = "续当 机构 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer continueOrgStatus;
+
 
     public String getCollecterId() {
         return collecterId;
@@ -256,5 +262,21 @@ public class RepawnDetail extends RepawnMini {
 
     public void setIsPayPlatMoney(String isPayPlatMoney) {
         this.isPayPlatMoney = isPayPlatMoney;
+    }
+
+    public Integer getContinueUserStatus() {
+        return continueUserStatus;
+    }
+
+    public void setContinueUserStatus(Integer continueUserStatus) {
+        this.continueUserStatus = continueUserStatus;
+    }
+
+    public Integer getContinueOrgStatus() {
+        return continueOrgStatus;
+    }
+
+    public void setContinueOrgStatus(Integer continueOrgStatus) {
+        this.continueOrgStatus = continueOrgStatus;
     }
 }

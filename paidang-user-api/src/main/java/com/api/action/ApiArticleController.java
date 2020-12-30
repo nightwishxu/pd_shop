@@ -6,7 +6,10 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.StringUtils;
+import com.demo.connector.HttpConnector;
+import com.demo.constant.DSPConsts;
 import com.item.dao.model.User;
 import com.item.daoEx.model.UserEx;
 import com.item.service.UserService;
@@ -317,8 +320,9 @@ public class ApiArticleController extends ApiBaseController {
     @ApiOperation(value = "test", notes = "分页")
     @RequestMapping(value = "/test/list",method = {RequestMethod.GET})
     @ApiMethod(isLogin = false,isPage = false)
-    public Ret test(){
-        return  msg("22");
+    public Result test(){
+        return new Result<>(HttpConnector.JKS_PATH);
+
     }
 
 

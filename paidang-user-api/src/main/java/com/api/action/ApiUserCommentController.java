@@ -105,6 +105,7 @@ public class ApiUserCommentController extends ApiBaseController {
         if (result>0){
             com.paidang.dao.model.Order order=new  com.paidang.dao.model.Order();
             order.setCommentState(1);
+            order.setState(5);
             orderService.updateByExampleSelective(order,example);
         }
         pawnOrgService.updateCommentCount(userComment.getOrgId());

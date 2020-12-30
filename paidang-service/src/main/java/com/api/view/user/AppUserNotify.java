@@ -28,6 +28,9 @@ public class AppUserNotify {
     @ApiModelProperty(value="时间")
     private String createTime;
 
+    @ApiModelProperty(value="消息种类 1 典2 鉴3 递4 系")
+    private Integer messageType;
+
     public Integer getId() {
         return id;
     }
@@ -98,5 +101,13 @@ public class AppUserNotify {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(Integer messageType) {
+        this.messageType = messageType;
     }
 }

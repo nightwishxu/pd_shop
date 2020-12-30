@@ -60,20 +60,20 @@ public class GoodsTask {
     /**
      * 竞拍商品处理
      */
-    @Scheduled(cron ="0 */5 * * * ?")
-    public void endAuctionGoods(){
-
-        GoodsExample example = new GoodsExample();
-        example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeGreaterThan(new Date())
-                .andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andStateEqualTo(1).andTotalGreaterThan(1)
-                .andMaxAutionIdIsNotNull().andMaxAuctionIsNotNull();
-
-        List<Goods> goods = goodsService.selectByExample(example);
-        for (Goods good : goods) {
-
-        }
-
-
-    }
+//    @Scheduled(cron ="0 */5 * * * ?")
+//    public void endAuctionGoods(){
+//
+//        GoodsExample example = new GoodsExample();
+//        example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeGreaterThan(new Date())
+//                .andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andStateEqualTo(1).andTotalGreaterThan(1)
+//                .andMaxAutionIdIsNotNull().andMaxAuctionIsNotNull();
+//
+//        List<Goods> goods = goodsService.selectByExample(example);
+//        for (Goods good : goods) {
+//
+//        }
+//
+//
+//    }
 
 }

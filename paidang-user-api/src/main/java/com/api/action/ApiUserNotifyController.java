@@ -12,6 +12,7 @@ import com.item.dao.model.UserNotify;
 import com.item.dao.model.UserNotifyExample;
 import com.item.service.UserNotifyService;
 import com.ruoyi.common.core.domain.Ret;
+import com.util.PaidangMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -55,6 +56,7 @@ public class ApiUserNotifyController extends ApiBaseController {
             record.setIsRead(1);
             record.setContent(ex.getContent());
             record.setCreateTime(DateUtil.dateToStr(ex.getCreateTime()));
+            record.setMessageType(PaidangMessage.getByRedirectType(ex.getRedirectType(),0).getMessageType());
             list2.add(record);
         }
         return list2;

@@ -2,6 +2,9 @@ package com.api.view.orgAuctionPawn;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
 
 /**
  * Created by Lee on 2017/9/25.
@@ -79,6 +82,15 @@ public class BidWonDetail {
 
     @ApiModelProperty("本次拍当是否已失效（中标后1小时内未支付贷款）0-已失效 1-有效")
     private String isInvalid;
+
+    @ApiModelProperty(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+    private Integer pawnStatus;
+
+    @ApiModelProperty("用户 0未生成合同1待签署2已签署3拒签4作废)")
+    private Integer userStatus;
+
+    @ApiModelProperty("机构 0未生成合同1待签署2已签署3拒签4作废)")
+    private Integer orgStatus;
 
     public String getPawnId() {
         return pawnId;
@@ -262,5 +274,29 @@ public class BidWonDetail {
 
     public void setIsInvalid(String isInvalid) {
         this.isInvalid = isInvalid;
+    }
+
+    public Integer getPawnStatus() {
+        return pawnStatus;
+    }
+
+    public void setPawnStatus(Integer pawnStatus) {
+        this.pawnStatus = pawnStatus;
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Integer getOrgStatus() {
+        return orgStatus;
+    }
+
+    public void setOrgStatus(Integer orgStatus) {
+        this.orgStatus = orgStatus;
     }
 }

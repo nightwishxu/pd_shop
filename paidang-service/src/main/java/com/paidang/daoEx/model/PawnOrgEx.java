@@ -29,6 +29,15 @@ public class PawnOrgEx extends PawnOrg {
 
     private Integer isPersonal;
 
+    private Integer isEnterprise;
+
+    public Integer getIsEnterprise() {
+        return isEnterprise;
+    }
+
+    public void setIsEnterprise(Integer isEnterprise) {
+        this.isEnterprise = isEnterprise;
+    }
 
     public String getOrgLevel() {
         BigDecimal integral = getIntegral()==null?BigDecimal.ZERO:getIntegral();

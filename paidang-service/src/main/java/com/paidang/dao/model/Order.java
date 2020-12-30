@@ -96,6 +96,14 @@ public class Order implements Serializable {
 	private java.math.BigDecimal goodsCost;
 
 	/**
+	 *商品数量
+	 */
+	@ApiModelProperty(value="商品数量")
+	@ApiParam(value="商品数量")
+	@Column(name = "goods_num")
+	private Integer goodsNum;
+
+	/**
 	 *订单总金额
 	 */
 	@ApiModelProperty(value="订单总金额")
@@ -413,6 +421,14 @@ public class Order implements Serializable {
 
 	public java.math.BigDecimal getGoodsCost() {
 		return goodsCost;
+	}
+
+	public void setGoodsNum(Integer goodsNum) {
+		this.goodsNum=goodsNum;
+	}
+
+	public Integer getGoodsNum() {
+		return goodsNum;
 	}
 
 	public void setTotalPrice(java.math.BigDecimal totalPrice) {

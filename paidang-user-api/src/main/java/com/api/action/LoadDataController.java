@@ -1,17 +1,20 @@
 package com.api.action;
 
-import com.api.model.PawnTicketModel;
-import com.api.model.RepawnTicketModel;
+
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiException;
 import com.base.util.DateUtil;
 import com.item.dao.model.User;
 import com.item.service.UserService;
 import com.paidang.dao.model.PawnOrg;
+import com.paidang.dao.model.PawnTicket;
 import com.paidang.daoEx.model.PawnContinueEx;
 import com.paidang.daoEx.model.UserPawnEx;
+import com.paidang.domain.pojo.PawnTicketModel;
+import com.paidang.domain.pojo.RepawnTicketModel;
 import com.paidang.service.PawnContinueService;
 import com.paidang.service.PawnOrgService;
+import com.paidang.service.PawnTicketService;
 import com.paidang.service.UserPawnService;
 import com.util.NumberToCN;
 import io.swagger.annotations.Api;
@@ -39,6 +42,9 @@ public class LoadDataController {
     UserPawnService userPawnService;
     @Autowired
     PawnContinueService pawnContinueService;
+
+    @Autowired
+    PawnTicketService pawnTicketService;
 
     /**
      * 查询典当续当数据
@@ -134,6 +140,7 @@ public class LoadDataController {
         UserPawnEx userPawnEx = userPawnService.getUserPawnExById(pawnContinueEx.getPawnId().toString());
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawnEx.getOrgId());
         User pawner = userService.selectByPrimaryKey(userPawnEx.getUserId());
+        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(userPawnEx.getProjectCode());
         //所有续当票
         RepawnTicketModel repawnTicketModel = new RepawnTicketModel();
         repawnTicketModel.setContactor(pawnContinueEx.getUserName()!=null?pawnContinueEx.getUserName():"");
@@ -161,6 +168,10 @@ public class LoadDataController {
             BigDecimal repawnTotal = pawnContinueEx.getPawnMoney().add(pawnContinueEx.getPawnInterest());
             repawnTicketModel.setRepawnTotal(repawnTotal.toString());
             repawnTicketModel.setRepawnTotalCN(NumberToCN.number2CNMontrayUnit(repawnTotal));
+        }
+        if(pawnTicket!=null){
+            repawnTicketModel.setChecker(pawnTicket.getChecker());
+            repawnTicketModel.setHandler(pawnTicket.getHandler());
         }
         return repawnTicketModel;
     }

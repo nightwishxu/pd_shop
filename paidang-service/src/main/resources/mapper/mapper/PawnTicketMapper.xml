@@ -47,8 +47,14 @@
         <result column="type" property="type" jdbcType="VARCHAR" />
         <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+        <result column="user_location" property="userLocation" jdbcType="VARCHAR" />
         <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
         <result column="org_id" property="orgId" jdbcType="INTEGER" />
+        <result column="org_status" property="orgStatus" jdbcType="INTEGER" />
+        <result column="org_sign_time" property="orgSignTime" jdbcType="TIMESTAMP" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="org_location" property="orgLocation" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -112,7 +118,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,pawn_ticket_code,org_name,org_tel,org_adress,business_license,pawner_name,pawner_tel,pawner_id_card,pawner_cert,contactor,pawner_addr,goods_name,auth_price_test,auth_price,equivalent_ratio,loan_money,user_money,pawn_money,loan_money_c_n,user_money_c_n,pawn_money_c_n,pawn_begin_time,pawn_end_time,begin_pawn_end_time,rate,money_rate,cost,money_cost,repawn_total,cost_c_n,repawn_total_c_n,money_cost_c_n,repawn_begin_time,repawn_end_time,checker,handler,user_id,remark,other_order,create_time,modify_time,type,contract_id,status,sign_time,org_id
+        id,pawn_ticket_code,org_name,org_tel,org_adress,business_license,pawner_name,pawner_tel,pawner_id_card,pawner_cert,contactor,pawner_addr,goods_name,auth_price_test,auth_price,equivalent_ratio,loan_money,user_money,pawn_money,loan_money_c_n,user_money_c_n,pawn_money_c_n,pawn_begin_time,pawn_end_time,begin_pawn_end_time,rate,money_rate,cost,money_cost,repawn_total,cost_c_n,repawn_total_c_n,money_cost_c_n,repawn_begin_time,repawn_end_time,checker,handler,user_id,remark,other_order,create_time,modify_time,type,contract_id,status,user_status,user_location,sign_time,org_id,org_status,org_sign_time,project_code,org_location
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -165,7 +171,9 @@
         handler,user_id,remark,
         other_order,create_time,modify_time,
         type,contract_id,status,
-        sign_time,org_id
+        user_status,user_location,sign_time,
+        org_id,org_status,org_sign_time,
+        project_code,org_location
         )
         values (#{pawnTicketCode,jdbcType=VARCHAR},#{orgName,jdbcType=VARCHAR},
         #{orgTel,jdbcType=VARCHAR},#{orgAdress,jdbcType=VARCHAR},#{businessLicense,jdbcType=VARCHAR},
@@ -182,7 +190,9 @@
         #{handler,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},
         #{otherOrder,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
         #{type,jdbcType=VARCHAR},#{contractId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
-        #{signTime,jdbcType=TIMESTAMP},#{orgId,jdbcType=INTEGER}
+        #{userStatus,jdbcType=INTEGER},#{userLocation,jdbcType=VARCHAR},#{signTime,jdbcType=TIMESTAMP},
+        #{orgId,jdbcType=INTEGER},#{orgStatus,jdbcType=INTEGER},#{orgSignTime,jdbcType=TIMESTAMP},
+        #{projectCode,jdbcType=VARCHAR},#{orgLocation,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -321,11 +331,29 @@
             <if test="status != null" >
                 status,
             </if>
+            <if test="userStatus != null" >
+                user_status,
+            </if>
+            <if test="userLocation != null" >
+                user_location,
+            </if>
             <if test="signTime != null" >
                 sign_time,
             </if>
             <if test="orgId != null" >
                 org_id,
+            </if>
+            <if test="orgStatus != null" >
+                org_status,
+            </if>
+            <if test="orgSignTime != null" >
+                org_sign_time,
+            </if>
+            <if test="projectCode != null" >
+                project_code,
+            </if>
+            <if test="orgLocation != null" >
+                org_location,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -461,11 +489,29 @@
             <if test="status != null" >
                 #{status,jdbcType=VARCHAR},
             </if>
+            <if test="userStatus != null" >
+                #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="userLocation != null" >
+                #{userLocation,jdbcType=VARCHAR},
+            </if>
             <if test="signTime != null" >
                 #{signTime,jdbcType=TIMESTAMP},
             </if>
             <if test="orgId != null" >
                 #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null" >
+                #{orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="orgSignTime != null" >
+                #{orgSignTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="projectCode != null" >
+                #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgLocation != null" >
+                #{orgLocation,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -615,11 +661,29 @@
             <if test="record.status != null" >
                 status = #{record.status,jdbcType=VARCHAR},
             </if>
+            <if test="record.userStatus != null" >
+                user_status = #{record.userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.userLocation != null" >
+                user_location = #{record.userLocation,jdbcType=VARCHAR},
+            </if>
             <if test="record.signTime != null" >
                 sign_time = #{record.signTime,jdbcType=TIMESTAMP},
             </if>
             <if test="record.orgId != null" >
                 org_id = #{record.orgId,jdbcType=INTEGER},
+            </if>
+            <if test="record.orgStatus != null" >
+                org_status = #{record.orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.orgSignTime != null" >
+                org_sign_time = #{record.orgSignTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.projectCode != null" >
+                project_code = #{record.projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.orgLocation != null" >
+                org_location = #{record.orgLocation,jdbcType=VARCHAR},
             </if>
         </set>
         <if test="_parameter != null" >
@@ -674,8 +738,14 @@
         type = #{type,jdbcType=VARCHAR},
         contract_id = #{contractId,jdbcType=VARCHAR},
         status = #{status,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        user_location = #{userLocation,jdbcType=VARCHAR},
         sign_time = #{signTime,jdbcType=TIMESTAMP},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        org_status = #{orgStatus,jdbcType=INTEGER},
+        org_sign_time = #{orgSignTime,jdbcType=TIMESTAMP},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        org_location = #{orgLocation,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -816,11 +886,29 @@
             <if test="status != null" >
                 status = #{status,jdbcType=VARCHAR},
             </if>
+            <if test="userStatus != null" >
+                user_status = #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="userLocation != null" >
+                user_location = #{userLocation,jdbcType=VARCHAR},
+            </if>
             <if test="signTime != null" >
                 sign_time = #{signTime,jdbcType=TIMESTAMP},
             </if>
             <if test="orgId != null" >
                 org_id = #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null" >
+                org_status = #{orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="orgSignTime != null" >
+                org_sign_time = #{orgSignTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="projectCode != null" >
+                project_code = #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgLocation != null" >
+                org_location = #{orgLocation,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id}
@@ -872,8 +960,14 @@
         type = #{type,jdbcType=VARCHAR},
         contract_id = #{contractId,jdbcType=VARCHAR},
         status = #{status,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        user_location = #{userLocation,jdbcType=VARCHAR},
         sign_time = #{signTime,jdbcType=TIMESTAMP},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        org_status = #{orgStatus,jdbcType=INTEGER},
+        org_sign_time = #{orgSignTime,jdbcType=TIMESTAMP},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        org_location = #{orgLocation,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

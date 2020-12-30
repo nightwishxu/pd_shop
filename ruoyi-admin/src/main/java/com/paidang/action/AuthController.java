@@ -49,7 +49,7 @@ public class AuthController extends CoreController {
      * @return
      */
     @PostMapping("/user/list")
-    public TableDataInfo list(int page, int rows, String nickOrMobile){
+    public TableDataInfo list(String nickOrMobile){
         startPage();
         List<UserEx> userExes =  authUserMapper.authUserList(nickOrMobile);
         return page(userExes);
@@ -63,7 +63,7 @@ public class AuthController extends CoreController {
      * @return
      */
     @PostMapping("/goods/list")
-    public TableDataInfo goodsList(int page, int rows,String goodsName){
+    public TableDataInfo goodsList(String goodsName){
         startPage();
         List<GoodsEx> goodsList = goodsService.selectBusinessGoodsList(goodsName);
         return page(goodsList);
@@ -85,7 +85,7 @@ public class AuthController extends CoreController {
     }
 
     @PostMapping("/order/list")
-    public TableDataInfo orderList(int page,int rows,String goodsName,String orderCode,String state){
+    public TableDataInfo orderList(String goodsName,String orderCode,String state){
         startPage();
         List<OrderEx> orderExes = orderService.getBusinessOrder(goodsName,orderCode,state,null);
         return page(orderExes);

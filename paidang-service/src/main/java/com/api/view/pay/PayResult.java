@@ -3,6 +3,8 @@ package com.api.view.pay;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Map;
+
 @ApiModel
 public class PayResult {
 
@@ -14,6 +16,12 @@ public class PayResult {
 	private Integer platform;
 	@ApiModelProperty(value="支付宝支付回调地址")
 	private String backUrl;
+
+	@ApiModelProperty(value="支付宝支付参数")
+	private String aliPay;
+	@ApiModelProperty(value="微信支付参数")
+	private String wxPay;
+
 	public String getId() {
 		return id;
 	}
@@ -37,5 +45,21 @@ public class PayResult {
 	}
 	public void setBackUrl(String backUrl) {
 		this.backUrl = backUrl;
+	}
+
+	public String getAliPay() {
+		return aliPay;
+	}
+
+	public void setAliPay(String aliPay) {
+		this.aliPay = aliPay;
+	}
+
+	public String getWxPay() {
+		return wxPay;
+	}
+
+	public void setWxPay(String wxPay) {
+		this.wxPay = wxPay;
 	}
 }

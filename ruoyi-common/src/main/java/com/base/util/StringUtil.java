@@ -3,13 +3,11 @@ package com.base.util;
 
 import cn.hutool.core.util.ArrayUtil;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.Character.UnicodeBlock;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
@@ -2738,5 +2736,44 @@ public class StringUtil {
 
     public static String getRandomUUID() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+
+    public static String buildUrlWithQueryString(String url, Map<String, String> queryParas) {
+        if (queryParas != null && !queryParas.isEmpty()) {
+            StringBuilder sb = new StringBuilder(url);
+            boolean isFirst;
+            if (!url.contains("?")) {
+                isFirst = true;
+                sb.append("?");
+            } else {
+                isFirst = false;
+            }
+
+            String key;
+            String value;
+            for(Iterator var4 = queryParas.entrySet().iterator(); var4.hasNext(); sb.append(key).append("=").append(value)) {
+                Entry<String, String> entry = (Entry)var4.next();
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sb.append("&");
+                }
+
+                key = (String)entry.getKey();
+                value = (String)entry.getValue();
+                if (notBlank(value)) {
+                    try {
+                        value = URLEncoder.encode(value, "utf-8");
+                    } catch (UnsupportedEncodingException var9) {
+                        throw new RuntimeException(var9);
+                    }
+                }
+            }
+
+            return sb.toString();
+        } else {
+            return url;
+        }
     }
 }

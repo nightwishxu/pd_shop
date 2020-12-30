@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PawnContinueExample {
 	protected String orderByClause;
@@ -1431,6 +1431,266 @@ public class PawnContinueExample {
 
 		public Criteria andContractIdNotBetween(String value1, String value2) {
 			addCriterion("contract_id not between", value1, value2, "contractId");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNull() {
+			addCriterion("project_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNotNull() {
+			addCriterion("project_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeEqualTo(String value) {
+			addCriterion("project_code =", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotEqualTo(String value) {
+			addCriterion("project_code <>", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThan(String value) {
+			addCriterion("project_code >", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("project_code >=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThan(String value) {
+			addCriterion("project_code <", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThanOrEqualTo(String value) {
+			addCriterion("project_code <=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLike(String value) {
+			addCriterion("project_code like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotLike(String value) {
+			addCriterion("project_code not like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIn(List<String> values) {
+			addCriterion("project_code in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotIn(List<String> values) {
+			addCriterion("project_code not in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeBetween(String value1, String value2) {
+			addCriterion("project_code between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotBetween(String value1, String value2) {
+			addCriterion("project_code not between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusIsNull() {
+			addCriterion("user_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusIsNotNull() {
+			addCriterion("user_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusEqualTo(Integer value) {
+			addCriterion("user_status =", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotEqualTo(Integer value) {
+			addCriterion("user_status <>", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusGreaterThan(Integer value) {
+			addCriterion("user_status >", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("user_status >=", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusLessThan(Integer value) {
+			addCriterion("user_status <", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("user_status <=", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusIn(List<Integer> values) {
+			addCriterion("user_status in", values, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotIn(List<Integer> values) {
+			addCriterion("user_status not in", values, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusBetween(Integer value1, Integer value2) {
+			addCriterion("user_status between", value1, value2, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("user_status not between", value1, value2, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIsNull() {
+			addCriterion("org_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIsNotNull() {
+			addCriterion("org_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusEqualTo(Integer value) {
+			addCriterion("org_status =", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotEqualTo(Integer value) {
+			addCriterion("org_status <>", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusGreaterThan(Integer value) {
+			addCriterion("org_status >", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("org_status >=", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusLessThan(Integer value) {
+			addCriterion("org_status <", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("org_status <=", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIn(List<Integer> values) {
+			addCriterion("org_status in", values, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotIn(List<Integer> values) {
+			addCriterion("org_status not in", values, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusBetween(Integer value1, Integer value2) {
+			addCriterion("org_status between", value1, value2, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("org_status not between", value1, value2, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeIsNull() {
+			addCriterion("continue_pawn_ticket_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeIsNotNull() {
+			addCriterion("continue_pawn_ticket_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeEqualTo(String value) {
+			addCriterion("continue_pawn_ticket_code =", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeNotEqualTo(String value) {
+			addCriterion("continue_pawn_ticket_code <>", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeGreaterThan(String value) {
+			addCriterion("continue_pawn_ticket_code >", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("continue_pawn_ticket_code >=", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeLessThan(String value) {
+			addCriterion("continue_pawn_ticket_code <", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeLessThanOrEqualTo(String value) {
+			addCriterion("continue_pawn_ticket_code <=", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeLike(String value) {
+			addCriterion("continue_pawn_ticket_code like", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeNotLike(String value) {
+			addCriterion("continue_pawn_ticket_code not like", value, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeIn(List<String> values) {
+			addCriterion("continue_pawn_ticket_code in", values, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeNotIn(List<String> values) {
+			addCriterion("continue_pawn_ticket_code not in", values, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeBetween(String value1, String value2) {
+			addCriterion("continue_pawn_ticket_code between", value1, value2, "continuePawnTicketCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andContinuePawnTicketCodeNotBetween(String value1, String value2) {
+			addCriterion("continue_pawn_ticket_code not between", value1, value2, "continuePawnTicketCode");
 			return (Criteria) this;
 		}
 

@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class AppMyPawnGetBack {
     @ApiModelProperty(value="id")
     private Integer id;
-    @ApiModelProperty(value="name")
+    @ApiModelProperty(value="当品名称")
     private String name;
     @ApiModelProperty(value="鉴定价")
     private String authPrice;
@@ -52,6 +52,15 @@ public class AppMyPawnGetBack {
     private String payeeBankName;
     @ApiModelProperty(value="收款账户--银行卡号")
     private String payeeBankCardCode;
+
+    @ApiModelProperty(value="当户电话")
+    private String pawnerPhone;
+
+    @ApiModelProperty(value="赎当付款凭证")
+    private String redeemTicket;
+
+    @ApiModelProperty(value="当户名称")
+    private String pawnerName;
 
 
     public Integer getId() {
@@ -220,5 +229,30 @@ public class AppMyPawnGetBack {
 
     public void setPayeeBankCardCode(String payeeBankCardCode) {
         this.payeeBankCardCode = payeeBankCardCode;
+    }
+
+
+    public String getPawnerPhone() {
+        return pawnerPhone;
+    }
+
+    public void setPawnerPhone(String pawnerPhone) {
+        this.pawnerPhone = pawnerPhone;
+    }
+
+    public String getRedeemTicket() {
+        return redeemTicket;
+    }
+
+    public void setRedeemTicket(String redeemTicket) {
+        this.redeemTicket = redeemTicket;
+    }
+
+    public String getPawnerName() {
+        return pawnerName;
+    }
+
+    public void setPawnerName(String pawnerName) {
+        this.pawnerName = pawnerName;
     }
 }

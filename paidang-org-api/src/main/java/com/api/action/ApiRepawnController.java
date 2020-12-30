@@ -12,6 +12,7 @@ import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.util.DateUtil;
+import com.base.util.StringUtil;
 import com.item.dao.model.User;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
@@ -62,6 +63,8 @@ public class ApiRepawnController extends ApiBaseController{
     private UserBalanceLogService userBalanceLogService;
     @Autowired
     private PawnLogService pawnLogService;
+    @Autowired
+    private PawnTicketService pawnTicketService;
 
 
     @ApiOperation(value = "机构端续当列表",notes="机构端续当列表")
@@ -114,6 +117,8 @@ public class ApiRepawnController extends ApiBaseController{
             repawnMini.setUserMoney(userMoney);//已发放当金
             repawnMini.setPawnCode(pawnTicketCode);//当号
             repawnMini.setImages(OrgUtil.getSingleImage(images));//图
+            repawnMini.setSignButton("0");
+            repawnMini.setCompleteTicketButton("0");
            /* //成功续当次数
             Integer pawnedTimes = pawnContinueService.getRepawnTimes(userPawn.getId());
             repawnMini.setRepawnTimes(pawnedTimes!=null?pawnedTimes:0);*/
@@ -128,7 +133,22 @@ public class ApiRepawnController extends ApiBaseController{
                 repawnMini.setDateRepawnTo(userPawn.getBeginPawnEndTime()!=null? DateUtil.format(userPawn.getBeginPawnEndTime(),"yyyy-MM-dd"):"");
             }else{
                 PawnContinue newestOne = pawnContinueList.get(0);//时间倒序取最新一次续当申请
-                if (newestOne.getState() == 1){ //续当申请中
+                repawnMini.setProjectCode(newestOne.getProjectCode());
+                if (StringUtils.isNotBlank(repawnMini.getPawnCode())){
+                    PawnTicket pawnTicket = pawnTicketService.getByProjectCode(repawnMini.getProjectCode());
+                    if (pawnTicket!=null){
+                        repawnMini.setUserStatus(pawnTicket.getUserStatus());
+                        repawnMini.setOrgStatus(pawnTicket.getOrgStatus());
+                        if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isNotBlank(newestOne.getContinuePawnTicketCode())){
+                            repawnMini.setSignButton("1");
+                        }
+                        if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isBlank(newestOne.getContinuePawnTicketCode())){
+                            repawnMini.setCompleteTicketButton("1");
+                        }
+
+                    }
+                }
+                if (newestOne.getState() == 3){ //续当申请中
                     //显示确认收款（续当手续费）按钮
                     repawnMini.setShowButton("1");
                     //最新续当id，set了repawnId后点击进入详情页面与未set的不同
@@ -364,6 +384,47 @@ public class ApiRepawnController extends ApiBaseController{
         return repawnDetail;
     }
 
+    @ApiOperation(value = "完善当票当票号",notes="")
+    @RequestMapping(value = "/completePawnTicketCode", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer completePawnTicketCode(@ApiParam(value = "典当id",required = true) Integer pawnId,
+                                        @ApiParam(value = "续当id ",required = true) Integer repawnId,
+                                        @ApiParam(value = "当票号",required = true) String pawnTicketCode,
+                                        MobileInfo mobileInfo){
+
+        //已经使用过的当号排除
+        UserPawnExample userPawnExample = new UserPawnExample();
+        userPawnExample.createCriteria().andPawnTicketCodeEqualTo(pawnTicketCode).andStateGreaterThanOrEqualTo(2);
+        Integer cnt = userPawnService.countByExample(userPawnExample);
+        if (cnt > 0){
+            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
+        }
+        PawnContinueExample example = new PawnContinueExample();
+        example.createCriteria().andContinuePawnTicketCodeEqualTo(pawnTicketCode);
+        int i = pawnContinueService.countByExample(example);
+        if (i > 0){
+            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
+        }
+
+        PawnContinue repawnRecord = pawnContinueService.selectByPrimaryKey(pawnId);
+        if (repawnRecord == null){
+            throw new ApiException(400,"续当不存在");
+        }
+        UserPawn pawnRecord = userPawnService.selectByPrimaryKey(repawnId);
+        Integer goodsId = pawnRecord.getGoodsId();
+        Integer userId = pawnRecord.getUserId();
+        Integer orgId = pawnRecord.getOrgId();
+        if (goodsId == null || orgId == null || userId == null){
+            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+        }
+        PawnContinue pawnContinue = new PawnContinue();
+
+        pawnContinue.setId(repawnId);
+        pawnContinue.setContinuePawnTicketCode(pawnTicketCode);
+        pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
+
+        return 1;
+    }
 
 
     @ApiOperation(value = "确认收款(续当费)",notes="用户提交续当请求,机构确认续当打款凭证有效后点击此按钮")
@@ -442,6 +503,7 @@ public class ApiRepawnController extends ApiBaseController{
         pawnLog.setUserName(pawner.getName());
         pawnLog.setTradeCardBank(repawnRecord.getUserBank());
         pawnLog.setTradeCardCode(repawnRecord.getUserBankCard());
+        pawnLog.setCreateTime(new Date());
         pawnLogService.insert(pawnLog);
 
         OrgBalanceLog orgBalanceLog = new OrgBalanceLog();
@@ -459,6 +521,7 @@ public class ApiRepawnController extends ApiBaseController{
         orgBalanceLog.setUserId(pawner.getId());
         orgBalanceLog.setUserName(pawner.getName());
         orgBalanceLog.setUserPhone(pawner.getPhone()!=null?pawner.getPhone():pawner.getAccount());
+        orgBalanceLog.setCreateTime(new Date());
         orgBalanceLogService.insert(orgBalanceLog);
 
         UserBalanceLog userBalanceLog = new UserBalanceLog();
@@ -476,6 +539,7 @@ public class ApiRepawnController extends ApiBaseController{
         userBalanceLog.setOrgId(orgId);
         userBalanceLog.setOrgName(pawnOrg.getName());
         userBalanceLog.setOrgPhone(pawnOrg.getPhone());
+        userBalanceLog.setCreateTime(new Date());
         userBalanceLogService.insert(userBalanceLog);
         return 1;
 

@@ -1,6 +1,8 @@
 package com.api.action;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.api.service.ApiUserPayService;
 import com.base.action.CoreController;
 import com.base.pay.MFramePayType;
 import com.base.pay.PayPropertySupport;
@@ -9,6 +11,9 @@ import com.base.pay.ali.AlipayNotify;
 import com.base.pay.wx.WxPrepay;
 import com.base.pay.wx.util.ConstantUtil;
 import com.base.pay.wx.util.XMLUtil;
+import com.ijpay.core.enums.SignType;
+import com.ijpay.core.kit.HttpKit;
+import com.ijpay.core.kit.WxPayKit;
 import com.item.dao.model.PayLog;
 import com.item.service.BaseService;
 import com.paidang.dao.model.*;
@@ -56,6 +61,9 @@ public class PayController extends CoreController {
 
 	@Autowired
 	private OutOrderService outOrderService;
+
+	@Autowired
+	private ApiUserPayService apiUserPayService;
 
 	@RequestMapping(value = "/payReturn")
 	public String alipayWapReturn(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -428,20 +436,36 @@ public class PayController extends CoreController {
 	public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.info("@@@@收到微信支付信息,进入notify流程@@@@");
 		try {
-			InputStream in = request.getInputStream();
-			String s = null;
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, "utf-8"));
-			StringBuffer sb = new StringBuffer();
-			while ((s = br.readLine()) != null) {
-				sb.append(s);
-			}
-			br.close();
-			in.close();
-			Map<String, String> params = XMLUtil.doXMLParse(sb.toString());
+//			InputStream in = request.getInputStream();
+//			String s = null;
+//			BufferedReader br = new BufferedReader(new InputStreamReader(in, "utf-8"));
+//			StringBuffer sb = new StringBuffer();
+//			while ((s = br.readLine()) != null) {
+//				sb.append(s);
+//			}
+//			br.close();
+//			in.close();
+//			Map<String, String> params = XMLUtil.doXMLParse(sb.toString());
+			String xmlMsg = HttpKit.readData(request);
+			logger.info("微信支付通知=" + xmlMsg);
+			Map<String, String> params = WxPayKit.xmlToMap(xmlMsg);
+			logger.info("微信支付通知=" + JSONUtils.toJSONString(params));
+			String returnCode = params.get("return_code");
 
-			SortedMap<String, String> newParams = new TreeMap<String, String>(params);
-			
-			newParams.put("key", ConstantUtil.PAY_KEY);
+
+//			SortedMap<String, String> newParams = new TreeMap<String, String>(params);
+//
+//			newParams.put("key", ConstantUtil.PAY_KEY);
+//
+//			String out_trade_no = (String) params.get("out_trade_no");
+//
+//			String trade_no = (String) params.get("transaction_id");
+//			// 总金额，分
+//			String total = (String) params.get("total_fee");
+//
+//			String respCode = (String) params.get("result_code");
+//
+//			String openId = (String) params.get("openid");
 
 			String out_trade_no = (String) params.get("out_trade_no");
 
@@ -454,9 +478,11 @@ public class PayController extends CoreController {
 			String openId = (String) params.get("openid");
 			// 自定义参数
 			String extraParam = (String) params.get("attach");
-			if (WxPrepay.isValiSign(newParams)) {
-				logger.info("@@@@验证成功@@@@,respCode=" + respCode);
-				if (respCode != null && respCode.equals("SUCCESS")) {
+//			// 自定义参数
+//			String extraParam = (String) params.get("attach");
+			if (WxPayKit.verifyNotify(params,apiUserPayService.getApiConfig().getPartnerKey(), SignType.HMACSHA256)) {
+//				logger.info("@@@@验证成功@@@@,respCode=" + respCode);
+				if (WxPayKit.codeIsOk(returnCode)) {
 					afterPay(out_trade_no, trade_no, respCode, openId, new BigDecimal(total).divide(new BigDecimal(100)), 2, extraParam);
 				} else {
 					logger.info("@@@@支付交易状态未知——订单号:" + out_trade_no + ";交易状态:" + respCode + ";微信支付订单号:" + trade_no);
@@ -517,7 +543,7 @@ public class PayController extends CoreController {
 			String[] nos=out_trade_no.split("-");
 			for (String no:nos) {
 				try {
-					payLog = payLogService.selectByPrimaryKey(Long.parseLong(no));
+					payLog = payLogService.selectByPrimaryKey(no);
 					tradeStatus = new BigDecimal(payLog.getState());
 					userId = payLog.getUserId();
 				} catch (Exception e) {

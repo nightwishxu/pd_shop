@@ -2374,6 +2374,206 @@ public class UserExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andAuthStatusIsNull() {
+			addCriterion("auth_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusIsNotNull() {
+			addCriterion("auth_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusEqualTo(Integer value) {
+			addCriterion("auth_status =", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusNotEqualTo(Integer value) {
+			addCriterion("auth_status <>", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusGreaterThan(Integer value) {
+			addCriterion("auth_status >", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("auth_status >=", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusLessThan(Integer value) {
+			addCriterion("auth_status <", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("auth_status <=", value, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusIn(List<Integer> values) {
+			addCriterion("auth_status in", values, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusNotIn(List<Integer> values) {
+			addCriterion("auth_status not in", values, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusBetween(Integer value1, Integer value2) {
+			addCriterion("auth_status between", value1, value2, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andAuthStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("auth_status not between", value1, value2, "authStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnIsNull() {
+			addCriterion("txsn is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnIsNotNull() {
+			addCriterion("txsn is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnEqualTo(String value) {
+			addCriterion("txsn =", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnNotEqualTo(String value) {
+			addCriterion("txsn <>", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnGreaterThan(String value) {
+			addCriterion("txsn >", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnGreaterThanOrEqualTo(String value) {
+			addCriterion("txsn >=", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnLessThan(String value) {
+			addCriterion("txsn <", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnLessThanOrEqualTo(String value) {
+			addCriterion("txsn <=", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnLike(String value) {
+			addCriterion("txsn like", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnNotLike(String value) {
+			addCriterion("txsn not like", value, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnIn(List<String> values) {
+			addCriterion("txsn in", values, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnNotIn(List<String> values) {
+			addCriterion("txsn not in", values, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnBetween(String value1, String value2) {
+			addCriterion("txsn between", value1, value2, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andTxsnNotBetween(String value1, String value2) {
+			addCriterion("txsn not between", value1, value2, "txsn");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdIsNull() {
+			addCriterion("anxinsign_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdIsNotNull() {
+			addCriterion("anxinsign_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdEqualTo(String value) {
+			addCriterion("anxinsign_id =", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdNotEqualTo(String value) {
+			addCriterion("anxinsign_id <>", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdGreaterThan(String value) {
+			addCriterion("anxinsign_id >", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdGreaterThanOrEqualTo(String value) {
+			addCriterion("anxinsign_id >=", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdLessThan(String value) {
+			addCriterion("anxinsign_id <", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdLessThanOrEqualTo(String value) {
+			addCriterion("anxinsign_id <=", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdLike(String value) {
+			addCriterion("anxinsign_id like", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdNotLike(String value) {
+			addCriterion("anxinsign_id not like", value, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdIn(List<String> values) {
+			addCriterion("anxinsign_id in", values, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdNotIn(List<String> values) {
+			addCriterion("anxinsign_id not in", values, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdBetween(String value1, String value2) {
+			addCriterion("anxinsign_id between", value1, value2, "anxinsignId");
+			return (Criteria) this;
+		}
+
+		public Criteria andAnxinsignIdNotBetween(String value1, String value2) {
+			addCriterion("anxinsign_id not between", value1, value2, "anxinsignId");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

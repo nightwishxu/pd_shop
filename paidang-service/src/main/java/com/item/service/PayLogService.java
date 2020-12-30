@@ -2,6 +2,7 @@ package com.item.service;
 
 import java.util.List;
 
+import com.base.util.BaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class PayLogService {
 		return this.payLogMapper.countByExample(example);
 	}
 
-	public PayLog selectByPrimaryKey(Long id) {
+	public PayLog selectByPrimaryKey(String id) {
 		return this.payLogMapper.selectByPrimaryKey(id);
 	}
 
@@ -26,7 +27,7 @@ public class PayLogService {
 		return this.payLogMapper.selectByExample(example);
 	}
 
-	public int deleteByPrimaryKey(Long id) {
+	public int deleteByPrimaryKey(String id) {
 		return this.payLogMapper.deleteByPrimaryKey(id);
 	}
 
@@ -55,6 +56,7 @@ public class PayLogService {
 	}
 
 	public int insertSelective(PayLog record) {
+		record.setId(BaseUtils.getRandomOrderId(""));
 		return this.payLogMapper.insertSelective(record);
 	}
 

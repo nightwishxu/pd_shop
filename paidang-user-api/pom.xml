@@ -24,6 +24,12 @@
             <optional>true</optional> <!-- 表示依赖不会传递 -->
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+
         <!-- swagger2-->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -83,64 +89,64 @@
         </dependency>
 
 
-                        <dependency>
-                            <groupId>com.cfca</groupId>
-                            <artifactId>Sadk</artifactId>
-                            <version>3.6.1.0</version>
-                            <scope>system</scope>
-                            <systemPath>${pom.basedir}/lib/sadk-3.6.1.0.jar</systemPath>
-                        </dependency>
+<!--                        <dependency>-->
+<!--                            <groupId>com.cfca</groupId>-->
+<!--                            <artifactId>Sadk</artifactId>-->
+<!--                            <version>3.6.1.0</version>-->
+<!--                            <scope>system</scope>-->
+<!--                            <systemPath>${pom.basedir}/lib/sadk-3.6.1.0.jar</systemPath>-->
+<!--                        </dependency>-->
 
-                <dependency>
-                    <groupId>com.cfca</groupId>
-                    <artifactId>timestampAPI</artifactId>
-                    <version>4.0.3.0</version>
-                    <scope>system</scope>
-                    <systemPath>${pom.basedir}/lib/timestampAPI-4.0.3.0.jar</systemPath>
-                </dependency>
-
-
-                <!-- https://mvnrepository.com/artifact/com.cfca/SealSADK -->
-                    <dependency>
-                        <groupId>com.cfca</groupId>
-                        <artifactId>SealSADK</artifactId>
-                        <version>3.1.4.0</version>
-                        <scope>system</scope>
-                        <systemPath>${pom.basedir}/lib/SealSADK-3.1.4.0.jar</systemPath>
-                    </dependency>
-
-                <dependency>
-                    <groupId>com.hcehk</groupId>
-                    <artifactId>cfca-common-tsv</artifactId>
-                    <version>3.5.8.3</version>
-                    <scope>system</scope>
-                    <systemPath>${pom.basedir}/lib/common-3.5.8.3-tsvo.jar</systemPath>
-                </dependency>
+<!--                <dependency>-->
+<!--                    <groupId>com.cfca</groupId>-->
+<!--                    <artifactId>timestampAPI</artifactId>-->
+<!--                    <version>4.0.3.0</version>-->
+<!--                    <scope>system</scope>-->
+<!--                    <systemPath>${pom.basedir}/lib/timestampAPI-4.0.3.0.jar</systemPath>-->
+<!--                </dependency>-->
 
 
-        <dependency>
-            <groupId>com.hcehk</groupId>
-            <artifactId>logback-cfca</artifactId>
-            <version>3.2.0.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/logback-cfca-jdk1.6-3.2.0.0.jar</systemPath>
-        </dependency>
+<!--                &lt;!&ndash; https://mvnrepository.com/artifact/com.cfca/SealSADK &ndash;&gt;-->
+<!--                    <dependency>-->
+<!--                        <groupId>com.cfca</groupId>-->
+<!--                        <artifactId>SealSADK</artifactId>-->
+<!--                        <version>3.1.4.0</version>-->
+<!--                        <scope>system</scope>-->
+<!--                        <systemPath>${pom.basedir}/lib/SealSADK-3.1.4.0.jar</systemPath>-->
+<!--                    </dependency>-->
 
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov</artifactId>
-            <version>1.46</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/bcprov-jdk15-1.46.jar</systemPath>
-        </dependency>
+<!--                <dependency>-->
+<!--                    <groupId>com.hcehk</groupId>-->
+<!--                    <artifactId>cfca-common-tsv</artifactId>-->
+<!--                    <version>3.5.8.3</version>-->
+<!--                    <scope>system</scope>-->
+<!--                    <systemPath>${pom.basedir}/lib/common-3.5.8.3-tsvo.jar</systemPath>-->
+<!--                </dependency>-->
 
-        <dependency>
-            <groupId>cpcn.dsp</groupId>
-            <artifactId>CPCN-DSP-API</artifactId>
-            <version>v1.6.4.05</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/CPCN-DSP-API-v1.6.4.05.jar</systemPath>
-        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.hcehk</groupId>-->
+<!--            <artifactId>logback-cfca</artifactId>-->
+<!--            <version>3.2.0.0</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${pom.basedir}/lib/logback-cfca-jdk1.6-3.2.0.0.jar</systemPath>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.bouncycastle</groupId>-->
+<!--            <artifactId>bcprov</artifactId>-->
+<!--            <version>1.46</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${pom.basedir}/lib/bcprov-jdk15-1.46.jar</systemPath>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>cpcn.dsp</groupId>-->
+<!--            <artifactId>CPCN-DSP-API</artifactId>-->
+<!--            <version>v1.6.4.05</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${pom.basedir}/lib/CPCN-DSP-API-v1.6.4.05.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 
 

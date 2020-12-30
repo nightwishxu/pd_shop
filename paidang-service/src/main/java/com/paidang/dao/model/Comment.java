@@ -1,96 +1,163 @@
 package com.paidang.dao.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *
  */
-public class Comment {
+@ApiModel
+@Table(name="p_comment")
+public class Comment implements Serializable {
 
 	/**
 	 *
 	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "id")
 	private Integer id;
 
 	/**
 	 *主题id
 	 */
+	@ApiModelProperty(value="主题id")
+	@ApiParam(value="主题id")
+	@Column(name = "topic_id")
 	private Integer topicId;
 
 	/**
 	 *主题用户id
 	 */
+	@ApiModelProperty(value="主题用户id")
+	@ApiParam(value="主题用户id")
+	@Column(name = "topic_user_id")
 	private Integer topicUserId;
 
 	/**
-	 *类型1为寄拍物品
+	 *类型1为寄拍物品 2推荐鉴定 3 用户发布
 	 */
+	@ApiModelProperty(value="类型1为寄拍物品 2推荐鉴定 3 用户发布")
+	@ApiParam(value="类型1为寄拍物品 2推荐鉴定 3 用户发布")
+	@Column(name = "type")
 	private Integer type;
 
 	/**
 	 *评论内容
 	 */
+	@ApiModelProperty(value="评论内容")
+	@ApiParam(value="评论内容")
+	@Column(name = "content")
 	private String content;
 
 	/**
 	 *评论者id，一般为会员表的id
 	 */
+	@ApiModelProperty(value="评论者id，一般为会员表的id")
+	@ApiParam(value="评论者id，一般为会员表的id")
+	@Column(name = "user_id")
 	private Integer userId;
 
 	/**
 	 *冗余用户昵称
 	 */
+	@ApiModelProperty(value="冗余用户昵称")
+	@ApiParam(value="冗余用户昵称")
+	@Column(name = "nick_name")
 	private String nickName;
 
 	/**
 	 *冗余用户头像
 	 */
+	@ApiModelProperty(value="冗余用户头像")
+	@ApiParam(value="冗余用户头像")
+	@Column(name = "head_img")
 	private String headImg;
 
 	/**
 	 *是否置顶评论，1为置顶，0为不置顶
 	 */
+	@ApiModelProperty(value="是否置顶评论，1为置顶，0为不置顶")
+	@ApiParam(value="是否置顶评论，1为置顶，0为不置顶")
+	@Column(name = "is_top")
 	private Integer isTop;
 
 	/**
 	 *是否为热评，1为热评
 	 */
+	@ApiModelProperty(value="是否为热评，1为热评")
+	@ApiParam(value="是否为热评，1为热评")
+	@Column(name = "is_hot")
 	private Integer isHot;
 
 	/**
 	 *评论被点赞的次数
 	 */
+	@ApiModelProperty(value="评论被点赞的次数")
+	@ApiParam(value="评论被点赞的次数")
+	@Column(name = "like_num")
 	private Integer likeNum;
 
 	/**
 	 *评论被回复的次数
 	 */
+	@ApiModelProperty(value="评论被回复的次数")
+	@ApiParam(value="评论被回复的次数")
+	@Column(name = "reply_num")
 	private Integer replyNum;
 
 	/**
 	 *是否回复0没有，1已回复
 	 */
+	@ApiModelProperty(value="是否回复0没有，1已回复")
+	@ApiParam(value="是否回复0没有，1已回复")
+	@Column(name = "is_reply")
 	private Integer isReply;
 
 	/**
 	 *评论状态，-1为删除，0为待审核，1为已发布
 	 */
+	@ApiModelProperty(value="评论状态，-1为删除，0为待审核，1为已发布")
+	@ApiParam(value="评论状态，-1为删除，0为待审核，1为已发布")
+	@Column(name = "status")
 	private Integer status;
 
 	/**
 	 *0隐藏1展示
 	 */
+	@ApiModelProperty(value="0隐藏1展示")
+	@ApiParam(value="0隐藏1展示")
+	@Column(name = "is_show")
 	private Integer isShow;
 
 	/**
 	 *创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
+	@ApiParam(value="创建时间")
+	@Column(name = "create_time")
 	private java.util.Date createTime;
 
 	/**
 	 *0为普通回复，1为后台管理员回复,2作者回复
 	 */
+	@ApiModelProperty(value="0为普通回复，1为后台管理员回复,2作者回复")
+	@ApiParam(value="0为普通回复，1为后台管理员回复,2作者回复")
+	@Column(name = "is_author")
 	private Integer isAuthor;
+
+	/**
+	 *
+	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "is_report")
+	private Integer isReport;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -226,6 +293,14 @@ public class Comment {
 
 	public Integer getIsAuthor() {
 		return isAuthor;
+	}
+
+	public void setIsReport(Integer isReport) {
+		this.isReport=isReport;
+	}
+
+	public Integer getIsReport() {
+		return isReport;
 	}
 
 }

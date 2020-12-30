@@ -25,8 +25,10 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.base.util.http.HttpUtil;
+import com.demo.constant.DSPConsts;
 import com.item.dao.model.*;
 import com.item.service.AdminService;
 import com.item.service.CodeService;
@@ -39,6 +41,7 @@ import com.paidang.service.*;
 import com.paidang.utils.CostGenerator;
 import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableSupport;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.util.ApiStoreBankUtil;
 import com.util.PaidangConst;
 import com.util.PaidangMessage;
@@ -51,7 +54,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,6 +111,9 @@ public class ApiMyAppController extends ApiBaseController{
     private CodeService codeService;
     @Autowired
     private UserBankCardService userBankCardService;
+
+    @Autowired
+    private PawnTicketService pawnTicketService;
 
 
     @ApiOperation(value = "我参与的竞拍(竞拍标签页)",notes="我参与的竞拍(竞拍中)")
@@ -171,10 +180,18 @@ public class ApiMyAppController extends ApiBaseController{
         }
     }
 
+    /**
+     *  TODO 需区分 业务中 和处理中（能操作的）
+     *
+     * @param mobileInfo
+     * @param pageLimit
+     * @return
+     *  2 可处理 pawnStatus =1 完善当票 orgStatus=1 签署
+     */
     @ApiOperation(value = "我参与的竞拍(已中标标签页)",notes="我参与的竞拍(已中标标签页)")
     @RequestMapping(value = "/getMyBidWonList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true,isPage = true)
-    public List<PawnDetail> getMyBidWonList(MobileInfo mobileInfo, PageLimit pageLimit){
+    public List<PawnDetail> getMyBidWonList(MobileInfo mobileInfo, @ApiParam(value = "1 业务中 2 处理中",required = false) Integer type){
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
         startPage();
         List<UserPawnEx> list;
@@ -186,6 +203,10 @@ public class ApiMyAppController extends ApiBaseController{
         List<PawnDetail> retList = new ArrayList<>();
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
+            pawnDetail.setAuctionCount(userPawnEx.getCnt());
+            pawnDetail.setPawnStatus(userPawnEx.getPawnStatus());
+            pawnDetail.setUserStatus(userPawnEx.getUserStatus());
+            pawnDetail.setOrgStatus(userPawnEx.getOrgStatus());
             pawnDetail.setId(userPawnEx.getId().toString());
             pawnDetail.setTitle(userPawnEx.getGoodsName1());
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");
@@ -360,6 +381,9 @@ public class ApiMyAppController extends ApiBaseController{
 
         //set页面返回model
         BidWonDetail bidWonDetail = new BidWonDetail();
+        bidWonDetail.setPawnStatus(userPawnEx.getPawnStatus());
+        bidWonDetail.setUserStatus(userPawnEx.getUserStatus());
+        bidWonDetail.setOrgStatus(userPawnEx.getOrgStatus());
         bidWonDetail.setPawnId(pawnId);
         bidWonDetail.setGoodsId(goodsId.toString());
         bidWonDetail.setGoodsName(goodName);
@@ -404,11 +428,10 @@ public class ApiMyAppController extends ApiBaseController{
     @ApiOperation(value = "完善当票信息",notes="已经中标的典当竞拍,完善当票信息")
     @RequestMapping(value = "/completePawnTicket", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Integer completePawnTicket(@ApiParam(value = "票据编号",required = true) String pawnTicketId,
+    public Integer completePawnTicket(@ApiParam(value = "典当id",required = true) Integer pawnId,
                            @ApiParam(value = "当票号",required = true) String pawnTicketCode,
                            @ApiParam(value = "复核",required = true) String checker,
                            @ApiParam(value = "经办",required = true) String handler,
-                           @ApiParam(value = "备注",required = true) String remark,
                            MobileInfo mobileInfo){
 
         Integer orgUserId = mobileInfo.getUserId();
@@ -416,16 +439,190 @@ public class ApiMyAppController extends ApiBaseController{
         if(orgUser == null){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
         }
-//        UserPawn userPawn = userPawnService.selectByPrimaryKey(Integer.valueOf(pawnId));
-//        if(userPawn == null){
-//            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
-//        }
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        if(userPawn == null){
+            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+        }
+        if (userPawn.getPawnStatus()!=1){
+            throw new ApiException(400,"典当状态异常");
+        }
+        //已经使用过的当号排除
+        UserPawnExample userPawnExample = new UserPawnExample();
+        userPawnExample.createCriteria().andPawnTicketCodeEqualTo(pawnTicketCode).andStateGreaterThanOrEqualTo(2);
+        Integer cnt = userPawnService.countByExample(userPawnExample);
+        if (cnt > 0){
+            throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
+        }
 
+
+        String projectCode = BaseUtils.getRandomOrderId("D");
+        Integer ticketId = pawnTicketService.addDDTicket(userPawn, projectCode, pawnTicketCode, checker, handler, DSPConsts.CONTRACT_REMARK);
+        UserPawn temp = new UserPawn();
+        temp.setId(pawnId);
+        temp.setProjectCode(projectCode);
+        temp.setPawnTicketCode(pawnTicketCode);
+        temp.setPawnTicket(ticketId.toString());
+        temp.setPawnStatus(2);
+        temp.setModifyTime(new Date());
+        userPawnService.updateByPrimaryKeySelective(temp);
 //        Convert.digitToChinese()
 
         return 1;
 
     }
+
+
+
+
+//    @ApiOperation(value = "签署合同-确认短信",notes="完善当票信息后进行签署合同")
+//    @RequestMapping(value = "/sign/confirmSmsCode", method = RequestMethod.POST)
+//    @ApiMethod(isLogin = true)
+//    public Integer signConfirmSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+//            ,@ApiParam(value = "验证码",required = true) String  checkCode) throws Exception{
+//        Integer orgUserId = mobileInfo.getUserId();
+//        User orgUser = userService.selectByPrimaryKey(orgUserId);
+//        if(orgUser == null){
+//            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+//        }
+//        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+//        if (userPawn==null){
+//            throw new ApiException(400,"典当不存在");
+//        }
+//        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(userPawn.getProjectCode());
+//        if (pawnTicket==null){
+//            throw new ApiException(400,"当票异常");
+//        }
+//        HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        String ip = IpUtils.getIpAddr(request);
+//        User pawner = userService.selectByPrimaryKey(userPawn.getUserId());
+//        Integer orgId = userPawn.getOrgId();
+//        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+//        Date signTime = AnXinSignService.confirmSmsCode(pawnOrg.getAnxinsignId(), userPawn.getProjectCode(), checkCode);
+//        PawnTicket temp = new PawnTicket();
+//        temp.setId(pawnTicket.getId());
+//        temp.setOrgSignTime(signTime);
+//        temp.setOrgLocation(ip);
+//        temp.setOrgStatus(2);
+//        boolean flag = false;
+//        if (pawnTicket.getUserStatus()!=null && pawnTicket.getUserStatus()==2){
+//            temp.setStatus("2");
+//            flag = true;
+//        }
+//        if (flag){
+//            String contractNo = AnXinSignService.createContract(DSPConsts.contractPawnTemplateId, "互联网电子典当凭证",
+//                    pawner.getAnxinsignId(), pawnTicket.getUserLocation(), userPawn.getProjectCode(), pawnTicket.getSignTime(), pawnOrg.getAnxinsignId(),
+//                    ip, signTime, pawnTicket);
+//            userPawn.setPawnStatus(3);
+//            userPawn.setContractId(contractNo);
+//            temp.setContractId(contractNo);
+//            userPawnService.updateByPrimaryKeySelective(userPawn);
+//        }
+//        pawnTicketService.updateByPrimaryKeySelective(temp);
+//        return 1;
+//    }
+
+    @ApiOperation(value = "签署合同-发送短信",notes="完善当票信息后进行签署合同")
+    @RequestMapping(value = "/sign/sendSmsCode", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer signSendSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+            ,@ApiParam(value = "续当id,续当时传",required = false) Integer lastPawnContinueId) throws Exception{
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        if (userPawn==null){
+            throw new ApiException(400,"典当异常");
+        }
+        String projectCode = null;
+        if (lastPawnContinueId!=null){
+            if (!Objects.equals(userPawn.getLastPawnContinueId(),lastPawnContinueId)){
+                throw new ApiException(400,"续当编号异常");
+            }
+            PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+            if (pawnContinue==null){
+                throw new ApiException(400,"续当异常");
+            }
+            if (StringUtils.isBlank(pawnContinue.getContinuePawnTicketCode())){
+                throw new ApiException(400,"请先完善当票");
+            }
+            projectCode = pawnContinue.getProjectCode();
+        }else {
+            projectCode = userPawn.getProjectCode();
+        }
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
+        if (StringUtils.isBlank(pawnOrg.getAnxinsignId())){
+            String userId = AnXinSignService.companyRegister(pawnOrg.getName(), pawnOrg.getBusinessLicenseCode(), pawnOrg.getLegalPersonPhone(), pawnOrg.getLandLinePhone(), pawnOrg.getLegalPerson(), pawnOrg.getIdCard());
+            pawnOrg.setAnxinsignId(userId);
+            pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
+        }
+        AnXinSignService.sendSmsCode(pawnOrg.getAnxinsignId(),projectCode,null);
+
+        return 1;
+    }
+
+
+    @ApiOperation(value = "签署合同-确认短信",notes="完善当票信息后进行签署合同")
+    @RequestMapping(value = "/sign/confirmSmsCode", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer signConfirmSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+            ,@ApiParam(value = "续当id,续当时传",required = false) Integer lastPawnContinueId
+            ,@ApiParam(value = "验证码",required = true) String  checkCode) throws Exception{
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        if (userPawn==null){
+            throw new ApiException(400,"典当异常");
+        }
+        String projectCode = null;
+        PawnContinue pawnContinue =null;
+        if (lastPawnContinueId!=null){
+            if (!Objects.equals(userPawn.getLastPawnContinueId(),lastPawnContinueId)){
+                throw new ApiException(400,"续当编号异常");
+            }
+            pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+            if (pawnContinue==null){
+                throw new ApiException(400,"续当异常");
+            }
+            projectCode = pawnContinue.getProjectCode();
+        }else {
+            projectCode = userPawn.getProjectCode();
+        }
+        User user = userService.selectByPrimaryKey(userPawn.getUserId());
+        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(projectCode);
+        HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ip = IpUtils.getIpAddr(request);
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
+        Date signTime = AnXinSignService.confirmSmsCode(pawnOrg.getAnxinsignId(), projectCode, checkCode);
+        PawnTicket temp = new PawnTicket();
+        temp.setId(pawnTicket.getId());
+        temp.setOrgSignTime(signTime);
+        temp.setOrgLocation(ip);
+        temp.setOrgStatus(2);
+        boolean flag = false;
+        if (pawnTicket.getUserStatus()!=null && pawnTicket.getUserStatus()==2){
+            temp.setStatus("2");
+            flag = true;
+        }
+        if (flag){
+            if (lastPawnContinueId ==null){
+                String contractNo = AnXinSignService.createContract(DSPConsts.contractPawnTemplateId,"互联网电子典当凭证",
+                        user.getAnxinsignId(),pawnTicket.getUserLocation(),userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        ip,signTime,pawnTicket);
+                userPawn.setPawnStatus(3);
+                userPawn.setContractId(contractNo);
+                temp.setContractId(contractNo);
+                userPawnService.updateByPrimaryKeySelective(userPawn);
+            }else {
+                String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
+                        user.getAnxinsignId(),pawnTicket.getUserLocation(),userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        ip,signTime,pawnTicket,pawnContinue);
+                pawnContinue.setState(2);
+                pawnContinue.setContractId(contractNo);
+                temp.setContractId(contractNo);
+                pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
+            }
+        }
+        pawnTicketService.updateByPrimaryKeySelective(temp);
+        return 1;
+    }
+
+
+
 
     @ApiOperation(value = "确认支付贷款按钮",notes="已经中标的典当竞拍,机构支付贷款")
     @RequestMapping(value = "/payLoan", method = RequestMethod.POST)
@@ -504,6 +701,7 @@ public class ApiMyAppController extends ApiBaseController{
         userPawn.setPlatformState(0);//0未缴纳1已缴纳平台服务费
         userPawn.setPlatformRate(PaidangConst.PLATFORM_INTEREST);
         userPawn.setPlatformMoney(platformFee);
+        userPawn.setPawnStatus(4);
         userPawnService.updateByPrimaryKey(userPawn);
 
         //把机构已经打款消息推送给用户
@@ -529,6 +727,7 @@ public class ApiMyAppController extends ApiBaseController{
         pawnLog.setUserName(pawner.getName());
         pawnLog.setTradeCardBank(userPawn.getPayeeBankName());
         pawnLog.setTradeCardCode(userPawn.getPayeeBankCardCode());
+        pawnOrg.setCreateTime(new Date());
         pawnLogService.insert(pawnLog);
 
         OrgBalanceLog orgBalanceLog = new OrgBalanceLog();
@@ -546,6 +745,7 @@ public class ApiMyAppController extends ApiBaseController{
         orgBalanceLog.setUserId(userId);
         orgBalanceLog.setUserName(pawner.getName());
         orgBalanceLog.setUserPhone(pawner.getPhone()!=null?pawner.getPhone():pawner.getAccount());
+        orgBalanceLog.setCreateTime(new Date());
         orgBalanceLogService.insert(orgBalanceLog);
 
         UserBalanceLog userBalanceLog = new UserBalanceLog();
@@ -563,6 +763,7 @@ public class ApiMyAppController extends ApiBaseController{
         userBalanceLog.setOrgId(orgId);
         userBalanceLog.setOrgName(pawnOrg.getName());
         userBalanceLog.setOrgPhone(pawnOrg.getPhone());
+        userBalanceLog.setCreateTime(new Date());
         userBalanceLogService.insert(userBalanceLog);
         return 1;
     }
@@ -911,6 +1112,7 @@ public class ApiMyAppController extends ApiBaseController{
         orgBankCard.setBankCardName(bankName);
         orgBankCard.setBankCardPhone(account);
 //        orgBankCard.setBankCardIdCard(idCard);
+        orgBankCard.setCreateTime(new Date());
         orgBankCard.setIsDefault(0);
         int result = orgBankCardService.insert(orgBankCard);
         if(result != 1){
@@ -1189,6 +1391,7 @@ public class ApiMyAppController extends ApiBaseController{
         //寄件人信息是机构的名称与电话
         express.setPostName(pawnOrg.getName());
         express.setPostPhone(pawnOrg.getPhone());
+        express.setCreateTime(new Date());
         expressService.insert(express);
         return 1;
     }
@@ -1612,6 +1815,12 @@ public class ApiMyAppController extends ApiBaseController{
             return express.getExpressData();
         }else
             return "";
+    }
+
+    public Integer withdrawApply(){
+
+
+        return 1;
     }
 
 

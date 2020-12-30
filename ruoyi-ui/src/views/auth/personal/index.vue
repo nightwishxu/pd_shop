@@ -40,7 +40,7 @@
       :gutter="10"
       class="mb8"
     >
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -77,7 +77,7 @@
           @click="handleExport"
           v-hasPermi="['system:personal:export']"
         >导出</el-button>
-      </el-col>
+      </el-col> -->
       <div class="top-right-btn">
         <el-tooltip
           class="item"
@@ -124,7 +124,7 @@
         prop="id"
       />
       <el-table-column
-        columnlabel="logo"
+        label="logo"
         align="center"
         prop="logo"
       >
@@ -171,9 +171,9 @@
       />
 
       <el-table-column
-        columnlabel="idCardFront"
+        prop="idCardFront"
         align="center"
-        prop="身份证照片正面"
+        label="身份证照片正面"
       >
         <template scope="scope">
           <el-popover
@@ -193,9 +193,9 @@
       </el-table-column>
 
       <el-table-column
-        columnlabel="idCardBack"
+        prop="idCardBack"
         align="center"
-        prop="身份证照片反面"
+        label="身份证照片反面"
       >
         <template scope="scope">
           <el-popover
@@ -219,25 +219,23 @@
         align="center"
         prop="state"
       >
-      <template slot-scope="scope">
-        <div v-if="scope.row.state==0">
-               <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="changeState(scope.row.id,1)"
-          >通过</el-button>
-             <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="changeState(scope.row.id,2)"
-          >不通过</el-button>
+        <template slot-scope="scope">
+          <div v-if="scope.row.state==0">
+            <el-button
+              size="mini"
+              type="text"
+              @click="changeStateBtn(scope.row.id,1)"
+            >通过</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleChangeState(scope.row)"
+            >不通过</el-button>
 
-        </div>
-        <div v-if="scope.row.state==1">审核通过</div>
-        <div v-if="scope.row.state==2">审核不通过</div>
-      </template>
+          </div>
+          <div v-if="scope.row.state==1">审核通过</div>
+          <div v-if="scope.row.state==2">审核不通过</div>
+        </template>
       </el-table-column>
 
       <el-table-column
@@ -272,6 +270,40 @@
       @pagination="getList"
     />
 
+    <el-dialog
+      :title="title1"
+      :visible.sync="open1"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="原因"
+          prop="refuseInfo"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form1.refuseInfo"
+            placeholder="请输入原因"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="changeStateBtnEx"
+        >确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog
       :title="title"
@@ -286,14 +318,15 @@
         label-width="80px"
       >
         <el-form-item
-          label="logo图片"
+          label="logo"
           prop="logo"
         >
-          <el-input
+          <single-upload
             v-model="form.logo"
-            placeholder="请输入logo图片"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
+
         <el-form-item
           label="店铺名称"
           prop="storeName"
@@ -310,26 +343,19 @@
           <el-input
             v-model="form.storeIntroduce"
             type="textarea"
-            placeholder="请输入内容"
           />
         </el-form-item>
         <el-form-item
           label="姓名"
           prop="name"
         >
-          <el-input
-            v-model="form.name"
-            placeholder="请输入姓名"
-          />
+          <el-input v-model="form.name" />
         </el-form-item>
         <el-form-item
           label="身份证"
           prop="idCard"
         >
-          <el-input
-            v-model="form.idCard"
-            placeholder="请输入身份证"
-          />
+          <el-input v-model="form.idCard" />
         </el-form-item>
         <el-form-item
           label="手机号码"
@@ -340,41 +366,25 @@
             placeholder="请输入手机号码"
           />
         </el-form-item>
+
         <el-form-item
           label="身份证照片正面"
           prop="idCardFront"
         >
-          <el-input
+          <single-upload
             v-model="form.idCardFront"
-            placeholder="请输入身份证照片正面"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
+
         <el-form-item
           label="身份证照片反面"
           prop="idCardBack"
         >
-          <el-input
+          <single-upload
             v-model="form.idCardBack"
-            placeholder="请输入身份证照片反面"
-          />
-        </el-form-item>
-        <el-form-item
-          label="创建人"
-          prop="createUser"
-        >
-          <el-input
-            v-model="form.createUser"
-            placeholder="请输入创建人"
-          />
-        </el-form-item>
-        <el-form-item
-          label="0审核中，1审核成功 2审核失败 3无效"
-          prop="state"
-        >
-          <el-input
-            v-model="form.state"
-            placeholder="请输入0审核中，1审核成功 2审核失败 3无效"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
         <el-form-item
           label="审核不通过原因"
@@ -383,15 +393,6 @@
           <el-input
             v-model="form.refuseInfo"
             placeholder="请输入审核不通过原因"
-          />
-        </el-form-item>
-        <el-form-item
-          label="机构表id"
-          prop="orgId"
-        >
-          <el-input
-            v-model="form.orgId"
-            placeholder="请输入机构表id"
           />
         </el-form-item>
       </el-form>
@@ -411,9 +412,11 @@
 
 <script>
 import { listPersonal, getPersonal, delPersonal, addPersonal, updatePersonal, exportPersonal,changeState } from "@/api/auth/personal";
+import SingleUpload from "@/components/Upload/singleUpload";
 
 export default {
   name: "Personal",
+  components: { SingleUpload},
   data() {
     return {
       // 遮罩层
@@ -432,8 +435,10 @@ export default {
       personalList: [],
       // 弹出层标题
       title: "",
+      title1: "",
       // 是否显示弹出层
       open: false,
+      open1: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -453,6 +458,7 @@ export default {
       },
       // 表单参数
       form: {},
+      form1: {},
       // 表单校验
       rules: {
       }
@@ -476,6 +482,10 @@ export default {
       this.open = false;
       this.reset();
     },
+     cancel1() {
+      this.open1 = false;
+      this.reset1();
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -495,6 +505,13 @@ export default {
         orgId: null
       };
       this.resetForm("form");
+    },
+    reset1() {
+      this.form1 = {
+        id: null,
+        refuseInfo: null,
+      };
+      this.resetForm("form1");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -516,7 +533,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加【请填写功能名称】";
+      this.title = "查看";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -525,40 +542,58 @@ export default {
       getPersonal(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改【请填写功能名称】";
+        this.title = "查看";
       });
     },
+    handleChangeState(row) {
+        const id = row.id;
+        this.form1 = { id: id, v: 2, refuseInfo: null };
+        this.open1 = true;
+        this.title1 = "审核不通过";
+    },
 
-    changeState(id,v) {
-      this.reset();
-      changeState(id,1).then(response => {
+    changeStateBtn(id,v) {
+      var param = {"id":id,"v":v};
+      console.info(param);
+      changeState(param).then(response => {
          this.msgSuccess("修改成功");
          this.getList();
       });
     },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updatePersonal(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addPersonal(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
+    changeStateBtnEx(){
+        changeState(this.form1).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open1 = false;
+          this.getList();
         }
       });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.open = false;
+      this.getList();
+      // this.$refs["form"].validate(valid => {
+      //   if (valid) {
+      //     if (this.form.id != null) {
+      //       updatePersonal(this.form).then(response => {
+      //         if (response.code === 200) {
+      //           this.msgSuccess("修改成功");
+      //           this.open = false;
+      //           this.getList();
+      //         }
+      //       });
+      //     } else {
+      //       addPersonal(this.form).then(response => {
+      //         if (response.code === 200) {
+      //           this.msgSuccess("新增成功");
+      //           this.open = false;
+      //           this.getList();
+      //         }
+      //       });
+      //     }
+      //   }
+      // });
     },
     /** 删除按钮操作 */
     handleDelete(row) {

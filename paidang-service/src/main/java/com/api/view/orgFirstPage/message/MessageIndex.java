@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class MessageIndex {
 
     @ApiModelProperty(value="消息类型id  1-续当通知2-滞纳通知3-竞拍成功通知4-赎当通知5-绝当通知 ...")
-    private String typeId;
+    private Integer typeId;
     @ApiModelProperty(value="消息类型名称")
     private String typeName;
     @ApiModelProperty(value="消息类型图片")
@@ -16,11 +16,11 @@ public class MessageIndex {
     @ApiModelProperty(value="内容：该类型里最新的一条")
     private OrgNotifyInfo orgNotifyInfo;
 
-    public String getTypeId() {
+    public Integer getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(String typeId) {
+    public void setTypeId(Integer typeId) {
         this.typeId = typeId;
     }
 

@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -48,6 +49,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private static final String USER_ID = "userid";
     private static final String DEVICE_ID = "deviceid";
     private static final String DEVICE_TYPE = "deviceType";
+
+
+    @Value("${token.auth}")
+    private Boolean TOKEN_AUTH;
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -112,7 +117,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             }
             
             //登陆
-            if(annotation.isLogin()){
+            if(annotation.isLogin()  && TOKEN_AUTH){
                 if(mobileVerify == null || (mobileVerify.getExpireTime() != null && mobileVerify.getExpireTime().getTime() < System.currentTimeMillis())){
             		throw new ApiException(MErrorEnum.LOGIN_FAIL_ERROR);
                 }

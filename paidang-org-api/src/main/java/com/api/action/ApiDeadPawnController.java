@@ -70,8 +70,8 @@ public class ApiDeadPawnController extends ApiBaseController {
     @RequestMapping(value = "/getOrgDeadPawnList", method = RequestMethod.POST)
     @ApiMethod(isPage = true,isLogin = true)
     public List<DeadPawnMini> getOrgDeadPawnList(MobileInfo mobileInfo, PageLimit pageLimit){
-        startPage();
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());//机构id
+        startPage();
         List<UserPawnEx> userPawnExList = userPawnService.getOrgDeadPawnList(orgId.toString(),"","");
         List<DeadPawnMini> retList = new ArrayList<>();
         for (UserPawnEx element : userPawnExList){

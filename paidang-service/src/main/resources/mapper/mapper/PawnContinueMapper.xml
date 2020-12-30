@@ -23,6 +23,10 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
         <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+        <result column="org_status" property="orgStatus" jdbcType="INTEGER" />
+        <result column="continue_pawn_ticket_code" property="continuePawnTicketCode" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -86,7 +90,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,pawn_id,pawn_ticket_code,pawn_last_end_time,pawn_end_time,pawn_month,pawn_money,pawn_interest,pawn_overdue,platform_money,state,platform_state,pay_ticket,pawn_ticket,pay_time,user_name,user_bank,user_bank_card,create_time,modify_time,contract_id
+        id,pawn_id,pawn_ticket_code,pawn_last_end_time,pawn_end_time,pawn_month,pawn_money,pawn_interest,pawn_overdue,platform_money,state,platform_state,pay_ticket,pawn_ticket,pay_time,user_name,user_bank,user_bank_card,create_time,modify_time,contract_id,project_code,user_status,org_status,continue_pawn_ticket_code
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -130,7 +134,9 @@
         platform_money,state,platform_state,
         pay_ticket,pawn_ticket,pay_time,
         user_name,user_bank,user_bank_card,
-        create_time,modify_time,contract_id
+        create_time,modify_time,contract_id,
+        project_code,user_status,org_status,
+        continue_pawn_ticket_code
         )
         values (#{pawnId,jdbcType=INTEGER},#{pawnTicketCode,jdbcType=VARCHAR},
         #{pawnLastEndTime,jdbcType=DATE},#{pawnEndTime,jdbcType=DATE},#{pawnMonth,jdbcType=TINYINT},
@@ -138,7 +144,9 @@
         #{platformMoney,jdbcType=DECIMAL},#{state,jdbcType=TINYINT},#{platformState,jdbcType=TINYINT},
         #{payTicket,jdbcType=VARCHAR},#{pawnTicket,jdbcType=VARCHAR},#{payTime,jdbcType=TIMESTAMP},
         #{userName,jdbcType=VARCHAR},#{userBank,jdbcType=VARCHAR},#{userBankCard,jdbcType=VARCHAR},
-        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{contractId,jdbcType=VARCHAR}
+        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{contractId,jdbcType=VARCHAR},
+        #{projectCode,jdbcType=VARCHAR},#{userStatus,jdbcType=INTEGER},#{orgStatus,jdbcType=INTEGER},
+        #{continuePawnTicketCode,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -205,6 +213,18 @@
             <if test="contractId != null" >
                 contract_id,
             </if>
+            <if test="projectCode != null" >
+                project_code,
+            </if>
+            <if test="userStatus != null" >
+                user_status,
+            </if>
+            <if test="orgStatus != null" >
+                org_status,
+            </if>
+            <if test="continuePawnTicketCode != null" >
+                continue_pawn_ticket_code,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pawnId != null" >
@@ -266,6 +286,18 @@
             </if>
             <if test="contractId != null" >
                 #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectCode != null" >
+                #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userStatus != null" >
+                #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null" >
+                #{orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="continuePawnTicketCode != null" >
+                #{continuePawnTicketCode,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -343,6 +375,18 @@
             <if test="record.contractId != null" >
                 contract_id = #{record.contractId,jdbcType=VARCHAR},
             </if>
+            <if test="record.projectCode != null" >
+                project_code = #{record.projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userStatus != null" >
+                user_status = #{record.userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.orgStatus != null" >
+                org_status = #{record.orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.continuePawnTicketCode != null" >
+                continue_pawn_ticket_code = #{record.continuePawnTicketCode,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -371,7 +415,11 @@
         user_bank_card = #{userBankCard,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-        contract_id = #{contractId,jdbcType=VARCHAR}
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        org_status = #{orgStatus,jdbcType=INTEGER},
+        continue_pawn_ticket_code = #{continuePawnTicketCode,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -440,6 +488,18 @@
             <if test="contractId != null" >
                 contract_id = #{contractId,jdbcType=VARCHAR},
             </if>
+            <if test="projectCode != null" >
+                project_code = #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userStatus != null" >
+                user_status = #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="orgStatus != null" >
+                org_status = #{orgStatus,jdbcType=INTEGER},
+            </if>
+            <if test="continuePawnTicketCode != null" >
+                continue_pawn_ticket_code = #{continuePawnTicketCode,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -465,7 +525,11 @@
         user_bank_card = #{userBankCard,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-        contract_id = #{contractId,jdbcType=VARCHAR}
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        org_status = #{orgStatus,jdbcType=INTEGER},
+        continue_pawn_ticket_code = #{continuePawnTicketCode,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

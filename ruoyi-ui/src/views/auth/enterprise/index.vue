@@ -7,6 +7,7 @@
       v-show="showSearch"
       label-width="68px"
     >
+
       <el-form-item
         label="店铺名称"
         prop="storeName"
@@ -39,7 +40,7 @@
       :gutter="10"
       class="mb8"
     >
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -68,6 +69,15 @@
           v-hasPermi="['system:enterprise:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['system:enterprise:export']"
+        >导出</el-button>
+      </el-col> -->
       <div class="top-right-btn">
         <el-tooltip
           class="item"
@@ -113,21 +123,27 @@
         align="center"
         prop="id"
       />
-      <el-table-column
-        label="店铺名称"
-        align="center"
-        prop="storeName"
-      />
-      <el-table-column
-        label="店铺logo"
+      <!-- <el-table-column
+        label="logo"
         align="center"
         prop="logo"
-      />
-      <el-table-column
-        label="店铺介绍"
-        align="center"
-        prop="storeIntroduce"
-      />
+      >
+        <template scope="scope">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
+            <el-image
+              slot="reference"
+              :src="scope.row.logo"
+              :alt="scope.row.logo"
+              style="max-height: 50px; max-width: 50px"
+            ></el-image>
+            <el-image :src="scope.row.logo"></el-image>
+          </el-popover>
+        </template>
+      </el-table-column> -->
       <el-table-column
         label="企业名称"
         align="center"
@@ -143,41 +159,96 @@
         align="center"
         prop="legalPersonCard"
       />
+
       <el-table-column
-        label="营业执照副本照片"
-        align="center"
         prop="businessLicensePhoto"
-      />
-      <el-table-column
-        label="法人身份证正面照片"
         align="center"
+        label="营业执照副本"
+      >
+        <template scope="scope">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
+            <el-image
+              slot="reference"
+              :src="scope.row.businessLicensePhoto"
+              :alt="scope.row.businessLicensePhoto"
+              style="max-height: 50px; max-width: 50px"
+            ></el-image>
+          </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         prop="legalPersonCardFront"
-      />
-      <el-table-column
-        label="法人身份证反面照片"
         align="center"
+        label="法人身份证正面"
+      >
+        <template scope="scope">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
+            <el-image
+              slot="reference"
+              :src="scope.row.legalPersonCardFront"
+              :alt="scope.row.legalPersonCardFront"
+              style="max-height: 50px; max-width: 50px"
+            ></el-image>
+            <el-image :src="scope.row.legalPersonCardFront"></el-image>
+          </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         prop="legalPersonCardBack"
-      />
-      <el-table-column
-        label="创建人"
         align="center"
-        prop="createUser"
-      />
+        label="法人身份证反面"
+      >
+        <template scope="scope">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
+            <el-image
+              slot="reference"
+              :src="scope.row.legalPersonCardFront"
+              :alt="scope.row.legalPersonCardFront"
+              style="max-height: 50px; max-width: 50px"
+            ></el-image>
+            <el-image :src="scope.row.legalPersonCardFront"></el-image>
+          </el-popover>
+        </template>
+      </el-table-column>
+
       <el-table-column
-        label="0审核中，1审核成功 2审核失败 3无效"
+        label="审核状态"
         align="center"
         prop="state"
-      />
-      <el-table-column
-        label="不通过原因"
-        align="center"
-        prop="refuseInfo"
-      />
-      <el-table-column
-        label="机构表id"
-        align="center"
-        prop="orgId"
-      />
+      >
+        <template slot-scope="scope">
+          <div v-if="scope.row.state==0">
+            <el-button
+              size="mini"
+              type="text"
+              @click="changeStateBtn(scope.row.id,1)"
+            >通过</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleChangeState(scope.row)"
+            >不通过</el-button>
+
+          </div>
+          <div v-if="scope.row.state==1">审核通过</div>
+          <div v-if="scope.row.state==2">审核不通过</div>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="操作"
         align="center"
@@ -190,7 +261,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:enterprise:edit']"
-          >修改</el-button>
+          >查看</el-button>
           <el-button
             size="mini"
             type="text"
@@ -210,136 +281,106 @@
       @pagination="getList"
     />
 
+    <el-dialog
+      :title="title1"
+      :visible.sync="open1"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        ref="form1"
+        :model="form1"
+        label-width="150px"
+      >
+        <el-form-item
+          label="原因"
+          prop="refuseInfo"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form1.refuseInfo"
+            placeholder="请输入原因"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="changeStateBtnEx"
+        >确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="700px"
       append-to-body
     >
       <el-form
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="80px"
+        label-width="120px"
       >
         <el-form-item
-          label="店铺名称"
-          prop="storeName"
-        >
-          <el-input
-            v-model="form.storeName"
-            placeholder="请输入店铺名称"
-          />
-        </el-form-item>
-        <el-form-item
-          label="店铺logo"
+          label="logo"
           prop="logo"
         >
-          <el-input
+          <single-upload
             v-model="form.logo"
-            placeholder="请输入店铺logo"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
-        <el-form-item
-          label="店铺介绍"
-          prop="storeIntroduce"
-        >
-          <el-input
-            v-model="form.storeIntroduce"
-            type="textarea"
-            placeholder="请输入内容"
-          />
-        </el-form-item>
+
         <el-form-item
           label="企业名称"
-          prop="enterpriseName"
+          prop="storeName"
         >
-          <el-input
-            v-model="form.enterpriseName"
-            placeholder="请输入企业名称"
-          />
+          <el-input v-model="form.enterpriseName" />
         </el-form-item>
         <el-form-item
           label="法人姓名"
           prop="legalPersonName"
         >
-          <el-input
-            v-model="form.legalPersonName"
-            placeholder="请输入法人姓名"
-          />
+          <el-input v-model="form.legalPersonName" />
         </el-form-item>
         <el-form-item
           label="法人身份证"
           prop="legalPersonCard"
         >
-          <el-input
-            v-model="form.legalPersonCard"
-            placeholder="请输入法人身份证"
-          />
+          <el-input v-model="form.legalPersonCard" />
         </el-form-item>
+
         <el-form-item
-          label="营业执照副本照片"
-          prop="businessLicensePhoto"
-        >
-          <el-input
-            v-model="form.businessLicensePhoto"
-            placeholder="请输入营业执照副本照片"
-          />
-        </el-form-item>
-        <el-form-item
-          label="法人身份证正面照片"
+          label="身份证照片正面"
           prop="legalPersonCardFront"
         >
-          <el-input
+          <single-upload
             v-model="form.legalPersonCardFront"
-            placeholder="请输入法人身份证正面照片"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
+
         <el-form-item
-          label="法人身份证反面照片"
+          label="身份证照片反面"
           prop="legalPersonCardBack"
         >
-          <el-input
+          <single-upload
             v-model="form.legalPersonCardBack"
-            placeholder="请输入法人身份证反面照片"
-          />
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></single-upload>
         </el-form-item>
         <el-form-item
-          label="创建人"
-          prop="createUser"
-        >
-          <el-input
-            v-model="form.createUser"
-            placeholder="请输入创建人"
-          />
-        </el-form-item>
-        <el-form-item
-          label="0审核中，1审核成功 2审核失败 3无效"
-          prop="state"
-        >
-          <el-input
-            v-model="form.state"
-            placeholder="请输入0审核中，1审核成功 2审核失败 3无效"
-          />
-        </el-form-item>
-        <el-form-item
-          label="不通过原因"
+          label="审核不通过原因"
           prop="refuseInfo"
         >
-          <el-input
-            v-model="form.refuseInfo"
-            placeholder="请输入不通过原因"
-          />
-        </el-form-item>
-        <el-form-item
-          label="机构表id"
-          prop="orgId"
-        >
-          <el-input
-            v-model="form.orgId"
-            placeholder="请输入机构表id"
-          />
+          <el-input v-model="form.refuseInfo" />
         </el-form-item>
       </el-form>
       <div
@@ -357,10 +398,14 @@
 </template>
 
 <script>
-import { listEnterprise, getEnterprise, delEnterprise, addEnterprise, updateEnterprise, exportEnterprise } from "@/api/auth/enterprise";
+// import { listEnterprise, getEnterprise, delEnterprise, addEnterprise, updateEnterprise, exportEnterprise } from "@/api/auth/enterprise";
+
+import { listEnterprise, getEnterprise, delEnterprise, addEnterprise, updateEnterprise, exportEnterprise,changeState } from "@/api/auth/enterprise";
+import SingleUpload from "@/components/Upload/singleUpload";
 
 export default {
   name: "Enterprise",
+  components: { SingleUpload},
   data() {
     return {
       // 遮罩层
@@ -379,21 +424,22 @@ export default {
       enterpriseList: [],
       // 弹出层标题
       title: "",
+      title1: "",
       // 是否显示弹出层
       open: false,
+      open1: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        storeName: null,
         logo: null,
+        storeName: null,
         storeIntroduce: null,
-        enterpriseName: null,
-        legalPersonName: null,
-        legalPersonCard: null,
-        businessLicensePhoto: null,
-        legalPersonCardFront: null,
-        legalPersonCardBack: null,
+        name: null,
+        idCard: null,
+        phone: null,
+        idCardFront: null,
+        idCardBack: null,
         createUser: null,
         state: null,
         refuseInfo: null,
@@ -401,11 +447,9 @@ export default {
       },
       // 表单参数
       form: {},
+      form1: {},
       // 表单校验
       rules: {
-        state: [
-          { required: true, message: "0审核中，1审核成功 2审核失败 3无效不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -427,19 +471,22 @@ export default {
       this.open = false;
       this.reset();
     },
+     cancel1() {
+      this.open1 = false;
+      this.reset1();
+    },
     // 表单重置
     reset() {
       this.form = {
         id: null,
-        storeName: null,
         logo: null,
+        storeName: null,
         storeIntroduce: null,
-        enterpriseName: null,
-        legalPersonName: null,
-        legalPersonCard: null,
-        businessLicensePhoto: null,
-        legalPersonCardFront: null,
-        legalPersonCardBack: null,
+        name: null,
+        idCard: null,
+        phone: null,
+        idCardFront: null,
+        idCardBack: null,
         createUser: null,
         createTime: null,
         state: null,
@@ -447,6 +494,13 @@ export default {
         orgId: null
       };
       this.resetForm("form");
+    },
+    reset1() {
+      this.form1 = {
+        id: null,
+        refuseInfo: null,
+      };
+      this.resetForm("form1");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -468,7 +522,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加【请填写功能名称】";
+      this.title = "查看";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -477,32 +531,58 @@ export default {
       getEnterprise(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改【请填写功能名称】";
+        this.title = "查看";
+      });
+    },
+    handleChangeState(row) {
+        const id = row.id;
+        this.form1 = { id: id, v: 2, refuseInfo: null };
+        this.open1 = true;
+        this.title1 = "审核不通过";
+    },
+
+    changeStateBtn(id,v) {
+      var param = {"id":id,"v":v};
+      console.info(param);
+      changeState(param).then(response => {
+         this.msgSuccess("修改成功");
+         this.getList();
+      });
+    },
+    changeStateBtnEx(){
+        changeState(this.form1).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open1 = false;
+          this.getList();
+        }
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateEnterprise(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addEnterprise(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
+      this.open = false;
+      this.getList();
+      // this.$refs["form"].validate(valid => {
+      //   if (valid) {
+      //     if (this.form.id != null) {
+      //       updateEnterprise(this.form).then(response => {
+      //         if (response.code === 200) {
+      //           this.msgSuccess("修改成功");
+      //           this.open = false;
+      //           this.getList();
+      //         }
+      //       });
+      //     } else {
+      //       addEnterprise(this.form).then(response => {
+      //         if (response.code === 200) {
+      //           this.msgSuccess("新增成功");
+      //           this.open = false;
+      //           this.getList();
+      //         }
+      //       });
+      //     }
+      //   }
+      // });
     },
     /** 删除按钮操作 */
     handleDelete(row) {

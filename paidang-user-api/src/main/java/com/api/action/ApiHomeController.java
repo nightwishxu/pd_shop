@@ -2,7 +2,8 @@ package com.api.action;
 
 import com.api.MEnumError;
 import com.api.MErrorEnum;
-import com.api.service.UnionApiService;
+import com.constants.PaidangConstants;
+import com.paidang.service.UnionApiService;
 import com.api.util.PageLimit;
 import com.api.view.home.*;
 import com.api.view.store.AppJdGoodsAuc;
@@ -12,6 +13,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.DateUtil;
 import com.base.util.StringUtil;
 import com.item.dao.model.*;
@@ -24,13 +26,7 @@ import com.paidang.daoEx.model.UserGoodsEx;
 import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.util.PaidangConst;
-import com.util.WxBank.BankCardApiResult;
-import com.util.WxBank.BankCardBin;
-import com.util.WxBank.BankCardInfo;
-import com.util.WxBank.BankCardResult;
-import com.util.WxBankUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,8 +41,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.*;
-
-import static com.api.service.AnXinSignService.personRegister;
 
 @RestController
 @RequestMapping(value = "/api/home", produces = {"application/json;charset=UTF-8"})
@@ -96,6 +90,10 @@ public class ApiHomeController extends ApiBaseController {
     @Autowired
     private BankService bankService;
 
+    @Autowired
+    private OrgAmountLogService orgAmountLogService;
+
+
     /**
      * 个人资料
      */
@@ -115,8 +113,14 @@ public class ApiHomeController extends ApiBaseController {
         userInfo.setNickName(record.getNickName());
         userInfo.setAccount(record.getAccount());
         userInfo.setIsBind(record.getIsBind());
+        if (record.getIsBind()!=null &&record.getIsBind()==1){
+            userInfo.setAuthStatus(4);
+        }else {
+            userInfo.setAuthStatus(record.getAuthStatus());
+        }
         return userInfo;
     }
+
 
     /**
      * 修改个人资料
@@ -266,6 +270,12 @@ public class ApiHomeController extends ApiBaseController {
         if(!user.getName().equals(userName)){
             throw new ApiException("请与身份证中姓名保持一致");
         }
+        UserBankCardExample example = new UserBankCardExample();
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andBankCardNoEqualTo(bankCardNo);
+        List<UserBankCard> userBankCards = userBankCardService.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(userBankCards)){
+            throw new ApiException(400,"该银行卡已绑定");
+        }
 
         //laria edit at 2019-09-29 以下语句注释掉
 //        //银行卡验证--借记卡
@@ -295,12 +305,13 @@ public class ApiHomeController extends ApiBaseController {
         record.setBankCardIdCard(idCard);
         record.setIsDefault(0);
         record.setBankCardUserName(userName);
+        record.setCreateTime(new Date());
 
         Bank bank = bankService.selectByPrimaryKey(bankId);
         if (bank!=null){
-            bank.setBankName(bank.getBankName());
+            record.setBankCardName(bank.getBankName());
         }else {
-            bank.setBankName("未知银行");
+            record.setBankCardName("未知银行");
         }
 
         if ("01".equals(carType)){
@@ -309,7 +320,7 @@ public class ApiHomeController extends ApiBaseController {
         }else if ("02".equals(carType)){
             record.setBankCardType(2);
         }else {
-            record.setBankCardType(Integer.valueOf(carType));
+//            record.setBankCardType(Integer.valueOf(carType));
         }
 
         int result = userBankCardService.insert(record);
@@ -520,7 +531,7 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "我的个人信息中--我的银行卡--当前当款总额", notes = "登陆")
     @RequestMapping(value = "/getMyPayeeTotal", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public String getMyPayeeTotal(MobileInfo mobileInfo) {
+    public Result getMyPayeeTotal(MobileInfo mobileInfo) {
         UserPawnExample userPawnExample = new UserPawnExample();
         userPawnExample.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andPayeeStateEqualTo(1);
         List<UserPawn> list = userPawnService.selectByExample(userPawnExample);
@@ -528,7 +539,7 @@ public class ApiHomeController extends ApiBaseController {
         for (UserPawn ex : list) {
             totalPrice = totalPrice.add(ex.getMoney());
         }
-        return totalPrice + "";
+        return new Result<String>(totalPrice+"");
 
     }
 
@@ -665,14 +676,14 @@ public class ApiHomeController extends ApiBaseController {
     @ApiMethod(isLogin = true, isPage = true)
     public List<AppMyStoreGoods> myStoreGoodsList(MobileInfo mobileInfo,
                                                   PageLimit pageLimit,
-                                                  @ApiParam(value = "状态 0全部 1待付款 2代发货 3待收货 4完成(确认收货) 5退款", required = true) Integer orderState
-            , @ApiParam(value = "评价状态0未评价，1已经评价", required = false)Integer commentState) {
+                                                  @ApiParam(value = "状态 0全部 1待付款 2待发货（已付款） 3待收货（已发货） 4确认收货（待评价） 5已完成（已评价） 6退款", required = true) Integer orderState
+            ) {
+        //订单状态-1已取消1待付款2已付款3已发货4确认收货5已评价
         Map<String, Object> map = new HashMap<String, Object>();
         List<AppMyStoreGoods> list = new ArrayList<AppMyStoreGoods>();
         map.put("user_id", mobileInfo.getUserId());
         map.put("is_del", 0);
         map.put("orderState", orderState);
-        map.put("commentState", commentState);
         startPage();
         //List<GoodsEx> goodsList = goodsService.selectMyGoodsList(map);
         List<OrderEx> goodsList = orderService.selectMyStoreOrderList(map);
@@ -686,6 +697,7 @@ public class ApiHomeController extends ApiBaseController {
                 record.setState(ex.getState());
             }
             record.setCommentState(ex.getCommentState());
+            record.setGoodsNum(ex.getGoodsNum());
             record.setId(ex.getId());
             record.setUserGoodsId(ex.getUserGoodsId());
             record.setGoodsId(ex.getGoodsId());
@@ -924,6 +936,19 @@ public class ApiHomeController extends ApiBaseController {
             businessUserBalanceLog.setCreateTime(new Date());
             businessUserBalanceLogService.insert(businessUserBalanceLog);
         }
+        if (order.getGoodsSource()!=5){
+            //机构订单流水保存
+            orgAmountLogService.saveLog(order.getOrgId(),order.getPrice(),"1","用户确认收货",order.getId(),null);
+            PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(order.getOrgId());
+            BigDecimal serviceRates = pawnOrg.getServiceRates();
+            if (serviceRates==null){
+                serviceRates = PaidangConstants.default_service_rates;
+            }
+            //手续费
+            orgAmountLogService.saveLog(order.getOrgId(),(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
+                    "3","订单手续费",order.getId(),null);
+        }
+
         return ok();
     }
 

@@ -40,8 +40,24 @@ public class RepawnMini {
     @ApiModelProperty("是否显示【确认收款】按钮  1-显示 0-否")
     private String showButton;
 
+    @ApiModelProperty("是否显示【完善当票】按钮  1-显示 0-否")
+    private String completeTicketButton;
+
+    @ApiModelProperty("是否显示【签署】按钮  1-显示 0-否")
+    private String signButton;
+
     @ApiModelProperty("典当/续当日期至：当repawnId为空时，该字段应呈现为【典当日期至yyyy-MM-dd HH：mm】，否则【续当日期至yyyy-MM-dd HH：mm】，其中yyyy-MM-dd HH：mm为本字段值 ")
     private String dateRepawnTo;
+
+    @ApiModelProperty(value = "项目编号")
+
+    private String projectCode;
+
+    @ApiModelProperty(value = "用户 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer userStatus;
+
+    @ApiModelProperty(value = "机构 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer orgStatus;
 
 
     public String getId() {
@@ -132,5 +148,43 @@ public class RepawnMini {
         this.dateRepawnTo = dateRepawnTo;
     }
 
+    public String getProjectCode() {
+        return projectCode;
+    }
 
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Integer getOrgStatus() {
+        return orgStatus;
+    }
+
+    public void setOrgStatus(Integer orgStatus) {
+        this.orgStatus = orgStatus;
+    }
+
+    public String getCompleteTicketButton() {
+        return completeTicketButton;
+    }
+
+    public void setCompleteTicketButton(String completeTicketButton) {
+        this.completeTicketButton = completeTicketButton;
+    }
+
+    public String getSignButton() {
+        return signButton;
+    }
+
+    public void setSignButton(String signButton) {
+        this.signButton = signButton;
+    }
 }

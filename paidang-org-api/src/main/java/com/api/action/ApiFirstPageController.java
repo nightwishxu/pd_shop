@@ -465,7 +465,7 @@ public class ApiFirstPageController extends ApiBaseController {
         for (OrgMessageType element:types){
             MessageIndex messageIndex = new MessageIndex();
             //set类型id，类型名称，类型图片名
-            messageIndex.setTypeId(element.getId().toString());
+            messageIndex.setTypeId(element.getId());
             messageIndex.setTypeName(element.getTypeName());
             messageIndex.setTypePic(element.getTypePic());
             OrgNotifyExample orgNotifyExample = new OrgNotifyExample();

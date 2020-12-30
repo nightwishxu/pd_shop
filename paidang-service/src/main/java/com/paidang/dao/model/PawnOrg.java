@@ -32,10 +32,10 @@ public class PawnOrg implements Serializable {
 	private String roleCode;
 
 	/**
-	 *1典当机构2服务商
+	 *1典当机构2服务商  6商户（个人企业认证）
 	 */
-	@ApiModelProperty(value="1典当机构2服务商")
-	@ApiParam(value="1典当机构2服务商")
+	@ApiModelProperty(value="1典当机构2服务商  6商户（个人企业认证）")
+	@ApiParam(value="1典当机构2服务商  6商户（个人企业认证）")
 	@Column(name = "type")
 	private Integer type;
 
@@ -302,6 +302,86 @@ public class PawnOrg implements Serializable {
 	@ApiParam(value="法人电话")
 	@Column(name = "legal_person_phone")
 	private String legalPersonPhone;
+
+	/**
+	 *0 未缴纳店铺保证金 1缴纳
+	 */
+	@ApiModelProperty(value="0 未缴纳店铺保证金 1缴纳")
+	@ApiParam(value="0 未缴纳店铺保证金 1缴纳")
+	@Column(name = "is_store_deposit")
+	private Integer isStoreDeposit;
+
+	/**
+	 *保证金金额
+	 */
+	@ApiModelProperty(value="保证金金额")
+	@ApiParam(value="保证金金额")
+	@Column(name = "deposit_amount")
+	private java.math.BigDecimal depositAmount;
+
+	/**
+	 *签名
+	 */
+	@ApiModelProperty(value="签名")
+	@ApiParam(value="签名")
+	@Column(name = "signature")
+	private String signature;
+
+	/**
+	 *店铺联系人
+	 */
+	@ApiModelProperty(value="店铺联系人")
+	@ApiParam(value="店铺联系人")
+	@Column(name = "store_contacts")
+	private String storeContacts;
+
+	/**
+	 *店铺联系电话
+	 */
+	@ApiModelProperty(value="店铺联系电话")
+	@ApiParam(value="店铺联系电话")
+	@Column(name = "store_phone")
+	private String storePhone;
+
+	/**
+	 *余额
+	 */
+	@ApiModelProperty(value="余额")
+	@ApiParam(value="余额")
+	@Column(name = "amount")
+	private java.math.BigDecimal amount;
+
+	/**
+	 *安心签编号
+	 */
+	@ApiModelProperty(value="安心签编号")
+	@ApiParam(value="安心签编号")
+	@Column(name = "anxinsign_id")
+	private String anxinsignId;
+
+	/**
+	 *固定电话
+	 */
+	@ApiModelProperty(value="固定电话")
+	@ApiParam(value="固定电话")
+	@Column(name = "land_line_phone")
+	private String landLinePhone;
+
+	/**
+	 *手续费率
+	 */
+	@ApiModelProperty(value="手续费率")
+	@ApiParam(value="手续费率")
+	@Column(name = "service_rates")
+	private java.math.BigDecimal serviceRates;
+
+	/**
+	 *安心签经办人电话
+	 */
+	@ApiModelProperty(value="安心签经办人电话")
+	@ApiParam(value="安心签经办人电话")
+	@Column(name = "anxin_phone")
+	private String anxinPhone;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -589,6 +669,86 @@ public class PawnOrg implements Serializable {
 
 	public String getLegalPersonPhone() {
 		return legalPersonPhone;
+	}
+
+	public void setIsStoreDeposit(Integer isStoreDeposit) {
+		this.isStoreDeposit=isStoreDeposit;
+	}
+
+	public Integer getIsStoreDeposit() {
+		return isStoreDeposit;
+	}
+
+	public void setDepositAmount(java.math.BigDecimal depositAmount) {
+		this.depositAmount=depositAmount;
+	}
+
+	public java.math.BigDecimal getDepositAmount() {
+		return depositAmount;
+	}
+
+	public void setSignature(String signature) {
+		this.signature=signature == null ? signature : signature.trim();
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setStoreContacts(String storeContacts) {
+		this.storeContacts=storeContacts == null ? storeContacts : storeContacts.trim();
+	}
+
+	public String getStoreContacts() {
+		return storeContacts;
+	}
+
+	public void setStorePhone(String storePhone) {
+		this.storePhone=storePhone == null ? storePhone : storePhone.trim();
+	}
+
+	public String getStorePhone() {
+		return storePhone;
+	}
+
+	public void setAmount(java.math.BigDecimal amount) {
+		this.amount=amount;
+	}
+
+	public java.math.BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAnxinsignId(String anxinsignId) {
+		this.anxinsignId=anxinsignId == null ? anxinsignId : anxinsignId.trim();
+	}
+
+	public String getAnxinsignId() {
+		return anxinsignId;
+	}
+
+	public void setLandLinePhone(String landLinePhone) {
+		this.landLinePhone=landLinePhone == null ? landLinePhone : landLinePhone.trim();
+	}
+
+	public String getLandLinePhone() {
+		return landLinePhone;
+	}
+
+	public void setServiceRates(java.math.BigDecimal serviceRates) {
+		this.serviceRates=serviceRates;
+	}
+
+	public java.math.BigDecimal getServiceRates() {
+		return serviceRates;
+	}
+
+	public void setAnxinPhone(String anxinPhone) {
+		this.anxinPhone=anxinPhone == null ? anxinPhone : anxinPhone.trim();
+	}
+
+	public String getAnxinPhone() {
+		return anxinPhone;
 	}
 
 }

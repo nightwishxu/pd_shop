@@ -1,5 +1,6 @@
 package com.item.service;
 
+import com.base.api.ApiException;
 import com.base.web.annotation.LoginMethod;
 import com.item.dao.MobileVerifyMapper;
 import com.item.dao.UserMapper;
@@ -141,6 +142,21 @@ public class UserService {
     		return -1;
 		}
 		return user.getOrgId()!=null?user.getOrgId():-1;
+	}
+
+
+	public Integer getOrgIdByUserIdChecked(Integer userId){
+		if(userId == null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		User user = userMapper.selectByPrimaryKey(userId);
+		if (user==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		if (user.getOrgId()==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		return user.getOrgId();
 	}
 
 	//机构后台，用户列表

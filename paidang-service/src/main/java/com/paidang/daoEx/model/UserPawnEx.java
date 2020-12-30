@@ -86,6 +86,24 @@ public class UserPawnEx extends UserPawn {
 
     private Integer pawnLogId;
 
+    /**
+     *  0未生成合同1待签署2已签署3拒签4作废
+     */
+    private Integer continueUserStatus;
+
+    /**
+     *  0未生成合同1待签署2已签署3拒签4作废
+     */
+    private Integer continueOrgStatus;
+
+    private Integer userStatus;
+
+    private Integer orgStatus;
+
+    private String continueProjectCode;
+
+    private Integer continuePawnStatus;
+
 
     public String getGoodsName1() {
         return goodsName1;
@@ -303,5 +321,53 @@ public class UserPawnEx extends UserPawn {
 
     public void setPawnLogId(Integer pawnLogId) {
         this.pawnLogId = pawnLogId;
+    }
+
+    public Integer getContinueUserStatus() {
+        return continueUserStatus;
+    }
+
+    public void setContinueUserStatus(Integer continueUserStatus) {
+        this.continueUserStatus = continueUserStatus;
+    }
+
+    public Integer getContinueOrgStatus() {
+        return continueOrgStatus;
+    }
+
+    public void setContinueOrgStatus(Integer continueOrgStatus) {
+        this.continueOrgStatus = continueOrgStatus;
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Integer getOrgStatus() {
+        return orgStatus;
+    }
+
+    public void setOrgStatus(Integer orgStatus) {
+        this.orgStatus = orgStatus;
+    }
+
+    public String getContinueProjectCode() {
+        return continueProjectCode;
+    }
+
+    public void setContinueProjectCode(String continueProjectCode) {
+        this.continueProjectCode = continueProjectCode;
+    }
+
+    public Integer getContinuePawnStatus() {
+        return continuePawnStatus;
+    }
+
+    public void setContinuePawnStatus(Integer continuePawnStatus) {
+        this.continuePawnStatus = continuePawnStatus;
     }
 }

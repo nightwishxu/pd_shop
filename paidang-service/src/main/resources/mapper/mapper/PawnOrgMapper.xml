@@ -37,6 +37,16 @@
         <result column="pawn_exequatur" property="pawnExequatur" jdbcType="VARCHAR" />
         <result column="other_file" property="otherFile" jdbcType="VARCHAR" />
         <result column="legal_person_phone" property="legalPersonPhone" jdbcType="VARCHAR" />
+        <result column="is_store_deposit" property="isStoreDeposit" jdbcType="INTEGER" />
+        <result column="deposit_amount" property="depositAmount" jdbcType="DECIMAL" />
+        <result column="signature" property="signature" jdbcType="VARCHAR" />
+        <result column="store_contacts" property="storeContacts" jdbcType="VARCHAR" />
+        <result column="store_phone" property="storePhone" jdbcType="VARCHAR" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="anxinsign_id" property="anxinsignId" jdbcType="VARCHAR" />
+        <result column="land_line_phone" property="landLinePhone" jdbcType="VARCHAR" />
+        <result column="service_rates" property="serviceRates" jdbcType="DECIMAL" />
+        <result column="anxin_phone" property="anxinPhone" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.PawnOrg" extends="BaseResultMap" >
@@ -104,7 +114,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file,legal_person_phone
+        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file,legal_person_phone,is_store_deposit,deposit_amount,signature,store_contacts,store_phone,amount,anxinsign_id,land_line_phone,service_rates,anxin_phone
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -176,7 +186,11 @@
         labels,integral,score,
         comment_count,express_score,service_score,
         id_card_img,id_card_reverse,id_card,
-        pawn_exequatur,other_file,legal_person_phone
+        pawn_exequatur,other_file,legal_person_phone,
+        is_store_deposit,deposit_amount,signature,
+        store_contacts,store_phone,amount,
+        anxinsign_id,land_line_phone,service_rates,
+        anxin_phone
         )
         values (#{roleCode,jdbcType=VARCHAR},#{type,jdbcType=TINYINT},
         #{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
@@ -189,7 +203,11 @@
         #{labels,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL},#{score,jdbcType=DECIMAL},
         #{commentCount,jdbcType=INTEGER},#{expressScore,jdbcType=DECIMAL},#{serviceScore,jdbcType=DECIMAL},
         #{idCardImg,jdbcType=VARCHAR},#{idCardReverse,jdbcType=VARCHAR},#{idCard,jdbcType=VARCHAR},
-        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR},#{legalPersonPhone,jdbcType=VARCHAR}
+        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR},#{legalPersonPhone,jdbcType=VARCHAR},
+        #{isStoreDeposit,jdbcType=INTEGER},#{depositAmount,jdbcType=DECIMAL},#{signature,jdbcType=VARCHAR},
+        #{storeContacts,jdbcType=VARCHAR},#{storePhone,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},
+        #{anxinsignId,jdbcType=VARCHAR},#{landLinePhone,jdbcType=VARCHAR},#{serviceRates,jdbcType=DECIMAL},
+        #{anxinPhone,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -301,6 +319,36 @@
             <if test="legalPersonPhone != null" >
                 legal_person_phone,
             </if>
+            <if test="isStoreDeposit != null" >
+                is_store_deposit,
+            </if>
+            <if test="depositAmount != null" >
+                deposit_amount,
+            </if>
+            <if test="signature != null" >
+                signature,
+            </if>
+            <if test="storeContacts != null" >
+                store_contacts,
+            </if>
+            <if test="storePhone != null" >
+                store_phone,
+            </if>
+            <if test="amount != null" >
+                amount,
+            </if>
+            <if test="anxinsignId != null" >
+                anxinsign_id,
+            </if>
+            <if test="landLinePhone != null" >
+                land_line_phone,
+            </if>
+            <if test="serviceRates != null" >
+                service_rates,
+            </if>
+            <if test="anxinPhone != null" >
+                anxin_phone,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="roleCode != null" >
@@ -407,6 +455,36 @@
             </if>
             <if test="legalPersonPhone != null" >
                 #{legalPersonPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="isStoreDeposit != null" >
+                #{isStoreDeposit,jdbcType=INTEGER},
+            </if>
+            <if test="depositAmount != null" >
+                #{depositAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="signature != null" >
+                #{signature,jdbcType=VARCHAR},
+            </if>
+            <if test="storeContacts != null" >
+                #{storeContacts,jdbcType=VARCHAR},
+            </if>
+            <if test="storePhone != null" >
+                #{storePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="anxinsignId != null" >
+                #{anxinsignId,jdbcType=VARCHAR},
+            </if>
+            <if test="landLinePhone != null" >
+                #{landLinePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceRates != null" >
+                #{serviceRates,jdbcType=DECIMAL},
+            </if>
+            <if test="anxinPhone != null" >
+                #{anxinPhone,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -529,6 +607,36 @@
             <if test="record.legalPersonPhone != null" >
                 legal_person_phone = #{record.legalPersonPhone,jdbcType=VARCHAR},
             </if>
+            <if test="record.isStoreDeposit != null" >
+                is_store_deposit = #{record.isStoreDeposit,jdbcType=INTEGER},
+            </if>
+            <if test="record.depositAmount != null" >
+                deposit_amount = #{record.depositAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="record.signature != null" >
+                signature = #{record.signature,jdbcType=VARCHAR},
+            </if>
+            <if test="record.storeContacts != null" >
+                store_contacts = #{record.storeContacts,jdbcType=VARCHAR},
+            </if>
+            <if test="record.storePhone != null" >
+                store_phone = #{record.storePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.amount != null" >
+                amount = #{record.amount,jdbcType=DECIMAL},
+            </if>
+            <if test="record.anxinsignId != null" >
+                anxinsign_id = #{record.anxinsignId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.landLinePhone != null" >
+                land_line_phone = #{record.landLinePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.serviceRates != null" >
+                service_rates = #{record.serviceRates,jdbcType=DECIMAL},
+            </if>
+            <if test="record.anxinPhone != null" >
+                anxin_phone = #{record.anxinPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -572,7 +680,17 @@
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
         other_file = #{otherFile,jdbcType=VARCHAR},
-        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
+        is_store_deposit = #{isStoreDeposit,jdbcType=INTEGER},
+        deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+        signature = #{signature,jdbcType=VARCHAR},
+        store_contacts = #{storeContacts,jdbcType=VARCHAR},
+        store_phone = #{storePhone,jdbcType=VARCHAR},
+        amount = #{amount,jdbcType=DECIMAL},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
+        service_rates = #{serviceRates,jdbcType=DECIMAL},
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -614,7 +732,17 @@
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
         other_file = #{otherFile,jdbcType=VARCHAR},
-        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
+        is_store_deposit = #{isStoreDeposit,jdbcType=INTEGER},
+        deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+        signature = #{signature,jdbcType=VARCHAR},
+        store_contacts = #{storeContacts,jdbcType=VARCHAR},
+        store_phone = #{storePhone,jdbcType=VARCHAR},
+        amount = #{amount,jdbcType=DECIMAL},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
+        service_rates = #{serviceRates,jdbcType=DECIMAL},
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -728,6 +856,36 @@
             <if test="legalPersonPhone != null" >
                 legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
             </if>
+            <if test="isStoreDeposit != null" >
+                is_store_deposit = #{isStoreDeposit,jdbcType=INTEGER},
+            </if>
+            <if test="depositAmount != null" >
+                deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="signature != null" >
+                signature = #{signature,jdbcType=VARCHAR},
+            </if>
+            <if test="storeContacts != null" >
+                store_contacts = #{storeContacts,jdbcType=VARCHAR},
+            </if>
+            <if test="storePhone != null" >
+                store_phone = #{storePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="anxinsignId != null" >
+                anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+            </if>
+            <if test="landLinePhone != null" >
+                land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceRates != null" >
+                service_rates = #{serviceRates,jdbcType=DECIMAL},
+            </if>
+            <if test="anxinPhone != null" >
+                anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -768,7 +926,17 @@
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
         other_file = #{otherFile,jdbcType=VARCHAR},
-        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
+        is_store_deposit = #{isStoreDeposit,jdbcType=INTEGER},
+        deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+        signature = #{signature,jdbcType=VARCHAR},
+        store_contacts = #{storeContacts,jdbcType=VARCHAR},
+        store_phone = #{storePhone,jdbcType=VARCHAR},
+        amount = #{amount,jdbcType=DECIMAL},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
+        service_rates = #{serviceRates,jdbcType=DECIMAL},
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
@@ -807,7 +975,17 @@
         id_card = #{idCard,jdbcType=VARCHAR},
         pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
         other_file = #{otherFile,jdbcType=VARCHAR},
-        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR}
+        legal_person_phone = #{legalPersonPhone,jdbcType=VARCHAR},
+        is_store_deposit = #{isStoreDeposit,jdbcType=INTEGER},
+        deposit_amount = #{depositAmount,jdbcType=DECIMAL},
+        signature = #{signature,jdbcType=VARCHAR},
+        store_contacts = #{storeContacts,jdbcType=VARCHAR},
+        store_phone = #{storePhone,jdbcType=VARCHAR},
+        amount = #{amount,jdbcType=DECIMAL},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
+        service_rates = #{serviceRates,jdbcType=DECIMAL},
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

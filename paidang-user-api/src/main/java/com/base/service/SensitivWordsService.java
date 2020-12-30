@@ -1,5 +1,12 @@
 package com.base.service;
 
+import com.api.constants.PayConfig;
+import com.base.pay.PayPropertySupport;
+import com.base.util.CoreConstants;
+import com.ijpay.alipay.AliPayApiConfig;
+import com.ijpay.alipay.AliPayApiConfigKit;
+import com.ijpay.wxpay.WxPayApiConfig;
+import com.ijpay.wxpay.WxPayApiConfigKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,6 +46,7 @@ public class SensitivWordsService {
         logger.info("[内存数据]-开始加载敏感词数据任务");
         try {
             readSensitiveWordFile();
+            initPayConfig();
             logger.info("[内存数据]-敏感词数据任务加载完成");
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -46,6 +54,19 @@ public class SensitivWordsService {
         }
         
     }
+
+    public void initPayConfig(){
+        AliPayApiConfig aliPayApiConfig = AliPayApiConfig.builder()
+                .setAppId(PayPropertySupport.getProperty("alipay.appId"))
+                .setAliPayPublicKey(PayPropertySupport.getProperty("alipay.publicKey"))
+                .setCharset("UTF-8")
+                .setPrivateKey(PayPropertySupport.getProperty("alipay.privateKey"))
+                .setServiceUrl(PayPropertySupport.getProperty("alipay.serverUrl"))
+                .setSignType("RSA2")
+                .build();
+        AliPayApiConfigKit.putApiConfig(aliPayApiConfig);
+    }
+
 
 
     

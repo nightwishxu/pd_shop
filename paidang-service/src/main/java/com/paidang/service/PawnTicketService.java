@@ -10,7 +10,10 @@ import com.item.dao.model.User;
 import com.paidang.dao.PawnOrgMapper;
 import com.paidang.dao.UserGoodsMapper;
 import com.paidang.dao.model.*;
+import com.paidang.daoEx.model.PawnTicketEx;
+import com.paidang.domain.pojo.RepawnTicketModel;
 import com.ruoyi.common.utils.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,12 +83,23 @@ public class PawnTicketService {
 		return this.pawnTicketMapper.selectByWrapper(wrapper);
 	}
 
+	public PawnTicket getByProjectCode(String projectCode){
+		PawnTicketExample example = new PawnTicketExample();
+		example.createCriteria().andProjectCodeEqualTo(projectCode);
+		List<PawnTicket> pawnTickets = selectByExample(example);
+		if (CollectionUtils.isNotEmpty(pawnTickets)){
+			return pawnTickets.get(0);
+		}
+		return null;
+	}
+
 	/**
 	 * 机构端注册时需注册安心签
 	 * 中标后，签署前完善信息，合同签署完成后，上传支付凭证
 	 */
 
-	public void addDDTicket(UserPawn userPawn){
+	public Integer addDDTicket(UserPawn userPawn,String projectCode,
+							String pawnTicketCode,String checker,String handler,String remark){
 		User user  = userMapper.selectByPrimaryKey(userPawn.getUserId());
 		PawnOrg pawnOrg = pawnOrgMapper.selectByPrimaryKey(userPawn.getOrgId());
 		UserGoods userGoods = userGoodsMapper.selectByPrimaryKey(userPawn.getGoodsId());
@@ -99,14 +113,15 @@ public class PawnTicketService {
 		entity.setPawnerTel(user.getPhone());
 		entity.setPawnerIdCard(user.getIdCard());
 		entity.setContactor(user.getName());
-//		entity.setPawnerAddr(); 当户地址
+		entity.setPawnerAddr(user.getIdCardHand()); //当户地址
 		entity.setGoodsName(userPawn.getGoodsName());
-		entity.setAuthPriceTest(userGoods.getAuthPriceTest()==null?null:userGoods.getAuthPriceTest().toString());
-		entity.setAuthPrice(userGoods.getAuthPrice());
-//		entity.setEquivalentRatio();
+		entity.setAuthPriceTest(userGoods.getAuthPrice().toString());
+		entity.setAuthPrice(userPawn.getMoney());
 		BigDecimal total = userPawn.getMoney();
-		BigDecimal pawnMoney = total.multiply(userPawn.getRate());
+		BigDecimal pawnMoney = total.multiply(userPawn.getRate()).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_DOWN);
 		BigDecimal userMoney = total.subtract(pawnMoney);
+		entity.setCost(pawnMoney.toString());
+		entity.setCostCN(Convert.digitToChinese(pawnMoney));
 		entity.setLoanMoney(total.toString());
 		entity.setUserMoney(userMoney.toString());
 		entity.setPawnMoney(pawnMoney.toString());
@@ -116,8 +131,8 @@ public class PawnTicketService {
 		entity.setPawnBeginTime(DateFormatUtils.format(userPawn.getPawnBeginTime(),"yyyy-MM-dd"));
 		entity.setPawnEndTime(DateFormatUtils.format(userPawn.getPawnEndTime(),"yyyy-MM-dd"));
 		entity.setBeginPawnEndTime(DateFormatUtils.format(userPawn.getBeginPawnEndTime(),"yyyy-MM-dd"));
-		entity.setRate(userPawn.getRate()==null?null:userPawn.getRate().toString());
-		entity.setMoneyRate(userPawn.getMoneyRate()==null?null:userPawn.getMoneyRate().toString());
+		entity.setRate(userPawn.getRate()==null?"0":userPawn.getRate().toString() + "%");
+		entity.setMoneyRate(userPawn.getMoneyRate()==null?"0":userPawn.getMoneyRate().toString() + "%");
 //		entity.setCost();
 //		entity.setCostCN();
 //		entity.setRepawnTotalCN();
@@ -130,11 +145,54 @@ public class PawnTicketService {
 		entity.setOrgId(userPawn.getOrgId());
 		entity.setStatus("0");
 		entity.setCreateTime(new Date());
+		entity.setEquivalentRatio(entity.getAuthPrice().divide(new BigDecimal(entity.getAuthPriceTest()),2, BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(100))+"%");
+		entity.setProjectCode(projectCode);
+		entity.setPawnTicketCode(pawnTicketCode);
+		entity.setChecker(checker);
+		entity.setHandler(handler);
+		entity.setOtherOrder("无");
+		entity.setRemark(remark);
+		entity.setOrgStatus(1);
+		entity.setUserStatus(1);
+		insert(entity);
+		return  entity.getId();
 
 	}
 
 
-	public void adXDTicket(){
+	//先是用户续当，生成合同，然后签署，然后上传付款凭证，典当行确认
 
+	public void adXDTicket(String projectCode,String userName, String userTel,  PawnOrg pawnOrg, RepawnTicketModel repawn){
+		PawnTicket ticket = new PawnTicket();
+		ticket.setPawnTicketCode(repawn.getPawnTicketCode());
+		ticket.setOrgName(pawnOrg.getName());
+		ticket.setOrgTel(pawnOrg.getPhone());
+		ticket.setOrgAdress(pawnOrg.getAdress());
+		ticket.setPawnerName(repawn.getPawnerName());
+		ticket.setBusinessLicense(pawnOrg.getBusinessLicenseCode());
+		ticket.setPawnerName(userName);
+		ticket.setPawnerTel(userTel);
+		ticket.setRepawnBeginTime(repawn.getRepawnBeginTime());
+		ticket.setRepawnEndTime(repawn.getRepawnEndTime());
+		ticket.setContactor(userName);
+		ticket.setLoanMoney(repawn.getLoanMoney());
+		ticket.setLoanMoneyCN(Convert.digitToChinese(new BigDecimal(repawn.getLoanMoney())));
+		ticket.setCost(repawn.getCost());
+		ticket.setCostCN(Convert.digitToChinese(new BigDecimal(repawn.getCost())));
+		ticket.setMoneyCost(repawn.getMoneyCost());
+		ticket.setMoneyCostCN(Convert.digitToChinese(new BigDecimal(repawn.getMoneyCost())));
+		ticket.setRepawnTotal(repawn.getRepawnTotal());
+		ticket.setRepawnTotalCN(Convert.digitToChinese(new BigDecimal(repawn.getRepawnTotal())));
+		ticket.setRate(repawn.getRate());
+		ticket.setMoneyRate(repawn.getMoneyRate());
+		ticket.setHandler(repawn.getHandler());
+		ticket.setChecker(repawn.getChecker());
+		ticket.setCreateTime(new Date());
+		ticket.setProjectCode(projectCode);
+		ticket.setStatus("0");
+		ticket.setType("2");
+		ticket.setUserStatus(1);
+		ticket.setOrgStatus(1);
+		insert(ticket);
 	}
 }

@@ -11,6 +11,7 @@ import com.paidang.dao.model.UserPawnExample;
 import com.paidang.daoEx.UserPawnMapperEx;
 import com.paidang.daoEx.model.UserPawnEx;
 import com.util.PaidangConst;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -230,4 +231,15 @@ public class UserPawnService {
     public List<UserPawnEx> selectTradeRecordList(Map<String, Object> map) {
 		return this.userPawnMapperEx.selectTradeRecordList(map);
     }
+
+    public UserPawn getByProjectCode(String projectCode){
+		UserPawnExample example = new UserPawnExample();
+		example.createCriteria().andProjectCodeEqualTo(projectCode);
+		List<UserPawn> userPawns = userPawnMapper.selectByExample(example);
+		if (CollectionUtils.isNotEmpty(userPawns)){
+			return userPawns.get(0);
+		}else {
+			return null;
+		}
+	}
 }

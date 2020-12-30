@@ -30,7 +30,7 @@ public class  AppMyStoreGoods {
     private String declare;
     @ApiModelProperty(value=" 优惠券减免金额")
     private String couponPrice;
-    @ApiModelProperty(value="订单状态-1已取消1待付款2已付款3已发货4确认收货5退款")
+    @ApiModelProperty(value="订单状态-1已取消1待付款2已付款3已发货4确认收货5已评价")
     private Integer state;
     @ApiModelProperty(value="物流状态0：在途1：揽件2：疑难3：签收4：退签或异常签收5：派件6：退回")
     private Integer expressState;
@@ -64,6 +64,9 @@ public class  AppMyStoreGoods {
 
     @ApiModelProperty(value = "寄拍商品")
     private Integer userGoodsId;
+
+    @ApiModelProperty(value = "商品数量")
+    private Integer goodsNum;
 
     public Integer getCommentState() {
         return commentState;
@@ -279,5 +282,14 @@ public class  AppMyStoreGoods {
 
     public void setExpressId(Integer expressId) {
         this.expressId = expressId;
+    }
+
+
+    public Integer getGoodsNum() {
+        return goodsNum;
+    }
+
+    public void setGoodsNum(Integer goodsNum) {
+        this.goodsNum = goodsNum;
     }
 }

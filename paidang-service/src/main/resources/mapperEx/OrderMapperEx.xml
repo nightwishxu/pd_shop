@@ -152,14 +152,11 @@
     <if test="is_del !=null">
         and A.is_del = #{is_del}
     </if>
-    <if test="orderState == 5">
+    <if test="orderState == 6">
       and A.ref_state != 0
     </if>
-    <if test="orderState != 0 and orderState != 5">
+    <if test="orderState != 0 and orderState != 6">
       and A.state = #{orderState} and A.ref_state = 0
-      <if test="commentState !=null">
-        and A.comment_state=#{commentState}
-      </if>
     </if>
     order by A.create_time desc
   </select>
@@ -302,6 +299,25 @@
     </if>
     ORDER BY
     t.create_time desc
+  </select>
+
+  <select id="getTotalOrderPrice" resultType="java.math.BigDecimal">
+    select ifnull(sum(price),0) from p_order where goods_source IN ( 6, 7 )
+    and goods_owner=#{userId}
+    <if test="queryType!=null and queryType==1">
+      and state=1 and ref_state!=4
+    </if>
+    <if test="queryType!=null and queryType==2">
+      and state=2 and ref_state!=4
+    </if>
+    <if test="queryType!=null and queryType==3">
+      and state=3 and ref_state!=4
+    </if>
+    <if test="queryType!=null and queryType==4">
+      and state>=1 and ref_state!=4
+    </if>
+
+
   </select>
 
 

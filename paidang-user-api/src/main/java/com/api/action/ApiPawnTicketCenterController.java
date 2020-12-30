@@ -87,17 +87,17 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
             throw new ApiException(9999,"合同已经生成，不能重复生成");
         }
         //业务ID
-        Long categoryId = qysService.getCategoryId(pawnTicket.getType());
-        String contractId = qysService.createSendContract(categoryId, pawnTicket.getPawnerName(), pawnTicket.getPawnerTel(), pawnTicket.getOrgName(), pawnTicket.getOrgTel(), pawnTicket);
-        //通知用户
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnTicket.getPawnerTel());
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnTicket.getOrgTel());
-        //更新合同
-        PawnTicket pawnTicket1 = new PawnTicket();
-        pawnTicket1.setId(pawnTicket.getId());
-        pawnTicket1.setContractId(contractId);//合同文档Id
-        pawnTicket1.setStatus("1");//待签署
-        pawnTicketService.updateByPrimaryKeySelective(pawnTicket1);
+//        Long categoryId = qysService.getCategoryId(pawnTicket.getType());
+//        String contractId = qysService.createSendContract(categoryId, pawnTicket.getPawnerName(), pawnTicket.getPawnerTel(), pawnTicket.getOrgName(), pawnTicket.getOrgTel(), pawnTicket);
+//        //通知用户
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnTicket.getPawnerTel());
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnTicket.getOrgTel());
+//        //更新合同
+//        PawnTicket pawnTicket1 = new PawnTicket();
+//        pawnTicket1.setId(pawnTicket.getId());
+//        pawnTicket1.setContractId(contractId);//合同文档Id
+//        pawnTicket1.setStatus("1");//待签署
+//        pawnTicketService.updateByPrimaryKeySelective(pawnTicket1);
         return new Ret();
     }
 

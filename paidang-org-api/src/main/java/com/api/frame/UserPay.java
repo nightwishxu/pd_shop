@@ -88,7 +88,7 @@ public class UserPay implements PayFilter,PayKeyFilter {
             BigDecimal tradeStatus = null;
             Integer userId = null;
             try {
-                payLog = payLogService.selectByPrimaryKey(Long.parseLong(out_trade_no));
+                payLog = payLogService.selectByPrimaryKey(out_trade_no);
                 tradeStatus = new BigDecimal(payLog.getState());
                 userId = payLog.getUserId();
             } catch (Exception e) {

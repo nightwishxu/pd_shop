@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -133,6 +135,30 @@ public class AuthEnterprise implements Serializable {
 	@Column(name = "org_id")
 	private Integer orgId;
 
+	/**
+	 *典当许可证
+	 */
+	@ApiModelProperty(value="典当许可证")
+	@ApiParam(value="典当许可证")
+	@Column(name = "pawn_exequatur")
+	private String pawnExequatur;
+
+	/**
+	 *其他辅助文件
+	 */
+	@ApiModelProperty(value="其他辅助文件")
+	@ApiParam(value="其他辅助文件")
+	@Column(name = "other_file")
+	private String otherFile;
+
+	/**
+	 *营业执照号码
+	 */
+	@ApiModelProperty(value="营业执照号码")
+	@ApiParam(value="营业执照号码")
+	@Column(name = "business_license")
+	private String businessLicense;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -251,6 +277,30 @@ public class AuthEnterprise implements Serializable {
 
 	public Integer getOrgId() {
 		return orgId;
+	}
+
+	public void setPawnExequatur(String pawnExequatur) {
+		this.pawnExequatur=pawnExequatur == null ? pawnExequatur : pawnExequatur.trim();
+	}
+
+	public String getPawnExequatur() {
+		return pawnExequatur;
+	}
+
+	public void setOtherFile(String otherFile) {
+		this.otherFile=otherFile == null ? otherFile : otherFile.trim();
+	}
+
+	public String getOtherFile() {
+		return otherFile;
+	}
+
+	public void setBusinessLicense(String businessLicense) {
+		this.businessLicense=businessLicense == null ? businessLicense : businessLicense.trim();
+	}
+
+	public String getBusinessLicense() {
+		return businessLicense;
 	}
 
 }

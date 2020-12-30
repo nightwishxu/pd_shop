@@ -10,7 +10,7 @@
         <result column="info" property="info" jdbcType="VARCHAR" />
         <result column="pawn_code" property="pawnCode" jdbcType="VARCHAR" />
         <result column="fid" property="fid" jdbcType="INTEGER" />
-        <result column="pay_log_id" property="payLogId" jdbcType="BIGINT" />
+        <result column="pay_log_id" property="payLogId" jdbcType="VARCHAR" />
         <result column="trade_type" property="tradeType" jdbcType="TINYINT" />
         <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
         <result column="trade_card_bank" property="tradeCardBank" jdbcType="VARCHAR" />
@@ -133,7 +133,7 @@
         )
         values (#{orgId,jdbcType=INTEGER},#{money,jdbcType=DECIMAL},
         #{type,jdbcType=TINYINT},#{item,jdbcType=VARCHAR},#{info,jdbcType=VARCHAR},
-        #{pawnCode,jdbcType=VARCHAR},#{fid,jdbcType=INTEGER},#{payLogId,jdbcType=BIGINT},
+        #{pawnCode,jdbcType=VARCHAR},#{fid,jdbcType=INTEGER},#{payLogId,jdbcType=VARCHAR},
         #{tradeType,jdbcType=TINYINT},#{tradeNo,jdbcType=VARCHAR},#{tradeCardBank,jdbcType=VARCHAR},
         #{tradeCardCode,jdbcType=VARCHAR},#{tradeTicket,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},
         #{userName,jdbcType=VARCHAR},#{userPhone,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
@@ -225,7 +225,7 @@
                 #{fid,jdbcType=INTEGER},
             </if>
             <if test="payLogId != null" >
-                #{payLogId,jdbcType=BIGINT},
+                #{payLogId,jdbcType=VARCHAR},
             </if>
             <if test="tradeType != null" >
                 #{tradeType,jdbcType=TINYINT},
@@ -298,7 +298,7 @@
                 fid = #{record.fid,jdbcType=INTEGER},
             </if>
             <if test="record.payLogId != null" >
-                pay_log_id = #{record.payLogId,jdbcType=BIGINT},
+                pay_log_id = #{record.payLogId,jdbcType=VARCHAR},
             </if>
             <if test="record.tradeType != null" >
                 trade_type = #{record.tradeType,jdbcType=TINYINT},
@@ -349,7 +349,7 @@
         info = #{info,jdbcType=VARCHAR},
         pawn_code = #{pawnCode,jdbcType=VARCHAR},
         fid = #{fid,jdbcType=INTEGER},
-        pay_log_id = #{payLogId,jdbcType=BIGINT},
+        pay_log_id = #{payLogId,jdbcType=VARCHAR},
         trade_type = #{tradeType,jdbcType=TINYINT},
         trade_no = #{tradeNo,jdbcType=VARCHAR},
         trade_card_bank = #{tradeCardBank,jdbcType=VARCHAR},
@@ -391,7 +391,7 @@
                 fid = #{fid,jdbcType=INTEGER},
             </if>
             <if test="payLogId != null" >
-                pay_log_id = #{payLogId,jdbcType=BIGINT},
+                pay_log_id = #{payLogId,jdbcType=VARCHAR},
             </if>
             <if test="tradeType != null" >
                 trade_type = #{tradeType,jdbcType=TINYINT},
@@ -439,7 +439,7 @@
         info = #{info,jdbcType=VARCHAR},
         pawn_code = #{pawnCode,jdbcType=VARCHAR},
         fid = #{fid,jdbcType=INTEGER},
-        pay_log_id = #{payLogId,jdbcType=BIGINT},
+        pay_log_id = #{payLogId,jdbcType=VARCHAR},
         trade_type = #{tradeType,jdbcType=TINYINT},
         trade_no = #{tradeNo,jdbcType=VARCHAR},
         trade_card_bank = #{tradeCardBank,jdbcType=VARCHAR},
@@ -453,5 +453,19 @@
         end_time = #{endTime,jdbcType=TIMESTAMP}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from p_org_balance_log
+        ${sqlSegment}
+    </select>
 
 </mapper>

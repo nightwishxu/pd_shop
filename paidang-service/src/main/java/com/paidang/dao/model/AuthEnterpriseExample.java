@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AuthEnterpriseExample {
 	protected String orderByClause;
@@ -1111,6 +1111,216 @@ public class AuthEnterpriseExample {
 
 		public Criteria andOrgIdNotBetween(Integer value1, Integer value2) {
 			addCriterion("org_id not between", value1, value2, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIsNull() {
+			addCriterion("pawn_exequatur is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIsNotNull() {
+			addCriterion("pawn_exequatur is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturEqualTo(String value) {
+			addCriterion("pawn_exequatur =", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotEqualTo(String value) {
+			addCriterion("pawn_exequatur <>", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturGreaterThan(String value) {
+			addCriterion("pawn_exequatur >", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturGreaterThanOrEqualTo(String value) {
+			addCriterion("pawn_exequatur >=", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLessThan(String value) {
+			addCriterion("pawn_exequatur <", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLessThanOrEqualTo(String value) {
+			addCriterion("pawn_exequatur <=", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturLike(String value) {
+			addCriterion("pawn_exequatur like", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotLike(String value) {
+			addCriterion("pawn_exequatur not like", value, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturIn(List<String> values) {
+			addCriterion("pawn_exequatur in", values, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotIn(List<String> values) {
+			addCriterion("pawn_exequatur not in", values, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturBetween(String value1, String value2) {
+			addCriterion("pawn_exequatur between", value1, value2, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andPawnExequaturNotBetween(String value1, String value2) {
+			addCriterion("pawn_exequatur not between", value1, value2, "pawnExequatur");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIsNull() {
+			addCriterion("other_file is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIsNotNull() {
+			addCriterion("other_file is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileEqualTo(String value) {
+			addCriterion("other_file =", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotEqualTo(String value) {
+			addCriterion("other_file <>", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileGreaterThan(String value) {
+			addCriterion("other_file >", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileGreaterThanOrEqualTo(String value) {
+			addCriterion("other_file >=", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLessThan(String value) {
+			addCriterion("other_file <", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLessThanOrEqualTo(String value) {
+			addCriterion("other_file <=", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileLike(String value) {
+			addCriterion("other_file like", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotLike(String value) {
+			addCriterion("other_file not like", value, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileIn(List<String> values) {
+			addCriterion("other_file in", values, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotIn(List<String> values) {
+			addCriterion("other_file not in", values, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileBetween(String value1, String value2) {
+			addCriterion("other_file between", value1, value2, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andOtherFileNotBetween(String value1, String value2) {
+			addCriterion("other_file not between", value1, value2, "otherFile");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseIsNull() {
+			addCriterion("business_license is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseIsNotNull() {
+			addCriterion("business_license is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseEqualTo(String value) {
+			addCriterion("business_license =", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseNotEqualTo(String value) {
+			addCriterion("business_license <>", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseGreaterThan(String value) {
+			addCriterion("business_license >", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseGreaterThanOrEqualTo(String value) {
+			addCriterion("business_license >=", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseLessThan(String value) {
+			addCriterion("business_license <", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseLessThanOrEqualTo(String value) {
+			addCriterion("business_license <=", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseLike(String value) {
+			addCriterion("business_license like", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseNotLike(String value) {
+			addCriterion("business_license not like", value, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseIn(List<String> values) {
+			addCriterion("business_license in", values, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseNotIn(List<String> values) {
+			addCriterion("business_license not in", values, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseBetween(String value1, String value2) {
+			addCriterion("business_license between", value1, value2, "businessLicense");
+			return (Criteria) this;
+		}
+
+		public Criteria andBusinessLicenseNotBetween(String value1, String value2) {
+			addCriterion("business_license not between", value1, value2, "businessLicense");
 			return (Criteria) this;
 		}
 

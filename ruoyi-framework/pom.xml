@@ -69,6 +69,12 @@
             <artifactId>ruoyi-system</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.sun</groupId>-->
+<!--            <artifactId>framework-base</artifactId>-->
+<!--            <version>1.0.4.v20190225</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 </project>

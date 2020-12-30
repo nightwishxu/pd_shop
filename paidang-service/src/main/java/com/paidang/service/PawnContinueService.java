@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.paidang.daoEx.PawnContinueMapperEx;
 import com.paidang.daoEx.model.PawnContinueEx;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,5 +80,16 @@ public class PawnContinueService {
 	//	pawnContinueExample.createCriteria().andPawnIdEqualTo(pawnId);
 		pawnContinueExample.createCriteria().andPawnIdEqualTo(pawnId).andStateEqualTo(4);
 		return pawnContinueMapper.countByExample(pawnContinueExample);
+	}
+
+	public PawnContinue getByProjectCode(String projectCode){
+		PawnContinueExample example = new PawnContinueExample();
+		example.createCriteria().andProjectCodeEqualTo(projectCode);
+		List<PawnContinue> userPawns = pawnContinueMapper.selectByExample(example);
+		if (CollectionUtils.isNotEmpty(userPawns)){
+			return userPawns.get(0);
+		}else {
+			return null;
+		}
 	}
 }

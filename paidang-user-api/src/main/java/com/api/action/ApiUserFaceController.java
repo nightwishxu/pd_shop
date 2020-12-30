@@ -1,16 +1,17 @@
 package com.api.action;
 
 import com.api.MErrorEnum;
-import com.api.constants.FileConstants;
-import com.api.service.UnionApiService;
+import com.paidang.service.UnionApiService;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.StringUtil;
+import com.base.util.StringUtils;
+import com.demo.constant.DSPConsts;
 import com.item.dao.model.User;
 import com.item.service.UserService;
-import com.paidang.dao.model.BFile;
 import com.paidang.service.BFileService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.utils.file.FileUtils;
@@ -116,9 +117,14 @@ public class ApiUserFaceController extends ApiBaseController {
                            @ApiParam(value = "地址", required = true) String address) throws Exception{
         User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
+        if (user.getAuthStatus()!=null && user.getAuthStatus()!=0){
+            throw new ApiException(400,"绑定状态出现异常，请联系客服人员");
+        }
+
+
         //判断是否已经绑定身份证和是否已经录入人脸
-        if(StringUtil.isNotBlank(user.getIdCardImg()) || StringUtil.isNotBlank(user.getHeadShake())){
-            throw new ApiException(-1,"绑定状态出现异常，请联系客户人员");
+        if(StringUtil.isNotBlank(user.getIdCardImg())){
+            throw new ApiException(-1,"绑定状态出现异常，请联系客服人员");
         }
 
         //身份证正面
@@ -135,7 +141,7 @@ public class ApiUserFaceController extends ApiBaseController {
         user.setIdCard(idCard);
         user.setName(userName);
 
-        user.setIsBind(1);
+//        user.setIsBind(1);
 
         user.setIdCardHand(address);
 
@@ -149,7 +155,7 @@ public class ApiUserFaceController extends ApiBaseController {
 
         String fileId = UnionApiService.uploadFile(idCardImg);
         UnionApiService.validIdCard(userName,idCard,fileId);
-
+        user.setAuthStatus(1);
 //        try {
 //            File file = FileUtils.getFile(user.getIdCardImg());
 //            File file1 = FileUtils.getFile(user.getHeadShake());
@@ -170,6 +176,26 @@ public class ApiUserFaceController extends ApiBaseController {
         }
 
         return ok();
+    }
+
+    @ApiOperation(value = "获取人脸识别地址", notes = "登陆")
+    @RequestMapping("/userFace/getUrl")
+    @ApiMethod(isLogin = true)
+    public Result getUserFaceUrl(MobileInfo mobileInfo){
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+
+        if (user.getIsBind()==1){
+            throw new ApiException(400,"实名认证已经成功");
+        }
+
+        if (user.getAuthStatus()!=null && user.getAuthStatus()==4){
+            throw new ApiException(400,"活体验证成功");
+        }
+        if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+            throw new ApiException(400,"请先进行实名认证");
+        }
+        String url = DSPConsts.hostUrl+"h5/userFace?userId="+mobileInfo.getUserId();
+        return new Result(url);
     }
 
 }

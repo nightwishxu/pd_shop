@@ -63,6 +63,8 @@
         <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
         <result column="last_pawn_continue_id" property="lastPawnContinueId" jdbcType="INTEGER" />
         <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="pawn_status" property="pawnStatus" jdbcType="INTEGER" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -126,7 +128,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,goods_id,loans_price,loans_rate,is_verify,org_id,org_user_id,org_selected_time,payee_name,payee_phone,payee_bank_name,payee_bank_card_code,payee_ticket,payee_state,pay_name,pay_phone,pay_bank_name,pay_bacnk_card_code,pawn_ticket_code,pawn_ticket,state,user_state,pawn_begin_time,pawn_end_time,begin_money,begin_pawn_month,begin_pawn_end_time,money,pawn_time,last_money,last_pawn_month,last_pawn_time,rate,money_rate,overdue_rate,pawn_money,user_money,platform_rate,platform_money,platform_state,redeem_state,redeem_ticket,redeem_time,redeem_overdue,redeem_interest,redeem_pawn_ticket,create_time,modify_time,org_name,org_tel,org_address,org_license,org_seal,user_name,user_phone,user_address,user_id_card,goods_name,last_pawn_continue_id,contract_id
+        id,user_id,goods_id,loans_price,loans_rate,is_verify,org_id,org_user_id,org_selected_time,payee_name,payee_phone,payee_bank_name,payee_bank_card_code,payee_ticket,payee_state,pay_name,pay_phone,pay_bank_name,pay_bacnk_card_code,pawn_ticket_code,pawn_ticket,state,user_state,pawn_begin_time,pawn_end_time,begin_money,begin_pawn_month,begin_pawn_end_time,money,pawn_time,last_money,last_pawn_month,last_pawn_time,rate,money_rate,overdue_rate,pawn_money,user_money,platform_rate,platform_money,platform_state,redeem_state,redeem_ticket,redeem_time,redeem_overdue,redeem_interest,redeem_pawn_ticket,create_time,modify_time,org_name,org_tel,org_address,org_license,org_seal,user_name,user_phone,user_address,user_id_card,goods_name,last_pawn_continue_id,contract_id,project_code,pawn_status
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -184,7 +186,7 @@
         org_address,org_license,org_seal,
         user_name,user_phone,user_address,
         user_id_card,goods_name,last_pawn_continue_id,
-        contract_id
+        contract_id,project_code,pawn_status
         )
         values (#{userId,jdbcType=INTEGER},#{goodsId,jdbcType=INTEGER},
         #{loansPrice,jdbcType=DECIMAL},#{loansRate,jdbcType=DECIMAL},#{isVerify,jdbcType=TINYINT},
@@ -206,7 +208,7 @@
         #{orgAddress,jdbcType=VARCHAR},#{orgLicense,jdbcType=VARCHAR},#{orgSeal,jdbcType=VARCHAR},
         #{userName,jdbcType=VARCHAR},#{userPhone,jdbcType=VARCHAR},#{userAddress,jdbcType=VARCHAR},
         #{userIdCard,jdbcType=VARCHAR},#{goodsName,jdbcType=VARCHAR},#{lastPawnContinueId,jdbcType=INTEGER},
-        #{contractId,jdbcType=VARCHAR}
+        #{contractId,jdbcType=VARCHAR},#{projectCode,jdbcType=VARCHAR},#{pawnStatus,jdbcType=INTEGER}
         )
     </insert>
 
@@ -393,6 +395,12 @@
             <if test="contractId != null" >
                 contract_id,
             </if>
+            <if test="projectCode != null" >
+                project_code,
+            </if>
+            <if test="pawnStatus != null" >
+                pawn_status,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="userId != null" >
@@ -574,6 +582,12 @@
             </if>
             <if test="contractId != null" >
                 #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectCode != null" >
+                #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnStatus != null" >
+                #{pawnStatus,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -771,6 +785,12 @@
             <if test="record.contractId != null" >
                 contract_id = #{record.contractId,jdbcType=VARCHAR},
             </if>
+            <if test="record.projectCode != null" >
+                project_code = #{record.projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pawnStatus != null" >
+                pawn_status = #{record.pawnStatus,jdbcType=INTEGER},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -839,7 +859,9 @@
         user_id_card = #{userIdCard,jdbcType=VARCHAR},
         goods_name = #{goodsName,jdbcType=VARCHAR},
         last_pawn_continue_id = #{lastPawnContinueId,jdbcType=INTEGER},
-        contract_id = #{contractId,jdbcType=VARCHAR}
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        pawn_status = #{pawnStatus,jdbcType=INTEGER}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -1028,6 +1050,12 @@
             <if test="contractId != null" >
                 contract_id = #{contractId,jdbcType=VARCHAR},
             </if>
+            <if test="projectCode != null" >
+                project_code = #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnStatus != null" >
+                pawn_status = #{pawnStatus,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -1093,7 +1121,9 @@
         user_id_card = #{userIdCard,jdbcType=VARCHAR},
         goods_name = #{goodsName,jdbcType=VARCHAR},
         last_pawn_continue_id = #{lastPawnContinueId,jdbcType=INTEGER},
-        contract_id = #{contractId,jdbcType=VARCHAR}
+        contract_id = #{contractId,jdbcType=VARCHAR},
+        project_code = #{projectCode,jdbcType=VARCHAR},
+        pawn_status = #{pawnStatus,jdbcType=INTEGER}
         where id = #{id}
     </update>
 

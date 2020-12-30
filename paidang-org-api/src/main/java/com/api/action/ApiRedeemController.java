@@ -65,8 +65,8 @@ public class ApiRedeemController extends ApiBaseController{
     @RequestMapping(value = "/getOrgRedeemList", method = RequestMethod.POST)
     @ApiMethod(isPage = true,isLogin = true)
     public List<RedeemMini> getOrgRedeemList(MobileInfo mobileInfo, PageLimit pageLimit){
-        startPage();
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());//机构id
+        startPage();
         List<UserPawnEx> userPawnExList = userPawnService.getOrgRedeemList(orgId.toString(),"","");
         List<RedeemMini> retList = new ArrayList<>();
         for (UserPawnEx element : userPawnExList){
@@ -305,6 +305,7 @@ public class ApiRedeemController extends ApiBaseController{
         pawnLog.setUserName(pawner.getName());
         pawnLog.setTradeCardBank(userPawn.getPayeeBankName());
         pawnLog.setTradeCardCode(userPawn.getPayeeBankCardCode());
+        pawnLog.setCreateTime(new Date());
         pawnLogService.insert(pawnLog);
 
         OrgBalanceLog orgBalanceLog = new OrgBalanceLog();
@@ -322,6 +323,7 @@ public class ApiRedeemController extends ApiBaseController{
         orgBalanceLog.setUserId(pawner.getId());
         orgBalanceLog.setUserName(pawner.getName());
         orgBalanceLog.setUserPhone(pawner.getPhone()!=null?pawner.getPhone():pawner.getAccount());
+        orgBalanceLog.setCreateTime(new Date());
         orgBalanceLogService.insert(orgBalanceLog);
 
         UserBalanceLog userBalanceLog = new UserBalanceLog();
@@ -339,6 +341,7 @@ public class ApiRedeemController extends ApiBaseController{
         userBalanceLog.setOrgId(orgId);
         userBalanceLog.setOrgName(pawnOrg.getName());
         userBalanceLog.setOrgPhone(pawnOrg.getPhone());
+        userBalanceLog.setCreateTime(new Date());
         userBalanceLogService.insert(userBalanceLog);
         return 1;
     }

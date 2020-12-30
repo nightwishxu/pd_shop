@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.6"/>
+<title>人脸识别demo</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+
+</head>
+
+<script>
+  window.onload = function() {
+    // 加载后自动提交Submit登录
+    document.form1.submit();
+  }
+  function doSubmit() {
+    document.form1.submit();
+  }
+</script>
+
+<body οnlοad="doSubmit();">
+  <form action="https://dsptest.cpcn.com.cn/DSPLivenessWeb/InterfaceVI" name="form1" method="POST">
+    <div>
+      <input type="text" name="message" placeholder="message" th:value="${message}" />
+    
+
+    </div>
+    <div>
+      <input type="text" name="signature" placeholder="signature" th:value="${signature}"/>
+    
+    </div>
+    <div>
+      <input type="text" id="dgtlEnvlp" name="dgtlenvlp" placeholder="dgtlenvlp" th:value="${dgtlEnvlp}" />
+    
+      
+      
+    </div>
+    <div>
+      <input type="text" id="signSN" name="signSN" placeholder="signSN" th:value="${signSN}" />
+    
+      
+    </div>
+    <div>
+      <input type="text" id="encryptSN" name="encryptSN" placeholder="encryptSN" th:value="${encryptSN}"/>
+      
+    </div>
+    <div>
+      
+      <button onclick="dosubmit();" >确定提交</button>
+    </div>
+  </form>
+</body>
+</html>

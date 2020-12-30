@@ -313,7 +313,7 @@
     <el-dialog
       :title="title1"
       :visible.sync="open1"
-      width="300px"
+      width="400px"
       append-to-body
     >
       <el-form
@@ -327,7 +327,7 @@
           prop="shipCode"
         >
           <el-input
-            v-model="form.shipCode"
+            v-model="form1.shipCode"
             placeholder="请输入快递编号"
           />
         </el-form-item>
@@ -753,11 +753,11 @@ export default {
 
     //支付方式 1微信 2支付宝 3线下
     handlePayType(row, column) {
-      if (row.state === 1) {
+      if (row.payType === 1) {
         return "微信";
-      } else if (row.state === 2) {
+      } else if (row.payType === 2) {
         return "支付宝";
-      } else if (row.state === 3) {
+      } else if (row.payType === 3) {
         return "线下";
       } else {
         return "--";
@@ -977,15 +977,13 @@ export default {
     updateState() {
       console.info(this.form1);
       this.$refs["form1"].validate((valid) => {
-        if (valid) {
-          updateState(this.form1).then(() => {
+          updateState(this.form1).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("修改成功");
               this.open1 = false;
               this.getList();
             }
           });
-        }
       });
     },
     refusing() {

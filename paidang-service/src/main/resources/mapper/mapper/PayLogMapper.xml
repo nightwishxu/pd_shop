@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.item.dao.PayLogMapper" >
     <resultMap id="BaseResultMap" type="com.item.dao.model.PayLog" >
-        <id column="id" property="id" jdbcType="BIGINT" />
+        <id column="id" property="id" jdbcType="VARCHAR" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
         <result column="order_id" property="orderId" jdbcType="INTEGER" />
         <result column="money" property="money" jdbcType="DECIMAL" />
@@ -117,14 +117,14 @@
         </if>
     </delete>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into b_pay_log (user_id,order_id,
+    <insert id="insert" >
+        insert into b_pay_log (id,user_id,order_id,
         money,real_pay,buyer,
         seller,trade_no,state,
         platform,create_time,modify_time,
         wx_key,alipay_partner,param
         )
-        values (#{userId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
+        values (#{id,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
         #{money,jdbcType=DECIMAL},#{realPay,jdbcType=DECIMAL},#{buyer,jdbcType=VARCHAR},
         #{seller,jdbcType=VARCHAR},#{tradeNo,jdbcType=VARCHAR},#{state,jdbcType=TINYINT},
         #{platform,jdbcType=TINYINT},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
@@ -132,9 +132,12 @@
         )
     </insert>
 
-    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insertSelective" >
         insert into b_pay_log
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
             <if test="userId != null" >
                 user_id,
             </if>
@@ -179,6 +182,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
@@ -235,7 +241,7 @@
         update b_pay_log
         <set >
             <if test="record.id != null" >
-                id = #{record.id,jdbcType=BIGINT},
+                id = #{record.id,jdbcType=VARCHAR},
             </if>
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
@@ -287,7 +293,7 @@
 
     <update id="updateByExample" >
         update b_pay_log
-        set id = #{id,jdbcType=BIGINT},
+        set id = #{id,jdbcType=VARCHAR},
         user_id = #{userId,jdbcType=INTEGER},
         order_id = #{orderId,jdbcType=INTEGER},
         money = #{money,jdbcType=DECIMAL},
@@ -374,5 +380,19 @@
         param = #{param,jdbcType=VARCHAR}
         where id = #{id}
     </update>
+
+    <select id="selectByWrapper" resultMap="BaseResultMap" >
+        select
+        <choose >
+            <when test="sqlSelect != null" >
+                ${sqlSelect}
+            </when>
+            <otherwise >
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from b_pay_log
+        ${sqlSegment}
+    </select>
 
 </mapper>

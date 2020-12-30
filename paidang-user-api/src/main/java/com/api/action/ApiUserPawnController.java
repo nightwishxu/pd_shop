@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.api.MEnumError;
 import com.api.MErrorEnum;
 import com.api.MPawnMsg;
+import com.base.util.BaseUtils;
+import com.demo.constant.DSPConsts;
+import com.item.dao.model.CodeExample;
+import com.paidang.service.AnXinSignService;
 import com.api.util.PageLimit;
 import com.api.view.myPawn.*;
 import com.api.view.orgAuctionPawn.SysRecommendOrg;
@@ -15,7 +19,9 @@ import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.util.DateUtil;
+import com.base.util.StringUtils;
 import com.item.dao.model.Code;
+import com.item.dao.model.User;
 import com.item.service.CodeService;
 import com.item.service.MobileVerifyService;
 import com.item.service.UserNotifyService;
@@ -29,18 +35,23 @@ import com.paidang.service.*;
 import com.paidang.utils.CostGenerator;
 import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.domain.Ret;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.util.PaidangConst;
 import com.util.PaidangMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -84,6 +95,13 @@ public class ApiUserPawnController extends ApiBaseController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private PawnTicketService pawnTicketService;
+
+    @Autowired
+    private AnXinSignService anXinSignService;
+
 //    /**
 //     * 我的典当列表--竞拍中，已典当
 //     */
@@ -215,18 +233,41 @@ public class ApiUserPawnController extends ApiBaseController {
     /**
      * 我的典当列表--竞拍中
      */
-    @ApiOperation(value = "我的典当列表--竞拍中", notes = "分页,登陆")
+    @ApiOperation(value = "我的典当列表--竞拍中及未典当邮寄物品", notes = "分页,登陆")
     @RequestMapping("/myPawnList")
-    @ApiMethod(isPage = true, isLogin = true)
+    @ApiMethod(isPage = false, isLogin = true)
     public List<AppMyPawnList> myPawnList(MobileInfo mobileInfo,
                                     PageLimit pageLimit) {
-        startPage();
+        Map<String, Object> temp = new HashMap<String, Object>();
+        temp.put("belong_id",mobileInfo.getUserId());
+        temp.put("isVerify",1);
+        temp.put("startPostState",3);
+        temp.put("backState",0);
+        List<UserGoodsEx> userGoodsExList = userGoodsService.selectMyGoods(temp);
+        List<AppMyPawnList> ret = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(userGoodsExList)){
+            for (UserGoodsEx ex : userGoodsExList) {
+                AppMyPawnList detail = new AppMyPawnList();
+                detail.setIsGotoPawn(0);
+                detail.setUserGoodsId(ex.getId());
+                detail.setTitle(ex.getName());
+                if (StringUtils.isBlank(detail.getTitle())){
+                    detail.setTitle((ApiUserGoodsController.MGoodsCateList.getNameByCode(ex.getCateCode())));
+                }
+                detail.setImage(ex.getImages());
+                detail.setAuthPrice(ex.getAuthPrice().toString());
+                ret.add(detail);
+            }
+        }
+
+
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("user_id",mobileInfo.getUserId());
         List<UserPawnEx> list = userPawnService.selectPawningList(map);
-        List<AppMyPawnList> ret = new ArrayList<>();
+
         for(UserPawnEx ex : list){
             AppMyPawnList detail = new AppMyPawnList();
+            detail.setIsGotoPawn(1);
             detail.setId(ex.getId());
             detail.setTitle(ex.getGoodsName());
             detail.setImage(ex.getImages());
@@ -242,7 +283,9 @@ public class ApiUserPawnController extends ApiBaseController {
             detail.setCount(count);
             ret.add(detail);
         }
-
+        if (pageLimit!=null && pageLimit.getPageNum()!=null && pageLimit.getPageSize()!=null){
+            return BaseUtils.getPageLimit(ret,pageLimit.getPageNum(),pageLimit.getPageSize());
+        }
         return ret;
 
     }
@@ -254,15 +297,19 @@ public class ApiUserPawnController extends ApiBaseController {
     @RequestMapping("/myPawnedList")
     @ApiMethod(isPage = true, isLogin = true)
     public  List<AppMyPawnList> myPawnedList(MobileInfo mobileInfo,
+                                             @ApiParam(value="1 业务中 2已完成",required = false)Integer type,
                                             PageLimit pageLimit) {
         startPage();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("user_id",mobileInfo.getUserId());
+        map.put("type",type);
         List<UserPawnEx> list = userPawnService.selectMyPawnedList(map);
         List<AppMyPawnList> ret = new ArrayList<>();
         for(UserPawnEx ex : list){
             AppMyPawnList detail = new AppMyPawnList();
             detail.setId(ex.getId());
+            detail.setContinuePawnStatus(ex.getContinuePawnStatus());
+            detail.setPawnStatus(ex.getPawnStatus());
             detail.setTitle(ex.getGoodsName());
             detail.setImage(ex.getImages());
             detail.setMoney(ex.getMoney()+"");
@@ -270,6 +317,12 @@ public class ApiUserPawnController extends ApiBaseController {
             //detail.setPayeeTicket(ex.getPayeeTicket());
             detail.setPawnTicket(ConstantsCode.SERVER_URL+"/m/pawn/toPawnTicket/"+ex.getId());
             detail.setIsVerify(ex.getPayeeState());
+            detail.setUserStatus(ex.getUserStatus());
+            detail.setOrgStatus(ex.getOrgStatus());
+            detail.setContinueOrgStatus(ex.getContinueOrgStatus());
+            detail.setContinueUserStatus(ex.getContinueUserStatus());
+            detail.setProjectCode(ex.getProjectCode());
+            detail.setContinueProjectCode(ex.getContinueProjectCode());
             //判断状态
             if(null == ex.getPawnContinueState()){
                 //没有续当操作
@@ -311,6 +364,12 @@ public class ApiUserPawnController extends ApiBaseController {
                 detail.setType(1);
             }
             detail.setTime(betTime+"");
+            //可以续当 到期前7天 逾期15天内
+            if (detail.getContinueState()==0 && detail.getRedeemState()==0 && (detail.getType()==1) || (detail.getType()==0 && betTime<=7)){
+                detail.setIsContinue(1);
+            }else {
+                detail.setIsContinue(0);
+            }
 
 //            if((betTime - (PaidangConst.BUFFER_DAYS)) >= 0){
 //                //未逾期
@@ -326,6 +385,108 @@ public class ApiUserPawnController extends ApiBaseController {
 
         return ret;
     }
+
+    public static void main(String[] args) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH,-1);
+        System.out.println(DateFormatUtils.format(calendar.getTime(),"yyy-MM-dd"));
+        System.out.println(DateUtil.between(new Date(), calendar.getTime(),DateUnit.DAY));
+    }
+
+    @ApiOperation(value = "签署合同-发送短信",notes="完善当票信息后进行签署合同")
+    @RequestMapping(value = "/sign/sendSmsCode", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer signSendSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+    ,@ApiParam(value = "续当id,续当时传",required = false) Integer lastPawnContinueId) throws Exception{
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        if (userPawn==null){
+            throw new ApiException(400,"典当异常");
+        }
+        String projectCode = null;
+        if (lastPawnContinueId!=null){
+            if (!Objects.equals(userPawn.getLastPawnContinueId(),lastPawnContinueId)){
+                throw new ApiException(400,"续当编号异常");
+            }
+            PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+            if (pawnContinue==null){
+                throw new ApiException(400,"续当异常");
+            }
+            projectCode = pawnContinue.getProjectCode();
+        }else {
+            projectCode = userPawn.getProjectCode();
+        }
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        AnXinSignService.sendSmsCode(user.getAnxinsignId(),projectCode,null);
+
+        return 1;
+    }
+
+
+    @ApiOperation(value = "签署合同-确认短信",notes="完善当票信息后进行签署合同")
+    @RequestMapping(value = "/sign/confirmSmsCode", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer signConfirmSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+            ,@ApiParam(value = "续当id,续当时传",required = false) Integer lastPawnContinueId
+            ,@ApiParam(value = "验证码",required = true) String  checkCode) throws Exception{
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        if (userPawn==null){
+            throw new ApiException(400,"典当异常");
+        }
+        String projectCode = null;
+        PawnContinue pawnContinue =null;
+        if (lastPawnContinueId!=null){
+            if (!Objects.equals(userPawn.getLastPawnContinueId(),lastPawnContinueId)){
+                throw new ApiException(400,"续当编号异常");
+            }
+            pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+            if (pawnContinue==null){
+                throw new ApiException(400,"续当异常");
+            }
+            projectCode = pawnContinue.getProjectCode();
+        }else {
+            projectCode = userPawn.getProjectCode();
+        }
+        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(projectCode);
+        HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ip = IpUtils.getIpAddr(request);
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        Date signTime = AnXinSignService.confirmSmsCode(user.getAnxinsignId(), projectCode, checkCode);
+        PawnTicket temp = new PawnTicket();
+        temp.setId(pawnTicket.getId());
+        temp.setSignTime(signTime);
+        temp.setUserLocation(ip);
+        temp.setUserStatus(2);
+        boolean flag = false;
+        if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==2){
+            temp.setStatus("2");
+            flag = true;
+        }
+        if (flag){
+            if (lastPawnContinueId ==null){
+                Integer orgId = userPawn.getOrgId();
+                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+                String contractNo = AnXinSignService.createContract(DSPConsts.contractPawnTemplateId,"互联网电子典当凭证",
+                        user.getAnxinsignId(),ip,userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket);
+                userPawn.setPawnStatus(3);
+                userPawn.setContractId(contractNo);
+                temp.setContractId(contractNo);
+                userPawnService.updateByPrimaryKeySelective(userPawn);
+            }else {
+                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
+                String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
+                        user.getAnxinsignId(),ip,userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket,pawnContinue);
+                pawnContinue.setState(2);
+                pawnContinue.setContractId(contractNo);
+                temp.setContractId(contractNo);
+                pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
+            }
+        }
+        pawnTicketService.updateByPrimaryKeySelective(temp);
+        return 1;
+    }
+
 
     /**
      * 查看打款凭证
@@ -503,7 +664,7 @@ public class ApiUserPawnController extends ApiBaseController {
                         @ApiParam(value="id",required = true)Integer id,
                         @ApiParam(value="贷款额度",required = true)String loansPrice,
                         @ApiParam(value="期望利率",required = true)String loansRate,
-                        @ApiParam(value="典当时长(半个月为1，一个月为2，两个月为4.以此类推)",required = true)Integer pawnTime) {
+                        @ApiParam(value="典当时长(半个月为1，一个月为2，两个月为4.以此类推)",required = true)Integer pawnTime) throws Exception{
         if (!redisCache.getLock("gotoPawn:"+id,5)){
             throw new ApiException(400,"请求频繁请稍后");
         }
@@ -516,6 +677,19 @@ public class ApiUserPawnController extends ApiBaseController {
         int result = userGoodsService.updateByPrimaryKeySelective(userGoods);
         if(result == 0){
             throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
+        }
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        if (user==null){
+            throw new ApiException("用户不存在");
+        }
+        //注册安心签账户
+        if (StringUtils.isBlank(user.getAnxinsignId())){
+            String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
+            User temp = new User();
+            temp.setId(mobileInfo.getUserId());
+            temp.setAnxinsignId(anxinUserId);
+            temp.setModifyTime(new Date());
+            userService.updateByPrimaryKeySelective(temp);
         }
 
 
@@ -651,6 +825,29 @@ public class ApiUserPawnController extends ApiBaseController {
         if(pawnOrgList == null || pawnOrgList.size() < 1) {
             throw new ApiException("宝翔典当行信息不存在");
         }else{
+
+
+            //法律条文链接
+            CodeExample example = new CodeExample();
+            example.createCriteria().andCodeLike("%@law");
+            List<Code> codes = codeService.selectByExample(example);
+            if (codes!=null && codes.size()!=0){
+                for (Code code:codes){
+                    //典当管理法
+                    if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"ddgl")){
+                        appMyPawnList.setDiandangguanlifa(code.getValue());
+                    }
+                    //合同法
+                    if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"htf")){
+                        appMyPawnList.setHetongfa(code.getValue());
+                    }
+                    //民法总则
+                    if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"mfzz")){
+                        appMyPawnList.setMinshifa(code.getValue());
+                    }
+                }
+            }
+
             PawnOrg pawnOrg = pawnOrgList.get(0);
             //        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(0); 20191209修改
             //宝翔费率利率记录
@@ -781,6 +978,27 @@ public class ApiUserPawnController extends ApiBaseController {
         c.setRegMoney(MPawnMsg.regMoney);
         c.setManager(MPawnMsg.manager);
         c.setComPhone(MPawnMsg.comPhone);
+
+        //法律条文链接
+        CodeExample example = new CodeExample();
+        example.createCriteria().andCodeLike("%@law");
+        List<Code> codes = codeService.selectByExample(example);
+        if (codes!=null && codes.size()!=0){
+            for (Code code:codes){
+                //典当管理法
+                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"ddgl")){
+                    c.setDiandangguanlifa(code.getValue());
+                }
+                //合同法
+                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"htf")){
+                    c.setHetongfa(code.getValue());
+                }
+                //民法总则
+                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"mfzz")){
+                    c.setMinshifa(code.getValue());
+                }
+            }
+        }
         return c;
 
     }
@@ -888,12 +1106,15 @@ public class ApiUserPawnController extends ApiBaseController {
         orgNotifyService.insertByTemplate(0,"3", PaidangMessage.BAOXIANG_DOUDI,userGoods.getName());
 
         //创建典当合同
-        String contractId = qysService.createSendContract(qysService.pawnCategoryId, userPawn.getUserName(), userPawn.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadPawnData(id));
-        //发送短信
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),userPawn.getUserPhone());
+//        String contractId = qysService.createSendContract(qysService.pawnCategoryId, userPawn.getUserName(), userPawn.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadPawnData(id));
+//        //发送短信
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),userPawn.getUserPhone());
+//        anXinSignService.createContract("","典当合同");
+        String projectCode = null;
+//        pawnTicketService.addDDTicket(userPawn,projectCode,null,null,null,null);
         //添加合同id
-        qysService.addPawnContractId(id,contractId);
+//        qysService.addPawnContractId(id,contractId);
 
 
         return ok();
@@ -1050,7 +1271,7 @@ public class ApiUserPawnController extends ApiBaseController {
         ex.setPawnEndTime(DateUtil.strToDate(DatePawnEndTime));
         ex.setOrgSelectedTime(new Date());
         ex.setOverdueRate(pawnOrg.getRedeemOverrate());
-
+        ex.setPawnStatus(1);
 
         int result = userPawnService.updateByPrimaryKeySelective(ex);
         if(result == 0){
@@ -1081,13 +1302,16 @@ public class ApiUserPawnController extends ApiBaseController {
 //        JPushOrgUtil.pushMessageToList(map2,userGoods.getName(),verifyService.getCid(pawnAuction.getOrgId()));
 
         //创建典当合同
-        String contractId = qysService.createSendContract(qysService.pawnCategoryId, ex.getUserName(), ex.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadPawnData(id));
-        //发送短信
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),ex.getUserPhone());
-        //将合同id更新到典当表
-        //添加合同id
-        qysService.addPawnContractId(id,contractId);
+//        String contractId = qysService.createSendContract(qysService.pawnCategoryId, ex.getUserName(), ex.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadPawnData(id));
+//        //发送短信
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),ex.getUserPhone());
+//        //将合同id更新到典当表
+//        //添加合同id
+//        qysService.addPawnContractId(id,contractId);
+
+
+
         return ok();
     }
 
@@ -1148,8 +1372,11 @@ public class ApiUserPawnController extends ApiBaseController {
         if(null == ex){
             throw new ApiException(MEnumError.CONTENT_NOEXIST_ERROR);
         }
+        User user = userService.selectByPrimaryKey(ex.getUserId());
         AppMyPawnGetBack record = new AppMyPawnGetBack();
         record.setId(ex.getId());
+        record.setRedeemTicket(ex.getRedeemTicket());
+        record.setPawnerPhone(user.getPhone());
         record.setName(ex.getGoodsName());
         record.setAuthPrice(ex.getAuthPrice().toString());
         record.setImages(ex.getImages());
@@ -1160,8 +1387,9 @@ public class ApiUserPawnController extends ApiBaseController {
         record.setRedeemRate(ex.getOverdueRate()+"");
         record.setBeginDate(DateUtil.dateToStr(ex.getPawnBeginTime()).substring(0,10));
         record.setEndDate(DateUtil.dateToStr(ex.getPawnEndTime()).substring(0,10));
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(ex.getProjectCode());
+        record.setPawnerName(pawnTicket.getPawnerName());
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date endDate= new Date();
         long outTime = endDate.getTime() - ex.getPawnEndTime().getTime();
         //综合利息

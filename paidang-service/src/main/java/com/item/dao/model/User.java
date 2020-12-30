@@ -295,6 +295,30 @@ public class User implements Serializable {
 	@Column(name = "order_count")
 	private Integer orderCount;
 
+	/**
+	 *0未绑定 1 绑定身份证成功 2 活动验证中 3活动验证失败 4活体验证成功
+	 */
+	@ApiModelProperty(value="0未绑定 1 绑定身份证成功 2 活动验证中 3活动验证失败 4活体验证成功")
+	@ApiParam(value="0未绑定 1 绑定身份证成功 2 活动验证中 3活动验证失败 4活体验证成功")
+	@Column(name = "auth_status")
+	private Integer authStatus;
+
+	/**
+	 *验证流水号
+	 */
+	@ApiModelProperty(value="验证流水号")
+	@ApiParam(value="验证流水号")
+	@Column(name = "txsn")
+	private String txsn;
+
+	/**
+	 *安心签用户编号
+	 */
+	@ApiModelProperty(value="安心签用户编号")
+	@ApiParam(value="安心签用户编号")
+	@Column(name = "anxinsign_id")
+	private String anxinsignId;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -573,6 +597,30 @@ public class User implements Serializable {
 
 	public Integer getOrderCount() {
 		return orderCount;
+	}
+
+	public void setAuthStatus(Integer authStatus) {
+		this.authStatus=authStatus;
+	}
+
+	public Integer getAuthStatus() {
+		return authStatus;
+	}
+
+	public void setTxsn(String txsn) {
+		this.txsn=txsn == null ? txsn : txsn.trim();
+	}
+
+	public String getTxsn() {
+		return txsn;
+	}
+
+	public void setAnxinsignId(String anxinsignId) {
+		this.anxinsignId=anxinsignId == null ? anxinsignId : anxinsignId.trim();
+	}
+
+	public String getAnxinsignId() {
+		return anxinsignId;
 	}
 
 }

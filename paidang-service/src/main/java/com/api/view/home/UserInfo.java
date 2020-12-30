@@ -31,6 +31,9 @@ public class UserInfo {
 	private String idCardReverse;
 	@ApiModelProperty(value="身份证是否绑定0:未绑定 1绑定")
 	private Integer isBind;
+	@ApiModelProperty(value="实名认证状态 0未绑定 1 绑定身份证成功 2 活动验证中 3活动验证失败 4活体验证成功")
+	private Integer authStatus;
+
 	public UserInfo(){};
 
 	public UserInfo(Integer id,String nickName){
@@ -106,5 +109,13 @@ public class UserInfo {
 
 	public void setIsBind(Integer isBind) {
 		this.isBind = isBind;
+	}
+
+	public Integer getAuthStatus() {
+		return authStatus;
+	}
+
+	public void setAuthStatus(Integer authStatus) {
+		this.authStatus = authStatus;
 	}
 }

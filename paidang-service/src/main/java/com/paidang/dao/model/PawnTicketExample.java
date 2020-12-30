@@ -3204,6 +3204,136 @@ public class PawnTicketExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andUserStatusIsNull() {
+			addCriterion("user_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusIsNotNull() {
+			addCriterion("user_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusEqualTo(Integer value) {
+			addCriterion("user_status =", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotEqualTo(Integer value) {
+			addCriterion("user_status <>", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusGreaterThan(Integer value) {
+			addCriterion("user_status >", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("user_status >=", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusLessThan(Integer value) {
+			addCriterion("user_status <", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("user_status <=", value, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusIn(List<Integer> values) {
+			addCriterion("user_status in", values, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotIn(List<Integer> values) {
+			addCriterion("user_status not in", values, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusBetween(Integer value1, Integer value2) {
+			addCriterion("user_status between", value1, value2, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("user_status not between", value1, value2, "userStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationIsNull() {
+			addCriterion("user_location is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationIsNotNull() {
+			addCriterion("user_location is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationEqualTo(String value) {
+			addCriterion("user_location =", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationNotEqualTo(String value) {
+			addCriterion("user_location <>", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationGreaterThan(String value) {
+			addCriterion("user_location >", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationGreaterThanOrEqualTo(String value) {
+			addCriterion("user_location >=", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationLessThan(String value) {
+			addCriterion("user_location <", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationLessThanOrEqualTo(String value) {
+			addCriterion("user_location <=", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationLike(String value) {
+			addCriterion("user_location like", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationNotLike(String value) {
+			addCriterion("user_location not like", value, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationIn(List<String> values) {
+			addCriterion("user_location in", values, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationNotIn(List<String> values) {
+			addCriterion("user_location not in", values, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationBetween(String value1, String value2) {
+			addCriterion("user_location between", value1, value2, "userLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andUserLocationNotBetween(String value1, String value2) {
+			addCriterion("user_location not between", value1, value2, "userLocation");
+			return (Criteria) this;
+		}
+
 		public Criteria andSignTimeIsNull() {
 			addCriterion("sign_time is null");
 			return (Criteria) this;
@@ -3321,6 +3451,266 @@ public class PawnTicketExample {
 
 		public Criteria andOrgIdNotBetween(Integer value1, Integer value2) {
 			addCriterion("org_id not between", value1, value2, "orgId");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIsNull() {
+			addCriterion("org_status is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIsNotNull() {
+			addCriterion("org_status is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusEqualTo(Integer value) {
+			addCriterion("org_status =", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotEqualTo(Integer value) {
+			addCriterion("org_status <>", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusGreaterThan(Integer value) {
+			addCriterion("org_status >", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusGreaterThanOrEqualTo(Integer value) {
+			addCriterion("org_status >=", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusLessThan(Integer value) {
+			addCriterion("org_status <", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusLessThanOrEqualTo(Integer value) {
+			addCriterion("org_status <=", value, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusIn(List<Integer> values) {
+			addCriterion("org_status in", values, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotIn(List<Integer> values) {
+			addCriterion("org_status not in", values, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusBetween(Integer value1, Integer value2) {
+			addCriterion("org_status between", value1, value2, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgStatusNotBetween(Integer value1, Integer value2) {
+			addCriterion("org_status not between", value1, value2, "orgStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeIsNull() {
+			addCriterion("org_sign_time is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeIsNotNull() {
+			addCriterion("org_sign_time is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeEqualTo(java.util.Date value) {
+			addCriterion("org_sign_time =", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeNotEqualTo(java.util.Date value) {
+			addCriterion("org_sign_time <>", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeGreaterThan(java.util.Date value) {
+			addCriterion("org_sign_time >", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeGreaterThanOrEqualTo(java.util.Date value) {
+			addCriterion("org_sign_time >=", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeLessThan(java.util.Date value) {
+			addCriterion("org_sign_time <", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeLessThanOrEqualTo(java.util.Date value) {
+			addCriterion("org_sign_time <=", value, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeIn(List<java.util.Date> values) {
+			addCriterion("org_sign_time in", values, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeNotIn(List<java.util.Date> values) {
+			addCriterion("org_sign_time not in", values, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeBetween(java.util.Date value1, java.util.Date value2) {
+			addCriterion("org_sign_time between", value1, value2, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgSignTimeNotBetween(java.util.Date value1, java.util.Date value2) {
+			addCriterion("org_sign_time not between", value1, value2, "orgSignTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNull() {
+			addCriterion("project_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIsNotNull() {
+			addCriterion("project_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeEqualTo(String value) {
+			addCriterion("project_code =", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotEqualTo(String value) {
+			addCriterion("project_code <>", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThan(String value) {
+			addCriterion("project_code >", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("project_code >=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThan(String value) {
+			addCriterion("project_code <", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLessThanOrEqualTo(String value) {
+			addCriterion("project_code <=", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeLike(String value) {
+			addCriterion("project_code like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotLike(String value) {
+			addCriterion("project_code not like", value, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeIn(List<String> values) {
+			addCriterion("project_code in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotIn(List<String> values) {
+			addCriterion("project_code not in", values, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeBetween(String value1, String value2) {
+			addCriterion("project_code between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andProjectCodeNotBetween(String value1, String value2) {
+			addCriterion("project_code not between", value1, value2, "projectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationIsNull() {
+			addCriterion("org_location is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationIsNotNull() {
+			addCriterion("org_location is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationEqualTo(String value) {
+			addCriterion("org_location =", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationNotEqualTo(String value) {
+			addCriterion("org_location <>", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationGreaterThan(String value) {
+			addCriterion("org_location >", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationGreaterThanOrEqualTo(String value) {
+			addCriterion("org_location >=", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationLessThan(String value) {
+			addCriterion("org_location <", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationLessThanOrEqualTo(String value) {
+			addCriterion("org_location <=", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationLike(String value) {
+			addCriterion("org_location like", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationNotLike(String value) {
+			addCriterion("org_location not like", value, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationIn(List<String> values) {
+			addCriterion("org_location in", values, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationNotIn(List<String> values) {
+			addCriterion("org_location not in", values, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationBetween(String value1, String value2) {
+			addCriterion("org_location between", value1, value2, "orgLocation");
+			return (Criteria) this;
+		}
+
+		public Criteria andOrgLocationNotBetween(String value1, String value2) {
+			addCriterion("org_location not between", value1, value2, "orgLocation");
 			return (Criteria) this;
 		}
 

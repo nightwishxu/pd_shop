@@ -147,4 +147,14 @@ public class PawnOrgService {
 		return pawnOrgMapperEx.addIntegral(orgId,integral);
 	}
 
+
+	/**
+	 * 重算余额
+	 * @param orgId
+	 * @return
+	 */
+	public int reSumAmount(Integer orgId){
+		return pawnOrgMapperEx.reSumAmount(orgId);
+	}
+
 }

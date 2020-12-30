@@ -8,6 +8,12 @@
     <result column="auth_price_test" property="authPriceTest"></result>
     <result column="bidTimes" property="bidTimes"></result>
     <result column="cnt" property="cnt"></result>
+    <result column="continueUserStatus" property="continueUserStatus"></result>
+    <result column="continueOrgStatus" property="continueOrgStatus"></result>
+      <result column="userStatus" property="userStatus"></result>
+      <result column="orgStatus" property="orgStatus"></result>
+      <result column="continuePawnStatus" property="continuePawnStatus"></result>
+      <result column="continueProjectCode" property="continueProjectCode"></result>
     <result column="totalAmountForPawner" property="totalAmountForPawner"></result>
 <!-- <result column="user_name" property="userName"></result>
     <result column="user_phone" property="phone"></result>
@@ -67,9 +73,11 @@
 
     <!--获取指定id的UserPawnEx扩展类-->
     <select id="getUserPawnExById"  resultMap="BaseResultMap">
-        SELECT p.* , g.id AS goods_id, g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes FROM
+        SELECT p.* , g.id AS goods_id, g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test
+        , F_GET_TotalBidTimes(p.id) as bidTimes,a.user_status userStatus,a.org_status orgStatus FROM
         p_user_pawn p
         LEFT JOIN p_user_goods g ON p.goods_id = g.id
+        left join p_pawn_ticket a on p.project_code = a.project_code
         <where>
             <if test="pawnId !=null">
                 p.id = ${pawnId}
@@ -95,9 +103,11 @@
 
     <!-- 获取已中标典当记录List -->
     <select id="getMyBidWonList" resultMap="BaseResultMap">
-        SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes FROM
+        SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test ,  (select count(*) from p_pawn_auction D where p.id = D.pawn_id) as cnt,
+         F_GET_TotalBidTimes(p.id) as bidTimes,a.user_status userStatus,a.org_status orgStatus FROM
         p_user_pawn p
         LEFT JOIN p_user_goods g ON p.goods_id = g.id
+        left join p_pawn_ticket a on p.project_code = a.project_code
         <where>
             (<if test="orgId != null">
                 p.org_id = ${orgId}
@@ -114,9 +124,10 @@
 
     <!-- 宝祥机构兜底 -->
     <select id="getBaoXiangList" resultMap="BaseResultMap">
-        SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes FROM
+        SELECT p.* , g.name AS goods_name1, g.images , g.auth_price , g.auth_price_test , F_GET_TotalBidTimes(p.id) as bidTimes ,a.user_status userStatus,a.org_status orgStatus FROM
         p_user_pawn p
         LEFT JOIN p_user_goods g ON p.goods_id = g.id
+        left join p_pawn_ticket a on p.project_code = a.project_code
         <where>
             <if test="orgId != null">
                 p.org_id = ${orgId}
@@ -261,7 +272,7 @@
     </select>
 
     <update id="updatebyPawnContinue" parameterType="java.util.HashMap">
-      update p_user_pawn set pawn_end_time = #{pawn_end_time}, pawn_time = #{pawnTime},last_pawn_continue_id = #{last_pawn_continue_id} where id = #{id} and user_id = #{user_id}
+      update p_user_pawn set pawn_end_time = #{pawn_end_time}, pawn_time = #{pawnTime},last_pawn_continue_id = #{last_pawn_continue_id},last_continue_project_code=#{lastContinueProjectCode} where id = #{id} and user_id = #{user_id}
 
     </update>
 
@@ -341,6 +352,12 @@
             B.images,
             B.auth_price,
             C.state as pawnContinueState,
+            D.user_status as continueUserStatus,
+            D.org_status as continueOrgStatus,
+            E.user_status as userstatus,
+            E.org_status as orgstatus,
+            C.project_code as continueProjectCode,
+            C.state as continuePawnStatus,
         (
         select count(*) from p_pawn_auction D where A.id = D.pawn_id
         ) as cnt
@@ -349,8 +366,16 @@
             p_user_pawn A
         LEFT JOIN p_user_goods B ON A.goods_id = B.id
         LEFT JOIN p_pawn_continue C on A.last_pawn_continue_id = C.id
+        LEFT JOIN p_pawn_ticket D on D.project_code = C.project_code
+        LEFT JOIN p_pawn_ticket E on A.project_code = E.project_code
         WHERE
-            A.user_id = #{user_id} and A.org_id is not null and (A.user_state =2 or A.user_state =3) and (A.state = 1 or A.state = 2 or A.state = 5)
+            A.user_id = #{user_id} and A.org_id is not null and (A.user_state =2 or A.user_state =3) and (A.state >0)
+        <if test="type!=null and type==1">
+            and (A.state = 1 or A.state = 2 or A.state = 5)
+        </if>
+        <if test="type!=null and type==2">
+            and (A.state=3 or A.state=4)
+        </if>
         order by A.create_time desc
     </select>
 

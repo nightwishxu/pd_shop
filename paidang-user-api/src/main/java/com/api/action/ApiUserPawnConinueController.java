@@ -8,6 +8,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.item.service.UserNotifyService;
 import com.paidang.dao.model.PawnContinue;
@@ -61,6 +62,8 @@ public class ApiUserPawnConinueController extends ApiBaseController {
     PawnOrgService pawnOrgService;
     @Autowired
     LoadDataController loadDataController;
+    @Autowired
+    private PawnTicketService pawnTicketService;
 
     @ApiOperation(value="续当办理详情--第一个页面",notes = "登录")
     @RequestMapping("pawnConinueDetailFirst")
@@ -223,14 +226,35 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 
     }
 
+    @ApiOperation(value="完善当票",notes = "登录")
+    @RequestMapping("/completeTicket")
+    @ApiMethod(isPage = false, isLogin =  true)
+    public Integer completeTicket(MobileInfo mobileInfo,
+                                  @ApiParam(value="id",required = true) Integer id, @ApiParam(value="打款凭证",required = true)String platformImage){
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        map2.put("id",id);
+        map2.put("userId",mobileInfo.getUserId());
+        UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map2);
+        Integer lastPawnContinueId = ex.getLastPawnContinueId();
+        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+        if (pawnContinue.getState()!=2){
+            throw new ApiException(400,"合同尚未签署完成");
+        }
+        pawnContinue.setPayTicket(platformImage);
+        pawnContinue.setState(3);
+        pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
+        return 1;
+    }
+
 
     @ApiOperation(value="续当",notes = "登录")
     @RequestMapping("/goPawnContinue")
     @ApiMethod(isPage = false, isLogin =  true)
-    public Ret goPawnContinue(MobileInfo mobileInfo,
+    public Integer goPawnContinue(MobileInfo mobileInfo,
                               @ApiParam(value="id",required = true) Integer id,
-                              @ApiParam(value="续当时间",required = true)Integer pawnTime,
-                              @ApiParam(value="打款凭证",required = true)String platformImage){
+                              @ApiParam(value="续当时间",required = true)Integer pawnTime
+//            , @ApiParam(value="打款凭证",required = true)String platformImage
+    ){
         Map<String, Object> map2 = new HashMap<String, Object>();
         map2.put("id",id);
         map2.put("userId",mobileInfo.getUserId());
@@ -345,7 +369,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         //pawnContinue.setPlatformMoney(userPawn.getPawnMoney().multiply(userPawn.getPlatformRate()));
         pawnContinue.setState(1);
         //pawnContinue.setPlatformState(1);
-        pawnContinue.setPayTicket(platformImage);
+//        pawnContinue.setPayTicket(platformImage);
         pawnContinue.setPawnTicket(userPawn.getPawnTicket());
         pawnContinue.setPayTime(new Date());
         pawnContinue.setUserName(userPawn.getUserName());
@@ -417,6 +441,9 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 //        }
         pawnContinue.setPawnLastEndTime(DateUtil.add(userPawn.getPawnEndTime(),1));
         pawnContinue.setPawnEndTime(DateUtil.add(userPawn.getPawnEndTime(),pawnTime*15));
+        pawnContinue.setCreateTime(new Date());
+        String projectCode = BaseUtils.getRandomOrderId("X");
+        pawnContinue.setProjectCode(projectCode);
         int result3 = pawnContinueService.insert(pawnContinue);
         if(result3 == 0){
                 throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -444,8 +471,6 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         if(result == 0){
             throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
         }
-        Ret ret = new Ret();
-        ret.setCode(1);
         String time = "";
         if(pawnTime == 1){
             //15天
@@ -469,16 +494,15 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         //创建典当合同
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
         Integer pawnContinueId = pawnContinue.getId();
-        String contractId = qysService.createSendContract(QysService.pawnContinueCategoryId, ex.getUserName(), ex.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadRePawnData(pawnContinueId));
-        //发送短信
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
-        qysService.getAndSendShortUrl(Long.valueOf(contractId),ex.getUserPhone());
-        //将合同id更新到典当表
-        //添加合同id
-        qysService.addPawnContinueContractId(pawnContinueId,contractId);
-
-
-        return ret;
+//        String contractId = qysService.createSendContract(QysService.pawnContinueCategoryId, ex.getUserName(), ex.getUserPhone(), pawnOrg.getName(), pawnOrg.getPhone(), loadDataController.loadRePawnData(pawnContinueId));
+//        //发送短信
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),pawnOrg.getPhone());
+//        qysService.getAndSendShortUrl(Long.valueOf(contractId),ex.getUserPhone());
+//        //将合同id更新到典当表
+//        //添加合同id
+//        qysService.addPawnContinueContractId(pawnContinueId,contractId);
+        pawnTicketService.adXDTicket(projectCode,ex.getUserName(),ex.getUserPhone(),pawnOrg,loadDataController.loadRePawnData(pawnContinueId));
+        return 1;
     }
 
     /**

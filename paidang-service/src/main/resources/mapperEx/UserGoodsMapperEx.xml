@@ -123,6 +123,15 @@
         left join p_experter_info D
         on A.id=D.goods_id
         where A.belong_id = #{belong_id} and A.back_state = 0 and A.goto_pawn = 0 and (sell_status is null or sell_status = 0)
+        <if test="isVerify!=null">
+            and A.is_verify=#{isVerify}
+        </if>
+        <if test="startPostState!=null">
+            and A.post_state>=#{startPostState}
+        </if>
+        <if test="backState!=null">
+            and A.back_state=#{backState}
+        </if>
         order by A.create_time desc
     </select>
 

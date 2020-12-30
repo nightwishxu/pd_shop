@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrgBalanceLogExample {
 	protected String orderByClause;
@@ -624,52 +624,62 @@ public class OrgBalanceLogExample {
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdEqualTo(Long value) {
+		public Criteria andPayLogIdEqualTo(String value) {
 			addCriterion("pay_log_id =", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdNotEqualTo(Long value) {
+		public Criteria andPayLogIdNotEqualTo(String value) {
 			addCriterion("pay_log_id <>", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdGreaterThan(Long value) {
+		public Criteria andPayLogIdGreaterThan(String value) {
 			addCriterion("pay_log_id >", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdGreaterThanOrEqualTo(Long value) {
+		public Criteria andPayLogIdGreaterThanOrEqualTo(String value) {
 			addCriterion("pay_log_id >=", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdLessThan(Long value) {
+		public Criteria andPayLogIdLessThan(String value) {
 			addCriterion("pay_log_id <", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdLessThanOrEqualTo(Long value) {
+		public Criteria andPayLogIdLessThanOrEqualTo(String value) {
 			addCriterion("pay_log_id <=", value, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdIn(List<Long> values) {
+		public Criteria andPayLogIdLike(String value) {
+			addCriterion("pay_log_id like", value, "payLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayLogIdNotLike(String value) {
+			addCriterion("pay_log_id not like", value, "payLogId");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayLogIdIn(List<String> values) {
 			addCriterion("pay_log_id in", values, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdNotIn(List<Long> values) {
+		public Criteria andPayLogIdNotIn(List<String> values) {
 			addCriterion("pay_log_id not in", values, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdBetween(Long value1, Long value2) {
+		public Criteria andPayLogIdBetween(String value1, String value2) {
 			addCriterion("pay_log_id between", value1, value2, "payLogId");
 			return (Criteria) this;
 		}
 
-		public Criteria andPayLogIdNotBetween(Long value1, Long value2) {
+		public Criteria andPayLogIdNotBetween(String value1, String value2) {
 			addCriterion("pay_log_id not between", value1, value2, "payLogId");
 			return (Criteria) this;
 		}

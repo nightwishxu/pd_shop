@@ -2,6 +2,7 @@ package com.api.action;
 
 import com.api.view.orgHome.OrgInfo;
 import com.base.annotation.ApiMethod;
+import com.base.util.StringUtils;
 import com.google.protobuf.ServiceException;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.daoEx.model.PawnOrgEx;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,6 +76,7 @@ public class ApiHomeController extends ApiBaseController{
 			,@ApiParam(value = "工商许可证号", required = true)String businessLicenseCode
 			,@ApiParam(value = "机构电话", required = true)String phone
 			,@ApiParam(value = "法人电话", required = true)String legalPersonPhone
+			,@ApiParam(value = "固定电话", required = true)String landLinePhone
 
 	){
 		if (!redisCache.getLock("editOrg:"+mobileInfo.getUserId(),10)){
@@ -97,15 +100,18 @@ public class ApiHomeController extends ApiBaseController{
 			pawnOrg.setOtherFile(otherFile);
 			pawnOrg.setBusinessLicenseCode(businessLicenseCode);
 			pawnOrg.setPhone(phone);
+			pawnOrg.setLandLinePhone(landLinePhone);
 			pawnOrg.setLegalPersonPhone(legalPersonPhone);
 			pawnOrg.setCreateTime(new Date());
 			pawnOrg.setType(1);
+			pawnOrg.setAnxinPhone(user.getPhone());
+
 			pawnOrg.setBalance(BigDecimal.ZERO);
 			pawnOrg.setState(2);
 			int i = pawnOrgService.insertSelective(pawnOrg);
 			User tmp = new User();
 			tmp.setId(mobileInfo.getUserId());
-			tmp.setOrgId(i);
+			tmp.setOrgId(pawnOrg.getId());
 			tmp.setModifyTime(new Date());
 			userService.updateByPrimaryKeySelective(tmp);
 		}else {
@@ -114,6 +120,7 @@ public class ApiHomeController extends ApiBaseController{
 			if (orgTmp.getState()==3){
 				pawnOrg.setId(orgId);
 				pawnOrg.setName(name);
+				pawnOrg.setBusinessLicenseCode(businessLicenseCode);
 				pawnOrg.setLegalPerson(legalPerson);
 				pawnOrg.setIdCard(idCard);
 				pawnOrg.setBusinessLicense(businessLicense);
@@ -123,7 +130,12 @@ public class ApiHomeController extends ApiBaseController{
 				pawnOrg.setLegalPersonPhone(legalPersonPhone);
 				pawnOrg.setOtherFile(otherFile);
 				pawnOrg.setModifyTime(new Date());
+				pawnOrg.setPhone(phone);
+				pawnOrg.setLandLinePhone(landLinePhone);
 				pawnOrg.setState(2);
+				if (StringUtils.isBlank(orgTmp.getAnxinPhone())){
+					pawnOrg.setAnxinPhone(user.getAccount());
+				}
 				pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
 			}else {
 				throw new ApiException(400,"当前状态不允许审核");
@@ -147,7 +159,36 @@ public class ApiHomeController extends ApiBaseController{
 		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
 		return pawnOrg;
 	}
-	
+
+
+
+	@ApiOperation(value = "设置店铺基本信息")
+	@PostMapping("/storeBaseInfo/set")
+	@ApiMethod(isLogin = true)
+	public Integer setUserStoreInfo(
+			MobileInfo mobileInfo
+			,@ApiParam(required = false,value = "签名")String signature
+			,@ApiParam(required = false,value = "联系人")String storeContacts
+			,@ApiParam(required = false,value = "联系电话")String storePhone
+
+	){
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		PawnOrg tmp =new PawnOrg();
+		tmp.setId(orgId);
+		tmp.setSignature(signature);
+		tmp.setStoreContacts(storeContacts);
+		tmp.setStorePhone(storePhone);
+		return pawnOrgService.updateByPrimaryKeySelective(tmp);
+	}
+
+
 	/**
 	 * 修改个人资料
 	 * */

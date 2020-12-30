@@ -42,6 +42,7 @@ public class AppMyPawnList {
     @ApiModelProperty(value="贷款机构列表")
     private List<PawnAuctionEx> pawnAuctionList;
     @ApiModelProperty(value="机构打款凭证")
+
     private String payeeTicket;
     @ApiModelProperty(value="当票")
     private String pawnTicket;
@@ -53,6 +54,48 @@ public class AppMyPawnList {
     private Integer redeemState;
     @ApiModelProperty(value="续当状态 0没有续当操作 1续当处理中 ")
     private Integer continueState;
+
+    @ApiModelProperty(value = "用户 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer userStatus;
+
+    @ApiModelProperty(value = "机构 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer orgStatus;
+
+    @ApiModelProperty(value = "续当 用户 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer continueUserStatus;
+
+    @ApiModelProperty(value = "续当 机构 0未生成合同1待签署2已签署3拒签4作废")
+    private Integer continueOrgStatus;
+
+    @ApiModelProperty(value = "项目编号")
+    private String projectCode;
+
+    @ApiModelProperty(value = "典当项目编号")
+    private String continueProjectCode;
+
+    @ApiModelProperty("合同法链接地址")
+    private String hetongfa;
+
+    @ApiModelProperty("民事法链接地址")
+    private String minshifa;
+
+    @ApiModelProperty("典当管理法链接地址")
+    private String diandangguanlifa;
+
+    @ApiModelProperty("0 未去典当 1已去典当")
+    private Integer isGotoPawn;
+
+    @ApiModelProperty("宝贝id")
+    private Integer userGoodsId;
+
+    @ApiModelProperty("0 不可以续当 1 可以续当")
+    private Integer isContinue;
+
+    @ApiModelProperty(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+    private Integer pawnStatus;
+
+    @ApiModelProperty(value = "1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
+    private Integer continuePawnStatus;
 
     public Integer getId() {
         return id;
@@ -204,5 +247,117 @@ public class AppMyPawnList {
 
     public void setPawnTicket(String pawnTicket) {
         this.pawnTicket = pawnTicket;
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Integer getOrgStatus() {
+        return orgStatus;
+    }
+
+    public void setOrgStatus(Integer orgStatus) {
+        this.orgStatus = orgStatus;
+    }
+
+    public Integer getContinueUserStatus() {
+        return continueUserStatus;
+    }
+
+    public void setContinueUserStatus(Integer continueUserStatus) {
+        this.continueUserStatus = continueUserStatus;
+    }
+
+    public Integer getContinueOrgStatus() {
+        return continueOrgStatus;
+    }
+
+    public void setContinueOrgStatus(Integer continueOrgStatus) {
+        this.continueOrgStatus = continueOrgStatus;
+    }
+
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    public String getContinueProjectCode() {
+        return continueProjectCode;
+    }
+
+    public void setContinueProjectCode(String continueProjectCode) {
+        this.continueProjectCode = continueProjectCode;
+    }
+
+    public String getHetongfa() {
+        return hetongfa;
+    }
+
+    public void setHetongfa(String hetongfa) {
+        this.hetongfa = hetongfa;
+    }
+
+    public String getMinshifa() {
+        return minshifa;
+    }
+
+    public void setMinshifa(String minshifa) {
+        this.minshifa = minshifa;
+    }
+
+    public String getDiandangguanlifa() {
+        return diandangguanlifa;
+    }
+
+    public void setDiandangguanlifa(String diandangguanlifa) {
+        this.diandangguanlifa = diandangguanlifa;
+    }
+
+    public Integer getIsGotoPawn() {
+        return isGotoPawn;
+    }
+
+    public void setIsGotoPawn(Integer isGotoPawn) {
+        this.isGotoPawn = isGotoPawn;
+    }
+
+    public Integer getUserGoodsId() {
+        return userGoodsId;
+    }
+
+    public void setUserGoodsId(Integer userGoodsId) {
+        this.userGoodsId = userGoodsId;
+    }
+
+    public Integer getIsContinue() {
+        return isContinue;
+    }
+
+    public void setIsContinue(Integer isContinue) {
+        this.isContinue = isContinue;
+    }
+
+    public Integer getPawnStatus() {
+        return pawnStatus;
+    }
+
+    public void setPawnStatus(Integer pawnStatus) {
+        this.pawnStatus = pawnStatus;
+    }
+
+    public Integer getContinuePawnStatus() {
+        return continuePawnStatus;
+    }
+
+    public void setContinuePawnStatus(Integer continuePawnStatus) {
+        this.continuePawnStatus = continuePawnStatus;
     }
 }

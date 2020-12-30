@@ -734,6 +734,66 @@ public class OrderExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andGoodsNumIsNull() {
+			addCriterion("goods_num is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumIsNotNull() {
+			addCriterion("goods_num is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumEqualTo(Integer value) {
+			addCriterion("goods_num =", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumNotEqualTo(Integer value) {
+			addCriterion("goods_num <>", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumGreaterThan(Integer value) {
+			addCriterion("goods_num >", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumGreaterThanOrEqualTo(Integer value) {
+			addCriterion("goods_num >=", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumLessThan(Integer value) {
+			addCriterion("goods_num <", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumLessThanOrEqualTo(Integer value) {
+			addCriterion("goods_num <=", value, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumIn(List<Integer> values) {
+			addCriterion("goods_num in", values, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumNotIn(List<Integer> values) {
+			addCriterion("goods_num not in", values, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumBetween(Integer value1, Integer value2) {
+			addCriterion("goods_num between", value1, value2, "goodsNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andGoodsNumNotBetween(Integer value1, Integer value2) {
+			addCriterion("goods_num not between", value1, value2, "goodsNum");
+			return (Criteria) this;
+		}
+
 		public Criteria andTotalPriceIsNull() {
 			addCriterion("total_price is null");
 			return (Criteria) this;

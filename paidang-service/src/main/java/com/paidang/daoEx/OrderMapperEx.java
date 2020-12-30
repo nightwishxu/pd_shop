@@ -6,6 +6,7 @@ import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.qo.OrderQo;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +50,12 @@ public interface OrderMapperEx {
                                    @Param("goodsName") String goodsName);
 
     List<OrderEx> findList(OrderQo qo);
+
+    /**
+     *
+     * @param userId
+     * @param queryType 1待打款 2 待发货 3 待收货 4 总金额
+     * @return
+     */
+    BigDecimal getTotalOrderPrice(@Param("userId") Integer userId,@Param("queryType") Integer queryType);
 }

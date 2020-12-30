@@ -1,16 +1,12 @@
 package com.paidang.service;
 
 import com.base.entity.QueryParams;
+import com.constants.PaidangConstants;
 import com.item.service.BaseService;
 import com.item.service.IntegralLogService;
-import com.paidang.dao.OrderMapper;
-import com.paidang.dao.OrgBalanceLogMapper;
-import com.paidang.dao.OrgIntegralEnum;
-import com.paidang.dao.PlatformBalanceLogMapper;
-import com.paidang.dao.model.Order;
-import com.paidang.dao.model.OrderExample;
-import com.paidang.dao.model.OrgBalanceLog;
-import com.paidang.dao.model.PlatformBalanceLog;
+import com.item.service.OrgAmountLogService;
+import com.paidang.dao.*;
+import com.paidang.dao.model.*;
 import com.paidang.daoEx.OrderMapperEx;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.qo.OrderQo;
@@ -36,6 +32,12 @@ public class OrderService {
 
 	@Autowired
 	private IntegralLogService integralLogService;
+
+	@Autowired
+	private OrgAmountLogService orgAmountLogService;
+
+	@Autowired
+	private PawnOrgMapper pawnOrgMapper;
 
 
 	public int countByExample(OrderExample example) {
@@ -157,9 +159,24 @@ public class OrderService {
 			balanceLog.setUserId(order.getUserId());
 			balanceLog.setOrgId(order.getOrgId());
 			this.orgBalanceLogMapper.insertSelective(balanceLog);
+
+
 		}else{
 
 		}
+		if(order.getGoodsSource()==5){
+			return;
+		}
+		//机构订单流水保存
+		orgAmountLogService.saveLog(order.getOrgId(),order.getPrice(),"1","用户确认收货",order.getId(),null);
+		PawnOrg pawnOrg = pawnOrgMapper.selectByPrimaryKey(order.getOrgId());
+		BigDecimal serviceRates = pawnOrg.getServiceRates();
+		if (serviceRates==null){
+			serviceRates = PaidangConstants.default_service_rates;
+		}
+		//手续费
+		orgAmountLogService.saveLog(order.getOrgId(),(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
+				"3","订单手续费",order.getId(),null);
 
 	}
 
@@ -200,6 +217,16 @@ public class OrderService {
 
 	public List<OrderEx> findList(OrderQo qo){
 		return orderMapperEx.findList(qo);
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @param queryType 1待打款 2 待发货 3 待收货 4 总金额
+	 * @return
+	 */
+	public   BigDecimal getTotalOrderPrice(Integer userId, Integer queryType){
+		return orderMapperEx.getTotalOrderPrice(userId,queryType);
 	}
 
 }

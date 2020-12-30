@@ -17,6 +17,7 @@ import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.qo.GoodsQo;
 import com.paidang.domain.vo.AuthResultVo;
+import com.paidang.domain.vo.OrderPriceCollectVo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import io.swagger.annotations.Api;
@@ -75,6 +76,9 @@ public class ApiAuthController extends CoreController {
     
     @Autowired
 	private GoodsAuctionOnlineLogService goodsAuctionOnlineLogService;
+
+    @Autowired
+	private PawnOrgService pawnOrgService;
 
 	@ApiOperation(value = "查询是否通过验证")
 	@PostMapping("/passOrNot")
@@ -150,18 +154,59 @@ public class ApiAuthController extends CoreController {
 		AuthEnterpriseExample authEnterpriseExample = new AuthEnterpriseExample();
 		authEnterpriseExample.createCriteria().andCreateUserEqualTo(userId).andStateNotEqualTo("3");
 		List<AuthEnterprise> authEnterprises = authEnterpriseService.selectByExample(authEnterpriseExample);
-
+		Integer orgId = null;
 		if(authPersonals.size()==1 && authEnterprises.size()==0){
-			userObject.put("authType","个人用户");
+			userObject.put("authTypeInfo","个人用户");
+			userObject.put("authType","1");
 			userObject.put("store",authPersonals.get(0).getStoreName());
 			userObject.put("logo",authPersonals.get(0).getLogo());
+			orgId = authPersonals.get(0).getOrgId();
 		}
 		if(authPersonals.size()==0 && authEnterprises.size()==1){
-			userObject.put("authType","企业用户");
+			userObject.put("authTypeInfo","企业用户");
+			userObject.put("authType","2");
 			userObject.put("store",authEnterprises.get(0).getStoreName());
 			userObject.put("logo",authEnterprises.get(0).getLogo());
+			orgId = authEnterprises.get(0).getOrgId();
+		}
+		if (orgId!=null){
+			PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+			if (pawnOrg!=null){
+				userObject.put("isStoreDeposit",pawnOrg.getIsStoreDeposit());
+				userObject.put("depositAmount",pawnOrg.getDepositAmount());
+				userObject.put("signature",pawnOrg.getSignature());
+				userObject.put("storeContacts",pawnOrg.getStoreContacts());
+				userObject.put("storePhone",pawnOrg.getStorePhone());
+				userObject.put("amount",pawnOrg.getAmount());
+			}
 		}
 		return userObject;
+	}
+
+	@ApiOperation(value = "设置店铺基本信息")
+	@PostMapping("/storeBaseInfo/set")
+	@ApiMethod(isLogin = true)
+	public Integer setUserStoreInfo(
+			MobileInfo mobileInfo
+			,@ApiParam(required = false,value = "签名")String signature
+			,@ApiParam(required = false,value = "联系人")String storeContacts
+			,@ApiParam(required = false,value = "联系电话")String storePhone
+
+	){
+		JSONObject ret = authService.isPersonal(mobileInfo.getUserId());
+		int code = ret.getInteger("code");
+		int org_id = ret.getInteger("org_id");
+
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(org_id);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		PawnOrg tmp =new PawnOrg();
+		tmp.setId(org_id);
+		tmp.setSignature(signature);
+		tmp.setStoreContacts(storeContacts);
+		tmp.setStorePhone(storePhone);
+		return pawnOrgService.updateByPrimaryKeySelective(tmp);
 	}
 
 	@ApiOperation(value = "保存退货地址")
@@ -384,8 +429,8 @@ public class ApiAuthController extends CoreController {
 			if (goods1.getDealType()==2 && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
 				throw new ApiException(400,"竞拍中禁止修改商品信息");
 			}
-			if(!Objects.equals(org_id,goods1.getOrgId())){
-				throw new ApiException("机构异常");
+			if(!Objects.equals(goods1.getGoodsOwner(),mobileInfo.getUserId())){
+				throw new ApiException("用户信息异常");
 			}
 			if (dealType!=null && dealType==2){
 				if(date.compareTo(auctionStartTime)<0){
@@ -441,9 +486,9 @@ public class ApiAuthController extends CoreController {
 			throw new ApiException(400,"竞拍中禁止下架");
 		}
 
-		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
-		if (!Objects.equals(orgId,goods.getOrgId())){
-			throw new ApiException(400,"机构异常");
+//		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (!Objects.equals(goods.getGoodsOwner(),mobileInfo.getUserId())){
+			throw new ApiException(400,"用户信息异常");
 		}
 		if(goods.getIsOnline()==0||goods.getIsOnline()==2){
 			throw new ApiException(MEnumError.DISMOUNT_STATE);
@@ -476,10 +521,10 @@ public class ApiAuthController extends CoreController {
 							  MobileInfo mobileInfo){
 		//判断当前商品是否是下架状态
 		Goods goods = goodsService.selectByPrimaryKey(goodsId);
-		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
-		if (!Objects.equals(orgId,goods.getOrgId())){
-			throw new ApiException(400,"机构异常");
-		}
+//		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//		if (!Objects.equals(orgId,goods.getOrgId())){
+//			throw new ApiException(400,"机构异常");
+//		}
 		if(goods.getIsVerfiy()!=2){
 			throw new ApiException(400,"商品未审核通过无法上架");
 		}
@@ -603,7 +648,7 @@ public class ApiAuthController extends CoreController {
 	@PostMapping("/order/orderList")
 	@ApiMethod(isLogin = true)
 	@ApiOperation(value = "根据(状态)获取订单列表")
-	public Object getOrderList(@ApiParam(value = "-1已取消1待付款2已付款3已发货4确认收货5已评价") String state,
+	public Object getOrderList(@ApiParam(value = "-1已取消1待付款2已付款(待发货)3已发货（待收货）4确认收货5已评价") String state,
 							   MobileInfo mobileInfo,
 							   @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
 							   @ApiParam(value = "分页(不传则不分页)") String pageNum,
@@ -615,11 +660,25 @@ public class ApiAuthController extends CoreController {
 
 
 		List<OrderEx> orderExes = orderService.getOrderByState(userId,goodsName,state);
-		if(BaseUtils.isAnyBlank(pageNum,pageSize)){
-			return page(orderExes);
-		}else{
-			return ok(orderExes);
-		}
+		return orderExes;
+	}
+
+	@PostMapping("/orderCollectPrice/get")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "获取订单汇总")
+	public OrderPriceCollectVo  getOrderCollect(MobileInfo mobileInfo){
+		OrderPriceCollectVo vo = new OrderPriceCollectVo();
+		//待打款
+		vo.setToBePay(orderService.getTotalOrderPrice(mobileInfo.getUserId(),1));
+		//待发货
+		vo.setToBeDeliver(orderService.getTotalOrderPrice(mobileInfo.getUserId(),2));
+		//待收货
+		vo.setToBeReceipt(orderService.getTotalOrderPrice(mobileInfo.getUserId(),3));
+		//总计
+		vo.setTotal(orderService.getTotalOrderPrice(mobileInfo.getUserId(),4));
+		return vo;
+
+
 	}
 
 	@PostMapping("/order/afterSales")
@@ -633,11 +692,7 @@ public class ApiAuthController extends CoreController {
 			startPage();
 		}
 		List<OrderEx> orderExes = orderService.getAfterSalesOrder(String.valueOf(userId),goodsName);
-		if(BaseUtils.isAnyBlank(pageNum,pageSize)){
-			return page(orderExes);
-		}else{
-			return ok(orderExes);
-		}
+		return orderExes;
 	}
 
     @PostMapping("/order/experter")

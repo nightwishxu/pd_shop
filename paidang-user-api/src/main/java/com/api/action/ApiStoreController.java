@@ -253,7 +253,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
-            record.setDealType(ex.getDealType());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
@@ -280,6 +280,7 @@ public class ApiStoreController extends ApiBaseController {
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
         qo.setType(2);
+        qo.setStartTotal(1);
         List<Integer> sources = Lists.newArrayList();
         sources.add(2);
         sources.add(3);
@@ -297,7 +298,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
-            record.setDealType(ex.getDealType());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
         }
@@ -325,6 +326,7 @@ public class ApiStoreController extends ApiBaseController {
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
         qo.setLimit(6);
+        qo.setStartTotal(1);
         List<GoodsEx> listEx = goodsService.findListEx(qo);
         if (listEx.size()<6){
             qo.setDealType(dealType==1?2:1);
@@ -346,7 +348,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuthPrice(ex.getPrice()+"");
             record.setPrice(ex.getPrice()+"");
             record.setOrgId(ex.getOrgId());
-            record.setDealType(ex.getDealType());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
             result.add(record);
         }
@@ -386,6 +388,7 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(4);
         sources.add(6);
         sources.add(7);
+        qo.setStartTotal(1);
         qo.setSources(sources);
 
         List<GoodsEx> list = goodsService.findListEx(qo);
@@ -402,7 +405,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setSource(ex.getSource());
             record.setOrgId(ex.getOrgId());
             record.setOrgIntegral(ex.getOrgIntegral());
-            record.setDealType(ex.getDealType());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setStartPrice(ex.getStartPrice());
             record.setGoodsAttribute(ex.getGoodsAttribute());
             record.setLabels(ex.getLabels());
@@ -493,6 +496,7 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setStartPrice(ex.getStartPrice());
         appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
         appStoreGoodsDetail.setLabels(ex.getLabels());
+        appStoreGoodsDetail.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
         //机构上传
         if(ex.getOrgId()!=null){
             PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
@@ -726,7 +730,7 @@ public class ApiStoreController extends ApiBaseController {
             AppStoreGoodsDetail c = new AppStoreGoodsDetail();
             c.setSource(ex.getSource());
             c.setOrgId(ex.getOrgId());
-            c.setDealType(ex.getDealType());
+            c.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             c.setStartPrice(ex.getStartPrice());
             c.setGoodsAttribute(ex.getGoodsAttribute());
             c.setLabels(ex.getLabels());

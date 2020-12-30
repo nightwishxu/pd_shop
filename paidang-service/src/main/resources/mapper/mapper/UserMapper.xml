@@ -37,6 +37,9 @@
         <result column="follow_count" property="followCount" jdbcType="INTEGER" />
         <result column="fans_count" property="fansCount" jdbcType="INTEGER" />
         <result column="order_count" property="orderCount" jdbcType="INTEGER" />
+        <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
+        <result column="txsn" property="txsn" jdbcType="VARCHAR" />
+        <result column="anxinsign_id" property="anxinsignId" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -100,7 +103,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,account,password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count
+        id,account,password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count,auth_status,txsn,anxinsign_id
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -149,7 +152,8 @@
         login_time,sobot_token,last_sobot_token_time,
         im_token,wx_openid,qq_openid,
         recommend_sort,article_count,follow_count,
-        fans_count,order_count
+        fans_count,order_count,auth_status,
+        txsn,anxinsign_id
         )
         values (#{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
         #{nickName,jdbcType=VARCHAR},#{headImg,jdbcType=VARCHAR},#{sex,jdbcType=TINYINT},
@@ -162,7 +166,8 @@
         #{loginTime,jdbcType=TIMESTAMP},#{sobotToken,jdbcType=VARCHAR},#{lastSobotTokenTime,jdbcType=TIMESTAMP},
         #{imToken,jdbcType=VARCHAR},#{wxOpenid,jdbcType=VARCHAR},#{qqOpenid,jdbcType=VARCHAR},
         #{recommendSort,jdbcType=INTEGER},#{articleCount,jdbcType=INTEGER},#{followCount,jdbcType=INTEGER},
-        #{fansCount,jdbcType=INTEGER},#{orderCount,jdbcType=INTEGER}
+        #{fansCount,jdbcType=INTEGER},#{orderCount,jdbcType=INTEGER},#{authStatus,jdbcType=INTEGER},
+        #{txsn,jdbcType=VARCHAR},#{anxinsignId,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -271,6 +276,15 @@
             <if test="orderCount != null" >
                 order_count,
             </if>
+            <if test="authStatus != null" >
+                auth_status,
+            </if>
+            <if test="txsn != null" >
+                txsn,
+            </if>
+            <if test="anxinsignId != null" >
+                anxinsign_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="account != null" >
@@ -374,6 +388,15 @@
             </if>
             <if test="orderCount != null" >
                 #{orderCount,jdbcType=INTEGER},
+            </if>
+            <if test="authStatus != null" >
+                #{authStatus,jdbcType=INTEGER},
+            </if>
+            <if test="txsn != null" >
+                #{txsn,jdbcType=VARCHAR},
+            </if>
+            <if test="anxinsignId != null" >
+                #{anxinsignId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -493,6 +516,15 @@
             <if test="record.orderCount != null" >
                 order_count = #{record.orderCount,jdbcType=INTEGER},
             </if>
+            <if test="record.authStatus != null" >
+                auth_status = #{record.authStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.txsn != null" >
+                txsn = #{record.txsn,jdbcType=VARCHAR},
+            </if>
+            <if test="record.anxinsignId != null" >
+                anxinsign_id = #{record.anxinsignId,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -535,7 +567,10 @@
         article_count = #{articleCount,jdbcType=INTEGER},
         follow_count = #{followCount,jdbcType=INTEGER},
         fans_count = #{fansCount,jdbcType=INTEGER},
-        order_count = #{orderCount,jdbcType=INTEGER}
+        order_count = #{orderCount,jdbcType=INTEGER},
+        auth_status = #{authStatus,jdbcType=INTEGER},
+        txsn = #{txsn,jdbcType=VARCHAR},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -646,6 +681,15 @@
             <if test="orderCount != null" >
                 order_count = #{orderCount,jdbcType=INTEGER},
             </if>
+            <if test="authStatus != null" >
+                auth_status = #{authStatus,jdbcType=INTEGER},
+            </if>
+            <if test="txsn != null" >
+                txsn = #{txsn,jdbcType=VARCHAR},
+            </if>
+            <if test="anxinsignId != null" >
+                anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -685,7 +729,10 @@
         article_count = #{articleCount,jdbcType=INTEGER},
         follow_count = #{followCount,jdbcType=INTEGER},
         fans_count = #{fansCount,jdbcType=INTEGER},
-        order_count = #{orderCount,jdbcType=INTEGER}
+        order_count = #{orderCount,jdbcType=INTEGER},
+        auth_status = #{authStatus,jdbcType=INTEGER},
+        txsn = #{txsn,jdbcType=VARCHAR},
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

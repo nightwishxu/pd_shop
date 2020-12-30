@@ -1,5 +1,6 @@
 package com.demo.connector;
 
+import com.base.util.CoreConstants;
 import com.demo.constant.MIMEType;
 import com.demo.constant.Request;
 import com.demo.constant.SystemConst;
@@ -14,7 +15,7 @@ import java.util.Map.Entry;
 
 
 public class HttpConnector {
-    public static String JKS_PATH = "E:\\work_space_wb\\paidang\\zs\\anxinsign.jks";
+    public static String JKS_PATH = CoreConstants.getProperty("jks.path");;
     public static String JKS_PWD = "paidang";
     public static String ALIAS = "anxinsign";
 

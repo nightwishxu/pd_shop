@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -501,6 +503,22 @@ public class UserPawn implements Serializable {
 	@Column(name = "contract_id")
 	private String contractId;
 
+	/**
+	 *项目编号
+	 */
+	@ApiModelProperty(value="项目编号")
+	@ApiParam(value="项目编号")
+	@Column(name = "project_code")
+	private String projectCode;
+
+	/**
+	 * 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成
+	 */
+	@ApiModelProperty(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+	@ApiParam(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
+	@Column(name = "pawn_status")
+	private Integer pawnStatus;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -987,6 +1005,22 @@ public class UserPawn implements Serializable {
 
 	public String getContractId() {
 		return contractId;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode=projectCode == null ? projectCode : projectCode.trim();
+	}
+
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setPawnStatus(Integer pawnStatus) {
+		this.pawnStatus=pawnStatus;
+	}
+
+	public Integer getPawnStatus() {
+		return pawnStatus;
 	}
 
 }

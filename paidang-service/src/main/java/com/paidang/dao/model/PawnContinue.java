@@ -1,11 +1,13 @@
 package com.paidang.dao.model;
 
 import io.swagger.annotations.ApiModel;
-import javax.persistence.Table;
-import java.io.Serializable;
-import javax.persistence.Column;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.io.Serializable;
+
 /**
  *
  */
@@ -94,10 +96,10 @@ public class PawnContinue implements Serializable {
 	private java.math.BigDecimal platformMoney;
 
 	/**
-	 *-1机构拒绝1申请3用户打款并上传凭证4机构确认5机构未收到
+	 *-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到
 	 */
-	@ApiModelProperty(value="-1机构拒绝1申请3用户打款并上传凭证4机构确认5机构未收到")
-	@ApiParam(value="-1机构拒绝1申请3用户打款并上传凭证4机构确认5机构未收到")
+	@ApiModelProperty(value="-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
+	@ApiParam(value="-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
 	@Column(name = "state")
 	private Integer state;
 
@@ -180,6 +182,38 @@ public class PawnContinue implements Serializable {
 	@ApiParam(value="合同id")
 	@Column(name = "contract_id")
 	private String contractId;
+
+	/**
+	 *项目编号
+	 */
+	@ApiModelProperty(value="项目编号")
+	@ApiParam(value="项目编号")
+	@Column(name = "project_code")
+	private String projectCode;
+
+	/**
+	 *用户 0未生成合同1待签署2已签署3拒签4作废
+	 */
+	@ApiModelProperty(value="用户 0未生成合同1待签署2已签署3拒签4作废")
+	@ApiParam(value="用户 0未生成合同1待签署2已签署3拒签4作废")
+	@Column(name = "user_status")
+	private Integer userStatus;
+
+	/**
+	 *机构 0未生成合同1待签署2已签署3拒签4作废
+	 */
+	@ApiModelProperty(value="机构 0未生成合同1待签署2已签署3拒签4作废")
+	@ApiParam(value="机构 0未生成合同1待签署2已签署3拒签4作废")
+	@Column(name = "org_status")
+	private Integer orgStatus;
+
+	/**
+	 *续票当号
+	 */
+	@ApiModelProperty(value="续票当号")
+	@ApiParam(value="续票当号")
+	@Column(name = "continue_pawn_ticket_code")
+	private String continuePawnTicketCode;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -347,6 +381,38 @@ public class PawnContinue implements Serializable {
 
 	public String getContractId() {
 		return contractId;
+	}
+
+	public void setProjectCode(String projectCode) {
+		this.projectCode=projectCode == null ? projectCode : projectCode.trim();
+	}
+
+	public String getProjectCode() {
+		return projectCode;
+	}
+
+	public void setUserStatus(Integer userStatus) {
+		this.userStatus=userStatus;
+	}
+
+	public Integer getUserStatus() {
+		return userStatus;
+	}
+
+	public void setOrgStatus(Integer orgStatus) {
+		this.orgStatus=orgStatus;
+	}
+
+	public Integer getOrgStatus() {
+		return orgStatus;
+	}
+
+	public void setContinuePawnTicketCode(String continuePawnTicketCode) {
+		this.continuePawnTicketCode=continuePawnTicketCode == null ? continuePawnTicketCode : continuePawnTicketCode.trim();
+	}
+
+	public String getContinuePawnTicketCode() {
+		return continuePawnTicketCode;
 	}
 
 }

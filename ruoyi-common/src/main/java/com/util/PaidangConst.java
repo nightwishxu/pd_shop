@@ -14,7 +14,7 @@ public interface PaidangConst {
     /*
     * 用户选择中标机构，该机构需要在 PAY_LIMIT_TIME 分钟内支付贷款
     * */
-    int PAY_LIMIT_TIME = 5*60;
+    int PAY_LIMIT_TIME = 48*60;
     /**
      * 服务商角色编号
      */

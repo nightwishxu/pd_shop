@@ -47,7 +47,8 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 return new Ret();
             }
             if (body.getClass().equals(String.class)){
-                body = JSON.parse(body.toString());
+//                body = JSON.parse(body.toString());
+                return new Result<>(body);
             }
             Result<Object> ret = new Result<>(body);
             if (api.isPage() && body!=null){

@@ -44,6 +44,17 @@ public class APPMyPawnBxGet {
     @ApiModelProperty(value="联系电话")
     private String comPhone;
 
+
+    @ApiModelProperty("合同法链接地址")
+    private String hetongfa;
+
+    @ApiModelProperty("民事法链接地址")
+    private String minshifa;
+
+    @ApiModelProperty("典当管理法链接地址")
+    private String diandangguanlifa;
+
+
     public Integer getId() {
         return id;
     }
@@ -170,5 +181,29 @@ public class APPMyPawnBxGet {
 
     public void setComPhone(String comPhone) {
         this.comPhone = comPhone;
+    }
+
+    public String getHetongfa() {
+        return hetongfa;
+    }
+
+    public void setHetongfa(String hetongfa) {
+        this.hetongfa = hetongfa;
+    }
+
+    public String getMinshifa() {
+        return minshifa;
+    }
+
+    public void setMinshifa(String minshifa) {
+        this.minshifa = minshifa;
+    }
+
+    public String getDiandangguanlifa() {
+        return diandangguanlifa;
+    }
+
+    public void setDiandangguanlifa(String diandangguanlifa) {
+        this.diandangguanlifa = diandangguanlifa;
     }
 }

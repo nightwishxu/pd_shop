@@ -17,6 +17,9 @@
         <result column="state" property="state" jdbcType="CHAR" />
         <result column="refuse_info" property="refuseInfo" jdbcType="VARCHAR" />
         <result column="org_id" property="orgId" jdbcType="INTEGER" />
+        <result column="pawn_exequatur" property="pawnExequatur" jdbcType="VARCHAR" />
+        <result column="other_file" property="otherFile" jdbcType="VARCHAR" />
+        <result column="business_license" property="businessLicense" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -80,7 +83,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,store_name,logo,store_introduce,enterprise_name,legal_person_name,legal_person_card,business_license_photo,legal_person_card_front,legal_person_card_back,create_user,create_time,state,refuse_info,org_id
+        id,store_name,logo,store_introduce,enterprise_name,legal_person_name,legal_person_card,business_license_photo,legal_person_card_front,legal_person_card_back,create_user,create_time,state,refuse_info,org_id,pawn_exequatur,other_file,business_license
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -122,13 +125,15 @@
         store_introduce,enterprise_name,legal_person_name,
         legal_person_card,business_license_photo,legal_person_card_front,
         legal_person_card_back,create_user,create_time,
-        state,refuse_info,org_id
+        state,refuse_info,org_id,
+        pawn_exequatur,other_file,business_license
         )
         values (#{storeName,jdbcType=VARCHAR},#{logo,jdbcType=VARCHAR},
         #{storeIntroduce,jdbcType=VARCHAR},#{enterpriseName,jdbcType=VARCHAR},#{legalPersonName,jdbcType=VARCHAR},
         #{legalPersonCard,jdbcType=VARCHAR},#{businessLicensePhoto,jdbcType=VARCHAR},#{legalPersonCardFront,jdbcType=VARCHAR},
         #{legalPersonCardBack,jdbcType=VARCHAR},#{createUser,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},
-        #{state,jdbcType=CHAR},#{refuseInfo,jdbcType=VARCHAR},#{orgId,jdbcType=INTEGER}
+        #{state,jdbcType=CHAR},#{refuseInfo,jdbcType=VARCHAR},#{orgId,jdbcType=INTEGER},
+        #{pawnExequatur,jdbcType=VARCHAR},#{otherFile,jdbcType=VARCHAR},#{businessLicense,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -177,6 +182,15 @@
             <if test="orgId != null" >
                 org_id,
             </if>
+            <if test="pawnExequatur != null" >
+                pawn_exequatur,
+            </if>
+            <if test="otherFile != null" >
+                other_file,
+            </if>
+            <if test="businessLicense != null" >
+                business_license,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="storeName != null" >
@@ -220,6 +234,15 @@
             </if>
             <if test="orgId != null" >
                 #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="pawnExequatur != null" >
+                #{pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="otherFile != null" >
+                #{otherFile,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null" >
+                #{businessLicense,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -279,6 +302,15 @@
             <if test="record.orgId != null" >
                 org_id = #{record.orgId,jdbcType=INTEGER},
             </if>
+            <if test="record.pawnExequatur != null" >
+                pawn_exequatur = #{record.pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="record.otherFile != null" >
+                other_file = #{record.otherFile,jdbcType=VARCHAR},
+            </if>
+            <if test="record.businessLicense != null" >
+                business_license = #{record.businessLicense,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -301,7 +333,10 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
         state = #{state,jdbcType=CHAR},
         refuse_info = #{refuseInfo,jdbcType=VARCHAR},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        business_license = #{businessLicense,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -352,6 +387,15 @@
             <if test="orgId != null" >
                 org_id = #{orgId,jdbcType=INTEGER},
             </if>
+            <if test="pawnExequatur != null" >
+                pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+            </if>
+            <if test="otherFile != null" >
+                other_file = #{otherFile,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null" >
+                business_license = #{businessLicense,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -371,7 +415,10 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
         state = #{state,jdbcType=CHAR},
         refuse_info = #{refuseInfo,jdbcType=VARCHAR},
-        org_id = #{orgId,jdbcType=INTEGER}
+        org_id = #{orgId,jdbcType=INTEGER},
+        pawn_exequatur = #{pawnExequatur,jdbcType=VARCHAR},
+        other_file = #{otherFile,jdbcType=VARCHAR},
+        business_license = #{businessLicense,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
