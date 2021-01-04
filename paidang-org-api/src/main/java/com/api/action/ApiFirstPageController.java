@@ -443,6 +443,11 @@ public class ApiFirstPageController extends ApiBaseController {
         orgInfo.setBusinessLicenseCode(record.getBusinessLicenseCode());
         orgInfo.setOrgLogo(record.getOrgLogo());
         orgInfo.setRegisteredCapital(record.getRegisteredCapital());
+        orgInfo.setPayPassword(record.getPayPassword());
+        orgInfo.setAmount(record.getAmount());
+        Integer auctionCount = goodsService.getAuctionCount(orgId, null);
+        orgInfo.setAuctionCount(auctionCount==null?0:auctionCount);
+
         return orgInfo;
     }
 

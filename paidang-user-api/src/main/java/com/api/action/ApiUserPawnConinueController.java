@@ -135,38 +135,6 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         BigDecimal totalMoney = null;
         BigDecimal lxMoeny = null;
 
- /*       //续当综合利息+利息
-        //续当档期的份数除以15，是不是整数
-        if((pawnTime * 15) % 30 == 0){
-            //整数
-            //综合利息
-            totalMoney = ex.getBeginMoney().multiply(ex.getRate()).multiply(new BigDecimal(pawnTime * 15)).divide(new BigDecimal(30)).divide(new BigDecimal(100));
-            record.setZhlxMoney(totalMoney+"");
-
-            //整数
-            //利息利率
-            lxMoeny = ex.getBeginMoney().multiply(ex.getMoneyRate()).multiply(new BigDecimal(pawnTime * 15)).divide(new BigDecimal(30)).divide(new BigDecimal(100));
-            record.setLxMoney(lxMoeny + "");
-        }else{
-            //不能整除--先取能整除的部分--然后取不能整除的不部分算法
-            if(1 == pawnTime){
-                //当15天
-                totalMoney = ex.getBeginMoney().multiply(ex.getRate()).multiply(new BigDecimal(pawnTime * 15)).divide(new BigDecimal(30)).divide(new BigDecimal(100));
-                record.setZhlxMoney(totalMoney+"");
-                //利息利率
-                lxMoeny = ex.getBeginMoney().multiply(ex.getMoneyRate()).multiply(new BigDecimal(pawnTime * 15)).divide(new BigDecimal(30)).divide(new BigDecimal(100));
-                record.setLxMoney(lxMoeny + "");
-            }else{
-                //超过15天
-                int t = (int) Math.floor((pawnTime * 15) % 30);
-                totalMoney = (ex.getBeginMoney().multiply(ex.getRate())).add(ex.getBeginMoney().multiply(ex.getRate()).multiply(new BigDecimal(15)).divide(new BigDecimal(30))).divide(new BigDecimal(100));
-                record.setZhlxMoney(totalMoney+"");
-                //利息利率
-                lxMoeny = (ex.getBeginMoney().multiply(ex.getMoneyRate())).add(ex.getBeginMoney().multiply(ex.getMoneyRate()).multiply(new BigDecimal(15)).divide(new BigDecimal(30))).divide(new BigDecimal(100));
-                record.setLxMoney(lxMoeny+"");
-            }
-        }*/
-
         BigDecimal principal = ex.getBeginMoney();
         if (pawnTime == null)
             throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
@@ -226,22 +194,109 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 
     }
 
+
+    @ApiOperation(value="续当详情",notes = "登录")
+    @RequestMapping("pawnContinue/detail")
+    @ApiMethod(isLogin = true)
+    public AppMyPawnConinue pawnConinueDetail(MobileInfo mobileInfo,
+                                                    @ApiParam(value="repawnId",required = true) Integer repawnId) throws Exception{
+
+        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id",pawnContinue.getPawnId());
+        map.put("userId",mobileInfo.getUserId());
+        UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map);
+        AppMyPawnConinue record = new AppMyPawnConinue();
+        record.setPawnTime(pawnContinue.getPawnMonth());
+        record.setTitle(ex.getGoodsName());
+        record.setAuthPrice(ex.getAuthPrice()+"");
+        record.setGoodsId(ex.getPawnTicketCode());
+        record.setImages(ex.getImages());
+        record.setOrgName(ex.getOrgName());
+        record.setRate(ex.getRate()+"");
+        record.setConinueTime(DateUtil.dateToStr(pawnContinue.getPawnEndTime(),"yyyy-MM-dd"));
+        record.setMoneyRate(ex.getMoneyRate()+"");
+        record.setBeginTime(DateUtil.dateToStr(ex.getPawnBeginTime(),"yyyy-MM-dd"));
+        //当前还款日期
+        String endTime = DateUtil.getAddDaysDate(ex.getPawnEndTime(),ex.getPawnTime()*15);
+        record.setEndTime(endTime);
+        record.setMoney(ex.getBeginMoney()+"");
+        //初始化综合利息
+        BigDecimal totalMoney = null;
+        BigDecimal lxMoeny = null;
+
+        BigDecimal principal = ex.getBeginMoney();
+        record.setZhlxMoney(pawnContinue.getPawnMoney().toString());
+        record.setLxMoney(pawnContinue.getPawnInterest().toString());
+        //
+//        PawnContinueExample pawnContinueExample = new PawnContinueExample();
+//        pawnContinueExample.setOrderByClause("create_time desc");
+//        pawnContinueExample.createCriteria().andPawnIdEqualTo(ex.getId()).andIdNotEqualTo(repawnId);
+//        List<PawnContinue> pawnContinues = pawnContinueService.selectByExample(pawnContinueExample);
+//        if (pawnContinues == null || pawnContinues.size()==0){//首次续当
+//
+//            record.setLxMoney(CostGenerator.getInterest(principal,ex.getMoneyRate(),ex.getBeginPawnMonth()).toString());
+//            lxMoeny = CostGenerator.getInterest(principal,ex.getMoneyRate(),ex.getBeginPawnMonth());
+//
+//        }else {
+//            PawnContinue lastPawnContinue = pawnContinues.get(0);
+//            record.setLxMoney(CostGenerator.getInterest(principal,ex.getMoneyRate(),lastPawnContinue.getPawnMonth()).toString());
+//            lxMoeny = CostGenerator.getInterest(principal,ex.getMoneyRate(),lastPawnContinue.getPawnMonth());
+//        }
+
+        record.setRedeemOverdue(pawnContinue.getPawnOverdue().toString());
+        record.setOverdueRate(ex.getOverdueRate()+"");
+        record.setTotalMoney(pawnContinue.getPawnMoney().add(pawnContinue.getPawnOverdue()).add(pawnContinue.getPawnInterest()).toString());
+//        //查找典当商品还有多久到期
+//        int betTime = Integer.parseInt(DateUtil.between(DateUtil.parse(DateUtil.format(new Date(), DateUtil.YYMMDD)),ex.getPawnEndTime(), DateUnit.DAY)+"");
+//
+//        //如果逾期了--在五天范围内，计算逾期滞纳金
+//        if(DateUtil.parse(DateUtil.format(new Date(), DateUtil.YYMMDD)).getTime()<ex.getPawnEndTime().getTime()){
+//            //没有逾期
+//            //record.setOverdueRate(PaidangConst.REDEEM_OVERRATE + "");
+//            record.setOverdueRate(ex.getOverdueRate()+"");
+//            //滞纳金
+//            record.setRedeemOverdue("0");
+//            //费用总计
+//            record.setTotalMoney(totalMoney.add(lxMoeny)+"");
+//        }else if(DateUtil.parse(DateUtil.format(new Date(), DateUtil.YYMMDD)).getTime()>ex.getPawnEndTime().getTime()&&(betTime < (PaidangConst.BUFFER_DAYS))){
+//            //逾期了，并且还在典当中
+//            //record.setOverdueRate(PaidangConst.REDEEM_OVERRATE + "");
+//            record.setOverdueRate(ex.getOverdueRate()+"");
+//            //滞纳金
+//            record.setRedeemOverdue(new BigDecimal(betTime).multiply(principal).multiply(ex.getOverdueRate()).divide(new BigDecimal(100))+"");
+//            //费用总计
+//            record.setTotalMoney(totalMoney.add(lxMoeny).add(new BigDecimal(betTime).multiply(principal).multiply(ex.getOverdueRate()).divide(new BigDecimal(100)))+"");
+//        }
+
+        //record.setPayeeName(e x.getPayName());
+        // record.setPayeeBankName(ex.getPayBankName());
+        //record.setPayeeBankCardCode(ex.getPayBacnkCardCode());
+
+//        record.setPayeeName(ex.getPayeeName());
+//        record.setPayeeBankName(ex.getPayeeBankName());
+//        record.setPayeeBankCardCode(ex.getPayeeBankCardCode());
+        record.setPayeeBankCardCode(ex.getPayBacnkCardCode());
+        record.setPayeeName(ex.getPayName());
+        record.setPayeeBankName(ex.getPayBankName());
+
+        return record;
+
+    }
+
+
     @ApiOperation(value="完善当票",notes = "登录")
     @RequestMapping("/completeTicket")
     @ApiMethod(isPage = false, isLogin =  true)
     public Integer completeTicket(MobileInfo mobileInfo,
                                   @ApiParam(value="id",required = true) Integer id, @ApiParam(value="打款凭证",required = true)String platformImage){
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        map2.put("id",id);
-        map2.put("userId",mobileInfo.getUserId());
-        UserPawnEx ex = userPawnService.selectByPawnConinueDetail(map2);
-        Integer lastPawnContinueId = ex.getLastPawnContinueId();
-        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
+        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(id);
         if (pawnContinue.getState()!=2){
             throw new ApiException(400,"合同尚未签署完成");
         }
         pawnContinue.setPayTicket(platformImage);
         pawnContinue.setState(3);
+        pawnContinue.setModifyTime(new Date());
         pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
         return 1;
     }
@@ -367,7 +422,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 //       pawnContinue.setPawnInterest(userPawn.getRate());
 //       pawnContinue.setPawnOverdue(new BigDecimal(0));
         //pawnContinue.setPlatformMoney(userPawn.getPawnMoney().multiply(userPawn.getPlatformRate()));
-        pawnContinue.setState(1);
+        pawnContinue.setState(0);
         //pawnContinue.setPlatformState(1);
 //        pawnContinue.setPayTicket(platformImage);
         pawnContinue.setPawnTicket(userPawn.getPawnTicket());
@@ -501,7 +556,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 //        //将合同id更新到典当表
 //        //添加合同id
 //        qysService.addPawnContinueContractId(pawnContinueId,contractId);
-        pawnTicketService.adXDTicket(projectCode,ex.getUserName(),ex.getUserPhone(),pawnOrg,loadDataController.loadRePawnData(pawnContinueId));
+        pawnTicketService.adXDTicket(projectCode,ex.getUserName(),ex.getUserPhone(),pawnOrg,loadDataController.loadRePawnData(pawnContinueId),userPawn);
         return 1;
     }
 

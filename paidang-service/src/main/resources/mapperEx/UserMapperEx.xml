@@ -195,5 +195,9 @@
 		</if>
 		where t.id=#{id}
 	</update>
+
+	<update id="addIntegral">
+        update b_user set integral = ifnull(integral,0) +#{integral} where id = #{id}
+    </update>
   	
 </mapper>

@@ -16,6 +16,7 @@ import java.util.Properties;
 public class PropertySupport {
     private static final String CONFIG_FILE = "application.properties";
     public static final String PROFILE_ACTIVE = "spring.profiles.active";
+    public static String active = null;
     protected static Properties p = new Properties();
 
     protected PropertySupport() {
@@ -31,10 +32,10 @@ public class PropertySupport {
     }
 
     protected static String getProfileActive() {
-        return getProperty("spring.profiles.active");
+        return StringUtils.isNoneBlank(active)?active:getProperty("spring.profiles.active");
     }
 
-    static void initProfile(String profile) {
+    public static void initProfile(String profile) {
         Properties active = getProperties("application-" + profile + ".properties");
         put(active);
     }

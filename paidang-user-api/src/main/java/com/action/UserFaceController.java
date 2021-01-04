@@ -1,5 +1,7 @@
 package com.action;
 
+import com.item.dao.model.SinglePage;
+import com.item.service.SinglePageService;
 import com.paidang.service.UnionApiService;
 import com.base.api.ApiException;
 import com.base.util.StringUtils;
@@ -19,6 +21,9 @@ public class UserFaceController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SinglePageService singlePageService;
 
     @Autowired
     private UnionApiService unionApiService;
@@ -73,5 +78,13 @@ public class UserFaceController {
         model.addAttribute("result",result);
 
         return "userFaceResult";
+    }
+
+    @RequestMapping(value = "/h5/singlePage")
+    public String singlePage(HttpServletRequest request, Model model)throws Exception {
+        String code = request.getParameter("code");
+        SinglePage page = singlePageService.selectByPrimaryKey(code);
+        model.addAttribute("content",page.getContent());
+        return "detail";
     }
 }

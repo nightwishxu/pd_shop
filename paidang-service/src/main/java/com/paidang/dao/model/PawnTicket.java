@@ -439,6 +439,14 @@ public class PawnTicket implements Serializable {
 	@Column(name = "org_location")
 	private String orgLocation;
 
+	/**
+	 *合同地址
+	 */
+	@ApiModelProperty(value="合同地址")
+	@ApiParam(value="合同地址")
+	@Column(name = "contract_url")
+	private String contractUrl;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -861,6 +869,14 @@ public class PawnTicket implements Serializable {
 
 	public String getOrgLocation() {
 		return orgLocation;
+	}
+
+	public void setContractUrl(String contractUrl) {
+		this.contractUrl=contractUrl == null ? contractUrl : contractUrl.trim();
+	}
+
+	public String getContractUrl() {
+		return contractUrl;
 	}
 
 }

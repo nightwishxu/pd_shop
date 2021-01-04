@@ -1,7 +1,7 @@
 package com.api.view.shopCart;
 
 import com.item.daoEx.model.ShopCartEx;
-import com.paidang.dao.OrgIntegralEnum;
+import com.paidang.domain.enums.OrgIntegralEnum;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;

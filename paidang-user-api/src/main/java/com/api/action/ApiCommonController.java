@@ -1,7 +1,6 @@
 package com.api.action;
 
 import com.api.MEnumError;
-import com.api.view.common.AppVersion;
 import com.api.view.common.LoadingImg;
 
 import com.base.annotation.ApiMethod;
@@ -19,6 +18,7 @@ import com.item.dao.model.Feedback;
 import com.item.service.CodeService;
 import com.item.service.FeedbackService;
 import com.item.service.SinglePageService;
+import com.paidang.domain.pojo.AppVersion;
 import com.paidang.service.BFileService;
 import com.paidang.service.CacheService;
 import com.ruoyi.common.core.domain.ApiFile;
@@ -207,26 +207,26 @@ public class ApiCommonController extends ApiBaseController {
     	return loadingImg;
     }
     
-    /**
-     * 版本更新
-     */
-    @ApiMethod
-    @RequestMapping(value="/appVerion", method = RequestMethod.POST)
-    @ApiOperation(value = "APP版本获取", notes = "不需要登录")
-    public AppVersion getVersion(@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType){
-    	if (deviceType == null){
-    		throw new ApiException("deviceType");
-    	}
-    	String reuslt = codeService.getCode(DEVICE[deviceType - 1]+"@sys");
-    	if (StringUtil.isBlank(reuslt)){
-    		throw new ApiException(MEnumError.APP_VERSION_NULL);
-    	}
-    	AppVersion version = JSONUtils.deserialize(reuslt, AppVersion.class);
-    	if (version == null){
-    		throw new ApiException(MEnumError.APP_VERSION_NULL);
-    	}
-    	return version;
-    }
+//    /**
+//     * 版本更新
+//     */
+//    @ApiMethod
+//    @RequestMapping(value="/appVerion", method = RequestMethod.POST)
+//    @ApiOperation(value = "APP版本获取", notes = "不需要登录")
+//    public AppVersion getVersion(@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType){
+//    	if (deviceType == null){
+//    		throw new ApiException("deviceType");
+//    	}
+//    	String reuslt = codeService.getCode(DEVICE[deviceType - 1]+"@sys");
+//    	if (StringUtil.isBlank(reuslt)){
+//    		throw new ApiException(MEnumError.APP_VERSION_NULL);
+//    	}
+//    	AppVersion version = JSONUtils.deserialize(reuslt, AppVersion.class);
+//    	if (version == null){
+//    		throw new ApiException(MEnumError.APP_VERSION_NULL);
+//    	}
+//    	return version;
+//    }
 
 //	@ApiMethod
 	@RequestMapping(value="/yjInfo", method = RequestMethod.POST)
@@ -253,11 +253,11 @@ public class ApiCommonController extends ApiBaseController {
 
 
 	@ApiMethod
-	@RequestMapping(value="/simplePage/get", method = RequestMethod.POST)
+	@RequestMapping(value="/simplePage/get")
 	@ApiOperation(value = "获取富文本页面", notes = "不需要登录")
 	public Object singlePage(@ApiParam(value = "页面code  about关于我们  yhxy用户协议", required = true) String code){
 		com.item.dao.model.SinglePage page=singlePageService.selectByPrimaryKey(code);
-		page.setContent(CoreConstants.SERVER_URL + "detail?code=" + code + "&type=" + 3 + "&id=" + 0);
+		page.setUrl(CoreConstants.SERVER_URL + "h5/singlePage?code=" + code);
 		return page;
 	}
 
@@ -271,6 +271,14 @@ public class ApiCommonController extends ApiBaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@ApiOperation(value = "获取app版本信息",notes="")
+	@RequestMapping(value = "/appVersion/get", method = RequestMethod.POST)
+	@ApiMethod(isLogin = false)
+	public AppVersion getAppVersion(
+									@ApiParam(value = "系统 0 ios 1 android",required = true)Integer system){
+		return codeService.getAppVersion("user",system);
 	}
 
 }

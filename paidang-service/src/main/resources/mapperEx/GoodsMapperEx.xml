@@ -144,6 +144,7 @@
         select
         a.*
         ,b.integral orgIntegral
+        ,b.name orgName
         <if test="isOnlineCnt!=null and isOnlineCnt==1">
             ,(select  count(1) from p_goods_auction_online_log where status = 1 and now()> auction_start_time and goods_id = a.id) onlineCnt
         </if>
@@ -160,6 +161,9 @@
         </if>
         <if test="type != null" >
             and a.type = #{type}
+        </if>
+        <if test="name != null and name!=''" >
+            and a.name like CONCAT('%',#{name},'%')
         </if>
         <if test="source != null" >
             and a.source = #{source}
@@ -195,5 +199,15 @@
         update p_goods set is_online = #{isOnline},max_aution_id=#{maxAutionId},max_auction=#{maxAuction}
         where id = #{id}
     </update>
+
+    <select id="getAuctionCount" resultType="java.lang.Integer">
+        select  ifnull(count(1),0) from p_goods where is_online=1 and deal_type=2 and now()>= auction_start_time and now() &lt;=auction_end_time
+        <if test="orgId!=null">
+            and org_id = #{orgId}
+        </if>
+        <if test="goodsOwner!=null">
+            and goods_owner = #{goodsOwner}
+        </if>
+    </select>
     
 </mapper>

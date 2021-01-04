@@ -2,7 +2,6 @@ package com.api.action;
 
 import com.api.MEnumError;
 import com.api.constants.FileConstants;
-import com.api.view.common.AppVersion;
 import com.api.view.common.LoadingImg;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
@@ -14,6 +13,7 @@ import com.base.util.StringUtil;
 import com.item.dao.model.Feedback;
 import com.item.service.CodeService;
 import com.item.service.FeedbackService;
+import com.paidang.domain.pojo.AppVersion;
 import com.paidang.service.BFileService;
 import com.ruoyi.common.core.domain.ApiFile;
 import io.swagger.annotations.Api;
@@ -198,24 +198,33 @@ public class ApiCommonController extends ApiBaseController{
     	return loadingImg;
     }
     
-    /**
-     * 版本更新
-     */
-    @ApiMethod
-    @RequestMapping(value="/appVerion", method = RequestMethod.POST)
-    @ApiOperation(value = "APP版本获取", notes = "不需要登录")
-    public AppVersion getVersion(@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType){
-    	if (deviceType == null){
-    		throw new ApiException("deviceType");
-    	}
-    	String reuslt = codeService.getCode(DEVICE[deviceType - 1]+"_org@sys");
-    	if (StringUtil.isBlank(reuslt)){
-    		throw new ApiException(MEnumError.APP_VERSION_NULL);
-    	}
-    	AppVersion version = JSONUtils.deserialize(reuslt, AppVersion.class);
-    	if (version == null){
-    		throw new ApiException(MEnumError.APP_VERSION_NULL);
-    	}
-    	return version;
-    }
+//    /**
+//     * 版本更新
+//     */
+//    @ApiMethod
+//    @RequestMapping(value="/appVerion", method = RequestMethod.POST)
+//    @ApiOperation(value = "APP版本获取", notes = "不需要登录")
+//    public AppVersion getVersion(@ApiParam(value = "设备类型 1:android 2:ios", required = true) Integer deviceType){
+//    	if (deviceType == null){
+//    		throw new ApiException("deviceType");
+//    	}
+//    	String reuslt = codeService.getCode(DEVICE[deviceType - 1]+"_org@sys");
+//    	if (StringUtil.isBlank(reuslt)){
+//    		throw new ApiException(MEnumError.APP_VERSION_NULL);
+//    	}
+//    	AppVersion version = JSONUtils.deserialize(reuslt, AppVersion.class);
+//    	if (version == null){
+//    		throw new ApiException(MEnumError.APP_VERSION_NULL);
+//    	}
+//    	return version;
+//    }
+
+
+	@ApiOperation(value = "获取app版本信息",notes="")
+	@RequestMapping(value = "/appVersion/get", method = RequestMethod.POST)
+	@ApiMethod(isLogin = false)
+	public AppVersion getAppVersion(
+			@ApiParam(value = "系统 0 ios 1 android",required = true)Integer system){
+		return codeService.getAppVersion("org",system);
+	}
 }

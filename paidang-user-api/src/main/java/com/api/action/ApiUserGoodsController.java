@@ -389,15 +389,15 @@ public class ApiUserGoodsController extends ApiBaseController {
         }
     }
 
-    @ApiOperation(value="视频搜索 ", notes = "不登录")
-    @RequestMapping("/searchIndexVideo")
-    @ApiMethod(isPage = false, isLogin = false)
-    public Object searchIndexVideo(@ApiParam(value="name",required = true)String name){
-        VideoOnlineExample example=new VideoOnlineExample();
-        example.createCriteria().andTitleLike("%"+name+"%");
-        example.setOrderByClause("create_time desc");
-        return videoOnlineService.selectByExample(example);
-    }
+//    @ApiOperation(value="视频搜索 ", notes = "不登录")
+//    @RequestMapping("/searchIndexVideo")
+//    @ApiMethod(isPage = false, isLogin = false)
+//    public Object searchIndexVideo(@ApiParam(value="name",required = true)String name){
+//        VideoOnlineExample example=new VideoOnlineExample();
+//        example.createCriteria().andTitleLike("%"+name+"%");
+//        example.setOrderByClause("create_time desc");
+//        return videoOnlineService.selectByExample(example);
+//    }
 
     @ApiOperation(value="店铺搜索 ", notes = "不登录")
     @RequestMapping("/searchIndexOrg")

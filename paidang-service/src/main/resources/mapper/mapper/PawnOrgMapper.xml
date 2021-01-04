@@ -47,6 +47,7 @@
         <result column="land_line_phone" property="landLinePhone" jdbcType="VARCHAR" />
         <result column="service_rates" property="serviceRates" jdbcType="DECIMAL" />
         <result column="anxin_phone" property="anxinPhone" jdbcType="VARCHAR" />
+        <result column="pay_password" property="payPassword" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.paidang.dao.model.PawnOrg" extends="BaseResultMap" >
@@ -114,7 +115,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file,legal_person_phone,is_store_deposit,deposit_amount,signature,store_contacts,store_phone,amount,anxinsign_id,land_line_phone,service_rates,anxin_phone
+        id,role_code,type,account,password,name,legal_person,registered_capital,adress,business_license_code,business_license,expiration_remind_type,phone,balance,create_time,modify_time,state,pawn_state,overdue_rate,seal,org_images,org_logo,redeem_overrate,labels,integral,score,comment_count,express_score,service_score,id_card_img,id_card_reverse,id_card,pawn_exequatur,other_file,legal_person_phone,is_store_deposit,deposit_amount,signature,store_contacts,store_phone,amount,anxinsign_id,land_line_phone,service_rates,anxin_phone,pay_password
     </sql>
 
     <sql id="Blob_Column_List" >
@@ -190,7 +191,7 @@
         is_store_deposit,deposit_amount,signature,
         store_contacts,store_phone,amount,
         anxinsign_id,land_line_phone,service_rates,
-        anxin_phone
+        anxin_phone,pay_password
         )
         values (#{roleCode,jdbcType=VARCHAR},#{type,jdbcType=TINYINT},
         #{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
@@ -207,7 +208,7 @@
         #{isStoreDeposit,jdbcType=INTEGER},#{depositAmount,jdbcType=DECIMAL},#{signature,jdbcType=VARCHAR},
         #{storeContacts,jdbcType=VARCHAR},#{storePhone,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},
         #{anxinsignId,jdbcType=VARCHAR},#{landLinePhone,jdbcType=VARCHAR},#{serviceRates,jdbcType=DECIMAL},
-        #{anxinPhone,jdbcType=VARCHAR}
+        #{anxinPhone,jdbcType=VARCHAR},#{payPassword,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -349,6 +350,9 @@
             <if test="anxinPhone != null" >
                 anxin_phone,
             </if>
+            <if test="payPassword != null" >
+                pay_password,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="roleCode != null" >
@@ -485,6 +489,9 @@
             </if>
             <if test="anxinPhone != null" >
                 #{anxinPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null" >
+                #{payPassword,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -637,6 +644,9 @@
             <if test="record.anxinPhone != null" >
                 anxin_phone = #{record.anxinPhone,jdbcType=VARCHAR},
             </if>
+            <if test="record.payPassword != null" >
+                pay_password = #{record.payPassword,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -690,7 +700,8 @@
         anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
         land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
         service_rates = #{serviceRates,jdbcType=DECIMAL},
-        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -742,7 +753,8 @@
         anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
         land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
         service_rates = #{serviceRates,jdbcType=DECIMAL},
-        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -886,6 +898,9 @@
             <if test="anxinPhone != null" >
                 anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
             </if>
+            <if test="payPassword != null" >
+                pay_password = #{payPassword,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -936,7 +951,8 @@
         anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
         land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
         service_rates = #{serviceRates,jdbcType=DECIMAL},
-        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 
@@ -985,7 +1001,8 @@
         anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
         land_line_phone = #{landLinePhone,jdbcType=VARCHAR},
         service_rates = #{serviceRates,jdbcType=DECIMAL},
-        anxin_phone = #{anxinPhone,jdbcType=VARCHAR}
+        anxin_phone = #{anxinPhone,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

@@ -16,6 +16,7 @@ import com.item.service.MobileVerifyService;
 import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.utils.sql.SqlUtil;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +50,37 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private static final String USER_ID = "userid";
     private static final String DEVICE_ID = "deviceid";
     private static final String DEVICE_TYPE = "deviceType";
+    private static final String APP_VERSION = "appVersion";
 
+    private static Map<String,String> signMap = new HashMap<>();
+    static {
+        signMap.put("3.0.0.0","");
+        signMap.put("3.0.0.1","");
+    }
+
+
+    public void checkoutVersion(String appVersion){
+        if (StringUtils.isBlank(appVersion)){
+            throw new ApiException(400, "为了您更好体验，请升级至最新的版本");
+        }
+        String[] split = appVersion.split("\\.");
+        if(split.length!=4){
+            throw new ApiException(400, "为了您更好体验，请升级至最新的版本");
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(split[0]).append(".").append(split[1]).append(".0.").append(split[3]);
+        if (!signMap.containsKey(builder.toString())){
+            throw new ApiException(400, "为了您更好体验，请升级至最新的版本");
+        }
+    }
 
     @Value("${token.auth}")
     private Boolean TOKEN_AUTH;
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        String appVersion = request.getParameter(APP_VERSION);
+//        checkoutVersion(appVersion);
         String userId = request.getParameter(USER_ID);
         if(StringUtils.isBlank(userId)){
             userId = request.getHeader(USER_ID);

@@ -80,10 +80,11 @@ public class OrgAmountLogService {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public OrgAmountLog saveLog(Integer orgId, BigDecimal amount,String item,String info,Integer fid,String payLogId){
+	public OrgAmountLog saveLog(Integer orgId,Integer userId, BigDecimal amount,String item,String info,Integer fid,String payLogId){
 		OrgAmountLog log = new OrgAmountLog();
 		log.setId(BaseUtils.getRandomOrderId(""));
 		log.setOrgId(orgId);
+		log.setUserId(userId);
 		log.setAmount(amount);
 		log.setItem(item);
 		log.setInfo(info);

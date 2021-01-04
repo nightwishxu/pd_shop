@@ -32,8 +32,8 @@ public class AuthService {
     @Autowired
     private BusinessUserInfoService businessUserInfoService;
 
-    @Autowired
-    private BusinessUserBalanceLogService businessUserBalanceLogService;
+//    @Autowired
+//    private BusinessUserBalanceLogService businessUserBalanceLogService;
 
     public AuthResultVo passOrNot(int userId){
         //查询当前人有没有申请个人认证

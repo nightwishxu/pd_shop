@@ -104,6 +104,9 @@ public class PawnDetail {
     @ApiParam(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
     private Integer pawnStatus;
 
+    @ApiModelProperty("最新续当id")
+    private Integer lastPawnContinueId;
+
     public String getId() {
         return id;
     }
@@ -311,5 +314,13 @@ public class PawnDetail {
 
     public void setPawnStatus(Integer pawnStatus) {
         this.pawnStatus = pawnStatus;
+    }
+
+    public Integer getLastPawnContinueId() {
+        return lastPawnContinueId;
+    }
+
+    public void setLastPawnContinueId(Integer lastPawnContinueId) {
+        this.lastPawnContinueId = lastPawnContinueId;
     }
 }

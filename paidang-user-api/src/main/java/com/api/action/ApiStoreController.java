@@ -24,7 +24,9 @@ import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.GoodsAuctionEx;
 import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.PawnOrgEx;
+import com.paidang.daoEx.model.VideoOnlineEx;
 import com.paidang.domain.qo.GoodsQo;
+import com.paidang.domain.vo.PawnOrgVo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -35,6 +37,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -952,19 +955,22 @@ public class ApiStoreController extends ApiBaseController {
     @ApiOperation(value = "首页下的视频列表", notes = "不需要登陆")
     @RequestMapping("/getVideoForIndex")
     @ApiMethod()
-    public List<AppVideoOnline> getVideoForIndex(){
-        VideoOnlineExample example = new VideoOnlineExample();
-        example.createCriteria().andStateEqualTo(1);
-        example.setOrderByClause("create_time desc");
-        List<VideoOnline> list = videoOnlineService.selectByExample(example);
+    public List<AppVideoOnline> getVideoForIndex(MobileInfo mobileInfo){
+        List<VideoOnlineEx> list = videoOnlineService.selectByComment(mobileInfo.getUserId(),1,null);
 
         List<AppVideoOnline> ret = new ArrayList<AppVideoOnline>();
-        for(VideoOnline ex : list){
+        for(VideoOnlineEx ex : list){
             AppVideoOnline record = new AppVideoOnline();
             record.setId(ex.getId());
             record.setTitle(ex.getTitle());
             record.setImg(ex.getImg());
             record.setVideo(ex.getVideo()+ PaidangConst.VIDEO_NORMAL);
+            record.setComCnt(ex.getCommCount());
+            record.setState(ex.getState());
+            record.setViewCnt(ex.getViewCnt());
+            record.setLabels(ex.getLabels());
+            record.setPraiseCount(ex.getPraiseNum());
+            record.setPraiseStatus(ex.getPraiseStatus());
             ret.add(record);
         }
         return ret;
@@ -1051,4 +1057,92 @@ public class ApiStoreController extends ApiBaseController {
 
     }
 
+
+    /**
+     * 商品列表
+     *  6个人7企业  臻品
+     * 	 * 2 绝当品
+     * 	 *  3   自营
+     */
+    @ApiOperation(value = "商品列表", notes = "分页")
+    @RequestMapping("/goods/list")
+    @ApiMethod(isLogin = false,isPage = true)
+    public List<AppStoreGoodsDetail> goodsList(MobileInfo mobileInfo,
+                                                    @ApiParam(value="商品名称",required = true) String name,
+                                                    PageLimit pageLimit){
+        startPage();
+        List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
+
+        GoodsQo qo = new GoodsQo();
+        qo.setStartTotal(1);
+        qo.setState(1);
+        qo.setIsOnline(1);
+        qo.setIsVerfiy(2);
+        qo.setType(1);
+        List<Integer> sources = Lists.newArrayList();
+        sources.add(2);
+        sources.add(3);
+        sources.add(1);
+        sources.add(4);
+        sources.add(6);
+        sources.add(7);
+        qo.setSources(sources);
+        qo.setName(name);
+
+        List<GoodsEx> list = goodsService.findListEx(qo);
+
+//        List<Goods> list = goodsService.selectByExample(goodsExample);
+        for(GoodsEx ex : list){
+            AppStoreGoodsDetail record = new AppStoreGoodsDetail();
+            record.setId(ex.getId());
+            record.setTitle(ex.getName());
+            record.setOrgName(ex.getOrgName());
+            record.setImg(ex.getImg());
+            record.setImages(ex.getImgs());
+            record.setWidth(ex.getWidth());
+            record.setHeight(ex.getHeight());
+            record.setAuthPrice(ex.getPrice()+"");
+            record.setPrice(ex.getPrice()+"");
+            record.setOrgId(ex.getOrgId());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
+            record.setOrgIntegral(ex.getOrgIntegral());
+            record.setGoodsSource(ex.getSource());
+            list2.add(record);
+        }
+        return list2;
+    }
+
+    /**
+     * 店铺列表
+     */
+    @ApiOperation(value = "店铺列表", notes = "分页")
+    @RequestMapping("/org/list")
+    @ApiMethod(isLogin = false,isPage = true)
+    public List<PawnOrgVo> orgList(MobileInfo mobileInfo,
+                                               @ApiParam(value="店铺名称",required = true) String name,
+                                               PageLimit pageLimit){
+        startPage();
+        PawnOrgExample example = new PawnOrgExample();
+        example.createCriteria().andNameLike("%"+name+"%").andStateEqualTo(1).andIdNotEqualTo(1);
+        List<PawnOrg> pawnOrgs = pawnOrgService.selectByExample(example);
+        List<PawnOrgVo> result = new ArrayList<>();
+        for (PawnOrg pawnOrg : pawnOrgs) {
+            PawnOrgVo vo = new PawnOrgVo();
+            BeanUtils.copyProperties(pawnOrg,vo);
+            result.add(vo);
+        }
+
+        return result;
+    }
+
+    @ApiOperation(value="视频搜索 ", notes = "不登录")
+    @RequestMapping("/searchVideo")
+    @ApiMethod(isPage = true, isLogin = false)
+    public Object searchIndexVideo(@ApiParam(value="name",required = true)String name){
+        startPage();
+        VideoOnlineExample example=new VideoOnlineExample();
+        example.createCriteria().andTitleLike("%"+name+"%");
+        example.setOrderByClause("create_time desc");
+        return videoOnlineService.selectByExample(example);
+    }
 }

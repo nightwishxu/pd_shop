@@ -86,8 +86,12 @@ public class AdController extends CoreController{
     public TableDataInfo list(Integer location){
 		startPage();
     	AdExample example = new AdExample();
-		example.createCriteria().andLocationEqualTo(location);
-		example.setOrderByClause("sort_order desc");
+		AdExample.Criteria criteria = example.createCriteria();
+		if (location!=null){
+			criteria.andLocationEqualTo(location);
+		}
+
+		example.setOrderByClause("create_time desc");
 
     	List<Ad> list = adService.selectByExampleWithBLOBs(example);
     	list.stream().forEach(ad->ad.setImg(BaseUtils.processImg(ad.getImg())));

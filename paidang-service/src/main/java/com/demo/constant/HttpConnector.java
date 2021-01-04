@@ -1,6 +1,8 @@
-package com.demo.connector;
+package com.demo.constant;
 
 import com.base.util.CoreConstants;
+import com.base.util.PropertySupport;
+import com.demo.connector.HttpClient;
 import com.demo.constant.MIMEType;
 import com.demo.constant.Request;
 import com.demo.constant.SystemConst;
@@ -16,7 +18,9 @@ import java.util.Map.Entry;
 
 public class HttpConnector {
 //    public static String JKS_PATH = "E:\\work_space_wb\\paidang\\zs\\anxinsign.jks";
-    public static String JKS_PATH = CoreConstants.getProperty("jks.path");;
+//    public static String JKS_PATH = PropertySupport.getProperty("jks.path");;
+//    public static String JKS_PATH = PropertySupport.getProperty("anxinSign.url");;
+    public static String JKS_PATH = PropertySupport.getProperty("jks.path");
     public static String JKS_PWD = "paidang";
     public static String ALIAS = "anxinsign";
 
@@ -32,7 +36,7 @@ public class HttpConnector {
     // public static String JKS_PWD = "cfca1234";
     // public static String ALIAS = "hewei@安心签贺伟版@3123456789@1 (cfca test oca1)";
 
-    public String url = "https://210.74.42.33:9443/FEP/";
+    public String url = PropertySupport.getProperty("anxinSign.url");
     // public String url = "https://192.168.123.177:8473/FEP/";
     // public String url = "https://192.168.113.121:8443/FEP/";
     // public String url = "https://210.74.42.33:9443/FEP/";

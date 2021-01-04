@@ -3,6 +3,8 @@ package com.api.view.orgHome;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Lee on 2017/10/11.
  *
@@ -40,6 +42,16 @@ public class OrgInfo {
 
     @ApiModelProperty(value="机构LOGO")
     private String orgLogo;
+
+    @ApiModelProperty(value="支付密码")
+    private String payPassword;
+
+    @ApiModelProperty(value="余额")
+    private BigDecimal amount;
+
+    @ApiModelProperty(value="拍品数量")
+    private Integer auctionCount;
+
 
     public Integer getId() {
         return id;
@@ -119,5 +131,30 @@ public class OrgInfo {
 
     public void setOrgLogo(String orgLogo) {
         this.orgLogo = orgLogo;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
+    }
+
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Integer getAuctionCount() {
+        return auctionCount;
+    }
+
+    public void setAuctionCount(Integer auctionCount) {
+        this.auctionCount = auctionCount;
     }
 }

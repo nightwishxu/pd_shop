@@ -85,7 +85,19 @@
 
     </dependencies>
 
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <package.environment>dev</package.environment>
+                <finalName>org-api</finalName>
+            </properties>
+            <activation>
+                <!-- 默认激活这个配置 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

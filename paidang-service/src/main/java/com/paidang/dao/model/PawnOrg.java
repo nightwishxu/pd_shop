@@ -383,6 +383,14 @@ public class PawnOrg implements Serializable {
 	@Column(name = "anxin_phone")
 	private String anxinPhone;
 
+	/**
+	 *支付密码
+	 */
+	@ApiModelProperty(value="支付密码")
+	@ApiParam(value="支付密码")
+	@Column(name = "pay_password")
+	private String payPassword;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -749,6 +757,14 @@ public class PawnOrg implements Serializable {
 
 	public String getAnxinPhone() {
 		return anxinPhone;
+	}
+
+	public void setPayPassword(String payPassword) {
+		this.payPassword=payPassword == null ? payPassword : payPassword.trim();
+	}
+
+	public String getPayPassword() {
+		return payPassword;
 	}
 
 }

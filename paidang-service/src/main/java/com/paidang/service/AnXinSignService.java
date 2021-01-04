@@ -6,7 +6,8 @@ import cfca.trustsign.common.vo.request.tx3.*;
 import com.base.api.ApiException;
 import com.base.util.DateUtil;
 import com.base.util.JSONUtils;
-import com.demo.connector.HttpConnector;
+import com.base.util.PropertySupport;
+import com.demo.constant.HttpConnector;
 import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 
 /**
@@ -43,6 +46,39 @@ public class AnXinSignService {
 //        sendSmsCode("B6E70740DFCD2236E05311016B0AAAF2","123456",null);
         //https://IP:Port/FEP/platId/{platId}/contractNo/{contractNo}/downloading
         confirmSmsCode("B6E70740DFCD2236E05311016B0AAAF2","123456","471318");
+    }
+
+
+    public static String getContractUrl(String contractNo){
+        String anxinUrl = PropertySupport.getProperty("anxinSign.url");
+        String url =  "platId/"+Request.PLAT_ID+"/contractNo/"+contractNo+"/downloading";
+        return url;
+    }
+
+    public static void getContractFile(String contractNo) {
+        HttpConnector httpConnector = new HttpConnector();
+        httpConnector.init();
+
+        byte[] fileBtye = httpConnector.getFile("platId/" + Request.PLAT_ID + "/contractNo/" + contractNo + "/downloading");
+        if (fileBtye == null || fileBtye.length == 0) {
+            return;
+        }
+
+        try {
+            String filePath = "./file";
+            File dir = new File(filePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File file = new File(filePath + File.separator + contractNo + ".pdf");
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                fos.write(fileBtye);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -293,7 +329,7 @@ public class AnXinSignService {
         fieldMap.put("25", ticket.getUserMoney());//实付金额小写
         fieldMap.put("26", ticket.getPawnBeginTime());//开始时间
         fieldMap.put("27", ticket.getPawnEndTime());//结束时间
-        fieldMap.put("28", ticket.getRemark());//备注
+//        fieldMap.put("28", ticket.getRemark());//备注
         fieldMap.put("29", ticket.getOtherOrder());//其它约定
         fieldMap.put("30", ticket.getChecker());//复核
         fieldMap.put("31", ticket.getHandler());//经办

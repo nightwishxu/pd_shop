@@ -153,6 +153,7 @@ public class MessageService {
 
     //推送，用户端用或者机构端向用户端推送用该方法
     public String pushToSingleUserSide(Integer userId, String msg,int redirectType,String redirectContent){
+        if (userId==null) return null;
         if(StringUtils.isBlank(PropertySupport.getProperty("jpush.appkey")))return null;
         Map<String, String> params = new HashMap<String, String>();
         params.put("redirectType", redirectType+"");

@@ -55,6 +55,7 @@
         <result column="org_sign_time" property="orgSignTime" jdbcType="TIMESTAMP" />
         <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
         <result column="org_location" property="orgLocation" jdbcType="VARCHAR" />
+        <result column="contract_url" property="contractUrl" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -118,7 +119,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,pawn_ticket_code,org_name,org_tel,org_adress,business_license,pawner_name,pawner_tel,pawner_id_card,pawner_cert,contactor,pawner_addr,goods_name,auth_price_test,auth_price,equivalent_ratio,loan_money,user_money,pawn_money,loan_money_c_n,user_money_c_n,pawn_money_c_n,pawn_begin_time,pawn_end_time,begin_pawn_end_time,rate,money_rate,cost,money_cost,repawn_total,cost_c_n,repawn_total_c_n,money_cost_c_n,repawn_begin_time,repawn_end_time,checker,handler,user_id,remark,other_order,create_time,modify_time,type,contract_id,status,user_status,user_location,sign_time,org_id,org_status,org_sign_time,project_code,org_location
+        id,pawn_ticket_code,org_name,org_tel,org_adress,business_license,pawner_name,pawner_tel,pawner_id_card,pawner_cert,contactor,pawner_addr,goods_name,auth_price_test,auth_price,equivalent_ratio,loan_money,user_money,pawn_money,loan_money_c_n,user_money_c_n,pawn_money_c_n,pawn_begin_time,pawn_end_time,begin_pawn_end_time,rate,money_rate,cost,money_cost,repawn_total,cost_c_n,repawn_total_c_n,money_cost_c_n,repawn_begin_time,repawn_end_time,checker,handler,user_id,remark,other_order,create_time,modify_time,type,contract_id,status,user_status,user_location,sign_time,org_id,org_status,org_sign_time,project_code,org_location,contract_url
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -173,7 +174,7 @@
         type,contract_id,status,
         user_status,user_location,sign_time,
         org_id,org_status,org_sign_time,
-        project_code,org_location
+        project_code,org_location,contract_url
         )
         values (#{pawnTicketCode,jdbcType=VARCHAR},#{orgName,jdbcType=VARCHAR},
         #{orgTel,jdbcType=VARCHAR},#{orgAdress,jdbcType=VARCHAR},#{businessLicense,jdbcType=VARCHAR},
@@ -192,7 +193,7 @@
         #{type,jdbcType=VARCHAR},#{contractId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
         #{userStatus,jdbcType=INTEGER},#{userLocation,jdbcType=VARCHAR},#{signTime,jdbcType=TIMESTAMP},
         #{orgId,jdbcType=INTEGER},#{orgStatus,jdbcType=INTEGER},#{orgSignTime,jdbcType=TIMESTAMP},
-        #{projectCode,jdbcType=VARCHAR},#{orgLocation,jdbcType=VARCHAR}
+        #{projectCode,jdbcType=VARCHAR},#{orgLocation,jdbcType=VARCHAR},#{contractUrl,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -355,6 +356,9 @@
             <if test="orgLocation != null" >
                 org_location,
             </if>
+            <if test="contractUrl != null" >
+                contract_url,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pawnTicketCode != null" >
@@ -512,6 +516,9 @@
             </if>
             <if test="orgLocation != null" >
                 #{orgLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="contractUrl != null" >
+                #{contractUrl,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -685,6 +692,9 @@
             <if test="record.orgLocation != null" >
                 org_location = #{record.orgLocation,jdbcType=VARCHAR},
             </if>
+            <if test="record.contractUrl != null" >
+                contract_url = #{record.contractUrl,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -745,7 +755,8 @@
         org_status = #{orgStatus,jdbcType=INTEGER},
         org_sign_time = #{orgSignTime,jdbcType=TIMESTAMP},
         project_code = #{projectCode,jdbcType=VARCHAR},
-        org_location = #{orgLocation,jdbcType=VARCHAR}
+        org_location = #{orgLocation,jdbcType=VARCHAR},
+        contract_url = #{contractUrl,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -910,6 +921,9 @@
             <if test="orgLocation != null" >
                 org_location = #{orgLocation,jdbcType=VARCHAR},
             </if>
+            <if test="contractUrl != null" >
+                contract_url = #{contractUrl,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -967,7 +981,8 @@
         org_status = #{orgStatus,jdbcType=INTEGER},
         org_sign_time = #{orgSignTime,jdbcType=TIMESTAMP},
         project_code = #{projectCode,jdbcType=VARCHAR},
-        org_location = #{orgLocation,jdbcType=VARCHAR}
+        org_location = #{orgLocation,jdbcType=VARCHAR},
+        contract_url = #{contractUrl,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

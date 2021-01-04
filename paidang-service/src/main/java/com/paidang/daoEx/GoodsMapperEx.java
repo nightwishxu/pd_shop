@@ -42,4 +42,6 @@ public interface GoodsMapperEx {
     List<GoodsEx> selectBusinessGoodsList(@Param("goodsName") String goodsName);
 
     int sellAuctionGoods(Goods goods);
+
+    Integer getAuctionCount(@Param("orgId")Integer orgId,@Param("goodsOwner")Integer goodsOwner);
 }

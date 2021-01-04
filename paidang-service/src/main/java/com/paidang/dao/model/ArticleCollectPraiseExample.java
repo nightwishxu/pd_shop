@@ -674,6 +674,66 @@ public class ArticleCollectPraiseExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andUseTypeIsNull() {
+			addCriterion("use_type is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeIsNotNull() {
+			addCriterion("use_type is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeEqualTo(Integer value) {
+			addCriterion("use_type =", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeNotEqualTo(Integer value) {
+			addCriterion("use_type <>", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeGreaterThan(Integer value) {
+			addCriterion("use_type >", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeGreaterThanOrEqualTo(Integer value) {
+			addCriterion("use_type >=", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeLessThan(Integer value) {
+			addCriterion("use_type <", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeLessThanOrEqualTo(Integer value) {
+			addCriterion("use_type <=", value, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeIn(List<Integer> values) {
+			addCriterion("use_type in", values, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeNotIn(List<Integer> values) {
+			addCriterion("use_type not in", values, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeBetween(Integer value1, Integer value2) {
+			addCriterion("use_type between", value1, value2, "useType");
+			return (Criteria) this;
+		}
+
+		public Criteria andUseTypeNotBetween(Integer value1, Integer value2) {
+			addCriterion("use_type not between", value1, value2, "useType");
+			return (Criteria) this;
+		}
+
 		public Criteria andCreateTimeIsNull() {
 			addCriterion("create_time is null");
 			return (Criteria) this;

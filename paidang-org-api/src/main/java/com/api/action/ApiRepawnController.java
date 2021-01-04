@@ -98,6 +98,7 @@ public class ApiRepawnController extends ApiBaseController{
             repawnMini.setGoodsid(userPawn.getGoodsId().toString());//当品id
             repawnMini.setGoodsName(goodName);//当品名称
             repawnMini.setAuthPrice(authPrice);//鉴定价格
+            repawnMini.setLastPawnContinueId(userPawn.getLastPawnContinueId());
             //已贷金额(本金)
             repawnMini.setLoanMoney(userPawn.getBeginMoney()!=null?userPawn.getBeginMoney().toString():"");
             //已发放当金 = 本金 - 首期综合费 若数据库已保存则取数据库，否则计算得到
@@ -134,7 +135,7 @@ public class ApiRepawnController extends ApiBaseController{
             }else{
                 PawnContinue newestOne = pawnContinueList.get(0);//时间倒序取最新一次续当申请
                 repawnMini.setProjectCode(newestOne.getProjectCode());
-                if (StringUtils.isNotBlank(repawnMini.getPawnCode())){
+                if (StringUtils.isNotBlank(repawnMini.getProjectCode())){
                     PawnTicket pawnTicket = pawnTicketService.getByProjectCode(repawnMini.getProjectCode());
                     if (pawnTicket!=null){
                         repawnMini.setUserStatus(pawnTicket.getUserStatus());
@@ -275,7 +276,9 @@ public class ApiRepawnController extends ApiBaseController{
         BigDecimal repawnMoney;
         BigDecimal loan_money = new BigDecimal(loanMoney);//本金
         RepawnDetail repawnDetail = new RepawnDetail();
-
+        repawnDetail.setShowButton("0");
+        repawnDetail.setSignButton("0");
+        repawnDetail.setCompleteTicketButton("0");
         /*//pawnId的续当所有记录（申请中的和确认的），按create_time降序排列，取第一个即为最新提交的续当申请信息
         PawnContinueExample pawnContinueExample = new PawnContinueExample();
         pawnContinueExample.createCriteria().andPawnIdEqualTo(Integer.valueOf(pawnId));
@@ -315,8 +318,13 @@ public class ApiRepawnController extends ApiBaseController{
             }
             PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(rpId);
             preInterest = pawnContinue.getPawnInterest();
+            if (pawnContinue.getState()==3){
+                repawnDetail.setShowButton("1");
+            }
             cost = pawnContinue.getPawnMoney();
             overdue =pawnContinue.getPawnOverdue();
+            repawnDetail.setCurrentPayTicket(pawnContinue.getPayTicket());
+
             //续当的收款人,账号,银行名称(由于是续当,所以显示的是机构收款的银行名和账号)
             bankCardName = card.getBankCardName()!=null?card.getBankCardName():"";
             bankCardUserName = card.getBankCardUserName()!=null? card.getBankCardUserName():"";
@@ -361,6 +369,21 @@ public class ApiRepawnController extends ApiBaseController{
             repawnDetail.setDemurrageRate(redeem_overrate.toString());
             repawnDetail.setIsPayRepawnMoney(pawnContinue.getState()==4?"1":"0");//是否已经缴纳续当费 0-否 1-已缴
             repawnDetail.setIsPayPlatMoney(pawnContinue.getPlatformState()==null?"0":pawnContinue.getPlatformState()==1?"1":"0");//是否已经缴纳平台利息 0-否 1-已缴
+
+            if (StringUtils.isNotBlank(pawnContinue.getPawnTicketCode())){
+                PawnTicket pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+                if (pawnTicket!=null){
+                    repawnDetail.setUserStatus(pawnTicket.getUserStatus());
+                    repawnDetail.setOrgStatus(pawnTicket.getOrgStatus());
+                    if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isNotBlank(pawnContinue.getContinuePawnTicketCode())){
+                        repawnDetail.setSignButton("1");
+                    }
+                    if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isBlank(pawnContinue.getContinuePawnTicketCode())){
+                        repawnDetail.setCompleteTicketButton("1");
+                    }
+
+                }
+            }
         }
         repawnDetail.setCollecterId(pawnerUserId.toString());
         repawnDetail.setLoanBeginTime(pawnBeginTime);
@@ -385,7 +408,7 @@ public class ApiRepawnController extends ApiBaseController{
     }
 
     @ApiOperation(value = "完善当票当票号",notes="")
-    @RequestMapping(value = "/completePawnTicketCode", method = RequestMethod.POST)
+    @RequestMapping(value = "/completeContinuePawnTicketCode", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
     public Integer completePawnTicketCode(@ApiParam(value = "典当id",required = true) Integer pawnId,
                                         @ApiParam(value = "续当id ",required = true) Integer repawnId,
@@ -406,11 +429,11 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MEnumError.PAWNTICKETCODE_OCCUPPIED);
         }
 
-        PawnContinue repawnRecord = pawnContinueService.selectByPrimaryKey(pawnId);
+        PawnContinue repawnRecord = pawnContinueService.selectByPrimaryKey(repawnId);
         if (repawnRecord == null){
             throw new ApiException(400,"续当不存在");
         }
-        UserPawn pawnRecord = userPawnService.selectByPrimaryKey(repawnId);
+        UserPawn pawnRecord = userPawnService.selectByPrimaryKey(pawnId);
         Integer goodsId = pawnRecord.getGoodsId();
         Integer userId = pawnRecord.getUserId();
         Integer orgId = pawnRecord.getOrgId();
@@ -418,11 +441,13 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
         }
         PawnContinue pawnContinue = new PawnContinue();
-
+        pawnContinue.setState(1);
         pawnContinue.setId(repawnId);
         pawnContinue.setContinuePawnTicketCode(pawnTicketCode);
         pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
-
+        PawnTicket ticket = pawnTicketService.getByProjectCode(repawnRecord.getProjectCode());
+        ticket.setPawnTicketCode(pawnTicketCode);
+        pawnTicketService.updateByPrimaryKeySelective(ticket);
         return 1;
     }
 
@@ -446,6 +471,9 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MEnumError.NUMINPUT_ILLEGAL_ERROR);
         }
         PawnContinue repawnRecord = pawnContinueService.selectByPrimaryKey(rpId);
+        if (repawnRecord.getState()!=3){
+            throw new ApiException(400,"尚未上传支付凭证");
+        }
         UserPawn pawnRecord = userPawnService.selectByPrimaryKey(pid);
         Integer goodsId = pawnRecord.getGoodsId();
         Integer userId = pawnRecord.getUserId();

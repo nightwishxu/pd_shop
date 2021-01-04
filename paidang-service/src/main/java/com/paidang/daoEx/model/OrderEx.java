@@ -24,6 +24,8 @@ public class OrderEx extends Order {
     private String goodsOwnerNick;
     private String goodsOwnerName;
 
+    private Integer backExpressId;
+
     public String getGoodsOwnerAccount() {
         return goodsOwnerAccount;
     }
@@ -132,5 +134,14 @@ public class OrderEx extends Order {
 
     public void setExpressData(String expressData) {
         this.expressData = expressData;
+    }
+
+
+    public Integer getBackExpressId() {
+        return backExpressId;
+    }
+
+    public void setBackExpressId(Integer backExpressId) {
+        this.backExpressId = backExpressId;
     }
 }

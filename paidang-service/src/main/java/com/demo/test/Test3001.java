@@ -4,7 +4,7 @@ import cfca.sadk.algorithm.common.PKIException;
 import cfca.trustsign.common.vo.cs.HeadVO;
 import cfca.trustsign.common.vo.cs.PersonVO;
 import cfca.trustsign.common.vo.request.tx3.Tx3001ReqVO;
-import com.demo.connector.HttpConnector;
+import com.demo.constant.HttpConnector;
 import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;
@@ -42,7 +42,7 @@ public class Test3001 {
 
         String txCode = "3001";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
-        String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
+        String res = httpConnector.post("platId/" + Request.getPlatId() + "/txCode/" + txCode + "/transaction", req, signature);
         System.out.println("res:" + res);
     }
 }

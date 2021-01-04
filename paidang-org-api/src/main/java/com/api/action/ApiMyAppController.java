@@ -25,8 +25,10 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
+import com.base.util.StringUtil;
 import com.base.util.http.HttpUtil;
 import com.demo.constant.DSPConsts;
 import com.item.dao.model.*;
@@ -49,6 +51,7 @@ import com.util.apiStore.BankCardResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,6 +117,9 @@ public class ApiMyAppController extends ApiBaseController{
 
     @Autowired
     private PawnTicketService pawnTicketService;
+
+    @Autowired
+    private BFileService fileService;
 
 
     @ApiOperation(value = "我参与的竞拍(竞拍标签页)",notes="我参与的竞拍(竞拍中)")
@@ -203,6 +209,7 @@ public class ApiMyAppController extends ApiBaseController{
         List<PawnDetail> retList = new ArrayList<>();
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
+            pawnDetail.setLastPawnContinueId(userPawnEx.getLastPawnContinueId());
             pawnDetail.setAuctionCount(userPawnEx.getCnt());
             pawnDetail.setPawnStatus(userPawnEx.getPawnStatus());
             pawnDetail.setUserStatus(userPawnEx.getUserStatus());
@@ -1794,34 +1801,104 @@ public class ApiMyAppController extends ApiBaseController{
     }
 
 
-    @ApiOperation(value = "物流详情",notes="我的->物流->物流详情")
+    /**
+     * 查看合同
+     */
+    @ApiOperation(value = "查看合同*", notes = "登陆")
+    @RequestMapping(value = "/showContract", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Result showContract(MobileInfo mobileInfo, @ApiParam(value="id",required = false)Integer pawnTicketId,
+                               @ApiParam(value="典当id",required = false)Integer pawnId,
+                               @ApiParam(value="续当id",required = false)Integer repawnId) throws Exception {
+        if (pawnTicketId ==null && pawnId==null && repawnId==null){
+            throw new ApiException(400,"缺少必要参数");
+        }
+        PawnTicket pawnTicket = null;
+        if (pawnId!=null){
+            UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+            pawnTicket = pawnTicketService.getByProjectCode(userPawn.getProjectCode());
+        }else if (repawnId!=null){
+            PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
+            pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+        }else if (pawnTicketId!=null){
+            pawnTicket = pawnTicketService.selectByPrimaryKey(pawnTicketId);
+        }
+
+        if (org.springframework.util.StringUtils.isEmpty(pawnTicket.getContractUrl())){
+            String contractUrl = AnXinSignService.getContractUrl(pawnTicket.getContractId());
+            String s = fileService.downLoadFromUrl(contractUrl,pawnTicket.getContractId());
+            PawnTicket temp = new PawnTicket();
+            temp.setContractUrl(s);
+            temp.setId(pawnTicketId);
+            pawnTicketService.updateByPrimaryKeySelective(temp);
+            return new Result(s);
+        }else {
+            return new Result(pawnTicket.getContractUrl());
+        }
+//        String contractId= pawnTicket.getContractId();
+//        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("pageUrl",pageUrl);
+//        logger.info("==================合同查看地址:{}",pageUrl);
+    }
+
+
+//    @ApiOperation(value = "物流详情",notes="我的->物流->物流详情")
+//    @RequestMapping(value = "/getExpressDetail", method = RequestMethod.POST)
+//    @ApiMethod(isLogin = true)
+//    public Result getExpressDetail(@ApiParam(value = "物流id",required = true)String expressId, MobileInfo mobileInfo){
+//        if (StringUtils.isEmpty(expressId)){
+//            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+//        }
+//        Integer id;
+//        try{
+//            id = Integer.valueOf(expressId);
+//        }catch (NumberFormatException e){
+//            e.printStackTrace();
+//            throw new ApiException(MEnumError.NUMINPUT_ILLEGAL_ERROR);
+//        }
+//        Express express = expressService.selectByPrimaryKey(id);
+//        if (express == null)
+//            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
+//        if (StringUtils.isNotEmpty(express.getExpressData())){
+//            return new Result(express.getExpressData());
+//        }else
+//            return new Result();
+//    }
+
+    @ApiOperation(value = "物流详情",notes="物流信息")
     @RequestMapping(value = "/getExpressDetail", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public String getExpressDetail(@ApiParam(value = "物流id",required = true)String expressId, MobileInfo mobileInfo){
-        if (StringUtils.isEmpty(expressId)){
-            throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+    public Express getExpressDetail(@ApiParam(value = "物流id ，id expressCode fid三者必传一个",required = false)Integer id,
+                                    @ApiParam(value = "快递单号",required = false)String expressCode,
+                                    @ApiParam(value = "相关id(藏品或订单id） ",required = false)Integer fid,
+                                    @ApiParam(value = "1寄给平台2取回3商城4平台寄给当户5机构寄给当户6机构取回（绝当品）7 退货快递单号",required = true)Integer type,
+                                    MobileInfo mobileInfo){
+
+        if (id==null && StringUtils.isBlank(expressCode) && fid==null){
+            throw new ApiException(400,"缺少必要参数");
         }
-        Integer id;
-        try{
-            id = Integer.valueOf(expressId);
-        }catch (NumberFormatException e){
-            e.printStackTrace();
-            throw new ApiException(MEnumError.NUMINPUT_ILLEGAL_ERROR);
+
+        ExpressExample example = new ExpressExample();
+        ExpressExample.Criteria criteria = example.createCriteria();
+        criteria.andTypeEqualTo(type);
+        if (id!=null){
+            criteria.andIdEqualTo(id);
         }
-        Express express = expressService.selectByPrimaryKey(id);
-        if (express == null)
-            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
-        if (StringUtils.isNotEmpty(express.getExpressData())){
-            return express.getExpressData();
-        }else
-            return "";
+        if (StringUtil.isNotBlank(expressCode)){
+            criteria.andExpressCodeEqualTo(expressCode);
+        }
+        if (fid!=null){
+            criteria.andFidEqualTo(fid);
+        }
+        List<Express> expresses = expressService.selectByExampleWithBLOBs(example);
+        if (CollectionUtils.isNotEmpty(expresses)){
+            return expresses.get(0);
+        }else{
+            throw new ApiException(400,"物流信息不存在");
+        }
     }
 
-    public Integer withdrawApply(){
-
-
-        return 1;
-    }
 
 
 }

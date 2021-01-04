@@ -141,7 +141,13 @@ public class ApiUserPayService {
             order.setUserId(mobileInfo.getUserId());
             order.setGoodsId(goods.getId());
             order.setGoodsName(goods.getName());
-            order.setGoodsImg(goods.getImg());
+            if (StringUtils.isNoneBlank(goods.getImgs())){
+                String[] split = goods.getImgs().split(",");
+                order.setGoodsImg(split[0]);
+            }else {
+                order.setGoodsImg(goods.getImg());
+            }
+
             order.setGoodsSource(goods.getSource());
             order.setOrgId(goods.getOrgId());
             order.setGoodsPrice(goods.getPrice());
@@ -352,7 +358,12 @@ public class ApiUserPayService {
         order.setUserId(userId);
         order.setGoodsId(goods.getId());
         order.setGoodsName(goods.getName());
-        order.setGoodsImg(goods.getImg());
+        if (StringUtils.isNoneBlank(goods.getImgs())){
+            String[] split = goods.getImgs().split(",");
+            order.setGoodsImg(split[0]);
+        }else {
+            order.setGoodsImg(goods.getImg());
+        }
         order.setGoodsSource(goods.getSource());
         order.setOrgId(goods.getOrgId());
         order.setGoodsCost(goods.getCost());

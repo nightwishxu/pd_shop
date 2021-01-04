@@ -59,6 +59,9 @@ public class RepawnMini {
     @ApiModelProperty(value = "机构 0未生成合同1待签署2已签署3拒签4作废")
     private Integer orgStatus;
 
+    @ApiModelProperty(value = "最新续当id")
+    private Integer  lastPawnContinueId;
+
 
     public String getId() {
         return id;
@@ -186,5 +189,13 @@ public class RepawnMini {
 
     public void setSignButton(String signButton) {
         this.signButton = signButton;
+    }
+
+    public Integer getLastPawnContinueId() {
+        return lastPawnContinueId;
+    }
+
+    public void setLastPawnContinueId(Integer lastPawnContinueId) {
+        this.lastPawnContinueId = lastPawnContinueId;
     }
 }

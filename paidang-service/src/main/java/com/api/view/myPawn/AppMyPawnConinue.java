@@ -54,6 +54,8 @@ public class AppMyPawnConinue {
     private String payeeBankName;
     @ApiModelProperty(value="收款账户--银行卡号")
     private String payeeBankCardCode;
+    @ApiModelProperty(value="续当时间")
+    private Integer pawnTime;
 
     public Integer getId() {
         return id;
@@ -229,5 +231,14 @@ public class AppMyPawnConinue {
 
     public void setPayeeBankCardCode(String payeeBankCardCode) {
         this.payeeBankCardCode = payeeBankCardCode;
+    }
+
+
+    public Integer getPawnTime() {
+        return pawnTime;
+    }
+
+    public void setPawnTime(Integer pawnTime) {
+        this.pawnTime = pawnTime;
     }
 }

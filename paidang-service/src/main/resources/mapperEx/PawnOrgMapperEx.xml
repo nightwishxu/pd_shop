@@ -87,7 +87,7 @@
     </select>
 
     <update id="reSumAmount">
-        update p_pawn_org set amount = (select ifnull(sum(amount_new),0) from p_org_amount_log where org_id = {orgId}) where id = #{orgId}
+        update p_pawn_org set amount = (select ifnull(sum(amount_new),0) from p_org_amount_log where org_id = #{orgId}) where id = #{orgId}
     </update>
 
 </mapper>

@@ -15,9 +15,7 @@ import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.daoEx.model.OrgAmountLogEx;
 import com.paidang.domain.qo.OrderQo;
-import com.paidang.service.ExpressService;
-import com.paidang.service.GoodsService;
-import com.paidang.service.OrderService;
+import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +61,12 @@ public class ApiOrderController extends ApiBaseController {
     @Autowired
     private OrgAmountLogService orgAmountLogService;
 
+    @Autowired
+    private UserReturnAddressService userReturnAddressService;
+
+    @Autowired
+    private OrgAddressService orgAddressService;
+
     //订单状态-1已取消1待付款2已付款3已发货4确认收货5已评价
     //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
     @ApiOperation(value = "订单列表",notes="订单列表")
@@ -102,42 +106,43 @@ public class ApiOrderController extends ApiBaseController {
     }
 
 
-    //新品商场订单同意退款 --发送退款信息  or 拒绝退款  --发送拒绝信息
-    @RequestMapping("/sendRefData")
-    @ResponseBody
-    public String sendRefData(Order data){
-        Order order = orderService.selectByPrimaryKey(data.getId());
-        order.setRefState(data.getRefState());
-        order.setBackAddress(data.getBackAddress());
-        order.setBackUser(data.getBackUser());
-        order.setBackPhone(data.getBackPhone());
-        if(data.getRefState() == 5){
-            order.setRefundNotVerifyReason(data.getRefundNotVerifyReason());
-        }
-        orderService.updateByPrimaryKeySelective(order);
-        //发送消息到客户端
-
-        UserNotify userNotify = new UserNotify();
-        userNotify.setIsRead(0);
-        userNotify.setType(0); //不是系统消息
-        userNotify.setUserId(order.getUserId());
-
-        if(data.getRefState() == 5){
-            //拒绝退款
-            userNotify.setRedirectType(10);  // 交易消息
-            userNotify.setTitle("退款拒绝");
-            userNotify.setContent(order.getGoodsName() + "退款拒绝"+"原因:"+data.getRefundNotVerifyReason());
-            userNotify.setRedirectContent(order.getGoodsName() + "退款拒绝"+"原因:"+data.getRefundNotVerifyReason());
-        }else if(data.getRefState() == 2){
-            //同意退款  --发送回寄信息
-            userNotify.setRedirectType(5);  //邮寄通知
-            userNotify.setTitle(order.getGoodsName() + "退款审核成功");
-            userNotify.setContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
-            userNotify.setRedirectContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
-        }
-        userNotifyService.insert(userNotify);
-        return null;
-    }
+//    //新品商场订单同意退款 --发送退款信息  or 拒绝退款  --发送拒绝信息
+//    @RequestMapping("/sendRefData")
+//    @ResponseBody
+//    public String sendRefData(Order data){
+//        Order order = orderService.selectByPrimaryKey(data.getId());
+//        order.setRefState(data.getRefState());
+//        order.setBackAddress(data.getBackAddress());
+//        order.setBackUser(data.getBackUser());
+//        order.setBackPhone(data.getBackPhone());
+//        if(data.getRefState() == 5){
+//            order.setRefundNotVerifyReason(data.getRefundNotVerifyReason());
+//        }
+//        orderService.updateByPrimaryKeySelective(order);
+//        //发送消息到客户端
+//
+//        UserNotify userNotify = new UserNotify();
+//        userNotify.setIsRead(0);
+//        userNotify.setType(0); //不是系统消息
+//        userNotify.setUserId(order.getUserId());
+//
+//        if(data.getRefState() == 5){
+//            //拒绝退款
+//            userNotify.setRedirectType(10);  // 交易消息
+//            userNotify.setTitle("退款拒绝");
+//            userNotify.setContent(order.getGoodsName() + "退款拒绝"+"原因:"+data.getRefundNotVerifyReason());
+//            userNotify.setRedirectContent(order.getGoodsName() + "退款拒绝"+"原因:"+data.getRefundNotVerifyReason());
+//        }else if(data.getRefState() == 2){
+//            //同意退款  --发送回寄信息
+//            userNotify.setRedirectType(5);  //邮寄通知
+//            userNotify.setTitle(order.getGoodsName() + "退款审核成功");
+//            userNotify.setContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
+//            userNotify.setRedirectContent("退款审核成功请邮寄至"+data.getBackAddress()+"收件人"+data.getBackUser()+"联系电话"+data.getBackPhone());
+//        }
+//        userNotify.setCreateTime(new Date());
+//        userNotifyService.insert(userNotify);
+//        return null;
+//    }
 
 
     /**
@@ -147,9 +152,10 @@ public class ApiOrderController extends ApiBaseController {
     @ApiOperation(value = "售后-驳回,同意",notes="订单列表")
     @RequestMapping(value = "/return", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public void refuseRefund(MobileInfo mobileInfo,
+    public Integer refuseRefund(MobileInfo mobileInfo,
                              @ApiParam(value = "退款状态2同意 5不同意") int refState,
                              @ApiParam(value = "拒绝退款理由",required = true)String  refundNotVerifyReason,
+                                @ApiParam(value = "退货地址编号") Integer returnAddressId,
                              @ApiParam(value = "订单id",required = true)Integer  id
     ){
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
@@ -165,38 +171,84 @@ public class ApiOrderController extends ApiBaseController {
         if(refState == 5 && StringUtils.isBlank(refundNotVerifyReason)){
             throw new ApiException(-1,"不同意退款需要填写不同意理由!");
         }
+        if (refState==2){
+            OrgAddress address = orgAddressService.selectByPrimaryKey(returnAddressId);
+            if (address ==null){
+                throw new ApiException(400,"退货地址不存在");
+            }
+            order.setBackAddress(address.getAddress());
+            order.setBackPhone(address.getPhone());
+            order.setBackUser(address.getUserName());
+        }
         order.setRefState(refState);
         order.setRefundNotVerifyReason(refundNotVerifyReason);
         order.setModifyTime(new Date());
         orderService.updateByPrimaryKeySelective(order);
-
+        UserNotify userNotify = new UserNotify();
+        userNotify.setIsRead(0);
+        userNotify.setType(0); //不是系统消息
+        userNotify.setUserId(tmp.getUserId());
         if (refState==5){
-            UserNotify userNotify = new UserNotify();
-            userNotify.setIsRead(0);
-            userNotify.setType(0); //不是系统消息
-            userNotify.setUserId(order.getUserId());
+
             //拒绝退款
             userNotify.setRedirectType(10);  // 交易消息
             userNotify.setTitle("退款拒绝");
-            userNotify.setContent(order.getGoodsName() + "退款拒绝"+"原因:"+order.getRefundNotVerifyReason());
-            userNotify.setRedirectContent(order.getGoodsName() + "退款拒绝"+"原因:"+order.getRefundNotVerifyReason());
+            userNotify.setContent(tmp.getGoodsName() + "退款拒绝"+"原因:"+tmp.getRefundNotVerifyReason());
+            userNotify.setRedirectContent(tmp.getGoodsName() + "退款拒绝"+"原因:"+tmp.getRefundNotVerifyReason());
+            userNotify.setCreateTime(new Date());
             userNotifyService.insert(userNotify);
         }else if (refState==2){
-            //同意退款
-            Order order1 = orderService.selectByPrimaryKey(id);
-            if (order1.getGoodsSource()!=5 &&  order1.getState()>=4){
-                OrgAmountLogExample example = new OrgAmountLogExample();
-                example.createCriteria().andFidEqualTo(id).andOrgIdEqualTo(orgId).andItemEqualTo("1");
-                example.setOrderByClause("id desc");
-                List<OrgAmountLog> orgAmountLogs = orgAmountLogService.selectByExample(example);
-                if (CollectionUtils.isNotEmpty(orgAmountLogs)){
-                    OrgAmountLog log = orgAmountLogs.get(0);
-                    orgAmountLogService.saveLog(orgId,log.getAmount(),"4","订单退款："+order.getCode(),id,null);
-                }
-            }
+
+
+            //同意退款  --发送回寄信息
+            userNotify.setRedirectType(5);  //邮寄通知
+            userNotify.setTitle(tmp.getGoodsName() + "退款审核成功");
+            userNotify.setContent("退款审核成功请邮寄至"+tmp.getBackAddress()+"收件人"+tmp.getBackUser()+"联系电话"+tmp.getBackPhone());
+            userNotify.setRedirectContent("退款审核成功请邮寄至"+tmp.getBackAddress()+"收件人"+tmp.getBackUser()+"联系电话"+tmp.getBackPhone());
+
         }
 
 
+        return 1;
+
+    }
+
+
+    @PostMapping("/order/return/confirm")
+    @ApiMethod(isLogin = true)
+    @ApiOperation(value = "确认退款")
+    public Integer confirmReturnOrder(@ApiParam(value = "订单号") String orderCode,
+                                      MobileInfo mobileInfo){
+        //先根据订单号查询订单信息
+        OrderExample example = new OrderExample();
+        OrderExample.Criteria criteria = example.createCriteria();
+        criteria.andCodeEqualTo(orderCode);
+        List<Order> orderList = orderService.selectByExample(example);
+        if(orderList.size()!=1){
+            throw new ApiException(-1,"不存在此订单");
+        }
+        Order order = orderList.get(0);
+        if (order.getRefState()!=3){
+            throw new ApiException(400,"用户尚未完善退款信息");
+        }
+        Order temp = new Order();
+        temp.setId(order.getId());
+        temp.setRefState(4);
+        temp.setModifyTime(new Date());
+        orderService.updateByPrimaryKeySelective(temp);
+
+        //同意退款
+        if (order.getGoodsSource()!=5 &&  order.getState()>=4){
+            OrgAmountLogExample logExample = new OrgAmountLogExample();
+            logExample.createCriteria().andFidEqualTo(order.getId()).andOrgIdEqualTo(order.getOrgId()).andItemEqualTo("1");
+            logExample.setOrderByClause("id desc");
+            List<OrgAmountLog> orgAmountLogs = orgAmountLogService.selectByExample(logExample);
+            if (CollectionUtils.isNotEmpty(orgAmountLogs)){
+                OrgAmountLog log = orgAmountLogs.get(0);
+                orgAmountLogService.saveLog(order.getOrgId(),null,log.getAmount(),"4","订单退款："+order.getCode(),order.getId(),null);
+            }
+        }
+        return 1;
     }
 
 //    //    //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
@@ -230,7 +282,7 @@ public class ApiOrderController extends ApiBaseController {
                                @ApiParam(value = "分页(不传则不分页)") String pageNum,
                                @ApiParam(value = "商品名称")String goodsName){
         int userId = mobileInfo.getUserId();
-        if (BaseUtils.isAnyBlank(pageNum,pageSize)){
+        if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
             startPage();
         }
 
@@ -305,6 +357,7 @@ public class ApiOrderController extends ApiBaseController {
             express.setReceiveName(order.getShipUser());
             express.setReceviceAddress(order.getShipUser());
             express.setReceivePhone(order.getShipPhone());
+            express.setCreateTime(new Date());
             expressService.insert(express);
         }
     }
@@ -325,6 +378,90 @@ public class ApiOrderController extends ApiBaseController {
         }
         return orderList.get(0);
     }
+
+
+//    @ApiOperation(value = "保存退货地址")
+//    @PostMapping("/saveOrUpdate/returnAddress")
+//    @ApiMethod(isLogin = true)
+//    public Integer saveReturnAddress(MobileInfo mobileInfo, UserReturnAddress userReturnAddress){
+//        int userId = mobileInfo.getUserId();
+//        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//        userReturnAddress.setUserId(userId);
+//        if (userReturnAddress.getId() == null){
+//            userReturnAddress.setType(3);
+//            userReturnAddress.setOrgId(orgId);
+//            userReturnAddress.setCreateTime(new Date());
+//            userReturnAddress.setIsDefault(0);
+//            userReturnAddressService.insert(userReturnAddress);
+//        }else{
+//            userReturnAddress.setModifyTime(new Date());
+//            userReturnAddressService.updateByPrimaryKeySelective(userReturnAddress);
+//        }
+//        return 1;
+//    }
+//
+//    @ApiOperation(value = "退货地址列表")
+//    @PostMapping("/returnAddress/list")
+//    @ApiMethod(isLogin = true)
+//    public List<UserReturnAddress> getReturnAddress(MobileInfo mobileInfo){
+//        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//        UserReturnAddressExample userReturnAddressExample = new UserReturnAddressExample();
+//        UserReturnAddressExample.Criteria criteria = userReturnAddressExample.createCriteria();
+//        criteria.andOrgIdEqualTo(orgId).andTypeEqualTo(3);
+//        List<UserReturnAddress> userReturnAddressList = userReturnAddressService.selectByExample(userReturnAddressExample);
+//        return userReturnAddressList;
+//    }
+//
+//
+//
+//    @ApiOperation(value = "设置默认地址")
+//    @PostMapping("/set/default")
+//    @ApiMethod(isLogin = true)
+//    public Integer setDefault(MobileInfo mobileInfo, @ApiParam(required = true,value = "退货地址id") @RequestParam("addressId") int addressId){
+//        int userId = mobileInfo.getUserId();
+//        UserReturnAddress userReturnAddress = userReturnAddressService.selectByPrimaryKey(addressId);
+//        if(userReturnAddress == null){
+//            throw new ApiException(-1,"不存在的退货地址");
+//        }
+//        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//
+//        if(userReturnAddress.getOrgId() != orgId){
+//            throw new ApiException(-1,"传入的地址与人员不匹配");
+//        }
+//        userReturnAddressService.updateNotDefaultOrg(userId);
+//        userReturnAddressService.updateDefault(addressId);
+//        return 1;
+//    }
+//
+//
+//    @ApiOperation(value="删除退货地址" )
+//    @PostMapping("/delete/returnAddress")
+//    @ApiMethod(isLogin = true)
+//    public Integer deleteReturnAddress(MobileInfo mobileInfo, @ApiParam(required = true,value = "退货地址id") @RequestParam("addressId") int addressId){
+////        int userId = mobileInfo.getUserId();
+//        UserReturnAddress userReturnAddress = userReturnAddressService.selectByPrimaryKey(addressId);
+//        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//
+//        if(userReturnAddress == null){
+//            throw new ApiException(-1,"不存在的退货地址");
+//        }
+//        if(userReturnAddress.getOrgId() != orgId){
+//            throw new ApiException(-1,"传入的地址与人员不匹配");
+//        }
+//        int isDefault = userReturnAddress.getIsDefault();
+//        userReturnAddressService.deleteByPrimaryKey(addressId);
+//        if(isDefault == 1){
+//            UserReturnAddressExample userReturnAddressExample = new UserReturnAddressExample();
+//            UserReturnAddressExample.Criteria criteria = userReturnAddressExample.createCriteria();
+//            criteria.andOrgIdEqualTo(orgId);
+//            List<UserReturnAddress> userReturnAddressList = userReturnAddressService.selectByExample(userReturnAddressExample);
+//            if(userReturnAddressList.size() >0){
+//                UserReturnAddress userReturnAddress1 = userReturnAddressList.get(0);
+//                userReturnAddressService.updateDefault(userReturnAddress1.getId());
+//            }
+//        }
+//        return 1;
+//    }
 
 
 }

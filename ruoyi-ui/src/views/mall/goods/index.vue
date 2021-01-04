@@ -1334,9 +1334,6 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          this.form.source = 3;
-          this.form.type = 1;
-          this.form.orgId = 0;
           this.form.labels = this.form.labels.join(",")
           // this.form.imgs = this.imgfileList.join(",")
           if(this.attributeOptions!=undefined){

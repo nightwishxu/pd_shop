@@ -3,7 +3,9 @@
 <mapper namespace="com.paidang.dao.UserReturnAddressMapper" >
     <resultMap id="BaseResultMap" type="com.paidang.dao.model.UserReturnAddress" >
         <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="org_id" property="orgId" jdbcType="INTEGER" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
         <result column="area" property="area" jdbcType="VARCHAR" />
         <result column="address" property="address" jdbcType="VARCHAR" />
@@ -74,7 +76,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,user_name,area,address,is_default,phone,create_time,modify_time
+        id,org_id,user_id,type,user_name,area,address,is_default,phone,create_time,modify_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -112,21 +114,29 @@
     </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into p_user_return_address (user_id,user_name,
-        area,address,is_default,
-        phone,create_time,modify_time
+        insert into p_user_return_address (org_id,user_id,
+        type,user_name,area,
+        address,is_default,phone,
+        create_time,modify_time
         )
-        values (#{userId,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR},
-        #{area,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{isDefault,jdbcType=TINYINT},
-        #{phone,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP}
+        values (#{orgId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
+        #{type,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR},#{area,jdbcType=VARCHAR},
+        #{address,jdbcType=VARCHAR},#{isDefault,jdbcType=TINYINT},#{phone,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP}
         )
     </insert>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
         insert into p_user_return_address
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orgId != null" >
+                org_id,
+            </if>
             <if test="userId != null" >
                 user_id,
+            </if>
+            <if test="type != null" >
+                type,
             </if>
             <if test="userName != null" >
                 user_name,
@@ -151,8 +161,14 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="orgId != null" >
+                #{orgId,jdbcType=INTEGER},
+            </if>
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=INTEGER},
             </if>
             <if test="userName != null" >
                 #{userName,jdbcType=VARCHAR},
@@ -191,8 +207,14 @@
             <if test="record.id != null" >
                 id = #{record.id,jdbcType=INTEGER},
             </if>
+            <if test="record.orgId != null" >
+                org_id = #{record.orgId,jdbcType=INTEGER},
+            </if>
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
+            </if>
+            <if test="record.type != null" >
+                type = #{record.type,jdbcType=INTEGER},
             </if>
             <if test="record.userName != null" >
                 user_name = #{record.userName,jdbcType=VARCHAR},
@@ -224,7 +246,9 @@
     <update id="updateByExample" >
         update p_user_return_address
         set id = #{id,jdbcType=INTEGER},
+        org_id = #{orgId,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
+        type = #{type,jdbcType=INTEGER},
         user_name = #{userName,jdbcType=VARCHAR},
         area = #{area,jdbcType=VARCHAR},
         address = #{address,jdbcType=VARCHAR},
@@ -240,8 +264,14 @@
     <update id="updateByPrimaryKeySelective" >
         update p_user_return_address
         <set >
+            <if test="orgId != null" >
+                org_id = #{orgId,jdbcType=INTEGER},
+            </if>
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=INTEGER},
             </if>
             <if test="userName != null" >
                 user_name = #{userName,jdbcType=VARCHAR},
@@ -270,7 +300,9 @@
 
     <update id="updateByPrimaryKey" >
         update p_user_return_address
-        set user_id = #{userId,jdbcType=INTEGER},
+        set org_id = #{orgId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=INTEGER},
+        type = #{type,jdbcType=INTEGER},
         user_name = #{userName,jdbcType=VARCHAR},
         area = #{area,jdbcType=VARCHAR},
         address = #{address,jdbcType=VARCHAR},

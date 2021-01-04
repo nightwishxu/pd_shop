@@ -2,6 +2,8 @@ package com.item.service;
 
 import java.util.List;
 
+import com.base.util.JSONUtils;
+import com.paidang.domain.pojo.AppVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,5 +69,29 @@ public class CodeService {
     
     public Code getByCode(String code){
     	return selectByPrimaryKey(code);
+    }
+
+
+    /**
+     * 获取版本信息
+     * @param platForm
+     * @param system
+     * @return
+     */
+    public AppVersion getAppVersion(String  platForm,Integer system){
+        Code byCode = getByCode(platForm + "@" + system);
+        return JSONUtils.deserialize(byCode.getValue(),AppVersion.class);
+    }
+
+    public static void main(String[] args) {
+        AppVersion a = new AppVersion();
+        a.setMiniVersion("3.0.0");
+        a.setMaxVersion("3.0.0");
+        a.setAppChargeLog("");
+        a.setUpdateEnabled(0);
+        a.setUrl("");
+        a.setSystem(0);
+        a.setPlatForm("user");
+        System.out.println(JSONUtils.serialize(a));
     }
 }

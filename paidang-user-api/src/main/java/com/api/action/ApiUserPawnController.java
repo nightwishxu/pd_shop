@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.api.MEnumError;
 import com.api.MErrorEnum;
 import com.api.MPawnMsg;
+import com.base.dao.model.Result;
 import com.base.util.BaseUtils;
 import com.demo.constant.DSPConsts;
+import com.google.protobuf.ServiceException;
 import com.item.dao.model.CodeExample;
 import com.paidang.service.AnXinSignService;
 import com.api.util.PageLimit;
@@ -242,6 +244,7 @@ public class ApiUserPawnController extends ApiBaseController {
         temp.put("belong_id",mobileInfo.getUserId());
         temp.put("isVerify",1);
         temp.put("startPostState",3);
+        temp.put("goSell",0);
         temp.put("backState",0);
         List<UserGoodsEx> userGoodsExList = userGoodsService.selectMyGoods(temp);
         List<AppMyPawnList> ret = new ArrayList<>();
@@ -308,6 +311,7 @@ public class ApiUserPawnController extends ApiBaseController {
         for(UserPawnEx ex : list){
             AppMyPawnList detail = new AppMyPawnList();
             detail.setId(ex.getId());
+            detail.setLastPawnContinueId(ex.getLastPawnContinueId());
             detail.setContinuePawnStatus(ex.getContinuePawnStatus());
             detail.setPawnStatus(ex.getPawnStatus());
             detail.setTitle(ex.getGoodsName());
@@ -329,7 +333,7 @@ public class ApiUserPawnController extends ApiBaseController {
                 detail.setContinueState(0);
             }else {
                 if(1 == ex.getPawnContinueState()){
-                    //提交续当申请
+                    //提交续当申请2283
                     detail.setContinueState(1);
                 }else{
                     detail.setContinueState(0);
@@ -343,6 +347,8 @@ public class ApiUserPawnController extends ApiBaseController {
                 if(2 == ex.getRedeemState()){
                     //提交赎当申请
                     detail.setRedeemState(1);
+                }else if (3 == ex.getRedeemState()){
+                    detail.setRedeemState(2);
                 }else{
                     detail.setContinueState(0);
                 }
@@ -410,6 +416,12 @@ public class ApiUserPawnController extends ApiBaseController {
             PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(lastPawnContinueId);
             if (pawnContinue==null){
                 throw new ApiException(400,"续当异常");
+            }
+            if (pawnContinue.getState()==0){
+                throw new ServiceException("机构尚未完善当票");
+            }
+            if (pawnContinue.getState()!=1){
+                throw new ServiceException("续当状态异常");
             }
             projectCode = pawnContinue.getProjectCode();
         }else {
@@ -1381,6 +1393,15 @@ public class ApiUserPawnController extends ApiBaseController {
         record.setAuthPrice(ex.getAuthPrice().toString());
         record.setImages(ex.getImages());
         record.setMoney(ex.getMoney()+"");
+
+        if(ex.getUserMoney()!=null){
+            record.setMoney(ex.getUserMoney()+"");
+        }else if (ex.getPawnMoney()!=null && ex.getBeginMoney()!=null){
+            record.setMoney(ex.getBeginMoney().subtract(ex.getPawnMoney()).toString());
+        }else {
+            record.setMoney("0");
+        }
+
         record.setPawnTime(ex.getLastPawnMonth());
         record.setRate(ex.getRate()+"");
         record.setMonetRate(ex.getMoneyRate()+"");
@@ -1452,6 +1473,22 @@ public class ApiUserPawnController extends ApiBaseController {
         orgNotifyService.insertByTemplate(userPawn.getOrgId(),"4", PaidangMessage.USER_REDEEM_NOTIFY,userPawn.getPayeeName(),DateUtil.dateToStr(new Date(),"yyyy-MM-dd HH:mm"),
                 totalMoney+"");
         return ok();
+    }
+
+
+    //https://IP:Port/FEP/platId/{platId}/contractNo/{contractNo}/downloading
+
+    @ApiOperation(value = "获取合同地址", notes = "登陆")
+    @RequestMapping("/getContractUrl")
+    @ApiMethod(isPage = false, isLogin = true)
+    public Result getContractUrl(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
+            ,@ApiParam(value = "续当id,续当时传",required = false) Integer repawnId){
+        if (repawnId!=null){
+            PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
+            return new Result(AnXinSignService.getContractUrl(pawnContinue.getContractId()));
+        }
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        return new Result(AnXinSignService.getContractUrl(userPawn.getContractId()));
     }
 
 }

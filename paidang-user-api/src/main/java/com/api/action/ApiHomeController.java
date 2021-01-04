@@ -2,7 +2,10 @@ package com.api.action;
 
 import com.api.MEnumError;
 import com.api.MErrorEnum;
+import com.base.util.KuaidiApiUtil;
 import com.constants.PaidangConstants;
+import com.paidang.domain.enums.UserIntegralEnum;
+import com.paidang.domain.pojo.AppVersion;
 import com.paidang.service.UnionApiService;
 import com.api.util.PageLimit;
 import com.api.view.home.*;
@@ -18,7 +21,7 @@ import com.base.util.DateUtil;
 import com.base.util.StringUtil;
 import com.item.dao.model.*;
 import com.item.service.*;
-import com.paidang.dao.OrgIntegralEnum;
+import com.paidang.domain.enums.OrgIntegralEnum;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.OrderEx;
@@ -93,6 +96,9 @@ public class ApiHomeController extends ApiBaseController {
     @Autowired
     private OrgAmountLogService orgAmountLogService;
 
+    @Autowired
+    private UserReturnAddressService userReturnAddressService;
+
 
     /**
      * 个人资料
@@ -118,6 +124,7 @@ public class ApiHomeController extends ApiBaseController {
         }else {
             userInfo.setAuthStatus(record.getAuthStatus());
         }
+        userInfo.setMemberLevel(UserIntegralEnum.getLevel(record.getIntegral()==null?BigDecimal.ZERO:record.getIntegral()).getDesc());
         return userInfo;
     }
 
@@ -733,8 +740,9 @@ public class ApiHomeController extends ApiBaseController {
     @ApiOperation(value = "商场订单 -- 申请退款", notes = "登陆")
     @RequestMapping(value = "/refundOrder", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Ret refundOrder(MobileInfo mobileInfo,
+    public Integer refundOrder(MobileInfo mobileInfo,
                            @ApiParam(value = "订单id", required = true) Integer orderId,
+                           @ApiParam(value = "退款图片", required = true) String  refundImgs,
                            @ApiParam(value = "退款原因", required = true) String refundReason){
         Order order = orderService.selectByPrimaryKey(orderId);
 
@@ -757,16 +765,18 @@ public class ApiHomeController extends ApiBaseController {
             throw new ApiException(MEnumError.ORDER_IS_HANDLE);
         }
         order.setRefState(1);//申请退款
+        order.setRefundImgs(refundImgs);
         order.setRefundReason(refundReason);
         orderService.updateByPrimaryKeySelective(order);
-        return new Ret(1);
+        return 1;
     }
 
     @ApiOperation(value = "商场订单 -- 申请成功后填写物流单号", notes = "登陆")
     @RequestMapping(value = "/refundOrderSendCode", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Ret refundOrderSendCode(MobileInfo mobileInfo,
+    public Integer refundOrderSendCode(MobileInfo mobileInfo,
                            @ApiParam(value = "回寄单号", required = true) String expressCode,
+                           @ApiParam(value = "快递公司", required = true) String expressName,
                            @ApiParam(value = "订单id", required = true) Integer orderId){
         Order order = orderService.selectByPrimaryKey(orderId);
         User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
@@ -781,25 +791,28 @@ public class ApiHomeController extends ApiBaseController {
             throw new ApiException(MEnumError.ORDER_IS_HANDLE);
         }
         order.setBackCode(expressCode);
+        order.setBackExpressName(expressName);
         orderService.updateByPrimaryKeySelective(order);
 
-//        Express express = new Express();
-//        express.setSourceId(1);
-//        express.setSourceId(mobileInfo.getUserid());
-//        express.setFid(order.getId());
-//        express.setType(7); //7用户退款回寄到平台(认证商城)
-//        express.setExpressCode(expressCode);
-//        //寄件人 --用户
-//        express.setPostName(user.getName() == null? user.getPhone() : user.getName());
-//        express.setPostPhone(user.getPhone());
-//        //收件人
-//        express.setReceiveName(order.getBackUser());
-//        express.setReceivePhone(order.getBackPhone());
-//        express.setReceviceAddress(order.getBackAddress());
-//        expressService.insert(express);
+        Express express = new Express();
+        express.setSourceId(1);
+        express.setSourceId(mobileInfo.getUserId());
+        express.setFid(order.getId());
+        express.setType(7); //7用户退款回寄到平台(认证商城)
+        express.setExpressCode(expressCode);
+        express.setExpressName(expressName);
+        //寄件人 --用户
+        express.setPostName(user.getName() == null? user.getPhone() : user.getName());
+        express.setPostPhone(user.getPhone());
+        //收件人
+        express.setReceiveName(order.getBackUser());
+        express.setReceivePhone(order.getBackPhone());
+        express.setReceviceAddress(order.getBackAddress());
+        express.setCreateTime(new Date());
+        expressService.insert(express);
         order.setRefState(3);
         orderService.updateByPrimaryKeySelective(order);
-        return ok();
+        return 1;
     }
 
     @ApiOperation(value = "商场订单物流信息", notes = "登陆")
@@ -872,11 +885,15 @@ public class ApiHomeController extends ApiBaseController {
         record.setShipAddress(ex.getShipAddress());
         record.setImages(ex.getGoodsImg());
         record.setGoodsType(goods.getType());
-        record.setAuthPrice(ex.getGoodsCost().toString());
+        if (ex.getGoodsCost()!=null){
+            record.setAuthPrice(ex.getGoodsCost().toString());
+        }
+        record.setOrderCode(ex.getCode());
         record.setCouponPrice(ex.getCouponValue() + "");
         record.setGoodsPirce(ex.getGoodsPrice() + "");
         record.setPrice(ex.getPrice() + "");
         record.setGoodsName(ex.getGoodsName());
+        record.setCreateTime(ex.getCreateTime());
         return record;
     }
 
@@ -904,7 +921,12 @@ public class ApiHomeController extends ApiBaseController {
         orderService.updateByPrimaryKeySelective(order);
         OrgIntegralEnum integralEnum = OrgIntegralEnum.getIntegral(order.getPrice());
         if (integralEnum!=null){
-            integralLogService.addIntegral(order.getOrgId(),integralEnum.getIntegral(),0,1,order.getCode(),integralEnum.getDesc());
+            integralLogService.addIntegral(order.getOrgId(),integralEnum.getIntegral(),0,1,order.getCode(),"订单消费");
+        }
+        if (order.getPrice().compareTo(BigDecimal.TEN)>=0){
+            //>=10   除以12 四舍五入后为积分
+            BigDecimal integral = order.getPrice().divide(new BigDecimal(12), 0, BigDecimal.ROUND_HALF_DOWN);
+            integralLogService.addIntegral(order.getOrgId(),integral,1,0,order.getCode(),"订单消费");
         }
         if (order.getGoodsSource() == 6 || order.getGoodsSource() == 7){
             BigDecimal money = order.getGoodsPrice();
@@ -938,14 +960,14 @@ public class ApiHomeController extends ApiBaseController {
         }
         if (order.getGoodsSource()!=5){
             //机构订单流水保存
-            orgAmountLogService.saveLog(order.getOrgId(),order.getPrice(),"1","用户确认收货",order.getId(),null);
+            orgAmountLogService.saveLog(order.getOrgId(),null,order.getPrice(),"1","用户确认收货",order.getId(),null);
             PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(order.getOrgId());
             BigDecimal serviceRates = pawnOrg.getServiceRates();
             if (serviceRates==null){
                 serviceRates = PaidangConstants.default_service_rates;
             }
             //手续费
-            orgAmountLogService.saveLog(order.getOrgId(),(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
+            orgAmountLogService.saveLog(order.getOrgId(),null,(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
                     "3","订单手续费",order.getId(),null);
         }
 
@@ -1417,7 +1439,7 @@ public class ApiHomeController extends ApiBaseController {
     public Express getExpressDetail(@ApiParam(value = "物流id ，id expressCode fid三者必传一个",required = false)Integer id,
                                    @ApiParam(value = "快递单号",required = false)String expressCode,
                                    @ApiParam(value = "相关id(藏品或订单id） ",required = false)Integer fid,
-                                   @ApiParam(value = "1寄给平台2取回3商城4平台寄给当户5机构寄给当户6机构取回（绝当品）",required = true)Integer type,
+                                   @ApiParam(value = "1寄给平台2取回3商城4平台寄给当户5机构寄给当户6机构取回（绝当品）7 退货快递单号",required = true)Integer type,
                                    MobileInfo mobileInfo){
 
         if (id==null && StringUtils.isBlank(expressCode) && fid==null){
@@ -1436,7 +1458,7 @@ public class ApiHomeController extends ApiBaseController {
         if (fid!=null){
             criteria.andFidEqualTo(fid);
         }
-        List<Express> expresses = expressService.selectByExample(example);
+        List<Express> expresses = expressService.selectByExampleWithBLOBs(example);
         if (CollectionUtils.isNotEmpty(expresses)){
             return expresses.get(0);
         }else{
@@ -1450,4 +1472,12 @@ public class ApiHomeController extends ApiBaseController {
 //    public String  test() throws Exception{
 //       return personRegister("320400702199112215013","许文炜","18861269725");
 //    }
+
+    @ApiOperation(value = "物流公司获取",notes="")
+    @RequestMapping(value = "/expressName/get", method = RequestMethod.POST)
+    @ApiMethod(isLogin = false)
+    public String[] getExpressNamws(){
+        return KuaidiApiUtil.expressArr;
+    }
+
 }

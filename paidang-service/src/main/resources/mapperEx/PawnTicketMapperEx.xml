@@ -2,6 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.paidang.daoEx.PawnTicketMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.PawnTicketEx" extends="com.paidang.dao.PawnTicketMapper.BaseResultMap">
+    <result column="repawnId" property="repawnId"></result>
+    <result column="pawnId" property="pawnId"></result>
+
   </resultMap>
+
+
+  <select id="findList" parameterType="com.paidang.domain.qo.PawnTicketQo" resultMap="BaseResultMap">
+    SELECT
+    a.*,
+    CASE
+    WHEN a.type = '1' THEN
+    b.id
+    WHEN a.type = '2' THEN
+    c.pawn_id
+    END pawnId,
+    case when a.type='2' then c.id end repawnId
+    FROM
+    p_pawn_ticket a
+    LEFT JOIN p_user_pawn b ON a.project_code = b.project_code
+    LEFT JOIN p_pawn_continue c ON a.project_code = c.project_code
+    WHERE
+    1 =1
+    <if test="statusList!=null and statusList.size()>0">
+      and a.status in
+      <foreach collection="statusList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="pawnerName!= null and pawnerName!=''">
+      and a.pawner_name = #{pawnerName}
+    </if>
+    <if test="pawnerTel!= null and pawnerTel!=''">
+      and a.pawner_tel = #{pawnerTel}
+    </if>
+    order by a.create_time desc
+  </select>
   
 </mapper>

@@ -684,6 +684,186 @@ public class VideoOnlineExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andPraiseNumIsNull() {
+			addCriterion("praise_num is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumIsNotNull() {
+			addCriterion("praise_num is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumEqualTo(Integer value) {
+			addCriterion("praise_num =", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumNotEqualTo(Integer value) {
+			addCriterion("praise_num <>", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumGreaterThan(Integer value) {
+			addCriterion("praise_num >", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumGreaterThanOrEqualTo(Integer value) {
+			addCriterion("praise_num >=", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumLessThan(Integer value) {
+			addCriterion("praise_num <", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumLessThanOrEqualTo(Integer value) {
+			addCriterion("praise_num <=", value, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumIn(List<Integer> values) {
+			addCriterion("praise_num in", values, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumNotIn(List<Integer> values) {
+			addCriterion("praise_num not in", values, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumBetween(Integer value1, Integer value2) {
+			addCriterion("praise_num between", value1, value2, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andPraiseNumNotBetween(Integer value1, Integer value2) {
+			addCriterion("praise_num not between", value1, value2, "praiseNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumIsNull() {
+			addCriterion("collect_num is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumIsNotNull() {
+			addCriterion("collect_num is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumEqualTo(Integer value) {
+			addCriterion("collect_num =", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumNotEqualTo(Integer value) {
+			addCriterion("collect_num <>", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumGreaterThan(Integer value) {
+			addCriterion("collect_num >", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumGreaterThanOrEqualTo(Integer value) {
+			addCriterion("collect_num >=", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumLessThan(Integer value) {
+			addCriterion("collect_num <", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumLessThanOrEqualTo(Integer value) {
+			addCriterion("collect_num <=", value, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumIn(List<Integer> values) {
+			addCriterion("collect_num in", values, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumNotIn(List<Integer> values) {
+			addCriterion("collect_num not in", values, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumBetween(Integer value1, Integer value2) {
+			addCriterion("collect_num between", value1, value2, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andCollectNumNotBetween(Integer value1, Integer value2) {
+			addCriterion("collect_num not between", value1, value2, "collectNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumIsNull() {
+			addCriterion("like_num is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumIsNotNull() {
+			addCriterion("like_num is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumEqualTo(Integer value) {
+			addCriterion("like_num =", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumNotEqualTo(Integer value) {
+			addCriterion("like_num <>", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumGreaterThan(Integer value) {
+			addCriterion("like_num >", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumGreaterThanOrEqualTo(Integer value) {
+			addCriterion("like_num >=", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumLessThan(Integer value) {
+			addCriterion("like_num <", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumLessThanOrEqualTo(Integer value) {
+			addCriterion("like_num <=", value, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumIn(List<Integer> values) {
+			addCriterion("like_num in", values, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumNotIn(List<Integer> values) {
+			addCriterion("like_num not in", values, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumBetween(Integer value1, Integer value2) {
+			addCriterion("like_num between", value1, value2, "likeNum");
+			return (Criteria) this;
+		}
+
+		public Criteria andLikeNumNotBetween(Integer value1, Integer value2) {
+			addCriterion("like_num not between", value1, value2, "likeNum");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

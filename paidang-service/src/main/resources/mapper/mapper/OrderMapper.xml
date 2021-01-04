@@ -35,8 +35,10 @@
         <result column="coupon_info" property="couponInfo" jdbcType="VARCHAR" />
         <result column="is_del" property="isDel" jdbcType="TINYINT" />
         <result column="refund_reason" property="refundReason" jdbcType="VARCHAR" />
+        <result column="refund_imgs" property="refundImgs" jdbcType="VARCHAR" />
         <result column="refund_not_verify_reason" property="refundNotVerifyReason" jdbcType="VARCHAR" />
         <result column="back_code" property="backCode" jdbcType="VARCHAR" />
+        <result column="back_express_name" property="backExpressName" jdbcType="VARCHAR" />
         <result column="back_address" property="backAddress" jdbcType="VARCHAR" />
         <result column="back_user" property="backUser" jdbcType="VARCHAR" />
         <result column="back_phone" property="backPhone" jdbcType="VARCHAR" />
@@ -106,7 +108,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,goods_num,total_price,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,address_id,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_not_verify_reason,back_code,back_address,back_user,back_phone,back_state,pay_type,comment_state
+        id,code,user_id,goods_id,goods_name,goods_img,goods_source,org_id,goods_price,goods_cost,goods_num,total_price,price,video,state,ref_state,pay_log_id,is_balance,create_time,modify_time,balance_time,pay_time,address_id,ship_user,ship_firm,ship_code,ship_address,ship_phone,coupon_id,coupon_value,coupon_info,is_del,refund_reason,refund_imgs,refund_not_verify_reason,back_code,back_express_name,back_address,back_user,back_phone,back_state,pay_type,comment_state
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -155,9 +157,10 @@
         ship_firm,ship_code,ship_address,
         ship_phone,coupon_id,coupon_value,
         coupon_info,is_del,refund_reason,
-        refund_not_verify_reason,back_code,back_address,
-        back_user,back_phone,back_state,
-        pay_type,comment_state
+        refund_imgs,refund_not_verify_reason,back_code,
+        back_express_name,back_address,back_user,
+        back_phone,back_state,pay_type,
+        comment_state
         )
         values (#{code,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},
         #{goodsId,jdbcType=INTEGER},#{goodsName,jdbcType=VARCHAR},#{goodsImg,jdbcType=VARCHAR},
@@ -170,9 +173,10 @@
         #{shipFirm,jdbcType=VARCHAR},#{shipCode,jdbcType=VARCHAR},#{shipAddress,jdbcType=VARCHAR},
         #{shipPhone,jdbcType=VARCHAR},#{couponId,jdbcType=INTEGER},#{couponValue,jdbcType=DECIMAL},
         #{couponInfo,jdbcType=VARCHAR},#{isDel,jdbcType=TINYINT},#{refundReason,jdbcType=VARCHAR},
-        #{refundNotVerifyReason,jdbcType=VARCHAR},#{backCode,jdbcType=VARCHAR},#{backAddress,jdbcType=VARCHAR},
-        #{backUser,jdbcType=VARCHAR},#{backPhone,jdbcType=VARCHAR},#{backState,jdbcType=TINYINT},
-        #{payType,jdbcType=TINYINT},#{commentState,jdbcType=INTEGER}
+        #{refundImgs,jdbcType=VARCHAR},#{refundNotVerifyReason,jdbcType=VARCHAR},#{backCode,jdbcType=VARCHAR},
+        #{backExpressName,jdbcType=VARCHAR},#{backAddress,jdbcType=VARCHAR},#{backUser,jdbcType=VARCHAR},
+        #{backPhone,jdbcType=VARCHAR},#{backState,jdbcType=TINYINT},#{payType,jdbcType=TINYINT},
+        #{commentState,jdbcType=INTEGER}
         )
     </insert>
 
@@ -275,11 +279,17 @@
             <if test="refundReason != null" >
                 refund_reason,
             </if>
+            <if test="refundImgs != null" >
+                refund_imgs,
+            </if>
             <if test="refundNotVerifyReason != null" >
                 refund_not_verify_reason,
             </if>
             <if test="backCode != null" >
                 back_code,
+            </if>
+            <if test="backExpressName != null" >
+                back_express_name,
             </if>
             <if test="backAddress != null" >
                 back_address,
@@ -397,11 +407,17 @@
             <if test="refundReason != null" >
                 #{refundReason,jdbcType=VARCHAR},
             </if>
+            <if test="refundImgs != null" >
+                #{refundImgs,jdbcType=VARCHAR},
+            </if>
             <if test="refundNotVerifyReason != null" >
                 #{refundNotVerifyReason,jdbcType=VARCHAR},
             </if>
             <if test="backCode != null" >
                 #{backCode,jdbcType=VARCHAR},
+            </if>
+            <if test="backExpressName != null" >
+                #{backExpressName,jdbcType=VARCHAR},
             </if>
             <if test="backAddress != null" >
                 #{backAddress,jdbcType=VARCHAR},
@@ -533,11 +549,17 @@
             <if test="record.refundReason != null" >
                 refund_reason = #{record.refundReason,jdbcType=VARCHAR},
             </if>
+            <if test="record.refundImgs != null" >
+                refund_imgs = #{record.refundImgs,jdbcType=VARCHAR},
+            </if>
             <if test="record.refundNotVerifyReason != null" >
                 refund_not_verify_reason = #{record.refundNotVerifyReason,jdbcType=VARCHAR},
             </if>
             <if test="record.backCode != null" >
                 back_code = #{record.backCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.backExpressName != null" >
+                back_express_name = #{record.backExpressName,jdbcType=VARCHAR},
             </if>
             <if test="record.backAddress != null" >
                 back_address = #{record.backAddress,jdbcType=VARCHAR},
@@ -598,8 +620,10 @@
         coupon_info = #{couponInfo,jdbcType=VARCHAR},
         is_del = #{isDel,jdbcType=TINYINT},
         refund_reason = #{refundReason,jdbcType=VARCHAR},
+        refund_imgs = #{refundImgs,jdbcType=VARCHAR},
         refund_not_verify_reason = #{refundNotVerifyReason,jdbcType=VARCHAR},
         back_code = #{backCode,jdbcType=VARCHAR},
+        back_express_name = #{backExpressName,jdbcType=VARCHAR},
         back_address = #{backAddress,jdbcType=VARCHAR},
         back_user = #{backUser,jdbcType=VARCHAR},
         back_phone = #{backPhone,jdbcType=VARCHAR},
@@ -710,11 +734,17 @@
             <if test="refundReason != null" >
                 refund_reason = #{refundReason,jdbcType=VARCHAR},
             </if>
+            <if test="refundImgs != null" >
+                refund_imgs = #{refundImgs,jdbcType=VARCHAR},
+            </if>
             <if test="refundNotVerifyReason != null" >
                 refund_not_verify_reason = #{refundNotVerifyReason,jdbcType=VARCHAR},
             </if>
             <if test="backCode != null" >
                 back_code = #{backCode,jdbcType=VARCHAR},
+            </if>
+            <if test="backExpressName != null" >
+                back_express_name = #{backExpressName,jdbcType=VARCHAR},
             </if>
             <if test="backAddress != null" >
                 back_address = #{backAddress,jdbcType=VARCHAR},
@@ -772,8 +802,10 @@
         coupon_info = #{couponInfo,jdbcType=VARCHAR},
         is_del = #{isDel,jdbcType=TINYINT},
         refund_reason = #{refundReason,jdbcType=VARCHAR},
+        refund_imgs = #{refundImgs,jdbcType=VARCHAR},
         refund_not_verify_reason = #{refundNotVerifyReason,jdbcType=VARCHAR},
         back_code = #{backCode,jdbcType=VARCHAR},
+        back_express_name = #{backExpressName,jdbcType=VARCHAR},
         back_address = #{backAddress,jdbcType=VARCHAR},
         back_user = #{backUser,jdbcType=VARCHAR},
         back_phone = #{backPhone,jdbcType=VARCHAR},

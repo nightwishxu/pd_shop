@@ -6,20 +6,24 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.item.dao.model.User;
 import com.item.service.UserService;
-import com.paidang.dao.model.PawnTicket;
-import com.paidang.dao.model.PawnTicketExample;
-import com.paidang.service.PawnTicketService;
+import com.paidang.dao.model.*;
+import com.paidang.daoEx.model.PawnTicketEx;
+import com.paidang.domain.qo.PawnTicketQo;
+import com.paidang.service.*;
 import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,20 +44,26 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
     @Autowired
     UserService userService;
 
+    @Autowired
+    private BFileService fileService;
+
+    @Autowired
+    private UserPawnService userPawnService;
+
+    @Autowired
+    private PawnContinueService pawnContinueService;
+
     /**
      * 票据列表
      */
     @ApiOperation(value = "票据列表*", notes = "登陆")
     @RequestMapping(value = "/pawnTicketList", method = RequestMethod.POST)
     @ApiMethod(isLogin = true, isPage = true)
-    public List<PawnTicket> pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
+    public List<PawnTicketEx> pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
         Integer userid = mobileInfo.getUserId();
         User user = userService.selectByPrimaryKey(userid);
         PawnTicketExample pawnTicketExample = new PawnTicketExample();
         //查询用户真实姓名和手机号相同的票据
-        PawnTicketExample.Criteria criteria = pawnTicketExample.createCriteria();
-        criteria.andPawnerNameEqualTo(user.getName())
-                .andPawnerTelEqualTo(user.getPhone());
         List<String> statusList=new ArrayList<>();
         if(status.equals("1")){
             statusList.add("0");
@@ -64,10 +74,12 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
             statusList.add("3");
             statusList.add("4");
         }
-        criteria.andStatusIn(statusList);
-        pawnTicketExample.setOrderByClause("create_time desc");
         startPage();
-        List<PawnTicket> pawnTickets = pawnTicketService.selectByExample(pawnTicketExample);
+        PawnTicketQo qo = new PawnTicketQo();
+        qo.setStatusList(statusList);
+        qo.setPawnerName(user.getName());
+        qo.setPawnerTel(user.getPhone());
+        List<PawnTicketEx> pawnTickets = pawnTicketService.findList(qo);
         return pawnTickets;
     }
 
@@ -108,14 +120,39 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
     @ApiOperation(value = "查看合同*", notes = "登陆")
     @RequestMapping(value = "/showContract", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Object showContract(MobileInfo mobileInfo, Integer pawnTicketId) {
-        PawnTicket pawnTicket = pawnTicketService.selectByPrimaryKey(pawnTicketId);
-        String contractId= pawnTicket.getContractId();
-        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pageUrl",pageUrl);
-        logger.info("==================合同查看地址:{}",pageUrl);
-        return jsonObject;
+    public Result showContract(MobileInfo mobileInfo, @ApiParam(value="id",required = false)Integer pawnTicketId,
+                               @ApiParam(value="典当id",required = false)Integer pawnId,
+                               @ApiParam(value="续当id",required = false)Integer repawnId) throws Exception {
+        if (pawnTicketId ==null && pawnId==null && repawnId==null){
+            throw new ApiException(400,"缺少必要参数");
+        }
+        PawnTicket pawnTicket = null;
+        if (pawnId!=null){
+            UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+            pawnTicket = pawnTicketService.getByProjectCode(userPawn.getProjectCode());
+        }else if (repawnId!=null){
+            PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
+            pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+        }else if (pawnTicketId!=null){
+            pawnTicket = pawnTicketService.selectByPrimaryKey(pawnTicketId);
+        }
+
+        if (StringUtils.isEmpty(pawnTicket.getContractUrl())){
+            String contractUrl = AnXinSignService.getContractUrl(pawnTicket.getContractId());
+            String s = fileService.downLoadFromUrl(contractUrl,pawnTicket.getContractId());
+            PawnTicket temp = new PawnTicket();
+            temp.setContractUrl(s);
+            temp.setId(pawnTicketId);
+            pawnTicketService.updateByPrimaryKeySelective(temp);
+            return new Result(s);
+        }else {
+            return new Result(pawnTicket.getContractUrl());
+        }
+//        String contractId= pawnTicket.getContractId();
+//        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("pageUrl",pageUrl);
+//        logger.info("==================合同查看地址:{}",pageUrl);
     }
 
 

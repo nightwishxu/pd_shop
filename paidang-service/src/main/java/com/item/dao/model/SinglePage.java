@@ -7,6 +7,8 @@ public class SinglePage {
 	private Integer sortOrder;
 	private Integer isShow;
 
+	private String url;
+
 	public void setCode(String code) {
 		this.code=code == null ? code : code.trim();
 	}
@@ -47,4 +49,11 @@ public class SinglePage {
 		return isShow;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }

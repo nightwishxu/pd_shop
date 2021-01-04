@@ -124,4 +124,9 @@ public class GoodsService {
 		return goodsMapperEx.sellAuctionGoods(goods);
 	}
 
+
+	public Integer getAuctionCount(Integer orgId,Integer goodsOwner){
+		return goodsMapperEx.getAuctionCount(orgId,goodsOwner);
+	}
+
 }

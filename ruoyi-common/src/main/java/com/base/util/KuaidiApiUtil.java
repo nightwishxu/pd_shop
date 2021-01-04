@@ -6,7 +6,9 @@ import com.base.util.express.core.KuaidiResult;
 import com.base.util.express.core.MD5;
 import com.base.util.http.HttpUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //import com.base.http.HttpUtil;
@@ -34,6 +36,8 @@ public class KuaidiApiUtil {
      * 快递公司map集合
      */
     private static Map<String, String> comMap;
+
+    public static String[] expressArr ={"顺丰快递","中通快递","ems","圆通快递","韵达快递","百世汇通","申通快递"};
 
     /**
      * 默认构造函数

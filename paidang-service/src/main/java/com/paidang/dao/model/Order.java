@@ -280,6 +280,14 @@ public class Order implements Serializable {
 	private String refundReason;
 
 	/**
+	 *退款图片
+	 */
+	@ApiModelProperty(value="退款图片")
+	@ApiParam(value="退款图片")
+	@Column(name = "refund_imgs")
+	private String refundImgs;
+
+	/**
 	 *退款审核不通过理由
 	 */
 	@ApiModelProperty(value="退款审核不通过理由")
@@ -294,6 +302,14 @@ public class Order implements Serializable {
 	@ApiParam(value="退款回寄单号")
 	@Column(name = "back_code")
 	private String backCode;
+
+	/**
+	 *退款快递公司
+	 */
+	@ApiModelProperty(value="退款快递公司")
+	@ApiParam(value="退款快递公司")
+	@Column(name = "back_express_name")
+	private String backExpressName;
 
 	/**
 	 *退款回寄地址
@@ -607,6 +623,14 @@ public class Order implements Serializable {
 		return refundReason;
 	}
 
+	public void setRefundImgs(String refundImgs) {
+		this.refundImgs=refundImgs == null ? refundImgs : refundImgs.trim();
+	}
+
+	public String getRefundImgs() {
+		return refundImgs;
+	}
+
 	public void setRefundNotVerifyReason(String refundNotVerifyReason) {
 		this.refundNotVerifyReason=refundNotVerifyReason == null ? refundNotVerifyReason : refundNotVerifyReason.trim();
 	}
@@ -621,6 +645,14 @@ public class Order implements Serializable {
 
 	public String getBackCode() {
 		return backCode;
+	}
+
+	public void setBackExpressName(String backExpressName) {
+		this.backExpressName=backExpressName == null ? backExpressName : backExpressName.trim();
+	}
+
+	public String getBackExpressName() {
+		return backExpressName;
 	}
 
 	public void setBackAddress(String backAddress) {

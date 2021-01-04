@@ -24,6 +24,10 @@ public class Goods implements Serializable {
 	private Integer id;
 
 	/**
+	 * 6个人7企业  臻品
+	 * 2 绝当品
+	 *  3   自营
+	 *
 	 *1平台2机构3服务商4供应商5寄拍6个人7企业8龙城画库
 	 */
 	@ApiModelProperty(value="1平台2机构3服务商4供应商5寄拍6个人7企业8龙城画库")

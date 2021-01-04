@@ -6,6 +6,7 @@ import com.baidubce.services.bos.BosClient;
 import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.PutObjectResponse;
 import com.base.util.*;
+import com.demo.constant.HttpConnector;
 import com.paidang.dao.BFileMapper;
 import com.paidang.dao.model.BFile;
 import com.paidang.dao.model.BFileExample;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,15 +36,15 @@ public class BFileService {
 	@Autowired
 	private BFileMapper bFileMapper;
 
-	public static final String LOCAL = "local";
-	public static final String OSS = "oss";
-	public static final String COS = "cos";
+	public static  String LOCAL = "local";
+	public static  String OSS = "oss";
+	public static  String COS = "cos";
 
-	private static final String ACCESS_KEY_ID = PropertySupport.getProperty("baidu.accessKey");
-	private static final String SECRET_ACCESS_KEY = PropertySupport.getProperty("baidu.secretKey");
-	private static final String ENDPOINT = PropertySupport.getProperty("baidu.endPoint");
+	private static  String ACCESS_KEY_ID = PropertySupport.getProperty("baidu.accessKey");
+	private static  String SECRET_ACCESS_KEY = PropertySupport.getProperty("baidu.secretKey");
+	private static  String ENDPOINT = PropertySupport.getProperty("baidu.endPoint");
 
-	private static final String BUCKET_NAME = PropertySupport.getProperty("baidu.bucketName");
+	private static  String BUCKET_NAME = PropertySupport.getProperty("baidu.bucketName");
 
 	private static BosClientConfiguration config = new BosClientConfiguration();
 
@@ -531,5 +534,46 @@ public class BFileService {
 		} catch (Exception var5) {
 			return null;
 		}
+	}
+
+	/**
+	 * 从网络Url中读取文件
+	 * @param urlStr 文件URL地址
+	 * @throws IOException
+	 */
+	public  String downLoadFromUrl(String urlStr,String contractNo) throws IOException{
+
+		HttpConnector httpConnector = new HttpConnector();
+		httpConnector.init();
+		byte[] bytes = httpConnector.getFile(urlStr);
+
+//		//把地址转换成URL对象
+//		URL url = new URL(urlStr);
+//		//创建http链接
+//		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+//		//设置超时间为3秒
+//		conn.setConnectTimeout(10*1000);
+//		//防止屏蔽程序抓取而返回403错误
+//		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+//		//得到输入流
+//		InputStream inputStream = conn.getInputStream();
+//		byte[] bytes = toByteArray(inputStream);
+		//截取链接中的文件名
+		String fileName= contractNo+".pdf";
+		putObject(bytes,"contract/"+fileName);
+		//请求OSS方法
+//		URL resUrl = OSSUploadImage(inputStream,fileName,"imagesTest/");
+
+		return CoreConstants.BOS_URL+"contract/"+fileName;
+	}
+
+	public static byte[] toByteArray(InputStream input) throws IOException {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		byte[] buffer = new byte[4096];
+		int n = 0;
+		while (-1 != (n = input.read(buffer))) {
+			output.write(buffer, 0, n);
+		}
+		return output.toByteArray();
 	}
 }

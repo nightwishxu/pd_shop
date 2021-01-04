@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.paidang.daoEx.VideoOnlineMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.VideoOnlineEx" extends="com.paidang.dao.VideoOnlineMapper.BaseResultMap">
+      <result column="praiseStatus" property="praiseStatus" jdbcType="VARCHAR"></result>
   </resultMap>
 
   <select id="selectByComment" resultMap="BaseResultMap">
@@ -14,8 +15,43 @@
               WHERE
                   video_id = A.id
           ) commCount
+          <if test="userId!=null">
+              ,(select count(1) from t_article_collect_praise where user_id=#{userId} and article_id = A.id and use_type=2 and type=0 ) as praiseStatus
+          </if>
+      <if test="userId==null">
+          ,0 as praiseStatus
+      </if>
+
       FROM
           p_video_online A
+          where 1=1
+          <if test="state!=null">
+              and A.state=#{state}
+          </if>
+      <if test="name!=null and name!=''">
+          and A.title like CONCAT('%',#{name},'%')
+      </if>
+      order by A.create_time desc
   </select>
+
+
+    <update id="updateCount">
+    UPDATE  p_video_online
+    <set>
+        <if test="type==0">
+            view_cnt=ifnull(view_cnt,0)+#{num}
+        </if>
+        <if test="type==1">
+            praise_num=ifnull(praise_num,0)+#{num}
+        </if>
+        <if test="type==2">
+            collect_num=ifnull(collect_num,0)+#{num}
+        </if>
+        <if test="type==3">
+            like_num=ifnull(like_num,0)+#{num}
+        </if>
+    </set>
+    where id=#{id}
+    </update>
   
 </mapper>

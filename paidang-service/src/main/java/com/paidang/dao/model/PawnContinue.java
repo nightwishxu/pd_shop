@@ -99,7 +99,7 @@ public class PawnContinue implements Serializable {
 	 *-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到
 	 */
 	@ApiModelProperty(value="-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
-	@ApiParam(value="-1机构拒绝1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
+	@ApiParam(value="-1机构拒绝  0 待完善当票 1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
 	@Column(name = "state")
 	private Integer state;
 

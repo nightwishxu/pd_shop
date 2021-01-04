@@ -82,7 +82,7 @@ public class OrgWithdrawApplyController extends CoreController {
 		orgWithdrawApplyService.updateByPrimaryKeySelective(apply);
 		if (status==1){
 			OrgWithdrawApply orgWithdrawApply = orgWithdrawApplyService.selectByPrimaryKey(id);
-			orgAmountLogService.saveLog(orgWithdrawApply.getOrgId(),orgWithdrawApply.getAmount(),"2","提现到账",orgWithdrawApply.getId(),null);
+			orgAmountLogService.saveLog(orgWithdrawApply.getOrgId(),null,orgWithdrawApply.getAmount(),"2","提现到账",orgWithdrawApply.getId(),null);
 		}
 		return ok();
 	}

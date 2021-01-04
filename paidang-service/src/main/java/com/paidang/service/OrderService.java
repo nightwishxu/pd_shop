@@ -9,6 +9,7 @@ import com.paidang.dao.*;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.OrderMapperEx;
 import com.paidang.daoEx.model.OrderEx;
+import com.paidang.domain.enums.OrgIntegralEnum;
 import com.paidang.domain.qo.OrderQo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,6 +121,11 @@ public class OrderService {
 		if (integralEnum!=null){
 			integralLogService.addIntegral(order.getOrgId(),integralEnum.getIntegral(),0,1,order.getCode(),integralEnum.getDesc());
 		}
+		if (order.getPrice().compareTo(BigDecimal.TEN)>=0){
+			//>=10   除以12 四舍五入后为积分
+			BigDecimal integral = order.getPrice().divide(new BigDecimal(12), 0, BigDecimal.ROUND_HALF_DOWN);
+			integralLogService.addIntegral(order.getOrgId(),integral,1,0,order.getCode(),"订单消费");
+		}
 		BigDecimal platform = BigDecimal.ZERO;
 		//如果是机构或服务商
 		if (order.getGoodsSource() != 1){
@@ -168,14 +174,14 @@ public class OrderService {
 			return;
 		}
 		//机构订单流水保存
-		orgAmountLogService.saveLog(order.getOrgId(),order.getPrice(),"1","用户确认收货",order.getId(),null);
+		orgAmountLogService.saveLog(order.getOrgId(),null,order.getPrice(),"1","用户确认收货",order.getId(),null);
 		PawnOrg pawnOrg = pawnOrgMapper.selectByPrimaryKey(order.getOrgId());
 		BigDecimal serviceRates = pawnOrg.getServiceRates();
 		if (serviceRates==null){
 			serviceRates = PaidangConstants.default_service_rates;
 		}
 		//手续费
-		orgAmountLogService.saveLog(order.getOrgId(),(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
+		orgAmountLogService.saveLog(order.getOrgId(),null,(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
 				"3","订单手续费",order.getId(),null);
 
 	}

@@ -129,8 +129,12 @@
         <if test="startPostState!=null">
             and A.post_state>=#{startPostState}
         </if>
+
         <if test="backState!=null">
             and A.back_state=#{backState}
+        </if>
+        <if test="goSell!=null">
+            and A.go_sell=#{goSell}
         </if>
         order by A.create_time desc
     </select>

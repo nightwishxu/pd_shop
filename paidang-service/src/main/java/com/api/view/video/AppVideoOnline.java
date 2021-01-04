@@ -22,6 +22,10 @@ public class AppVideoOnline {
 
     @ApiModelProperty(value="视频标签 ,分割")
     private String labels;
+    @ApiModelProperty(value="点赞状态")
+    private Integer praiseStatus;
+    @ApiModelProperty(value="点赞数量")
+    private Integer praiseCount;
 
     public Integer getId() {
         return id;
@@ -85,5 +89,21 @@ public class AppVideoOnline {
 
     public void setLabels(String labels) {
         this.labels = labels;
+    }
+
+    public Integer getPraiseStatus() {
+        return praiseStatus;
+    }
+
+    public void setPraiseStatus(Integer praiseStatus) {
+        this.praiseStatus = praiseStatus;
+    }
+
+    public Integer getPraiseCount() {
+        return praiseCount;
+    }
+
+    public void setPraiseCount(Integer praiseCount) {
+        this.praiseCount = praiseCount;
     }
 }

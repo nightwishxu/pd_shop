@@ -8,17 +8,13 @@ import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
 import com.base.util.StringUtils;
-import com.demo.connector.HttpConnector;
-import com.demo.constant.DSPConsts;
-import com.item.dao.model.User;
+import com.demo.constant.HttpConnector;
 import com.item.daoEx.model.UserEx;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.ArticleCommentEx;
 import com.paidang.daoEx.model.ArticleEx;
-import com.paidang.domain.pojo.FollowArticleResult;
 import com.paidang.service.*;
-import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.PageDomain;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -181,14 +177,14 @@ public class ApiArticleController extends ApiBaseController {
         Integer num=0;
         if (type==0){
             ArticleCollectPraiseExample example=new ArticleCollectPraiseExample();
-            example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andArticleIdEqualTo(id).andTypeEqualTo(0);
+            example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andArticleIdEqualTo(id).andTypeEqualTo(0).andUseTypeEqualTo(1);
             int result =articleCollectPraiseService.deleteByExample(example);
             if (result>0){
                 num=-1;
             }
         }else if (type==1){
             ArticleCollectPraiseExample example=new ArticleCollectPraiseExample();
-            example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andArticleIdEqualTo(id).andTypeEqualTo(0);
+            example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andArticleIdEqualTo(id).andTypeEqualTo(0).andUseTypeEqualTo(1);
             List<ArticleCollectPraise> list = articleCollectPraiseService.selectByExample(example);
             if (CollectionUtils.isEmpty(list)){
                 ArticleCollectPraise entity=new ArticleCollectPraise();
@@ -201,6 +197,7 @@ public class ApiArticleController extends ApiBaseController {
                 entity.setNickName(nickName);
                 entity.setImg(StringUtils.unescapeXss(img));
                 entity.setAuthorId(authorId);
+                entity.setUseType(1);
                 articleCollectPraiseService.insert(entity);
                 num=1;
             }

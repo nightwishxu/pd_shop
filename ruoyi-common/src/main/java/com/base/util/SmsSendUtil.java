@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class SmsSendUtil {
 
-	private static final String USERNAME = PropertySupport.getProperty("sms.account");
+	private static  String USERNAME = PropertySupport.getProperty("sms.account");
 	private static String PASSWORD = PropertySupport.getProperty("sms.pwd");
 	private static String url = "http://js10088.com:18001/?Action=SendSms&UserName=USERNAME&Password=PASSWORD&Mobile=MOBILE&Message=MESSAGE";
 	

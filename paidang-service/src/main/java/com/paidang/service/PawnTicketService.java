@@ -10,8 +10,10 @@ import com.item.dao.model.User;
 import com.paidang.dao.PawnOrgMapper;
 import com.paidang.dao.UserGoodsMapper;
 import com.paidang.dao.model.*;
+import com.paidang.daoEx.PawnTicketMapperEx;
 import com.paidang.daoEx.model.PawnTicketEx;
 import com.paidang.domain.pojo.RepawnTicketModel;
+import com.paidang.domain.qo.PawnTicketQo;
 import com.ruoyi.common.utils.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -34,6 +36,9 @@ public class PawnTicketService {
 
 	@Autowired
 	private UserGoodsMapper userGoodsMapper;
+
+	@Autowired
+	private PawnTicketMapperEx pawnTicketMapperEx;
 
 	public int countByExample(PawnTicketExample example) {
 		return this.pawnTicketMapper.countByExample(example);
@@ -143,7 +148,7 @@ public class PawnTicketService {
 		entity.setOtherOrder(null);
 		entity.setType("1");
 		entity.setOrgId(userPawn.getOrgId());
-		entity.setStatus("0");
+		entity.setStatus("1");
 		entity.setCreateTime(new Date());
 		entity.setEquivalentRatio(entity.getAuthPrice().divide(new BigDecimal(entity.getAuthPriceTest()),2, BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(100))+"%");
 		entity.setProjectCode(projectCode);
@@ -162,7 +167,7 @@ public class PawnTicketService {
 
 	//先是用户续当，生成合同，然后签署，然后上传付款凭证，典当行确认
 
-	public void adXDTicket(String projectCode,String userName, String userTel,  PawnOrg pawnOrg, RepawnTicketModel repawn){
+	public void adXDTicket(String projectCode,String userName, String userTel,  PawnOrg pawnOrg, RepawnTicketModel repawn,UserPawn userPawn){
 		PawnTicket ticket = new PawnTicket();
 		ticket.setPawnTicketCode(repawn.getPawnTicketCode());
 		ticket.setOrgName(pawnOrg.getName());
@@ -171,6 +176,7 @@ public class PawnTicketService {
 		ticket.setPawnerName(repawn.getPawnerName());
 		ticket.setBusinessLicense(pawnOrg.getBusinessLicenseCode());
 		ticket.setPawnerName(userName);
+		ticket.setGoodsName(userPawn.getGoodsName());
 		ticket.setPawnerTel(userTel);
 		ticket.setRepawnBeginTime(repawn.getRepawnBeginTime());
 		ticket.setRepawnEndTime(repawn.getRepawnEndTime());
@@ -189,10 +195,14 @@ public class PawnTicketService {
 		ticket.setChecker(repawn.getChecker());
 		ticket.setCreateTime(new Date());
 		ticket.setProjectCode(projectCode);
-		ticket.setStatus("0");
+		ticket.setStatus("1");
 		ticket.setType("2");
 		ticket.setUserStatus(1);
 		ticket.setOrgStatus(1);
 		insert(ticket);
+	}
+
+	public List<PawnTicketEx> findList(PawnTicketQo qo){
+		return pawnTicketMapperEx.findList(qo);
 	}
 }

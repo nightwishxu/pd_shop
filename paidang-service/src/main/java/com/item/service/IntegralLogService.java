@@ -1,6 +1,7 @@
 package com.item.service;
 
 import com.base.mybatis.plus.EntityWrapper;
+import com.item.daoEx.UserMapperEx;
 import com.paidang.dao.IntegralLogMapper;
 import com.paidang.dao.model.IntegralLog;
 import com.paidang.dao.model.IntegralLogExample;
@@ -20,6 +21,9 @@ public class IntegralLogService {
 
 	@Autowired
 	private PawnOrgMapperEx pawnOrgMapperEx;
+
+	@Autowired
+	private UserMapperEx userMapperEx;
 
 	public int countByExample(IntegralLogExample example) {
 		return this.integralLogMapper.countByExample(example);
@@ -97,6 +101,9 @@ public class IntegralLogService {
 		}
 		if (accountType==1){
 			pawnOrgMapperEx.addIntegral(userId,log.getIntegralNew());
+		}
+		if (accountType==0){
+			userMapperEx.addIntegral(userId,log.getIntegralNew());
 		}
 		insert(log);
 	}

@@ -1,6 +1,4 @@
-package com.paidang.dao;
-
-import com.paidang.dao.model.IntegralLog;
+package com.paidang.domain.enums;
 
 import java.math.BigDecimal;
 

@@ -40,6 +40,7 @@
         <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
         <result column="txsn" property="txsn" jdbcType="VARCHAR" />
         <result column="anxinsign_id" property="anxinsignId" jdbcType="VARCHAR" />
+        <result column="integral" property="integral" jdbcType="DECIMAL" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -103,7 +104,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,account,password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count,auth_status,txsn,anxinsign_id
+        id,account,password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count,auth_status,txsn,anxinsign_id,integral
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -153,7 +154,7 @@
         im_token,wx_openid,qq_openid,
         recommend_sort,article_count,follow_count,
         fans_count,order_count,auth_status,
-        txsn,anxinsign_id
+        txsn,anxinsign_id,integral
         )
         values (#{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
         #{nickName,jdbcType=VARCHAR},#{headImg,jdbcType=VARCHAR},#{sex,jdbcType=TINYINT},
@@ -167,7 +168,7 @@
         #{imToken,jdbcType=VARCHAR},#{wxOpenid,jdbcType=VARCHAR},#{qqOpenid,jdbcType=VARCHAR},
         #{recommendSort,jdbcType=INTEGER},#{articleCount,jdbcType=INTEGER},#{followCount,jdbcType=INTEGER},
         #{fansCount,jdbcType=INTEGER},#{orderCount,jdbcType=INTEGER},#{authStatus,jdbcType=INTEGER},
-        #{txsn,jdbcType=VARCHAR},#{anxinsignId,jdbcType=VARCHAR}
+        #{txsn,jdbcType=VARCHAR},#{anxinsignId,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL}
         )
     </insert>
 
@@ -285,6 +286,9 @@
             <if test="anxinsignId != null" >
                 anxinsign_id,
             </if>
+            <if test="integral != null" >
+                integral,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="account != null" >
@@ -397,6 +401,9 @@
             </if>
             <if test="anxinsignId != null" >
                 #{anxinsignId,jdbcType=VARCHAR},
+            </if>
+            <if test="integral != null" >
+                #{integral,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
@@ -525,6 +532,9 @@
             <if test="record.anxinsignId != null" >
                 anxinsign_id = #{record.anxinsignId,jdbcType=VARCHAR},
             </if>
+            <if test="record.integral != null" >
+                integral = #{record.integral,jdbcType=DECIMAL},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -570,7 +580,8 @@
         order_count = #{orderCount,jdbcType=INTEGER},
         auth_status = #{authStatus,jdbcType=INTEGER},
         txsn = #{txsn,jdbcType=VARCHAR},
-        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR}
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -690,6 +701,9 @@
             <if test="anxinsignId != null" >
                 anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
             </if>
+            <if test="integral != null" >
+                integral = #{integral,jdbcType=DECIMAL},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -732,7 +746,8 @@
         order_count = #{orderCount,jdbcType=INTEGER},
         auth_status = #{authStatus,jdbcType=INTEGER},
         txsn = #{txsn,jdbcType=VARCHAR},
-        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR}
+        anxinsign_id = #{anxinsignId,jdbcType=VARCHAR},
+        integral = #{integral,jdbcType=DECIMAL}
         where id = #{id}
     </update>
 

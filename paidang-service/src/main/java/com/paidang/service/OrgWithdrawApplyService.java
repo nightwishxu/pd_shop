@@ -88,7 +88,7 @@ public class OrgWithdrawApplyService {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Integer withdrawApply(Integer userId,Integer orgId, BigDecimal amount){
+	public OrgWithdrawApply withdrawApply(Integer userId,Integer orgId, BigDecimal amount){
 		pawnOrgService.reSumAmount(orgId);
 		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
 		if (pawnOrg.getAmount()==null){
@@ -105,7 +105,7 @@ public class OrgWithdrawApplyService {
 		apply.setStatus(0);
 		apply.setCreateAccount(userId.toString());
 		apply.setCreateTime(new Date());
-		return insertSelective(apply);
+		return apply;
 	}
 
 	public List<OrgWithdrawApplyEx> findList(OrgWithdrawApplyQo qo){

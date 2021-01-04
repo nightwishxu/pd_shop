@@ -4,7 +4,7 @@ import cfca.sadk.algorithm.common.PKIException;
 import cfca.trustsign.common.vo.cs.HeadVO;
 import cfca.trustsign.common.vo.cs.ProxySignVO;
 import cfca.trustsign.common.vo.request.tx3.Tx3102ReqVO;
-import com.demo.connector.HttpConnector;
+import com.demo.constant.HttpConnector;
 import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;

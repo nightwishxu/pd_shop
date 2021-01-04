@@ -58,12 +58,20 @@
         />
       </el-form-item>-->
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+        >搜索</el-button>
         <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button> -->
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -103,8 +111,18 @@
         >导出</el-button>
       </el-col>-->
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-          <el-button size="mini" circle icon="el-icon-refresh" @click="handleQuery" />
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
+          <el-button
+            size="mini"
+            circle
+            icon="el-icon-refresh"
+            @click="handleQuery"
+          />
         </el-tooltip>
         <el-tooltip
           class="item"
@@ -112,22 +130,56 @@
           :content="showSearch ? '隐藏搜索' : '显示搜索'"
           placement="top"
         >
-          <el-button size="mini" circle icon="el-icon-search" @click="showSearch=!showSearch" />
+          <el-button
+            size="mini"
+            circle
+            icon="el-icon-search"
+            @click="showSearch=!showSearch"
+          />
         </el-tooltip>
       </div>
     </el-row>
 
-    <el-table v-loading="loading" :data="adList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table
+      v-loading="loading"
+      :data="adList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
       <!-- <el-table-column label="广告" align="center" prop="id" /> -->
-      <el-table-column label="图片" align="center" prop="img">
+      <el-table-column
+        label="图片"
+        align="center"
+        prop="img"
+      >
         <template scope="scope">
-          <img :src="scope.row.img" width="40" height="40" />
+          <img
+            :src="scope.row.img"
+            width="40"
+            height="40"
+          />
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" prop="type" :formatter="handleType" />
-      <el-table-column label="排序(倒序)" align="center" prop="sortOrder" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="类型"
+        align="center"
+        prop="type"
+        :formatter="handleType"
+      />
+      <el-table-column
+        label="排序(倒序)"
+        align="center"
+        prop="sortOrder"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -156,12 +208,25 @@
     />
 
     <!-- 添加或修改认证商城广告对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="780px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+      >
         <!-- <el-form-item label="展示位置" prop="location">
           <el-input v-model="form.location" placeholder="请输入展示位置" />
         </el-form-item>-->
-        <el-form-item label="图片" prop="img">
+        <el-form-item
+          label="图片"
+          prop="img"
+        >
           <single-upload
             v-model="form.img"
             style="width: 300px;display: inline-block;margin-left: 10px"
@@ -188,17 +253,38 @@
           </el-select>
           <!-- cateCodeSon -->
         </el-form-item>
-        <el-form-item label="排序" prop="sortOrder">
-          <el-input v-model="form.sortOrder" placeholder="请输入排序" />
+        <el-form-item
+          label="排序"
+          prop="sortOrder"
+        >
+          <el-input
+            v-model="form.sortOrder"
+            placeholder="请输入排序"
+          />
         </el-form-item>
-        <el-form-item label="网址" prop="content" v-if="content1">
-          <el-input v-model="form.content" placeholder="请输入内容" />
+        <el-form-item
+          label="网址"
+          prop="content"
+          v-if="content1"
+        >
+          <el-input
+            v-model="form.content"
+            placeholder="请输入内容"
+          />
         </el-form-item>
-        <el-form-item label="详情" prop="content" v-if="content2">
+        <el-form-item
+          label="详情"
+          prop="content"
+          v-if="content2"
+        >
           <Editor v-model="form.content" />
         </el-form-item>
         <el-form-item label="认证商城商品">
-          <el-select v-model="form.content" placeholder="请选择" :style="{width: '100%'}">
+          <el-select
+            v-model="form.content"
+            placeholder="请选择"
+            :style="{width: '100%'}"
+          >
             <el-option
               v-for="item in adminGoodsOptions"
               :key="item.id"
@@ -217,8 +303,17 @@
             ></el-option>
           </el-select>
         </el-form-item>-->
-        <el-form-item label="绝当商城商品" prop="content" v-if="content4">
-          <el-select v-model="form.content" placeholder="请选择" clearable :style="{width: '100%'}">
+        <el-form-item
+          label="绝当商城商品"
+          prop="content"
+          v-if="content4"
+        >
+          <el-select
+            v-model="form.content"
+            placeholder="请选择"
+            clearable
+            :style="{width: '100%'}"
+          >
             <el-option
               v-for="item in deadPawnGoodsOptions"
               :key="item.id"
@@ -228,8 +323,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="店铺详情" v-if="content5">
-          <el-select v-model="form.content" placeholder="请选择" clearable :style="{width: '100%'}">
+        <el-form-item
+          label="店铺详情"
+          v-if="content6"
+        >
+          <el-select
+            v-model="form.content"
+            placeholder="请选择"
+            clearable
+            :style="{width: '100%'}"
+          >
             <el-option
               v-for="item in storeOptions"
               :key="item.id"
@@ -242,8 +345,14 @@
           <el-input v-model="form.content" placeholder="请输入内容" />
         </el-form-item>-->
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -334,7 +443,7 @@ export default {
       content2: false,
       content3: false,
       content4: false,
-      content5: false,
+      content6: false,
       typeOptions: [
         {
           label: "不跳转",
@@ -358,7 +467,7 @@ export default {
         },
         {
           label: "店铺详情",
-          value: 5,
+          value: 6,
         },
       ],
     };
@@ -399,7 +508,7 @@ export default {
         return "认证商城商品";
       } else if (row.type === 4) {
         return "绝当商城商品";
-      } else if (row.type === 5) {
+      } else if (row.type === 6) {
         return "店铺详情";
       } else {
         return "--";
@@ -411,37 +520,37 @@ export default {
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
-        this.content5 = false;
+        this.content6 = false;
       } else if (value === 2) {
         this.content1 = false;
         this.content2 = true;
         this.content3 = false;
         this.content4 = false;
-        this.content5 = false;
+        this.content6 = false;
       } else if (value === 3) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = true;
         this.content4 = false;
-        this.content5 = false;
+        this.content6 = false;
       } else if (value === 4) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = true;
-        this.content5 = false;
-      } else if (value === 5) {
+        this.content6 = false;
+      } else if (value === 6) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
-        this.content5 = true;
+        this.content6 = true;
       } else {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
-        this.content5 = false;
+        this.content6 = false;
       }
       this.form.content = null;
     },

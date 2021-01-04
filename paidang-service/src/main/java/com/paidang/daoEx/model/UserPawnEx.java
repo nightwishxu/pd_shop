@@ -104,6 +104,8 @@ public class UserPawnEx extends UserPawn {
 
     private Integer continuePawnStatus;
 
+    private String continuePawnTicketCode;
+
 
     public String getGoodsName1() {
         return goodsName1;
@@ -369,5 +371,13 @@ public class UserPawnEx extends UserPawn {
 
     public void setContinuePawnStatus(Integer continuePawnStatus) {
         this.continuePawnStatus = continuePawnStatus;
+    }
+
+    public String getContinuePawnTicketCode() {
+        return continuePawnTicketCode;
+    }
+
+    public void setContinuePawnTicketCode(String continuePawnTicketCode) {
+        this.continuePawnTicketCode = continuePawnTicketCode;
     }
 }

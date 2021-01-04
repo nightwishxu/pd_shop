@@ -3,6 +3,8 @@ package com.api.view.store;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 @ApiModel
 public class  AppMyStoreGoods {
 
@@ -67,6 +69,9 @@ public class  AppMyStoreGoods {
 
     @ApiModelProperty(value = "商品数量")
     private Integer goodsNum;
+
+    @ApiModelProperty(value = "订单创建时间")
+    private Date createTime;
 
     public Integer getCommentState() {
         return commentState;
@@ -291,5 +296,13 @@ public class  AppMyStoreGoods {
 
     public void setGoodsNum(Integer goodsNum) {
         this.goodsNum = goodsNum;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

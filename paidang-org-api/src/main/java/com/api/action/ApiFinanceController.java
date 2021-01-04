@@ -45,7 +45,9 @@ public class ApiFinanceController {
             throw new ApiException(400,"提现金额异常");
         }
         Integer orgId = userService.getOrgIdByUserIdChecked(mobileInfo.getUserId());
-        return orgWithdrawApplyService.withdrawApply(mobileInfo.getUserId(),orgId,amount);
+        OrgWithdrawApply i = orgWithdrawApplyService.withdrawApply(mobileInfo.getUserId(), orgId, amount);
+        orgAmountLogService.saveLog(orgId,mobileInfo.getUserId(),amount,"2","提现申请",i.getId(),null);
+        return 1;
     }
 
 

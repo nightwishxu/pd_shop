@@ -1,6 +1,6 @@
 package com.paidang.daoEx.model;
 
-import com.paidang.dao.OrgIntegralEnum;
+import com.paidang.domain.enums.OrgIntegralEnum;
 import com.paidang.dao.model.PawnOrg;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -30,6 +30,8 @@ public class PawnOrgEx extends PawnOrg {
     private Integer isPersonal;
 
     private Integer isEnterprise;
+
+    private Integer auctionCount;
 
     public Integer getIsEnterprise() {
         return isEnterprise;
@@ -87,5 +89,13 @@ public class PawnOrgEx extends PawnOrg {
 
     public void setIsPersonal(Integer isPersonal) {
         this.isPersonal = isPersonal;
+    }
+
+    public Integer getAuctionCount() {
+        return auctionCount;
+    }
+
+    public void setAuctionCount(Integer auctionCount) {
+        this.auctionCount = auctionCount;
     }
 }

@@ -55,4 +55,6 @@ public interface UserMapperEx{
 
 	List<UserEx> findFansList(@Param("userId")Integer userId);
 
+	int addIntegral(@Param("id")Integer id,@Param("integral")BigDecimal integral);
+
 } 

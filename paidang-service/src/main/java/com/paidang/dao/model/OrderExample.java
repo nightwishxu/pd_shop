@@ -2204,6 +2204,76 @@ public class OrderExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andRefundImgsIsNull() {
+			addCriterion("refund_imgs is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsIsNotNull() {
+			addCriterion("refund_imgs is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsEqualTo(String value) {
+			addCriterion("refund_imgs =", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsNotEqualTo(String value) {
+			addCriterion("refund_imgs <>", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsGreaterThan(String value) {
+			addCriterion("refund_imgs >", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsGreaterThanOrEqualTo(String value) {
+			addCriterion("refund_imgs >=", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsLessThan(String value) {
+			addCriterion("refund_imgs <", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsLessThanOrEqualTo(String value) {
+			addCriterion("refund_imgs <=", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsLike(String value) {
+			addCriterion("refund_imgs like", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsNotLike(String value) {
+			addCriterion("refund_imgs not like", value, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsIn(List<String> values) {
+			addCriterion("refund_imgs in", values, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsNotIn(List<String> values) {
+			addCriterion("refund_imgs not in", values, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsBetween(String value1, String value2) {
+			addCriterion("refund_imgs between", value1, value2, "refundImgs");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefundImgsNotBetween(String value1, String value2) {
+			addCriterion("refund_imgs not between", value1, value2, "refundImgs");
+			return (Criteria) this;
+		}
+
 		public Criteria andRefundNotVerifyReasonIsNull() {
 			addCriterion("refund_not_verify_reason is null");
 			return (Criteria) this;
@@ -2341,6 +2411,76 @@ public class OrderExample {
 
 		public Criteria andBackCodeNotBetween(String value1, String value2) {
 			addCriterion("back_code not between", value1, value2, "backCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameIsNull() {
+			addCriterion("back_express_name is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameIsNotNull() {
+			addCriterion("back_express_name is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameEqualTo(String value) {
+			addCriterion("back_express_name =", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameNotEqualTo(String value) {
+			addCriterion("back_express_name <>", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameGreaterThan(String value) {
+			addCriterion("back_express_name >", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameGreaterThanOrEqualTo(String value) {
+			addCriterion("back_express_name >=", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameLessThan(String value) {
+			addCriterion("back_express_name <", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameLessThanOrEqualTo(String value) {
+			addCriterion("back_express_name <=", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameLike(String value) {
+			addCriterion("back_express_name like", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameNotLike(String value) {
+			addCriterion("back_express_name not like", value, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameIn(List<String> values) {
+			addCriterion("back_express_name in", values, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameNotIn(List<String> values) {
+			addCriterion("back_express_name not in", values, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameBetween(String value1, String value2) {
+			addCriterion("back_express_name between", value1, value2, "backExpressName");
+			return (Criteria) this;
+		}
+
+		public Criteria andBackExpressNameNotBetween(String value1, String value2) {
+			addCriterion("back_express_name not between", value1, value2, "backExpressName");
 			return (Criteria) this;
 		}
 

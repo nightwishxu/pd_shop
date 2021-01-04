@@ -1,11 +1,10 @@
 package com.demo.test;
 
 import cfca.sadk.algorithm.common.PKIException;
-import cfca.trustsign.common.vo.BankCardInfoVO;
 import cfca.trustsign.common.vo.cs.HeadVO;
 import cfca.trustsign.common.vo.cs.PersonVO;
 import cfca.trustsign.common.vo.request.tx3.Tx3001ReqVO;
-import com.demo.connector.HttpConnector;
+import com.demo.constant.HttpConnector;
 import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;

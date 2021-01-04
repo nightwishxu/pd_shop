@@ -1,14 +1,23 @@
 package com.api.action;
 
-import com.api.view.orgHome.OrgInfo;
+import cn.hutool.crypto.digest.DigestUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.base.ConstantsCode;
 import com.base.annotation.ApiMethod;
+import com.base.dao.model.Result;
+import com.base.util.PropertySupport;
 import com.base.util.StringUtils;
-import com.google.protobuf.ServiceException;
-import com.paidang.dao.model.PawnOrg;
+import com.demo.constant.HttpConnector;
+import com.item.service.CodeService;
+import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.PawnOrgEx;
+import com.paidang.domain.pojo.AppVersion;
+import com.paidang.domain.vo.OrderPriceCollectVo;
+import com.paidang.service.GoodsService;
+import com.paidang.service.OrderService;
 import com.paidang.service.PawnOrgService;
+import com.paidang.service.UserReturnAddressService;
 import com.ruoyi.common.core.redis.RedisCache;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -18,25 +27,20 @@ import java.util.Date;
 import java.util.List;
 
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import com.api.MEnumError;
 import com.api.util.PageLimit;
-import com.api.view.home.UserInfo;
 import com.api.view.home.UserIsReadCountInfo;
 import com.api.view.home.UserNotifyInfo;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.util.DateUtil;
-import com.base.util.StringUtil;
 import com.item.dao.model.User;
-import com.item.dao.model.UserExample;
 import com.item.dao.model.UserNotify;
 import com.item.dao.model.UserNotifyExample;
 import com.item.service.UserNotifyService;
@@ -59,6 +63,21 @@ public class ApiHomeController extends ApiBaseController{
 	@Autowired
 	private RedisCache redisCache;
 
+	@Value("${spring.profiles.active}")
+	private String profiles;
+
+	@Autowired
+	private GoodsService goodsService;
+
+	@Autowired
+	private OrderService orderService;
+
+
+	@Autowired
+	private CodeService codeService;
+
+	@Autowired
+	private UserReturnAddressService userReturnAddressService;
 
 
 	@ApiOperation(value = "企业认证",notes="登陆")
@@ -149,15 +168,19 @@ public class ApiHomeController extends ApiBaseController{
 	@ApiOperation(value = "获取企业认证资料 返回state = -1 时未认证",notes="登陆")
 	@RequestMapping(value="/getOrgInfo", method = RequestMethod.POST)
 	@ApiMethod(isLogin = true)
-	public PawnOrg getOrgInfo(MobileInfo mobileInfo){
+	public PawnOrgEx getOrgInfo(MobileInfo mobileInfo){
 		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
 		if (orgId==-1){
-			PawnOrg pawnOrg = new PawnOrg();
+			PawnOrgEx pawnOrg = new PawnOrgEx();
 			pawnOrg.setState(-1);
 			return pawnOrg;
 		}
 		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
-		return pawnOrg;
+		Integer auctionCount = goodsService.getAuctionCount(orgId, null);
+		PawnOrgEx ex = new PawnOrgEx();
+		BeanUtils.copyProperties(pawnOrg,ex);
+		ex.setAuctionCount(auctionCount==null?0:auctionCount);
+		return ex;
 	}
 
 
@@ -341,5 +364,189 @@ public class ApiHomeController extends ApiBaseController{
 		userNotifyService.deleteByPrimaryKey(id);
 		return 1;
 	}
-	
+
+	@ApiOperation(value = "删除用户消息列表",notes="登陆")
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	@ApiMethod(isLogin = false)
+	public Result test(MobileInfo mobileInfo){
+		return new Result(profiles + ConstantsCode.JKS_PATH);
+	}
+//
+
+	@RequestMapping(value = "/test1", method = RequestMethod.POST)
+	@ApiMethod(isLogin = false)
+	public Result test1(MobileInfo mobileInfo){
+		PropertySupport.reload();
+		return new Result( ConstantsCode.JKS_PATH);
+	}
+
+
+	@PostMapping("/pay/set/password")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "设置支付密码（第一次）")
+	public Integer setPassword(@ApiParam(value = "支付密码") String password,
+							   MobileInfo mobileInfo){
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+
+		if(StringUtils.isNotBlank(pawnOrg.getPassword())){
+			throw new ApiException(-1,"存在异常数据。");
+		}
+
+		//密码对称加密 16进制
+		String encryptHex = DigestUtil.md5Hex(password);
+		PawnOrg temp = new PawnOrg();
+		temp.setId(orgId);
+		temp.setPayPassword(encryptHex);
+
+		pawnOrgService.updateByPrimaryKeySelective(temp);
+		return 1;
+	}
+
+
+	@PostMapping("/pay/reset/password")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "重置支付密码")
+	public Integer reSetPassword(@ApiParam(value = "原支付密码") String password,
+								 @ApiParam(value = "第一次输入新支付密码") String newPassword,
+								 @ApiParam(value = "第二次输入新支付密码") String reNewPassword,
+								 MobileInfo mobileInfo){
+
+		if(!newPassword.equals(reNewPassword)){
+			throw new ApiException(-1,"两次输入的密码不一致");
+		}
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+
+
+		//存在人员数据，但是人员已经设置过密码
+		if(StringUtils.isBlank(pawnOrg.getPayPassword())){
+			throw new ApiException(-1,"还未设置过密码");
+		}else{
+			String pass = pawnOrg.getPayPassword();
+			//密码对称加密 16进制
+			String encryptHex = DigestUtil.md5Hex(password);
+
+			if(!pass.equals(encryptHex)){
+				throw new ApiException(-1,"原支付密码错误");
+			}
+			String newEncryptHex = DigestUtil.md5Hex(newPassword);
+			PawnOrg temp = new PawnOrg();
+			temp.setId(orgId);
+			temp.setPayPassword(newEncryptHex);
+
+			pawnOrgService.updateByPrimaryKeySelective(temp);
+
+		}
+		return 1;
+	}
+
+
+	@PostMapping("/pay/forget/password/set")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "忘记支付密码 设置" )
+	public Integer setForgetPassword(
+			@ApiParam(value = "第一次输入新支付密码") String newPassword,
+			@ApiParam(value = "第二次输入新支付密码") String reNewPassword,
+			MobileInfo mobileInfo){
+		if(!newPassword.equals(reNewPassword)){
+			throw new ApiException(-1,"两次输入的密码不一致");
+		}
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+
+
+		//存在人员数据，但是人员已经设置过密码
+		if(StringUtils.isBlank(pawnOrg.getPayPassword())){
+			throw new ApiException(-1,"还未设置过密码");
+		}else{
+			String newEncryptHex = DigestUtil.md5Hex(newPassword);
+			PawnOrg temp = new PawnOrg();
+			temp.setId(orgId);
+			temp.setPayPassword(newEncryptHex);
+
+			pawnOrgService.updateByPrimaryKeySelective(temp);
+
+		}
+		return 1;
+	}
+
+	@PostMapping("/pay/password/verification")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "支付密码验证")
+	public Integer verification(@ApiParam(value = "支付密码") String password,
+								MobileInfo mobileInfo){
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		if(org.apache.commons.lang.StringUtils.isBlank(pawnOrg.getPayPassword())){
+			throw new ApiException(-1,"还未设置支付密码");
+		}else{
+			String pass = pawnOrg.getPayPassword();
+			String encryptHex = DigestUtil.md5Hex(password);
+			if(!pass.equals(encryptHex)){
+				throw new ApiException(-1,"支付密码不正确");
+			}
+		}
+		return 1;
+	}
+
+	@PostMapping("/financeInfo/get")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "机构财务汇总")
+	public OrderPriceCollectVo getOrderCollect(MobileInfo mobileInfo){
+		OrderPriceCollectVo vo = new OrderPriceCollectVo();
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		if (orgId==-1){
+			throw new ApiException("机构信息异常");
+		}
+		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+		if (pawnOrg==null){
+			throw new ApiException(400,"机构信息异常");
+		}
+		//待打款
+		vo.setToBePay(orderService.getTotalOrderPrice(orgId,1));
+		//待发货
+		vo.setToBeDeliver(orderService.getTotalOrderPrice(orgId,2));
+		//待收货
+		vo.setToBeReceipt(orderService.getTotalOrderPrice(orgId,3));
+
+		vo.setTotal(pawnOrg.getAmount()==null?BigDecimal.ZERO:pawnOrg.getAmount());
+		return vo;
+	}
+
+
+//	@ApiOperation(value = "获取app版本信息",notes="")
+//	@RequestMapping(value = "/appVersion/get", method = RequestMethod.POST)
+//	@ApiMethod(isLogin = false)
+//	public AppVersion getAppVersion(@ApiParam(value = "user 用户端 org 机构端",required = true)String platForm,
+//									@ApiParam(value = "系统 0 ios 1 android",required = true)Integer system){
+//		return codeService.getAppVersion(platForm,system);
+//	}
+
+
+
 }

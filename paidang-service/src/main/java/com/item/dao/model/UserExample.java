@@ -2574,6 +2574,66 @@ public class UserExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andIntegralIsNull() {
+			addCriterion("integral is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralIsNotNull() {
+			addCriterion("integral is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral =", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral <>", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralGreaterThan(java.math.BigDecimal value) {
+			addCriterion("integral >", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral >=", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralLessThan(java.math.BigDecimal value) {
+			addCriterion("integral <", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("integral <=", value, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralIn(List<java.math.BigDecimal> values) {
+			addCriterion("integral in", values, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("integral not in", values, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("integral between", value1, value2, "integral");
+			return (Criteria) this;
+		}
+
+		public Criteria andIntegralNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("integral not between", value1, value2, "integral");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

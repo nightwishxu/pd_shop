@@ -319,6 +319,14 @@ public class User implements Serializable {
 	@Column(name = "anxinsign_id")
 	private String anxinsignId;
 
+	/**
+	 *积分
+	 */
+	@ApiModelProperty(value="积分")
+	@ApiParam(value="积分")
+	@Column(name = "integral")
+	private java.math.BigDecimal integral;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -621,6 +629,14 @@ public class User implements Serializable {
 
 	public String getAnxinsignId() {
 		return anxinsignId;
+	}
+
+	public void setIntegral(java.math.BigDecimal integral) {
+		this.integral=integral;
+	}
+
+	public java.math.BigDecimal getIntegral() {
+		return integral;
 	}
 
 }

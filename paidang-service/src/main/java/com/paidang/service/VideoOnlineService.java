@@ -62,7 +62,11 @@ public class VideoOnlineService {
 		return this.videoOnlineMapper.insertSelective(record);
 	}
 
-    public List<VideoOnlineEx> selectByComment() {
-		return this.videoOnlineMapperEx.selectByComment();
+    public List<VideoOnlineEx> selectByComment(Integer userId,Integer state,String name) {
+		return this.videoOnlineMapperEx.selectByComment(userId,state,name);
     }
+
+	public int updateCount(Integer id,Integer num,Integer type){
+		return this.videoOnlineMapperEx.updateCount(id,num,type);
+	}
 }

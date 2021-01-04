@@ -7,7 +7,7 @@ import cfca.trustsign.common.vo.cs.CreateContractVO;
 import cfca.trustsign.common.vo.cs.HeadVO;
 import cfca.trustsign.common.vo.cs.SignInfoVO;
 import cfca.trustsign.common.vo.request.tx3.Tx3201ReqVO;
-import com.demo.connector.HttpConnector;
+import com.demo.constant.HttpConnector;
 import com.demo.constant.Request;
 import com.demo.converter.JsonObjectMapper;
 import com.demo.util.SecurityUtil;

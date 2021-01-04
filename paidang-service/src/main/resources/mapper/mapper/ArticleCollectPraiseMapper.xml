@@ -11,6 +11,7 @@
         <result column="img" property="img" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="INTEGER" />
         <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="use_type" property="useType" jdbcType="INTEGER" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     </resultMap>
 
@@ -75,7 +76,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,article_id,author_id,icon,nick_name,img,status,type,create_time
+        id,user_id,article_id,author_id,icon,nick_name,img,status,type,use_type,create_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -116,12 +117,12 @@
         insert into t_article_collect_praise (user_id,article_id,
         author_id,icon,nick_name,
         img,status,type,
-        create_time
+        use_type,create_time
         )
         values (#{userId,jdbcType=INTEGER},#{articleId,jdbcType=INTEGER},
         #{authorId,jdbcType=INTEGER},#{icon,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR},
         #{img,jdbcType=VARCHAR},#{status,jdbcType=INTEGER},#{type,jdbcType=INTEGER},
-        #{createTime,jdbcType=TIMESTAMP}
+        #{useType,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP}
         )
     </insert>
 
@@ -152,6 +153,9 @@
             <if test="type != null" >
                 type,
             </if>
+            <if test="useType != null" >
+                use_type,
+            </if>
             <if test="createTime != null" >
                 create_time,
             </if>
@@ -180,6 +184,9 @@
             </if>
             <if test="type != null" >
                 #{type,jdbcType=INTEGER},
+            </if>
+            <if test="useType != null" >
+                #{useType,jdbcType=INTEGER},
             </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
@@ -224,6 +231,9 @@
             <if test="record.type != null" >
                 type = #{record.type,jdbcType=INTEGER},
             </if>
+            <if test="record.useType != null" >
+                use_type = #{record.useType,jdbcType=INTEGER},
+            </if>
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
             </if>
@@ -244,6 +254,7 @@
         img = #{img,jdbcType=VARCHAR},
         status = #{status,jdbcType=INTEGER},
         type = #{type,jdbcType=INTEGER},
+        use_type = #{useType,jdbcType=INTEGER},
         create_time = #{createTime,jdbcType=TIMESTAMP}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -277,6 +288,9 @@
             <if test="type != null" >
                 type = #{type,jdbcType=INTEGER},
             </if>
+            <if test="useType != null" >
+                use_type = #{useType,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -294,6 +308,7 @@
         img = #{img,jdbcType=VARCHAR},
         status = #{status,jdbcType=INTEGER},
         type = #{type,jdbcType=INTEGER},
+        use_type = #{useType,jdbcType=INTEGER},
         create_time = #{createTime,jdbcType=TIMESTAMP}
         where id = #{id}
     </update>

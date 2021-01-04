@@ -11,4 +11,5 @@ public class ConstantsCode {
 	public static final String SERVICE_CACHE = "serviceCache";
 	public static final String PROJECT_NAME = PropertySupport.getProperty("project.name");
 	public static final boolean MULTI_LOGIN = "true".equals(PropertySupport.getProperty("api.login.multi"));
+
 }

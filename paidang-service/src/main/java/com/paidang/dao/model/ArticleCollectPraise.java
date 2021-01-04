@@ -88,6 +88,14 @@ public class ArticleCollectPraise implements Serializable {
 	private Integer type;
 
 	/**
+	 *1 动态 2 视频
+	 */
+	@ApiModelProperty(value="1 动态 2 视频")
+	@ApiParam(value="1 动态 2 视频")
+	@Column(name = "use_type")
+	private Integer useType;
+
+	/**
 	 *
 	 */
 	@ApiModelProperty(value="")
@@ -165,6 +173,14 @@ public class ArticleCollectPraise implements Serializable {
 
 	public Integer getType() {
 		return type;
+	}
+
+	public void setUseType(Integer useType) {
+		this.useType=useType;
+	}
+
+	public Integer getUseType() {
+		return useType;
 	}
 
 	public void setCreateTime(java.util.Date createTime) {

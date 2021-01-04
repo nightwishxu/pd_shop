@@ -3,12 +3,14 @@ package com.base.service;
 import com.api.constants.PayConfig;
 import com.base.pay.PayPropertySupport;
 import com.base.util.CoreConstants;
+import com.base.util.PropertySupport;
 import com.ijpay.alipay.AliPayApiConfig;
 import com.ijpay.alipay.AliPayApiConfigKit;
 import com.ijpay.wxpay.WxPayApiConfig;
 import com.ijpay.wxpay.WxPayApiConfigKit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,12 @@ public class SensitivWordsService {
     
     private static Set<String> keySet = new HashSet<String>();
 
-    
+    @Value("${spring.profiles.active}")
+    private String profiles;
+
+
+
+
     /**
      * 加载敏感词
      *
@@ -47,6 +54,7 @@ public class SensitivWordsService {
         try {
             readSensitiveWordFile();
             initPayConfig();
+            PropertySupport.initProfile(profiles);
             logger.info("[内存数据]-敏感词数据任务加载完成");
         } catch (Exception e) {
             // TODO Auto-generated catch block

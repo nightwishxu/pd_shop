@@ -8,6 +8,7 @@
     <result column="goodsOwnerAccount" property="goodsOwnerAccount"/>
     <result column="goodsOwnerNick" property="goodsOwnerNick"/>
     <result column="goodsOwnerName" property="goodsOwnerName"/>
+    <result column="backExpressId" property="backExpressId"/>
   </resultMap>
 
 
@@ -145,7 +146,7 @@
     D.id as userGoodsId,
     D.is_sell as isSell
     from p_order A
-    left join p_express B on A.id = B.fid
+    left join p_express B on A.id = B.fid and B.type=3
     left join p_goods  C on A.goods_id = C.id
     left join p_user_goods D  on D.id = C.goods_id
     where A.user_id = #{user_id}
@@ -281,11 +282,13 @@
     t.*,
     u.account goodsOwnerAccount,
     u.nick_name goodsOwnerNick,
+    c.id backExpressId,
     u.NAME goodsOwnerName
     FROM
     p_order t
     LEFT JOIN p_goods g ON t.goods_id = g.id
     LEFT JOIN b_user u ON g.goods_owner = u.id
+    LEFT JOIN p_express c on t.back_code = c.express_code and c.type=7
     WHERE
     t.goods_source IN ( 6, 7 )
     <if test="userId!=null and userId !='' ">
@@ -303,7 +306,7 @@
 
   <select id="getTotalOrderPrice" resultType="java.math.BigDecimal">
     select ifnull(sum(price),0) from p_order where goods_source IN ( 6, 7 )
-    and goods_owner=#{userId}
+    and org_id=#{userId}
     <if test="queryType!=null and queryType==1">
       and state=1 and ref_state!=4
     </if>

@@ -34,6 +34,9 @@ public class UserInfo {
 	@ApiModelProperty(value="实名认证状态 0未绑定 1 绑定身份证成功 2 活动验证中 3活动验证失败 4活体验证成功")
 	private Integer authStatus;
 
+	@ApiModelProperty(value="会员等级")
+	private String memberLevel;
+
 	public UserInfo(){};
 
 	public UserInfo(Integer id,String nickName){
@@ -117,5 +120,13 @@ public class UserInfo {
 
 	public void setAuthStatus(Integer authStatus) {
 		this.authStatus = authStatus;
+	}
+
+	public String getMemberLevel() {
+		return memberLevel;
+	}
+
+	public void setMemberLevel(String memberLevel) {
+		this.memberLevel = memberLevel;
 	}
 }

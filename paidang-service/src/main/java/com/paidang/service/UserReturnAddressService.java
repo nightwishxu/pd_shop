@@ -69,6 +69,10 @@ public class UserReturnAddressService {
 		return this.userReturnAddressMapperEx.updateNotDefault(userId);
 	}
 
+	public int updateNotDefaultOrg(int orgId){
+		return this.userReturnAddressMapperEx.updateNotDefaultOrg(orgId);
+	}
+
 	public int updateDefault(int addressId){
 		return this.userReturnAddressMapperEx.updateDefault(addressId);
 	}

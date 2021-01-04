@@ -3,13 +3,11 @@ package com.api.view.store;
 import com.base.util.StringUtils;
 import com.google.common.collect.Lists;
 import com.item.domain.enums.OrgLabelsEnum;
-import com.paidang.dao.OrgIntegralEnum;
+import com.paidang.domain.enums.OrgIntegralEnum;
 import com.paidang.daoEx.model.GoodsAuctionEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -102,6 +100,8 @@ public class AppStoreGoodsDetail {
 	@ApiModelProperty(value="下架原因")
 	private String reasonOfDismounting;
 
+	@ApiModelProperty(value="来源  6个人7企业  臻品  2 绝当品   3   自营")
+	private Integer goodsSource;
 
 	/**
 	 *简介
@@ -677,6 +677,15 @@ public class AppStoreGoodsDetail {
 
 	public void setOrgLabelsInfo(String orgLabelsInfo) {
 		this.orgLabelsInfo = orgLabelsInfo;
+	}
+
+
+	public Integer getGoodsSource() {
+		return goodsSource;
+	}
+
+	public void setGoodsSource(Integer goodsSource) {
+		this.goodsSource = goodsSource;
 	}
 }
 

@@ -24,12 +24,28 @@ public class UserReturnAddress implements Serializable {
 	private Integer id;
 
 	/**
+	 *机构编号
+	 */
+	@ApiModelProperty(value="机构编号")
+	@ApiParam(value="机构编号")
+	@Column(name = "org_id")
+	private Integer orgId;
+
+	/**
 	 *用户id
 	 */
 	@ApiModelProperty(value="用户id")
 	@ApiParam(value="用户id")
 	@Column(name = "user_id")
 	private Integer userId;
+
+	/**
+	 *1 用户个人 2 商户 3 机构
+	 */
+	@ApiModelProperty(value="1 用户个人 2 商户 3 机构")
+	@ApiParam(value="1 用户个人 2 商户 3 机构")
+	@Column(name = "type")
+	private Integer type;
 
 	/**
 	 *收件人名字
@@ -95,12 +111,28 @@ public class UserReturnAddress implements Serializable {
 		return id;
 	}
 
+	public void setOrgId(Integer orgId) {
+		this.orgId=orgId;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
 	public void setUserId(Integer userId) {
 		this.userId=userId;
 	}
 
 	public Integer getUserId() {
 		return userId;
+	}
+
+	public void setType(Integer type) {
+		this.type=type;
+	}
+
+	public Integer getType() {
+		return type;
 	}
 
 	public void setUserName(String userName) {

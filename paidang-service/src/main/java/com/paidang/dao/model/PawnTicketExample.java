@@ -3714,6 +3714,76 @@ public class PawnTicketExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andContractUrlIsNull() {
+			addCriterion("contract_url is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlIsNotNull() {
+			addCriterion("contract_url is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlEqualTo(String value) {
+			addCriterion("contract_url =", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlNotEqualTo(String value) {
+			addCriterion("contract_url <>", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlGreaterThan(String value) {
+			addCriterion("contract_url >", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlGreaterThanOrEqualTo(String value) {
+			addCriterion("contract_url >=", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlLessThan(String value) {
+			addCriterion("contract_url <", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlLessThanOrEqualTo(String value) {
+			addCriterion("contract_url <=", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlLike(String value) {
+			addCriterion("contract_url like", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlNotLike(String value) {
+			addCriterion("contract_url not like", value, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlIn(List<String> values) {
+			addCriterion("contract_url in", values, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlNotIn(List<String> values) {
+			addCriterion("contract_url not in", values, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlBetween(String value1, String value2) {
+			addCriterion("contract_url between", value1, value2, "contractUrl");
+			return (Criteria) this;
+		}
+
+		public Criteria andContractUrlNotBetween(String value1, String value2) {
+			addCriterion("contract_url not between", value1, value2, "contractUrl");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

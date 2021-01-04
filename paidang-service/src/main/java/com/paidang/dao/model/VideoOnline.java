@@ -87,6 +87,30 @@ public class VideoOnline implements Serializable {
 	@Column(name = "labels")
 	private String labels;
 
+	/**
+	 *点赞数
+	 */
+	@ApiModelProperty(value="点赞数")
+	@ApiParam(value="点赞数")
+	@Column(name = "praise_num")
+	private Integer praiseNum;
+
+	/**
+	 *收藏数
+	 */
+	@ApiModelProperty(value="收藏数")
+	@ApiParam(value="收藏数")
+	@Column(name = "collect_num")
+	private Integer collectNum;
+
+	/**
+	 *喜欢数
+	 */
+	@ApiModelProperty(value="喜欢数")
+	@ApiParam(value="喜欢数")
+	@Column(name = "like_num")
+	private Integer likeNum;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -157,6 +181,30 @@ public class VideoOnline implements Serializable {
 
 	public String getLabels() {
 		return labels;
+	}
+
+	public void setPraiseNum(Integer praiseNum) {
+		this.praiseNum=praiseNum;
+	}
+
+	public Integer getPraiseNum() {
+		return praiseNum;
+	}
+
+	public void setCollectNum(Integer collectNum) {
+		this.collectNum=collectNum;
+	}
+
+	public Integer getCollectNum() {
+		return collectNum;
+	}
+
+	public void setLikeNum(Integer likeNum) {
+		this.likeNum=likeNum;
+	}
+
+	public Integer getLikeNum() {
+		return likeNum;
 	}
 
 }

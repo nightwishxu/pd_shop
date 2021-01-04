@@ -15,6 +15,7 @@
       <result column="continuePawnStatus" property="continuePawnStatus"></result>
       <result column="continueProjectCode" property="continueProjectCode"></result>
     <result column="totalAmountForPawner" property="totalAmountForPawner"></result>
+    <result column="continuePawnTicketCode" property="continuePawnTicketCode"></result>
 <!-- <result column="user_name" property="userName"></result>
     <result column="user_phone" property="phone"></result>
     <result column="user_id_card" property="idCard"></result>
@@ -357,6 +358,7 @@
             E.user_status as userstatus,
             E.org_status as orgstatus,
             C.project_code as continueProjectCode,
+            C.continue_pawn_ticket_code as continuePawnTicketCode,
             C.state as continuePawnStatus,
         (
         select count(*) from p_pawn_auction D where A.id = D.pawn_id

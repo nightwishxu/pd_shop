@@ -193,4 +193,8 @@ public class UserService {
 	public int updateUserCount(Integer id,Integer type){
 		return userMapperEx.updateUserCount(id,type);
 	}
+
+	public int addIntegral(Integer id,BigDecimal integral){
+		return userMapperEx.addIntegral(id,integral);
+	}
 }

@@ -50,7 +50,7 @@ public class AppMyPawnList {
     private Integer isVerify;
     @ApiModelProperty(value="0未逾期  1逾期")
     private Integer type;
-    @ApiModelProperty(value="赎当状态  0没有赎当操作 1赎当处理中 ")
+    @ApiModelProperty(value="赎当状态  0没有赎当操作 1赎当处理中 2赎当处理完成")
     private Integer redeemState;
     @ApiModelProperty(value="续当状态 0没有续当操作 1续当处理中 ")
     private Integer continueState;
@@ -96,6 +96,9 @@ public class AppMyPawnList {
 
     @ApiModelProperty(value = "1待签署 2签署合同完成待上传打款凭证 3用户打款并上传凭证4机构确认5机构未收到")
     private Integer continuePawnStatus;
+
+    @ApiModelProperty("最新续当id")
+    private Integer lastPawnContinueId;
 
     public Integer getId() {
         return id;
@@ -359,5 +362,14 @@ public class AppMyPawnList {
 
     public void setContinuePawnStatus(Integer continuePawnStatus) {
         this.continuePawnStatus = continuePawnStatus;
+    }
+
+
+    public Integer getLastPawnContinueId() {
+        return lastPawnContinueId;
+    }
+
+    public void setLastPawnContinueId(Integer lastPawnContinueId) {
+        this.lastPawnContinueId = lastPawnContinueId;
     }
 }
