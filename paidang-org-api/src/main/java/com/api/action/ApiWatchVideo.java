@@ -57,7 +57,7 @@ public class ApiWatchVideo extends ApiBaseController {
 //        List<VideoOnline> list = videoOnlineService.selectByExample(example);
 
         //视频列表
-
+        startPage();
         List<VideoOnlineEx> list = videoOnlineService.selectByComment(mobileInfo.getUserId(),null,null);
 
         List<AppVideoOnline> ret = new ArrayList<AppVideoOnline>();

@@ -445,6 +445,9 @@ public class ApiFirstPageController extends ApiBaseController {
         orgInfo.setRegisteredCapital(record.getRegisteredCapital());
         orgInfo.setPayPassword(record.getPayPassword());
         orgInfo.setAmount(record.getAmount());
+        orgInfo.setStoreContacts(record.getStoreContacts());
+        orgInfo.setStorePhone(record.getStorePhone());
+        orgInfo.setSignature(record.getSignature());
         Integer auctionCount = goodsService.getAuctionCount(orgId, null);
         orgInfo.setAuctionCount(auctionCount==null?0:auctionCount);
 

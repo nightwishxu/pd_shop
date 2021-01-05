@@ -2,7 +2,9 @@ package com.api.view.orgHome;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 
 /**
@@ -51,6 +53,31 @@ public class OrgInfo {
 
     @ApiModelProperty(value="拍品数量")
     private Integer auctionCount;
+
+
+    /**
+     *签名
+     */
+    @ApiModelProperty(value="签名")
+    @ApiParam(value="签名")
+    @Column(name = "signature")
+    private String signature;
+
+    /**
+     *店铺联系人
+     */
+    @ApiModelProperty(value="店铺联系人")
+    @ApiParam(value="店铺联系人")
+    @Column(name = "store_contacts")
+    private String storeContacts;
+
+    /**
+     *店铺联系电话
+     */
+    @ApiModelProperty(value="店铺联系电话")
+    @ApiParam(value="店铺联系电话")
+    @Column(name = "store_phone")
+    private String storePhone;
 
 
     public Integer getId() {
@@ -156,5 +183,30 @@ public class OrgInfo {
 
     public void setAuctionCount(Integer auctionCount) {
         this.auctionCount = auctionCount;
+    }
+
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getStoreContacts() {
+        return storeContacts;
+    }
+
+    public void setStoreContacts(String storeContacts) {
+        this.storeContacts = storeContacts;
+    }
+
+    public String getStorePhone() {
+        return storePhone;
+    }
+
+    public void setStorePhone(String storePhone) {
+        this.storePhone = storePhone;
     }
 }

@@ -36,6 +36,8 @@ public class CoreConstants {
 
     public static  String SERVER_URL;
 
+    public static  String USER_SERVER_URL;
+
     public static  String BOS_URL;
 
     public static String FILE_PATH;
@@ -92,5 +94,10 @@ public class CoreConstants {
     @Value("${bos.url}")
     public void setBosUrl(String bosUrl) {
         BOS_URL = bosUrl;
+    }
+
+    @Value("${userServer.url}")
+    public  void setUserServerUrl(String userServerUrl) {
+        USER_SERVER_URL = userServerUrl;
     }
 }

@@ -8,11 +8,13 @@ import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 
+import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
 import com.base.util.StringUtil;
 import com.item.dao.model.Feedback;
 import com.item.service.CodeService;
 import com.item.service.FeedbackService;
+import com.item.service.SinglePageService;
 import com.paidang.domain.pojo.AppVersion;
 import com.paidang.service.BFileService;
 import com.ruoyi.common.core.domain.ApiFile;
@@ -46,6 +48,9 @@ public class ApiCommonController extends ApiBaseController{
 	private FeedbackService feedbackService;
 	@Autowired
 	private CodeService codeService;
+
+	@Autowired
+	private SinglePageService singlePageService;
 	
 	private static final String[] DEVICE = new String[]{"android","ios"};
 	
@@ -226,5 +231,16 @@ public class ApiCommonController extends ApiBaseController{
 	public AppVersion getAppVersion(
 			@ApiParam(value = "系统 0 ios 1 android",required = true)Integer system){
 		return codeService.getAppVersion("org",system);
+	}
+
+
+
+	@ApiMethod
+	@RequestMapping(value="/simplePage/get")
+	@ApiOperation(value = "获取富文本页面", notes = "不需要登录")
+	public Object singlePage(@ApiParam(value = "页面code  about关于我们  yhxy用户协议", required = true) String code){
+		com.item.dao.model.SinglePage page=singlePageService.selectByPrimaryKey(code);
+		page.setUrl(CoreConstants.USER_SERVER_URL + "h5/singlePage?code=" + code);
+		return page;
 	}
 }

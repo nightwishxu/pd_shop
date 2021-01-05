@@ -425,7 +425,7 @@ public class ApiLoginController extends ApiBaseController {
 		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(0);
 		List<User> list = userService.selectByExample(example);
 		if (list.size() == 0) {
-			throw new ApiException(MEnumError.LOGIN_FAILURE_ERROR);
+			throw new ApiException(MEnumError.USER_NOEXIST_ERROR);
 		}
 		User user = list.get(0);
 		if (!password.equals(user.getPassword())) {
@@ -485,7 +485,7 @@ public class ApiLoginController extends ApiBaseController {
 		example.createCriteria().andAccountEqualTo(phone).andTypeEqualTo(0);
 		List<User> list = userService.selectByExample(example);
 		if (list.size() == 0) {
-			throw new ApiException(MEnumError.LOGIN_FAILURE_ERROR);
+			throw new ApiException(MEnumError.USER_NOEXIST_ERROR);
 		}
 		User user = list.get(0);
 		// 验证码验证

@@ -193,6 +193,7 @@ public class ApiHomeController extends ApiBaseController{
 			,@ApiParam(required = false,value = "签名")String signature
 			,@ApiParam(required = false,value = "联系人")String storeContacts
 			,@ApiParam(required = false,value = "联系电话")String storePhone
+			,@ApiParam(required = false,value = "logo")String logo
 
 	){
 		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
@@ -205,6 +206,7 @@ public class ApiHomeController extends ApiBaseController{
 		}
 		PawnOrg tmp =new PawnOrg();
 		tmp.setId(orgId);
+		tmp.setOrgLogo(logo);
 		tmp.setSignature(signature);
 		tmp.setStoreContacts(storeContacts);
 		tmp.setStorePhone(storePhone);
