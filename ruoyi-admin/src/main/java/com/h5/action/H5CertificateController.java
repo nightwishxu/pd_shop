@@ -69,6 +69,7 @@ public class H5CertificateController extends H5BaseController {
         return redeem_overrate;
     }
 
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
     @ResponseBody
     @RequestMapping("/checkEx")
     public String checkEx(String phone,String exId){
@@ -357,6 +358,7 @@ public class H5CertificateController extends H5BaseController {
     }
 
     //专家鉴定保存
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
     @RequestMapping("/saveExperterInfo")
     @ResponseBody
     public Ret saveExperterInfo(ExperterInfo experterInfo){
@@ -406,6 +408,7 @@ public class H5CertificateController extends H5BaseController {
     }
 
 
+    @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
     @RequestMapping("/getExpertInfo")
     @ResponseBody
     public ExperterInfoEx getExpertInfo(Integer id){

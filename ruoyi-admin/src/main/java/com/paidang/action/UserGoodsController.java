@@ -2,6 +2,7 @@ package com.paidang.action;
 
 import com.base.ConstantsCode;
 import com.base.action.CoreController;
+import com.base.util.CoreConstants;
 import com.base.util.StringUtil;
 import com.base.util.http.HttpUtil;
 import com.item.dao.model.Admin;
@@ -24,6 +25,7 @@ import com.util.MPawnMsg;
 import com.util.PaidangMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -364,6 +366,7 @@ public class UserGoodsController extends CoreController{
 	}
 
 	//查看在线鉴定详情
+	@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 	@RequestMapping("/checkDetail")
 	@ResponseBody
 	public Ret checkDetail(Integer id){
@@ -461,6 +464,12 @@ public class UserGoodsController extends CoreController{
 		}
 		userGoodsService.updateByPrimaryKeySelective(userGoods);
 		return ok();
+	}
+
+	@RequestMapping("/serverUrl/get")
+	@ResponseBody
+	public Ret getBaseUrl(){
+		return ok(CoreConstants.SERVER_URL);
 	}
 
 }

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394 -->
+<html class="am-touch js cssanimations" style="font-size: 64.2188px;">
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style class="vjs-styles-defaults">
+        .video-js {
+            width: 300px;
+            height: 150px;
+        }
+
+        .vjs-fluid {
+            padding-top: 56.25%
+        }
+    </style>
+    <style class="vjs-styles-dimensions">
+        .my-video-dimensions {
+            width: 371px;
+            height: 654.7058823529411px;
+        }
+
+        .my-video-dimensions.vjs-fluid {
+            padding-top: 176.47058823529412%;
+        }
+    </style>
+
+
+
+
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <script src="./static/jquery-1.9.1.js.下载"></script>
+    <script src="./static/jquery.cookie.js.下载"></script>
+    <script src="./static/avalon.js.下载"></script>
+    <script src="./static/syJquery.js.下载" type="text/javascript" charset="utf-8"></script>
+    <script src="./static/init.js.下载" type="text/javascript" charset="utf-8"></script>
+    <script src="./static/layer.js.下载" type="text/javascript"></script>
+    <link href="./static/layer.css" type="text/css" rel="styleSheet" id="layermcss">
+    <script src="./static/layer.js(1).下载"></script>
+    <link rel="stylesheet" href="./static/layer(1).css" id="layuicss-skinlayercss">
+    <script type="text/javascript">
+        if (window.top != window) {
+            window.top.location = window.location;
+        }
+        var sy = sy || {};
+        // sy.path = "http://baidu.paidangwang.net:80/paidangAdmin";
+        sy.contextPath = 'http://localhost:8080';
+        // sy.basePath = "http" + "://" + "baidu.paidangwang.net" + ":" + "80" + "/paidangAdmin" + "/";
+        // sy.roleCode = 'admin';
+        if (location.href.indexOf("/login") == -1) {
+            sessionStorage.lastUnloginUrl = location.href;
+        }
+    </script>
+    <style>
+        ms-controller {
+            visibility: hidden;
+        }
+
+        body {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+    </style>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>专家鉴定</title>
+    <meta name="description" content="专家鉴定">
+    <meta name="keywords" content="专家鉴定">
+    <script src="./static/jquery-1.10.1.min.js.下载"></script>
+    <link href="./static/common.css" rel="stylesheet" type="text/css">
+    <link href="./static/base.css" rel="stylesheet" type="text/css">
+    <link href="./static/slider.css" rel="stylesheet" type="text/css">
+    <link href="./static/video-js.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="./static/common.js.下载"></script>
+    <script type="text/javascript" src="./static/regist.js.下载"></script>
+    <script type="text/javascript" src="./static/fastclick.js.下载"></script>
+    <script type="text/javascript" src="./static/amazeui.js.下载"></script>
+    <script type="text/javascript" src="./static/video.min.js.下载"></script>
+    <script type="text/javascript">
+        $(function () {
+            var obj;
+            var expId;
+            var experId;
+            $("#sub").click(function () {
+                if ($(".apprai").val() == null || $(".apprai").val() == '') {
+                    return layer.msg("请输入您的评价");
+                }
+                if ($("#phone").val() == null || $("#phone").val() == '') {
+                    return layer.msg("请输入手机号");
+                }
+                if ($("#code").val() == null || $("#code").val() == '') {
+                    return layer.msg("请输入验证码");
+                }
+
+                var res;
+                //验证验证码
+                $.post(sy.contextPath + '/webApi/account/checkCode', {
+                    phone: $("#phone").val(),
+                    code: $("#code").val(),
+                    type: 3
+                }, function (result) {
+                    if (result.code == 1) {
+                        var url = sy.contextPath + '/m/pawn/saveExperterInfo';
+                        var obj = {
+                            id: expId,
+                            info: $(".apprai").val(),
+                        };
+                        $.post(url, obj, function (result) {
+                            if (result.code == 1) {
+                                return layer.msg(result.msg);
+                            } else {
+                                return layer.msg(result.msg)
+                            }
+                        }, 'json');
+                    } else {
+                        return layer.msg(result.msg)
+                    }
+                }, 'json');
+
+
+            });
+
+
+            $("#yzm").click(function () {
+                var phone = $("#phone").val().trim();
+                var url = sy.contextPath + '/m/pawn/checkEx';
+                var obj = {
+                    phone: phone,
+                    exId: experId
+                };
+                $.post(url, obj, function (result) {
+                    if (result.code == 0) {
+                        layer.msg("您不是被指定专家，无权鉴定");
+                        return;
+
+                    } else {
+                        //获取验证码
+                        var url2 = sy.contextPath + "/webApi/account/getMobileMsg";
+                        var obj = {
+                            phone: phone,
+                            type: 3
+                        }
+                        $.post(url2, obj, function (result) {
+                            console.log(result)
+                        }, 'json');
+                    }
+                }, 'json');
+            });
+
+            var experterId = getQueryString('id')
+            if (experterId != '') {
+                $.post(sy.contextPath + '/m/pawn/getExpertInfo', {
+                    id: experterId
+                }, function (result) {
+                    // var data = JSON.parse(result);
+                    obj = result;
+                    expId = obj.id;
+                    experId = obj.experterId
+                    console.info(obj.id);
+                    /*
+                     <li>
+                            <div class="am-gallery-item"><img src="./static/download" data-am-pureviewed="1"></div>
+                        </li>
+                    */
+                    var html = '';
+                    var imgArr = obj.images.split(",");
+                    for (var i = 0; i < imgArr.length; i++) {
+                        html += "<li>"
+                        html += '<div class="<div class="am-gallery-item"><img src="' + imgArr[i] + '" data-am-pureviewed="1"></div>'
+                        html += "</li>"
+                    }
+                    console.info(html)
+                    $("#myImg").append(html)
+                    $.post(sy.contextPath + '/m/pawn/checkDetail', {
+                        id: obj.goodsId
+                    }, function (result) {
+                        var data = JSON.parse(result[0].content);
+
+                        var htmls = '';
+                        var flag = true;
+                        for (var i = 0; i < data.length; i++) {
+                            var json = data[i];
+                            var content = json.content;
+
+                            if (json.contentType == 3) {
+                                // content = po.showImg(content,20,20);
+                                continue;
+                            } else if (json.contentType == 4) {
+                                flag = false;
+                                content =
+                                    '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
+                                    '<source src="' + content + '" type="video/mp4">' +
+                                    ' </video>';
+                            }
+                            htmls += "<dd>"
+                            htmls += '<span>' + json.name + ':</span>';
+                            htmls += '<span>' + content + '</span>';
+                            htmls += "</dd>"
+                        }
+                        if (flag) {
+                            var content =
+                                '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
+                                '<source src="' + result.video + '" type="video/mp4">' +
+                                ' </video>';
+                            htmls += "<dd>"
+                            htmls += '<span>宝贝视频：</span>';
+                            htmls += '<span>' + content + '</span>';
+                            htmls += "</dd>"
+                        }
+                        $(".twoblock").eq(0).append(htmls);
+                        // $(".content-div-cc").eq(0).append(htmls);
+                        videojs("my-video");
+                    }, 'json');
+
+
+                }, 'json');
+            }
+
+
+
+        });
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        } 
+    </script>
+</head>
+
+
+
+
+
+
+<body
+    style="background-image: url(&quot;http://baidu.paidangwang.net:80/paidangAdmin/static/m/images/certificate/a_bg.jpg&quot;); background-size: cover; height: 100%; background-attachment: fixed;">
+    <div class="wrapper">
+        <!--背景遮罩-->
+        <div class="bg-black dis_none"></div>
+        <div class="a_cont pd20">
+            <!--图片概览-->
+            <dl class="twoblock">
+                <dt>图片概览1</dt>
+                <dd>
+                    <ul data-am-widget="gallery" id="myImg"
+                        class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-overlay clearfix am-no-layout"
+                        data-am-gallery="{ pureview: true }">
+
+                    </ul>
+                </dd>
+                <!-- <div class="content-div-cc">
+
+                   
+                </div> -->
+                <div class="Img_panel"></div>
+                <dl class="twoblock appr">
+                    <dd><span>专家手机号：</span><input id="phone" type="text" class="input-txt" name="phone"
+                            placeholder="请输入您的手机号"></dd>
+                    <dd><span>验证码：</span><input id="code" type="text" class="input-txt input-txt-yzm" name="code"
+                            placeholder="请输入验证码"><input id="yzm" type="button" onclick="getVerifyCode(this)"
+                            class="input-yzm" value="获取验证码"></dd>
+                    <dd><span>专家意见：</span><textarea class="apprai" placeholder="请输入您的鉴定和市场流通性评价" rows="3"></textarea>
+                    </dd>
+                    <div class="btn-link"><a class="a-link a-regist" id="sub">提交</a></div>
+                </dl>
+        </div>
+        <!-- <div class="am-pureview am-pureview-bar-active" id="am-pureview-iugav">
+            <ul class="am-pureview-slider"
+                style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                <li data-src="http://baidu.paidangwang.net/paidangAdmin/download?id=fe8c49d53c1843f093e1d56d34903c6b"
+                    data-title=""></li>
+                <li data-src="http://baidu.paidangwang.net/paidangAdmin/download?id=42315b21245942cc829479f98f2b8691"
+                    data-title=""></li>
+                <li data-src="http://baidu.paidangwang.net/paidangAdmin/download?id=0bb5dfdc1bf04c958e60e0f5db5202bb"
+                    data-title=""></li>
+            </ul>
+            <ul class="am-pureview-direction">
+                <li class="am-pureview-prev"><a
+                        href="http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394"></a></li>
+                <li class="am-pureview-next"><a
+                        href="http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394"></a></li>
+            </ul>
+            <ol class="am-pureview-nav">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+            </ol>
+            <div class="am-pureview-bar am-active"><span class="am-pureview-title"></span>
+                <div class="am-pureview-counter"><span class="am-pureview-current"></span> / <span
+                        class="am-pureview-total">3</span></div>
+            </div>
+            <div class="am-pureview-actions am-active"><a href="javascript: void(0)" class="am-icon-chevron-left"
+                    data-am-close="pureview"></a></div>
+        </div>
+        <div class="am-pureview am-pureview-bar-active am-pureview-only" id="am-pureview-njvfa">
+            <ul class="am-pureview-slider"
+                style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                <li data-src="http://baidu.paidangwang.net/paidangAdmin/download?id=d2a3d1e8cdb0434494db3929a7694f7c"
+                    data-title=""></li>
+            </ul>
+            <ul class="am-pureview-direction">
+                <li class="am-pureview-prev"><a
+                        href="http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394"></a></li>
+                <li class="am-pureview-next"><a
+                        href="http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394"></a></li>
+            </ul>
+            <ol class="am-pureview-nav">
+                <li>1</li>
+            </ol>
+            <div class="am-pureview-bar am-active"><span class="am-pureview-title"></span>
+                <div class="am-pureview-counter"><span class="am-pureview-current"></span> / <span
+                        class="am-pureview-total">1</span></div>
+            </div>
+            <div class="am-pureview-actions am-active"><a href="javascript: void(0)" class="am-icon-chevron-left"
+                    data-am-close="pureview"></a></div>
+        </div> -->
+</body>
+
+</html>

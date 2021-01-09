@@ -21,6 +21,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.service.SensitivWordsService;
 import com.base.util.CoreConstants;
 import com.base.util.DateUtil;
@@ -1559,6 +1560,30 @@ public class ApiUserGoodsController extends ApiBaseController {
                 certificate.setPrice(userGoods.getAuthPrice());
             }
             return certificate;
+        }
+        return null;
+    }
+
+
+    @ApiOperation(value="获取证书链接", notes = "登录")
+    @RequestMapping("/getCertificateInfo/url")
+    @ApiMethod( isLogin = false)
+    public Result getCertificateInfoUrl(@ApiParam(value="id",required = true)Integer id){
+        CertificateExample example = new CertificateExample();
+        example.createCriteria().andUserGoodsIdEqualTo(id);
+        List<Certificate> certificates = certificateService.selectByExample(example);
+        if (CollectionUtil.isNotEmpty(certificates)){
+            Certificate certificate = certificates.get(0);
+            UserGoods userGoods = userGoodsService.selectByPrimaryKey(id);
+            if (userGoods==null){
+                throw new ApiException(400,"鉴定不存在");
+            }
+            if (userGoods.getPostState()!=null && userGoods.getPostState()==1){
+                certificate.setPrice(userGoods.getAuthPriceTest());
+            }else if (userGoods.getPostState()!=null && (userGoods.getPostState()==2 || userGoods.getPostState()==3 || userGoods.getPostState()==4)){
+                certificate.setPrice(userGoods.getAuthPrice());
+            }
+            return new Result(CoreConstants.SERVER_URL+"h5/certificate?id="+certificate.getId());
         }
         return null;
     }

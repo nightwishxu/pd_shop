@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5,maximum-scale=1.5,user-scalable=yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>证书详情</title>
+    <meta name="description" content="云喵拍当"/>
+    <meta name="keywords" content="云喵拍当"/>
+    <link href="../static/common.css" rel="stylesheet" type="text/css" th:href="@{/common.css}">
+    <link href="../static/base.css" rel="stylesheet" type="text/css" th:href="@{/base.css}">
+
+</head>
+<body>
+<div class="wrapper">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="c2">
+        <dl class="oneblock clearfix">
+            <dt>名称：</dt>
+<!--            <dd>${certificate.name}</dd>-->
+            <dd>[(${certificate.name})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>编号：</dt>
+            <dd>[(${certificate.code})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>尺寸：</dt>
+            <dd>[(${certificate.length})]×[(${certificate.width})]×[(${certificate.height})]cm</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>重量：</dt>
+            <dd>[(${certificate.weight})]g</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>材质：</dt>
+            <dd>[(${certificate.material})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>主体材质：</dt>
+            <dd>[(${certificate.mainMaterial})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>其他辅材：</dt>
+            <dd>[(${certificate.otherMaterial})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>创作年代：</dt>
+            <dd>[(${certificate.createYear})]</dd>
+        </dl>
+        <dl class="oneblock clearfix">
+            <dt>其他：</dt>
+            <dd>[(${certificate.other})]</dd>
+        </dl>
+    </div>
+
+    <!--图片概览-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>图片概览</dt>
+            <dd th:each="img : ${imgs}">
+
+                    <em>
+                        <img th:src="${img}"  onclick="showBigImg(this);"/>
+                    </em>
+                    <br>
+
+<!--                <c:forEach items="${certificate.imgs}" var="item" >-->
+<!--                 -->
+<!--                </c:forEach>-->
+<!--                <em><img src="image/img-01.png" onclick="showBigImg(this);"> </em>-->
+<!--                <em><img src="image/img-02.png" onclick="showBigImg(this);"> </em>-->
+<!--                <em><img src="image/img-03.png" onclick="showBigImg(this);"> </em>-->
+<!--                <em><img src="image/img-04.png" onclick="showBigImg(this);"> </em>-->
+            </dd>
+        </dl>
+        <div class="Img_panel"></div>
+    </div>
+
+    <!--显示评价 *注：满分5分-->
+    <div class="c2">
+        <dl class="oneblock pos-r clearfix">
+            <dt>市场流通性:</dt>
+            <dd class="atar_Show">
+                <div th:class="${certificate.marketLiquidity}"></div>
+            </dd>
+        </dl>
+        <dl>
+            <div background="../static/images/star.png"></div>
+        </dl>
+        <dl class="oneblock pos-r clearfix">
+            <dt>价值稳定性:</dt>
+            <dd class="atar_Show">
+                <div th:class="${certificate.valueStability}"></div>
+            </dd>
+        </dl>
+        <dl class="oneblock pos-r clearfix">
+            <dt>材质易损性:</dt>
+            <dd class="atar_Show">
+                <div th:class="${certificate.materialVulnerability}"></div>
+            </dd>
+        </dl>
+    </div>
+
+    <!--存放条件-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>存放条件：</dt>
+            <dd>
+<!--                <p>${certificate.storageCondition}</p>-->
+                <p>[(${certificate.storageCondition})]</p>
+            </dd>
+        </dl>
+    </div>
+
+    <!--肉眼可见缺陷描述-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>肉眼可见缺陷描述：</dt>
+            <dd>
+<!--                <p>${certificate.nakedEyeDefect}</p>-->
+                <p>[(${certificate.nakedEyeDefect})]</p>
+            </dd>
+        </dl>
+    </div>
+
+    <!--流通记录-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>流通记录：</dt>
+            <dd th:each="item : ${certificateLog}">
+                <div class="one">
+                    <em class="dot"></em><span>日期：[(${item.logTime})]</span>
+                    <div class="clearfix"></div>
+                    <p>流通价格：¥[(${item.price})]</p>
+                </div>
+                <br>
+
+<!--                <div class="one">-->
+<!--                    <em class="dot"></em><span>日期：2010年10月2日</span>-->
+<!--                    <div class="clearfix"></div>-->
+<!--                    <p>流通价格：¥5600</p>-->
+<!--                </div>-->
+
+<!--                <div class="one">-->
+<!--                    <em class="dot"></em><span>日期：2010年10月2日</span>-->
+<!--                    <div class="clearfix"></div>-->
+<!--                    <p>流通价格：¥5600</p>-->
+<!--                </div>-->
+
+            </dd>
+        </dl>
+    </div>
+
+    <!--艺术品金融记录-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>艺术品金融记录：</dt>
+            <dd>
+                <p> [(${certificate.financeLog})]</p>
+            </dd>
+        </dl>
+    </div>
+
+    <!--其他事项-->
+    <div class="c2">
+        <dl class="twoblock">
+            <dt>其他事项：</dt>
+            <dd>
+                <p> [(${certificate.otherBusiness})]</p>
+            </dd>
+        </dl>
+    </div>
+
+</div>
+
+</body>
+<!--<%&#45;&#45;<script type="text/javascript" src="${path}/static/m/js/certificate/jquery-1.10.1.min.js"></script>&#45;&#45;%>-->
+<script src="../static/jquery-1.9.1.js"  th:src="@{/jquery-1.9.1.js}"></script>
+<script type="text/javascript" src="../static/common.js" th:src="@{/common.js}"></script>
+<script type="text/javascript" src="../static/fastclick.js" th:src="@{/fastclick.js}"></script>
+<script>
+    $(function(){
+        //显示分数
+        $(".atar_Show div").each(function() {
+            var num=$(this).attr("class");
+            var starWidth=num*.43;//一个星星的宽度是43px
+            $(this).css({width:starWidth+'rem'});
+        });
+    })
+
+    //预览图片
+    function showBigImg(target){
+        var picPath = $(target).attr("src");
+        var img = document.createElement("img");
+        $(".Img_panel").append(img);
+        var bigPic = $(".Img_panel img");
+        bigPic.attr("src", picPath); //将小图的路径传给大图
+        bigPic.css({
+            'width': '100%',
+            'z-index': '120'
+        });
+        BGimgshow()
+
+        //大图点击消失
+        bigPic.on("click",function(){
+            bigPic.remove();
+            closeBGimg()
+        })
+
+        //    背景遮罩点击弹框消失
+        $(".bg-black").unbind("click").click(function () {
+            bigPic.remove();
+            closeBGimg()
+        })
+    }
+</script>
+
+</html>

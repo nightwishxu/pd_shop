@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 @Controller
 @RequestMapping("/webApi")
 public class WebH5Controller extends WebBaseController{

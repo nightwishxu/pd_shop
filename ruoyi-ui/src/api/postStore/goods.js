@@ -123,3 +123,9 @@ export function saveByBackToUser(data) {
     params: data
   })
 }
+
+export function getServerUrl() {
+  return request({
+    url: '/userGoods/serverUrl/get',
+  })
+}

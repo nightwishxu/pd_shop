@@ -1,7 +1,14 @@
 package com.action;
 
+import com.api.model.CertificateLogModel;
+import com.base.util.DateUtil;
 import com.item.dao.model.SinglePage;
 import com.item.service.SinglePageService;
+import com.paidang.dao.model.Certificate;
+import com.paidang.dao.model.CertificateLog;
+import com.paidang.dao.model.CertificateLogExample;
+import com.paidang.service.CertificateLogService;
+import com.paidang.service.CertificateService;
 import com.paidang.service.UnionApiService;
 import com.base.api.ApiException;
 import com.base.util.StringUtils;
@@ -11,10 +18,13 @@ import cpcn.dsp.institution.api.tx.personalinfo.Tx2324Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class UserFaceController {
@@ -27,6 +37,12 @@ public class UserFaceController {
 
     @Autowired
     private UnionApiService unionApiService;
+
+    @Autowired
+    private CertificateService certificateService;
+
+    @Autowired
+    private CertificateLogService certificateLogService;
 
     //html访问控制器
     /**
@@ -76,6 +92,18 @@ public class UserFaceController {
 
         String result = UnionApiService.receiveNotifyBack(request);
         model.addAttribute("result",result);
+        model.addAttribute("code","SUCCESS".equals(result)?1:0);
+
+        return "userFaceResult";
+    }
+
+
+    @RequestMapping(value = "/h5/userFaceResult/test")
+    public String userFaceNotifyTest(HttpServletRequest request, HttpServletResponse response, Model model)throws Exception {
+
+        String result = request.getParameter("result");
+        model.addAttribute("result",result);
+        model.addAttribute("code","SUCCESS".equals(result)?1:0);
 
         return "userFaceResult";
     }
@@ -86,5 +114,40 @@ public class UserFaceController {
         SinglePage page = singlePageService.selectByPrimaryKey(code);
         model.addAttribute("content",page.getContent());
         return "detail";
+    }
+
+    @RequestMapping(value = "/h5/certificate")
+    public String toCertificate(Integer id, ModelMap map){
+        if (null == id){
+            return "common/404";
+        }
+        Certificate certificate = certificateService.selectByPrimaryKey(id);
+        if(null == certificate){
+            return "common/404";
+        }
+        CertificateLogExample certificateLogExample = new CertificateLogExample();
+        certificateLogExample.createCriteria().andCertificateIdEqualTo(id);
+        certificateLogExample.setOrderByClause("create_time desc");
+
+        List<CertificateLog> certificateLog = certificateLogService.selectByExample(certificateLogExample);
+
+        map.put("certificate",certificate);
+        if (StringUtils.isNotBlank(certificate.getImgs())){
+            map.put("imgs",certificate.getImgs().split(","));
+        }
+
+        List<CertificateLogModel> ret = new ArrayList<>();
+        for(CertificateLog ex : certificateLog){
+            CertificateLogModel c = new CertificateLogModel();
+            c.setId(ex.getId());
+            c.setCertificateId(ex.getCertificateId());
+            c.setLogTime(DateUtil.dateToStr(ex.getLogTime()).substring(0,10));
+            c.setPrice(ex.getPrice());
+            ret.add(c);
+
+        }
+
+        map.put("certificateLog",ret);
+        return "certificate-dt";
     }
 }

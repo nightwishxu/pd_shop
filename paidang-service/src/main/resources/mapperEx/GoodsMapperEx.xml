@@ -159,6 +159,9 @@
         <if test="state != null" >
             and a.state = #{state}
         </if>
+        <if test="orgId != null" >
+            and a.org_id = #{orgId}
+        </if>
         <if test="type != null" >
             and a.type = #{type}
         </if>

@@ -517,10 +517,7 @@
           label="链接地址"
           prop="settleMoney"
         >
-          <el-input
-            v-model="form4.authUrl"
-            disabled
-          />
+          <el-input v-model="form4.authUrl" />
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -724,6 +721,7 @@ import {
   settle,
   changeCheck,
   exportGoods,
+  getServerUrl,
 } from "@/api/postStore/goods";
 import { listDomain } from "@/api/authApply/domain";
 import { experterList } from "@/api/authApply/experter";
@@ -1039,10 +1037,13 @@ export default {
     },
     handleForm4(row) {
       this.reset4();
-      const id = row.id;
-      this.form4 = { id: id, authUrl: null };
-      this.open4 = true;
-      this.title4 = "复制url";
+      const id = row.experterInfoId;
+      getServerUrl().then((response) => {
+        this.form4 = { id: id, authUrl: response.data+"h5/appraisal?id="+id };
+        this.open4 = true;
+        this.title4 = "复制url";
+      })
+    
     },
     handleForm5(row) {
       this.reset5();
