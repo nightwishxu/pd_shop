@@ -273,7 +273,23 @@
     </select>
 
     <update id="updatebyPawnContinue" parameterType="java.util.HashMap">
-      update p_user_pawn set pawn_end_time = #{pawn_end_time}, pawn_time = #{pawnTime},last_pawn_continue_id = #{last_pawn_continue_id},last_continue_project_code=#{lastContinueProjectCode} where id = #{id} and user_id = #{user_id}
+      update p_user_pawn set modify_timw = now()
+      <if test="pawn_end_time!=null">
+        ,pawn_end_time = #{pawn_end_time}
+      </if>
+        <if test="pawn_time!=null">
+            ,pawn_time = #{pawn_time}
+        </if>
+        <if test="last_pawn_continue_id!=null">
+            ,last_pawn_continue_id = #{last_pawn_continue_id}
+        </if>
+        <if test="last_continue_project_code!=null and last_continue_project_code!=''">
+            ,last_continue_project_code = #{last_continue_project_code}
+        </if>
+         where id = #{id} and
+        <if test="user_id!=null">
+            user_id = #{user_id}
+        </if>
 
     </update>
 

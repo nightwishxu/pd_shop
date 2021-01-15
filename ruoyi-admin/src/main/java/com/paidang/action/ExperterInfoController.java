@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class ExperterInfoController extends CoreController{
 	@ResponseBody
     public Ret save(ExperterInfo experterInfo){
     	if (experterInfo.getId() == null){
+    		experterInfo.setCreateTime(new Date());
     		experterInfoService.insert(experterInfo);
     	}else{
     		experterInfoService.updateByPrimaryKeySelective(experterInfo);
@@ -58,6 +60,7 @@ public class ExperterInfoController extends CoreController{
 	@ResponseBody
 	public Ret saveInfo(ExperterInfo experterInfo){
     	//插入专家表意见表
+		experterInfo.setCreateTime(new Date());
 		experterInfoService.insert(experterInfo);
 		//修改p_user_gooods表
 		UserGoods userGoods = new UserGoods();

@@ -115,6 +115,38 @@ public class UserGoodsEx extends UserGoods {
      */
     private Integer praiseStatus;
 
+    // 鉴定说明相关
+
+    //名称
+    private String cerName;
+
+    //尺寸
+    private String size;
+
+    //重量
+    private String weight;
+
+    //主材质
+    private String mainMaterial;
+
+    //副材质
+    private String material;
+
+    //年代
+    private String createYear;
+
+    //其它
+    private String other;
+
+    //市场流通性
+    private Integer marketLiquidity;
+
+    //价值稳定性
+    private Integer valueStability;
+
+    //材质易损性
+    private Integer materialVulnerability;
+
 
     public Integer getCollectStatus() {
         return collectStatus;
@@ -489,4 +521,84 @@ public class UserGoodsEx extends UserGoods {
         return path;
     }
 
+
+    public String getCerName() {
+        return cerName;
+    }
+
+    public void setCerName(String cerName) {
+        this.cerName = cerName;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getMainMaterial() {
+        return mainMaterial;
+    }
+
+    public void setMainMaterial(String mainMaterial) {
+        this.mainMaterial = mainMaterial;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public String getCreateYear() {
+        return createYear;
+    }
+
+    public void setCreateYear(String createYear) {
+        this.createYear = createYear;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
+    }
+
+    public Integer getMarketLiquidity() {
+        return marketLiquidity;
+    }
+
+    public void setMarketLiquidity(Integer marketLiquidity) {
+        this.marketLiquidity = marketLiquidity;
+    }
+
+    public Integer getValueStability() {
+        return valueStability;
+    }
+
+    public void setValueStability(Integer valueStability) {
+        this.valueStability = valueStability;
+    }
+
+    public Integer getMaterialVulnerability() {
+        return materialVulnerability;
+    }
+
+    public void setMaterialVulnerability(Integer materialVulnerability) {
+        this.materialVulnerability = materialVulnerability;
+    }
 }

@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.paidang.dao.UserReportMapper" >
-    <resultMap id="BaseResultMap" type="com.paidang.dao.model.UserReport" >
+<mapper namespace="com.paidang.dao.UserFaceLogMapper" >
+    <resultMap id="BaseResultMap" type="com.paidang.dao.model.UserFaceLog" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="account" property="account" jdbcType="VARCHAR" />
-        <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
-        <result column="target_id" property="targetId" jdbcType="INTEGER" />
+        <result column="txsn" property="txsn" jdbcType="VARCHAR" />
         <result column="type" property="type" jdbcType="INTEGER" />
-        <result column="info" property="info" jdbcType="VARCHAR" />
-        <result column="imgs" property="imgs" jdbcType="VARCHAR" />
-        <result column="status" property="status" jdbcType="INTEGER" />
-        <result column="create_account" property="createAccount" jdbcType="VARCHAR" />
+        <result column="result" property="result" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="modify_account" property="modifyAccount" jdbcType="VARCHAR" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     </resultMap>
 
@@ -78,7 +72,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,account,nick_name,target_id,type,info,imgs,status,create_account,create_time,modify_account,modify_time
+        id,user_id,txsn,type,result,create_time,modify_time
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -87,7 +81,7 @@
             distinct
         </if>
         <include refid="Base_Column_List" />
-        from t_user_report
+        from p_user_face_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
@@ -99,72 +93,50 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List" />
-        from t_user_report
+        from p_user_face_log
         where id = #{id}
     </select>
 
     <delete id="deleteByPrimaryKey" >
-        delete from t_user_report
+        delete from p_user_face_log
         where id = #{id}
     </delete>
 
     <delete id="deleteByExample" >
-        delete from t_user_report
+        delete from p_user_face_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
     </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_user_report (user_id,account,
-        nick_name,target_id,type,
-        info,imgs,status,
-        create_account,create_time,modify_account,
+        insert into p_user_face_log (user_id,txsn,
+        type,result,create_time,
         modify_time
         )
-        values (#{userId,jdbcType=INTEGER},#{account,jdbcType=VARCHAR},
-        #{nickName,jdbcType=VARCHAR},#{targetId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},
-        #{info,jdbcType=VARCHAR},#{imgs,jdbcType=VARCHAR},#{status,jdbcType=INTEGER},
-        #{createAccount,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyAccount,jdbcType=VARCHAR},
+        values (#{userId,jdbcType=INTEGER},#{txsn,jdbcType=VARCHAR},
+        #{type,jdbcType=INTEGER},#{result,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
         #{modifyTime,jdbcType=TIMESTAMP}
         )
     </insert>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_user_report
+        insert into p_user_face_log
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="userId != null" >
                 user_id,
             </if>
-            <if test="account != null" >
-                account,
-            </if>
-            <if test="nickName != null" >
-                nick_name,
-            </if>
-            <if test="targetId != null" >
-                target_id,
+            <if test="txsn != null" >
+                txsn,
             </if>
             <if test="type != null" >
                 type,
             </if>
-            <if test="info != null" >
-                info,
-            </if>
-            <if test="imgs != null" >
-                imgs,
-            </if>
-            <if test="status != null" >
-                status,
-            </if>
-            <if test="createAccount != null" >
-                create_account,
+            <if test="result != null" >
+                result,
             </if>
             <if test="createTime != null" >
                 create_time,
-            </if>
-            <if test="modifyAccount != null" >
-                modify_account,
             </if>
             <if test="modifyTime != null" >
                 modify_time,
@@ -174,35 +146,17 @@
             <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="account != null" >
-                #{account,jdbcType=VARCHAR},
-            </if>
-            <if test="nickName != null" >
-                #{nickName,jdbcType=VARCHAR},
-            </if>
-            <if test="targetId != null" >
-                #{targetId,jdbcType=INTEGER},
+            <if test="txsn != null" >
+                #{txsn,jdbcType=VARCHAR},
             </if>
             <if test="type != null" >
                 #{type,jdbcType=INTEGER},
             </if>
-            <if test="info != null" >
-                #{info,jdbcType=VARCHAR},
-            </if>
-            <if test="imgs != null" >
-                #{imgs,jdbcType=VARCHAR},
-            </if>
-            <if test="status != null" >
-                #{status,jdbcType=INTEGER},
-            </if>
-            <if test="createAccount != null" >
-                #{createAccount,jdbcType=VARCHAR},
+            <if test="result != null" >
+                #{result,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="modifyAccount != null" >
-                #{modifyAccount,jdbcType=VARCHAR},
             </if>
             <if test="modifyTime != null" >
                 #{modifyTime,jdbcType=TIMESTAMP},
@@ -211,14 +165,14 @@
     </insert>
 
     <select id="countByExample" resultType="java.lang.Integer" >
-        select count(*) from t_user_report
+        select count(*) from p_user_face_log
         <if test="_parameter != null" >
             <include refid="Example_Where_Clause" />
         </if>
     </select>
 
     <update id="updateByExampleSelective" >
-        update t_user_report
+        update p_user_face_log
         <set >
             <if test="record.id != null" >
                 id = #{record.id,jdbcType=INTEGER},
@@ -226,35 +180,17 @@
             <if test="record.userId != null" >
                 user_id = #{record.userId,jdbcType=INTEGER},
             </if>
-            <if test="record.account != null" >
-                account = #{record.account,jdbcType=VARCHAR},
-            </if>
-            <if test="record.nickName != null" >
-                nick_name = #{record.nickName,jdbcType=VARCHAR},
-            </if>
-            <if test="record.targetId != null" >
-                target_id = #{record.targetId,jdbcType=INTEGER},
+            <if test="record.txsn != null" >
+                txsn = #{record.txsn,jdbcType=VARCHAR},
             </if>
             <if test="record.type != null" >
                 type = #{record.type,jdbcType=INTEGER},
             </if>
-            <if test="record.info != null" >
-                info = #{record.info,jdbcType=VARCHAR},
-            </if>
-            <if test="record.imgs != null" >
-                imgs = #{record.imgs,jdbcType=VARCHAR},
-            </if>
-            <if test="record.status != null" >
-                status = #{record.status,jdbcType=INTEGER},
-            </if>
-            <if test="record.createAccount != null" >
-                create_account = #{record.createAccount,jdbcType=VARCHAR},
+            <if test="record.result != null" >
+                result = #{record.result,jdbcType=VARCHAR},
             </if>
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="record.modifyAccount != null" >
-                modify_account = #{record.modifyAccount,jdbcType=VARCHAR},
             </if>
             <if test="record.modifyTime != null" >
                 modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
@@ -266,19 +202,13 @@
     </update>
 
     <update id="updateByExample" >
-        update t_user_report
+        update p_user_face_log
         set id = #{id,jdbcType=INTEGER},
         user_id = #{userId,jdbcType=INTEGER},
-        account = #{account,jdbcType=VARCHAR},
-        nick_name = #{nickName,jdbcType=VARCHAR},
-        target_id = #{targetId,jdbcType=INTEGER},
+        txsn = #{txsn,jdbcType=VARCHAR},
         type = #{type,jdbcType=INTEGER},
-        info = #{info,jdbcType=VARCHAR},
-        imgs = #{imgs,jdbcType=VARCHAR},
-        status = #{status,jdbcType=INTEGER},
-        create_account = #{createAccount,jdbcType=VARCHAR},
+        result = #{result,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        modify_account = #{modifyAccount,jdbcType=VARCHAR},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -286,40 +216,22 @@
     </update>
 
     <update id="updateByPrimaryKeySelective" >
-        update t_user_report
+        update p_user_face_log
         <set >
             <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="account != null" >
-                account = #{account,jdbcType=VARCHAR},
-            </if>
-            <if test="nickName != null" >
-                nick_name = #{nickName,jdbcType=VARCHAR},
-            </if>
-            <if test="targetId != null" >
-                target_id = #{targetId,jdbcType=INTEGER},
+            <if test="txsn != null" >
+                txsn = #{txsn,jdbcType=VARCHAR},
             </if>
             <if test="type != null" >
                 type = #{type,jdbcType=INTEGER},
             </if>
-            <if test="info != null" >
-                info = #{info,jdbcType=VARCHAR},
-            </if>
-            <if test="imgs != null" >
-                imgs = #{imgs,jdbcType=VARCHAR},
-            </if>
-            <if test="status != null" >
-                status = #{status,jdbcType=INTEGER},
-            </if>
-            <if test="createAccount != null" >
-                create_account = #{createAccount,jdbcType=VARCHAR},
+            <if test="result != null" >
+                result = #{result,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="modifyAccount != null" >
-                modify_account = #{modifyAccount,jdbcType=VARCHAR},
             </if>
             <if test="modifyTime != null" >
                 modify_time = #{modifyTime,jdbcType=TIMESTAMP},
@@ -329,18 +241,12 @@
     </update>
 
     <update id="updateByPrimaryKey" >
-        update t_user_report
+        update p_user_face_log
         set user_id = #{userId,jdbcType=INTEGER},
-        account = #{account,jdbcType=VARCHAR},
-        nick_name = #{nickName,jdbcType=VARCHAR},
-        target_id = #{targetId,jdbcType=INTEGER},
+        txsn = #{txsn,jdbcType=VARCHAR},
         type = #{type,jdbcType=INTEGER},
-        info = #{info,jdbcType=VARCHAR},
-        imgs = #{imgs,jdbcType=VARCHAR},
-        status = #{status,jdbcType=INTEGER},
-        create_account = #{createAccount,jdbcType=VARCHAR},
+        result = #{result,jdbcType=VARCHAR},
         create_time = #{createTime,jdbcType=TIMESTAMP},
-        modify_account = #{modifyAccount,jdbcType=VARCHAR},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP}
         where id = #{id}
     </update>
@@ -355,7 +261,7 @@
                 <include refid="Base_Column_List" />
             </otherwise>
         </choose>
-        from t_user_report
+        from p_user_face_log
         ${sqlSegment}
     </select>
 

@@ -95,7 +95,7 @@
     </if>
     ) b
     <if test="userId!=null">
-      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}
+      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId} and t.type=1
       left join t_article_collect_praise p on p.article_id = b.id and p.type=0 and p.user_id=#{userId}  and p.use_type=1
     </if>
     ORDER  by b.create_time desc
@@ -151,7 +151,7 @@
       and a.create_time &lt;=#{endTime}
     </if>) b
     <if test="userId!=null">
-      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}
+      left join t_user_follow t on b.user_id=t.follow_id and t.user_id=#{userId}  and t.type=1
       left join t_article_collect_praise p on p.article_id = b.id and p.type=0 and p.user_id=#{userId} and p.use_type=1
     </if>
     ORDER  by b.create_time desc
@@ -255,7 +255,7 @@
 
   <select id="followArticleList" resultType="com.paidang.daoEx.model.ArticleEx" parameterType="com.paidang.daoEx.model.ArticleEx">
     SELECT a.*,m.head_img,m.nick_name  from t_article a left join b_user m on a.user_id= m.id  where a.is_show=1 and a.status=2 and a.type=1
-    and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId})
+    and a.user_id in (SELECT follow_id from t_user_follow where user_id=#{userId}  and type=1)
     <if test="flag!=null and flag==1">
       and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY)
     </if>
@@ -269,7 +269,7 @@
     select  t.* from (SELECT a.*,m.head_img,m.nick_name  from t_article a left join b_user m on a.user_id= m.id
      where a.is_show=1 and a.status=2 and a.type=1  and a.create_time >= date_sub(curdate(), INTERVAL 7 DAY)
     <if test="userId!=null">
-      and a.user_id not in (SELECT follow_id from t_user_follow where user_id=#{userId})
+      and a.user_id not in (SELECT follow_id from t_user_follow where user_id=#{userId}  and type=1)
     </if>
     order by a.praise_count desc,a.comment_count desc limit 20) t
     order by RAND()

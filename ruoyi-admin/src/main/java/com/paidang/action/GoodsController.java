@@ -8,8 +8,10 @@ import com.base.util.DateUtil;
 import com.item.dao.model.Admin;
 import com.item.service.AdminService;
 import com.paidang.dao.model.Goods;
+import com.paidang.dao.model.GoodsAuctionOnlineLog;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.service.GoodsAuctionOnlineLogService;
 import com.paidang.service.GoodsService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
 @author sun
@@ -33,6 +36,10 @@ public class GoodsController extends CoreController{
     private GoodsService goodsService;
 	@Autowired
 	private AdminService adminService;
+
+
+	@Autowired
+	private GoodsAuctionOnlineLogService goodsAuctionOnlineLogService;
 
 //    @RequestMapping("/serviceList")
 //	@ResponseBody
@@ -104,7 +111,57 @@ public class GoodsController extends CoreController{
 			}
 			goods.setCreateTime(new Date());
 			goodsService.insert(goods);
+			if (goods.getDealType()!=null && goods.getDealType() == 2){
+				//保存竞拍日志
+				GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+				log.setAuctionEndTime(goods.getAuctionEndTime());
+				log.setAuctionStartTime(goods.getAuctionStartTime());
+				log.setGoodsId(goods.getId());
+				log.setStatus(0);
+				log.setCreateTime(new Date());
+				goodsAuctionOnlineLogService.insertSelective(log);
+				Goods tmp = new Goods();
+				tmp.setId(goods.getId());
+				tmp.setAuctionOnlineLogId(log.getId());
+				goodsService.updateByPrimaryKeySelective(tmp);
+			}
 		}else{
+			Date date = new Date();
+
+			Goods goods1 = goodsService.selectByPrimaryKey(goods.getId());
+			if (goods1.getDealType()!=null && goods1.getDealType()==2 && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
+				throw new ApiException(400,"竞拍中禁止修改商品信息");
+			}
+			if (goods.getDealType()!=null && goods.getDealType()==2){
+				if(date.compareTo(goods.getAuctionStartTime())<0){
+					boolean flag = false;
+					if (goods.getAuctionStartTime()!=null && goods1.getAuctionStartTime().compareTo(goods.getAuctionStartTime())!=0){
+						flag = true;
+					}
+					if (goods.getAuctionEndTime()!=null && goods1.getAuctionEndTime().compareTo(goods.getAuctionEndTime())!=0){
+						flag = true;
+					}
+					//修改上架记录表
+					if (flag){
+						GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+						log.setId(goods1.getAuctionOnlineLogId());
+						log.setAuctionStartTime(goods.getAuctionStartTime());
+						log.setAuctionEndTime(goods.getAuctionEndTime());
+						log.setModifyTime(date);
+						goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
+					}
+				}else if (date.compareTo(goods.getAuctionEndTime())>0){
+					GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+					log.setAuctionEndTime(goods.getAuctionEndTime());
+					log.setAuctionStartTime(goods.getAuctionStartTime());
+					log.setGoodsId(goods.getId());
+					log.setStatus(1);
+					log.setCreateTime(date);
+					goodsAuctionOnlineLogService.insertSelective(log);
+					goods.setAuctionOnlineLogId(log.getId());
+				}
+
+			}
 			goodsService.updateByPrimaryKeySelective(goods);
 		}
 		return ok();

@@ -63,7 +63,7 @@ public class ApiUserController extends ApiBaseController {
         }
         //获取关注状态
         UserFollowExample example=new UserFollowExample();
-        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andFollowIdEqualTo(followUserId);
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andFollowIdEqualTo(followUserId).andTypeEqualTo(1);
         UserFollow follow=new UserFollow();
         if (type==0){
             //取消关注
@@ -81,6 +81,7 @@ public class ApiUserController extends ApiBaseController {
                 follow.setFollowId(followUserId);
                 follow.setCreateTime(new Date());
                 follow.setStatus(1);
+                follow.setType(1);
                 int num = userFollowService.insert(follow);
                 if (num>0){
                     userService.updateUserCount(mobileInfo.getUserId(),2);

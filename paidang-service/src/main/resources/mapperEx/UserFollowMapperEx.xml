@@ -5,7 +5,7 @@
   </resultMap>
 
   <select id="getUserFollowCount" resultType="java.lang.Integer">
-    SELECT count(*) from t_user_follow where follow_id=#{userId}
+    SELECT count(*) from t_user_follow where follow_id=#{userId}  and type=1
   </select>
 
   <!--<select id="getuserFollow" resultType="com.macro.mall.modelEx.userFollowEx">-->
@@ -29,18 +29,18 @@
 
 
   <select id="getUserFlowIds" resultType="java.lang.Long">
-  select follow_id from t_user_follow where user_id=#{userId} and status=1
+  select follow_id from t_user_follow where user_id=#{userId} and status=1 and type=1
 </select>
 
 
 
   <select id="getUserFansCount" resultType="java.lang.Integer">
-    SELECT count(*) from t_user_follow where follow_id=#{user_id}
+    SELECT count(*) from t_user_follow where follow_id=#{user_id} and type=1
   </select>
 
   <select id="getIsFollow" resultType="java.lang.Integer">
     SELECT count(*) from t_user_follow
-    where user_id=#{userId} and follow_id=#{followId}
+    where user_id=#{userId} and follow_id=#{followId} and type=#{type}
 </select>
 
   <select id="getUserFollow" resultType="com.item.daoEx.model.UserEx">

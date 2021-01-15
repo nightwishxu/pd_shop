@@ -1,6 +1,8 @@
 package com.api.action;
 
 import com.api.MErrorEnum;
+import com.base.util.BaseUtils;
+import com.base.util.JSONUtils;
 import com.paidang.service.UnionApiService;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
@@ -181,20 +183,27 @@ public class ApiUserFaceController extends ApiBaseController {
     @ApiOperation(value = "获取人脸识别地址", notes = "登陆")
     @RequestMapping("/userFace/getUrl")
     @ApiMethod(isLogin = true)
-    public Result getUserFaceUrl(MobileInfo mobileInfo){
+    public Result getUserFaceUrl(MobileInfo mobileInfo,Integer type){
+        BaseUtils.checkBlankParam(type);
         User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        if (type==1){
+            if (user.getIsBind()==1){
+                throw new ApiException(400,"实名认证已经成功");
+            }
 
-        if (user.getIsBind()==1){
-            throw new ApiException(400,"实名认证已经成功");
+            if (user.getAuthStatus()!=null && user.getAuthStatus()==4){
+                throw new ApiException(400,"活体验证成功");
+            }
+            if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                throw new ApiException(400,"请先进行实名认证");
+            }
+        }else if (type==2){
+            if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                throw new ApiException(400,"请先进行实名认证");
+            }
         }
 
-        if (user.getAuthStatus()!=null && user.getAuthStatus()==4){
-            throw new ApiException(400,"活体验证成功");
-        }
-        if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
-            throw new ApiException(400,"请先进行实名认证");
-        }
-        String url = DSPConsts.hostUrl+"h5/userFace?userId="+mobileInfo.getUserId();
+        String url = DSPConsts.hostUrl+"h5/userFace?userId="+mobileInfo.getUserId()+"&type="+type;
         return new Result(url);
     }
 

@@ -111,7 +111,7 @@
         </if>
     </delete>
 
-    <insert id="insert" >
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
         insert into p_goods_auction_online_log (id,goods_id,status,
         create_time,modify_time,create_account,
         modify_account,auction_start_time,auction_end_time
@@ -122,7 +122,7 @@
         )
     </insert>
 
-    <insert id="insertSelective" >
+    <insert id="insertSelective"   useGeneratedKeys="true" keyProperty="id">
         insert into p_goods_auction_online_log
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null" >

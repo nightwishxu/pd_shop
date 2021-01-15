@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.item.dao.model.User;
 import com.item.dao.model.UserExample;
 import com.item.service.UserService;
+import com.paidang.dao.model.UserFaceLog;
 import cpcn.dsp.institution.api.notice.NoticeRequest;
 import cpcn.dsp.institution.api.notice.NoticeResponse;
 import cpcn.dsp.institution.api.security.EncryptAndDecrypt;
@@ -43,6 +44,9 @@ public class UnionApiService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserFaceLogService userFaceLogService;
 
 
 
@@ -424,28 +428,39 @@ public class UnionApiService {
             System.out.println(plainText);
             Map<String,String> map = JSONUtils.deserialize(plainText, Map.class);
             String txsn = map.get("TxSN");
-            UserExample example = new UserExample();
-            example.createCriteria().andTxsnEqualTo(txsn);
-            List<User> users = userService.selectByExample(example);
+//            UserExample example = new UserExample();
+//            example.createCriteria().andTxsnEqualTo(txsn);
+//            List<User> users = userService.selectByExample(example);
+            UserFaceLog log = userFaceLogService.getByTxsn(txsn);
+            if (log!=null){
+                log.setResult(noticeMessage);
+                log.setModifyTime(new Date());
+                User user = userService.selectByPrimaryKey(log.getUserId());
+                if ("SUCCESS".equals(noticeMessage)){
+                    //成功
 
-            if ("SUCCESS".equals(noticeMessage)){
-                //成功
+                    if ("1".equals(log.getType())){
+                        User temp = new User();
+                        temp.setId(user.getId());
+                        temp.setAuthStatus(4);
+                        temp.setIsBind(1);
+                        userService.updateByPrimaryKeySelective(temp);
+                    }else if ("2".equals(log.getType())){
 
-                if (CollectionUtils.isNotEmpty(users)){
-                    User temp = new User();
-                    temp.setId(users.get(0).getId());
-                    temp.setAuthStatus(4);
-                    temp.setIsBind(1);
-                    userService.updateByPrimaryKeySelective(temp);
+                    }
+                }else {
+                    if ("1".equals(log.getType())){
+                        User temp = new User();
+                        temp.setId(user.getId());
+                        temp.setAuthStatus(3);
+                        userService.updateByPrimaryKeySelective(temp);
+                    }else if ("2".equals(log.getType())){
+
+                    }
                 }
-            }else {
-                if (CollectionUtils.isNotEmpty(users)){
-                    User temp = new User();
-                    temp.setId(users.get(0).getId());
-                    temp.setAuthStatus(3);
-                    userService.updateByPrimaryKeySelective(temp);
-                }
+                userFaceLogService.updateByPrimaryKeySelective(log);
             }
+
             logger.info("receiveNoticeBackground ： " + plainText);
             logger.info("receiveNoticeBackground noticeMessage: " + noticeMessage);
             ////////////////////////////////////////

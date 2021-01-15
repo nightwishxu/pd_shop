@@ -31,7 +31,7 @@ public interface UserFollowMapperEx {
      */
     Integer getUserFansCount(Integer userId);
 
-    Integer getIsFollow(@Param("userId") Integer userId, @Param("followId") Integer followId);
+    Integer getIsFollow(@Param("userId") Integer userId, @Param("followId") Integer followId,@Param("type") Integer type);
 
 
     List<Integer> getUserFlowIds(@Param("userId")Integer userId);

@@ -215,6 +215,14 @@ public class Certificate implements Serializable {
 	@Column(name = "appraisal_dsc")
 	private String appraisalDsc;
 
+	/**
+	 *尺寸
+	 */
+	@ApiModelProperty(value="尺寸")
+	@ApiParam(value="尺寸")
+	@Column(name = "size")
+	private String size;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -413,6 +421,14 @@ public class Certificate implements Serializable {
 
 	public String getAppraisalDsc() {
 		return appraisalDsc;
+	}
+
+	public void setSize(String size) {
+		this.size=size == null ? size : size.trim();
+	}
+
+	public String getSize() {
+		return size;
 	}
 
 }

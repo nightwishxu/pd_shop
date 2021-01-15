@@ -7,6 +7,7 @@ import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
+import com.base.util.StringUtil;
 import com.item.dao.model.User;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
@@ -138,6 +139,9 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
         }
 
         if (StringUtils.isEmpty(pawnTicket.getContractUrl())){
+            if (StringUtils.isEmpty(pawnTicket.getContractId())){
+                throw new ApiException(400,"合同尚未签署完成，无法查看");
+            }
             String contractUrl = AnXinSignService.getContractUrl(pawnTicket.getContractId());
             String s = fileService.downLoadFromUrl(contractUrl,pawnTicket.getContractId());
             PawnTicket temp = new PawnTicket();

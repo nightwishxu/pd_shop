@@ -508,9 +508,17 @@ public class ApiRepawnController extends ApiBaseController{
         //更新续当表 机构是否确认状态字段
         repawnRecord.setState(4);//机构端确认用户上传的续当打款凭证
         pawnContinueService.updateByPrimaryKey(repawnRecord);
+
+
         //更新典当表最新一期当金，当期，续当至日期字段
         /*
         pawnRecord.setLastPawnContinueId(repawnRecord.getId());*/
+//                map.put("pawnTime",userPawn.getBeginPawnMonth()+pawnTime);
+//        map.put("pawn_end_time", DateUtil.dateToStr((DateUtil.add(userPawn.getPawnEndTime(),pawnTime*15)),"yyyy-MM-dd"));
+//        int result = userPawnService.updatebyPawnContinue(map);
+        //续当时间等需要在确认的时候更改
+        pawnRecord.setPawnTime(pawnRecord.getBeginPawnMonth()+repawnRecord.getPawnMonth());
+        pawnRecord.setPawnEndTime((DateUtil.add(pawnRecord.getPawnEndTime(),repawnRecord.getPawnMonth()*15)));
         pawnRecord.setLastMoney(pawnMoney);
         pawnRecord.setLastPawnMonth(repawnRecord.getPawnMonth());
         pawnRecord.setLastPawnTime(repawnRecord.getPawnEndTime());

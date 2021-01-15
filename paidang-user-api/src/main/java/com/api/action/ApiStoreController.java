@@ -41,6 +41,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -72,6 +73,12 @@ public class ApiStoreController extends ApiBaseController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private UserFollowService userFollowService;
+
+    @Autowired
+    private UserReportService userReportService;
 
 
     public enum MStoreGoodsCateList {
@@ -424,7 +431,7 @@ public class ApiStoreController extends ApiBaseController {
     @ApiOperation(value = "物品详情", notes = "不需要登录")
     @RequestMapping("/goodsDetail")
     @ApiMethod(isLogin = false)
-    public AppStoreGoodsDetail goodsDetail(@ApiParam(value="id",required = true) Integer id){
+    public AppStoreGoodsDetail goodsDetail(@ApiParam(value="id",required = true) Integer id,MobileInfo mobileInfo){
         AppStoreGoodsDetail appStoreGoodsDetail = new AppStoreGoodsDetail();
         Goods ex = goodsService.selectByPrimaryKey(id);
         appStoreGoodsDetail.setId(ex.getId());
@@ -447,6 +454,11 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setLabels(ex.getLabels());
         appStoreGoodsDetail.setMaxAuction(ex.getMaxAuction());
         appStoreGoodsDetail.setCateCode(ex.getCateCode());
+        if (mobileInfo!=null && mobileInfo.getUserId()!=null){
+            appStoreGoodsDetail.setIsFollow(userFollowService.getIsFollow(mobileInfo.getUserId(),id,2));
+        }else {
+            appStoreGoodsDetail.setIsFollow(0);
+        }
         PawnOrgEx pawnOrg=pawnOrgService.getInfo(ex.getOrgId());
         if (pawnOrg!=null){
             appStoreGoodsDetail.setOrgId(pawnOrg.getId());
@@ -850,48 +862,48 @@ public class ApiStoreController extends ApiBaseController {
 //    @ApiOperation(value = "绝当商城竞拍出价", notes = "登陆")
 //    @RequestMapping("/storeJDGoodsJp")
 //    @ApiMethod(isLogin = true)
-    public Ret storeJDGoodsJp(MobileInfo mobileInfo,
-                              @ApiParam(value="id",required = true) Integer id,
-                              @ApiParam(value="出价",required = true) String price)throws Exception{
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("goods_id",id);
-
-        Goods goods = goodsService.selectByPrimaryKey(id);
-        //判断是否超时
-        int second = DateUtil.secondsAfter(DateUtil.addMinute(goods.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
-        if(second < 0){
-            throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
-        }
-
-        BigDecimal maxPrice = goodsAuctionService.selectMaxPrice(map);
-        if(null != maxPrice){
-            //没人出价，第一次出价
-            if(new BigDecimal(price).compareTo(maxPrice) != 1){
-                //如果出价小于等于最大价格，抛异常
-                throw new ApiException(MEnumError.MAX_PRICE_ERROR);
-            }
-        }
-
-
-        //插入竞拍表 goods_auction
-        GoodsAuction c = new GoodsAuction();
-        c.setGoodsId(id);
-        c.setUserId(mobileInfo.getUserId());
-        c.setPrice(new BigDecimal(price));
-        int result = goodsAuctionService.insert(c);
-        if(result == 0){
-            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
-        }
-         //更新商品表的最新消息
-        goods.setMaxAutionId(c.getId());
-        goods.setMaxAuction(new BigDecimal(price));
-        goods.setUserId(mobileInfo.getUserId());
-        int result2 = goodsService.updateByPrimaryKey(goods);
-        if(result2 == 0){
-            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
-        }
-        return ok();
-    }
+//    public Ret storeJDGoodsJp(MobileInfo mobileInfo,
+//                              @ApiParam(value="id",required = true) Integer id,
+//                              @ApiParam(value="出价",required = true) String price)throws Exception{
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("goods_id",id);
+//
+//        Goods goods = goodsService.selectByPrimaryKey(id);
+//        //判断是否超时
+//        int second = DateUtil.secondsAfter(DateUtil.addMinute(goods.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
+//        if(second < 0){
+//            throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
+//        }
+//
+//        BigDecimal maxPrice = goodsAuctionService.selectMaxPrice(map);
+//        if(null != maxPrice){
+//            //没人出价，第一次出价
+//            if(new BigDecimal(price).compareTo(maxPrice) != 1){
+//                //如果出价小于等于最大价格，抛异常
+//                throw new ApiException(MEnumError.MAX_PRICE_ERROR);
+//            }
+//        }
+//
+//
+//        //插入竞拍表 goods_auction
+//        GoodsAuction c = new GoodsAuction();
+//        c.setGoodsId(id);
+//        c.setUserId(mobileInfo.getUserId());
+//        c.setPrice(new BigDecimal(price));
+//        int result = goodsAuctionService.insert(c);
+//        if(result == 0){
+//            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
+//        }
+//         //更新商品表的最新消息
+//        goods.setMaxAutionId(c.getId());
+//        goods.setMaxAuction(new BigDecimal(price));
+//        goods.setUserId(mobileInfo.getUserId());
+//        int result2 = goodsService.updateByPrimaryKey(goods);
+//        if(result2 == 0){
+//            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
+//        }
+//        return ok();
+//    }
 
     /**
      * 绝当商城详情
@@ -1145,4 +1157,61 @@ public class ApiStoreController extends ApiBaseController {
         example.setOrderByClause("create_time desc");
         return videoOnlineService.selectByExample(example);
     }
+
+
+    @ApiOperation(value = "关注(取消关注)商品", notes = "登陆")
+    @RequestMapping(value = "/follow", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public Integer goodsFollow(MobileInfo mobileInfo,
+                              @RequestParam @ApiParam(value = "目标商品id", required = true)Integer goodsId,
+                              @RequestParam @ApiParam(value = "操作类型0取消关注1关注", required = true)Integer type){
+
+        //获取关注状态
+        UserFollowExample example=new UserFollowExample();
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId()).andFollowIdEqualTo(goodsId).andTypeEqualTo(2);
+        UserFollow follow=new UserFollow();
+        if (type==0){
+            //取消关注
+            int num = userFollowService.deleteByExample(example);
+            return 0;
+        }else if (type==1){
+
+            List<UserFollow> list =  userFollowService.selectByExample(example);
+            if (org.springframework.util.CollectionUtils.isEmpty(list)){
+                follow.setUserId(mobileInfo.getUserId());
+                follow.setFollowId(goodsId);
+                follow.setCreateTime(new Date());
+                follow.setStatus(1);
+                follow.setType(2);
+                int num = userFollowService.insert(follow);
+                return 1;
+            }
+
+            return 1;
+        }else {
+            throw new ApiException("参数非法");
+        }
+    }
+
+
+    @ApiOperation(value = "举报商品", notes = "登陆")
+    @RequestMapping(value = "/report",method = {RequestMethod.POST})
+    @ApiMethod(isLogin = true)
+    public Integer report(MobileInfo mobileInfo,@RequestParam @ApiParam(value = "商品id", required = true)Integer goodsId,
+                          @RequestParam @ApiParam(value = "举报信息", required = true)String info,
+//    @RequestParam @ApiParam(value = "图片", required = true)String imgs,
+                          @RequestParam @ApiParam(value = "昵称", required = true)String nickName
+    ){
+        UserReport report=new UserReport();
+        report.setTargetId(goodsId);
+        report.setType(2);
+        report.setNickName(nickName);
+        report.setCreateTime(new Date());
+        report.setStatus(1);
+        report.setInfo(info);
+        report.setUserId(mobileInfo.getUserId());
+        report.setCreateAccount(mobileInfo.getUserId().toString());
+        return  userReportService.insert(report);
+    }
+
 }

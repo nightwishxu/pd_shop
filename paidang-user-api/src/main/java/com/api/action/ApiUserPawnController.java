@@ -677,71 +677,7 @@ public class ApiUserPawnController extends ApiBaseController {
                         @ApiParam(value="贷款额度",required = true)String loansPrice,
                         @ApiParam(value="期望利率",required = true)String loansRate,
                         @ApiParam(value="典当时长(半个月为1，一个月为2，两个月为4.以此类推)",required = true)Integer pawnTime) throws Exception{
-        if (!redisCache.getLock("gotoPawn:"+id,5)){
-            throw new ApiException(400,"请求频繁请稍后");
-        }
-        UserGoodsEx userGoods = userGoodsService.selectGotoPawn(id);
-        if (userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
-            throw new ApiException(400,"已典当");
-        }
-        userGoods.setGotoPawn(1);
-
-        int result = userGoodsService.updateByPrimaryKeySelective(userGoods);
-        if(result == 0){
-            throw new ApiException(MEnumError.OPER_FAILURE_ERROE);
-        }
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
-        if (user==null){
-            throw new ApiException("用户不存在");
-        }
-        //注册安心签账户
-        if (StringUtils.isBlank(user.getAnxinsignId())){
-            String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
-            User temp = new User();
-            temp.setId(mobileInfo.getUserId());
-            temp.setAnxinsignId(anxinUserId);
-            temp.setModifyTime(new Date());
-            userService.updateByPrimaryKeySelective(temp);
-        }
-
-
-        UserPawn userPawn2 = new UserPawn();
-        userPawn2.setUserId(userGoods.getBelongId());
-        userPawn2.setGoodsId(id);
-        userPawn2.setLoansPrice(new BigDecimal(loansPrice));
-        userPawn2.setLoansRate(new BigDecimal(loansRate));
-        userPawn2.setIsVerify(0);
-        userPawn2.setPawnBeginTime(new Date());
-        userPawn2.setPawnEndTime(DateUtil.add(new Date(),pawnTime * 15-1));
-        userPawn2.setBeginPawnEndTime(DateUtil.add(new Date(),pawnTime * 15-1));
-//        userPawn.setPayeeName(userGoods.getUserName());
-//        userPawn.setPayeePhone(userGoods.getUserPhone());
-        userPawn2.setPayeeState(0);
-        userPawn2.setPawnTime(pawnTime);
-        userPawn2.setBeginPawnMonth(pawnTime);
-        userPawn2.setState(1);
-        userPawn2.setUserState(0);
-        userPawn2.setUserName(userGoods.getUserName());
-        userPawn2.setUserPhone(userGoods.getUserPhone());
-        userPawn2.setUserIdCard(userGoods.getIdCard());
-        userPawn2.setGoodsName(userGoods.getName());
-        userPawn2.setCreateTime(new Date());
-        //userPawn2.setOverdueRate(PaidangConst.REDEEM_OVERRATE);
-        int reuslt2 = userPawnService.insert(userPawn2);
-        if(reuslt2 == 0){
-            throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
-        }
-        logger.debug("========================用户端典当成功通知所有的机构端========================");
-        //获取所有的机构端编号
-        PawnOrgExample orgExample = new PawnOrgExample();
-        orgExample.createCriteria().andTypeEqualTo(1);
-        List<PawnOrg> orgList = pawnOrgService.selectByExample(orgExample);
-        if(orgList.size() > 0){
-            for(PawnOrg org:orgList){
-                //推送
-                orgNotifyService.insertByTemplate(org.getId(), "3", PaidangMessage.USER_PAWN_NOTIFY, userGoods.getName());
-            }
-        }
+        userPawnService.gotoPawn(mobileInfo.getUserId(),id,loansPrice,loansRate,pawnTime);
         return 1;
 
     }

@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
+import javax.persistence.Column;
+import java.math.BigDecimal;
+
 /**
  * Created by Lee on 2017/9/25.
  *
@@ -106,6 +109,16 @@ public class PawnDetail {
 
     @ApiModelProperty("最新续当id")
     private Integer lastPawnContinueId;
+
+    @ApiModelProperty(value="0.无1.用户主动放弃本次竞拍 2.用户自主选择中标机构 3.跟随系统 4.机构拒绝（或机构未能在中标后规定时间内支付当款）")
+    private Integer userState;
+
+
+    @ApiModelProperty("月费率")
+    private BigDecimal rate;
+
+    @ApiModelProperty("月利率")
+    private BigDecimal moneyRate;
 
     public String getId() {
         return id;
@@ -322,5 +335,29 @@ public class PawnDetail {
 
     public void setLastPawnContinueId(Integer lastPawnContinueId) {
         this.lastPawnContinueId = lastPawnContinueId;
+    }
+
+    public Integer getUserState() {
+        return userState;
+    }
+
+    public void setUserState(Integer userState) {
+        this.userState = userState;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public BigDecimal getMoneyRate() {
+        return moneyRate;
+    }
+
+    public void setMoneyRate(BigDecimal moneyRate) {
+        this.moneyRate = moneyRate;
     }
 }

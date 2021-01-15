@@ -513,11 +513,11 @@ public class ApiUserPawnConinueController extends ApiBaseController {
 //        userPawnService.updateByPrimaryKeySelective(userPawn1);
 
         //map.put("last_pawn_month",pawnTime);
-        map.put("pawnTime",userPawn.getBeginPawnMonth()+pawnTime);
+//        map.put("pawnTime",userPawn.getBeginPawnMonth()+pawnTime);
         map.put("PayeeBankCardCode",userPawn.getBankCardNo());
         map.put("PayeeBankName",userPawn.getBankCardName());
         //续当的时候更新典当结束档期
-        map.put("pawn_end_time", DateUtil.dateToStr((DateUtil.add(userPawn.getPawnEndTime(),pawnTime*15)),"yyyy-MM-dd"));
+//        map.put("pawn_end_time", DateUtil.dateToStr((DateUtil.add(userPawn.getPawnEndTime(),pawnTime*15)),"yyyy-MM-dd"));
         map.put("last_pawn_continue_id",pawnContinue.getId());
         int result = userPawnService.updatebyPawnContinue(map);
 

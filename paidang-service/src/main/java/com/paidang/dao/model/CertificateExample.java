@@ -1774,6 +1774,76 @@ public class CertificateExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andSizeIsNull() {
+			addCriterion("size is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeIsNotNull() {
+			addCriterion("size is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeEqualTo(String value) {
+			addCriterion("size =", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeNotEqualTo(String value) {
+			addCriterion("size <>", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeGreaterThan(String value) {
+			addCriterion("size >", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeGreaterThanOrEqualTo(String value) {
+			addCriterion("size >=", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeLessThan(String value) {
+			addCriterion("size <", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeLessThanOrEqualTo(String value) {
+			addCriterion("size <=", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeLike(String value) {
+			addCriterion("size like", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeNotLike(String value) {
+			addCriterion("size not like", value, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeIn(List<String> values) {
+			addCriterion("size in", values, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeNotIn(List<String> values) {
+			addCriterion("size not in", values, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeBetween(String value1, String value2) {
+			addCriterion("size between", value1, value2, "size");
+			return (Criteria) this;
+		}
+
+		public Criteria andSizeNotBetween(String value1, String value2) {
+			addCriterion("size not between", value1, value2, "size");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

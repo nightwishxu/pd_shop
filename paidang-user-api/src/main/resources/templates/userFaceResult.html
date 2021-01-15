@@ -5,26 +5,40 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
      <script src="../static/jquery-1.9.1.js"  th:src="@{/jquery-1.9.1.js}"></script>
-
+     <script src="http://wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.2.0"></script>
+     <script>
+          // init vConsole
+          var vConsole = new VConsole();
+          console.log('Hello world');
+     </script>
      <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
 <title>人脸识别结果</title>
      <script type="text/javascript">
-          $(function () {
-              setTimeout('test()',300);
-               // var res = {
-               //      re:code   //这里识别结果，0：失败，1：成功
-               // }
-               // console.info("res="+code)
-               // // window.postMessage(
-               // //         JSON.stringify(res)
-               // // );
-               // if (window.postMessage) {
-               //      window.postMessage(JSON.stringify({
-               //           re:code
-               //      }))
-               // }
-          })
+          // $(function () {
+          //
+          //      // var res = {
+          //      //      re:code   //这里识别结果，0：失败，1：成功
+          //      // }
+          //      // console.info("res="+code)
+          //      // // window.postMessage(
+          //      // //         JSON.stringify(res)
+          //      // // );
+          //      // if (window.postMessage) {
+          //      //      window.postMessage(JSON.stringify({
+          //      //           re:code
+          //      //      }))
+          //      // }
+          // })
+          // setTimeout('test()',300);
+          var i = 0;
+          var interval = setInterval(function () {
+               test();
+               i++;
+               if (i>=10){
+                   clearInterval(interval);
+               }
+          }, 1000)
           function test() {
                var code = '[[${code}]]';
                console.info("code="+code)
@@ -32,7 +46,7 @@
               var params = {
                   res: code,
               };
-              window.postMessage(JSON.stringify(params)); //发送消息到rn
+              window.postMessage(JSON.stringify(params),"*"); //发送消息到rn
           }
 
           // function finish(){  //识别回调以后，直接调用这个方法，发送消息给APP端

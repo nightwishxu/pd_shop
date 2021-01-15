@@ -70,11 +70,12 @@ public class UserFollowService {
 	/**
 	 * 判断是否关注
 	 * @param userId 关注者
-	 * @param followuserId 被关注者
+	 * @param followId 被关注者
+	 * @param type 1 用户关注 2商品关注
 	 * @return
 	 */
-	public Integer getIsFollow(Integer userId,Integer followuserId){
-		return userFollowMapperEx.getIsFollow(userId,followuserId);
+	public Integer getIsFollow(Integer userId,Integer followId,Integer type){
+		return userFollowMapperEx.getIsFollow(userId,followId,type);
 	}
 
 

@@ -70,6 +70,32 @@
       </el-table-column>
 
       <el-table-column
+        label="物流单号"
+        align="center"
+        min-width="120%"
+        prop="postExpressCode"
+      >
+        <template slot-scope="scope">
+          <!-- <el-button
+            type="text"
+            size="mini"
+            v-if="
+              scope.row.postExpressCode == null ||
+              scope.row.postExpressCode == undifined ||
+              scope.row.postExpressCode == ''
+            "
+            @click="handleForm11(scope.row)"
+          >物流单号</el-button> -->
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.postExpressCode!=undefined && scope.row.postExpressCode!=null && scope.row.postExpressCode!=''"
+            @click="handleForm11(scope.row)"
+          >{{ scope.row.postExpressCode }}</el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         label="宝贝图片"
         align="center"
         prop="images"
@@ -174,6 +200,14 @@
           >
             查看拆箱视频
           </el-button>
+          <!-- handleForm6 -->
+
+          <el-button
+            type="primary"
+            size="mini"
+            v-else-if="(scope.row.postState==3 || scope.row.postState==4) && !scope.row.openGoodsVideo"
+            @click="handleForm6(scope.row)"
+          >上传拆箱视频</el-button>
           <div v-else>暂未上传拆箱视频</div>
         </template>
       </el-table-column>
@@ -422,11 +456,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        label
+        label="查看"
         align="center"
-        class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="scope.row.postState==2"
+            @click="confirmPost(scope.row)"
+          >确认收货</el-button>
           <el-button
             size="mini"
             type="text"
@@ -475,6 +514,40 @@
           type="primary"
           @click="from1Submit"
         >确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      :title="title11"
+      :visible.sync="open11"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        ref="form11"
+        :model="form11"
+        label-width="150px"
+      >
+        <el-form-item
+          label="设置物流单号"
+          prop="postExpressCode"
+          id="refuseInfo"
+        >
+          <el-input
+            v-model="form11.postExpressCode"
+            placeholder="请输名称"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from11Submit"
+        >确 定</el-button>
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
@@ -482,11 +555,11 @@
     <el-dialog
       :title="title2"
       :visible.sync="open2"
-      width="400px"
+      width="600px"
       append-to-body
     >
       <el-form
-        ref="form1"
+        ref="form2"
         :model="form2"
         label-width="100px"
       >
@@ -538,39 +611,16 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              label="长  单位cm"
-              prop="length"
+              label="尺寸 "
+              prop="size"
             >
               <el-input
                 v-model="form3.length"
-                placeholder="请输入尺寸--长"
+                placeholder="请输入尺寸"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="宽  单位cm"
-              prop="width"
-            >
-              <el-input
-                v-model="form3.width"
-                placeholder="请输入尺寸--宽"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item
-              label="高  单位cm"
-              prop="height"
-            >
-              <el-input
-                v-model="form3.height"
-                placeholder="请输入尺寸--高"
-              />
-            </el-form-item>
-          </el-col>
+
           <el-col :span="12">
             <el-form-item
               label="重量(单位g)"
@@ -583,6 +633,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row>
           <!-- <el-col :span="12">
             <el-form-item label="材质" prop="material">
@@ -606,12 +657,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              label="其他辅材"
-              prop="otherMaterial"
+              label="副材质"
+              prop="material"
             >
               <el-input
-                v-model="form3.otherMaterial"
-                placeholder="请输入其他辅材"
+                v-model="form3.material"
+                placeholder="请输入副材质"
               />
             </el-form-item>
           </el-col>
@@ -703,7 +754,7 @@
       append-to-body
     >
       <el-form
-        ref="form1"
+        ref="form4"
         :model="form4"
         label-width="100px"
       >
@@ -866,6 +917,86 @@
         >
           <el-input v-model="form8.rate" />
         </el-form-item>
+        <!-- <el-form-item
+          label="名称"
+          prop="cerName"
+          v-if="show4"
+        >
+          <el-input v-model="form8.cerName" />
+        </el-form-item>
+        <el-form-item
+          label="尺寸"
+          prop="size"
+          v-if="show4"
+        >
+          <el-input v-model="form8.size" />
+        </el-form-item>
+        <el-form-item
+          label="重量"
+          prop="weight"
+          v-if="show4"
+        >
+          <el-input v-model="form8.weight" />
+        </el-form-item>
+
+        <el-form-item
+          label="主材质"
+          prop="mainMaterial"
+          v-if="show4"
+        >
+          <el-input v-model="form8.mainMaterial" />
+        </el-form-item>
+
+        <el-form-item
+          label="副材质"
+          prop="material"
+          v-if="show4"
+        >
+          <el-input v-model="form8.material" />
+        </el-form-item>
+
+        <el-form-item
+          label="年代"
+          prop="createYear"
+          v-if="show4"
+        >
+          <el-input v-model="form8.createYear" />
+        </el-form-item>
+
+        <el-form-item
+          label="其他"
+          prop="other"
+          v-if="show4"
+        >
+          <el-input v-model="form8.other" />
+        </el-form-item>
+
+        </el-form-item>
+
+        <el-form-item
+          label="市场流通性"
+          prop="marketLiquidity"
+          v-if="show4"
+        >
+          <el-rate v-model="form8.marketLiquidity" />
+        </el-form-item>
+
+        <el-form-item
+          label="价值稳定性"
+          prop="valueStability"
+          v-if="show4"
+        >
+          <el-rate v-model="form8.valueStability" />
+        </el-form-item>
+
+        <el-form-item
+          label="材质易损性"
+          prop="materialVulnerability"
+          v-if="show4"
+        >
+          <el-rate v-model="form8.materialVulnerability" />
+        </el-form-item> -->
+
         <el-form-item
           label="无法鉴定理由："
           prop="authPrice"
@@ -1232,6 +1363,7 @@ export default {
       open6: false,
       open8: false,
       open10: false,
+      open11: false,
       videoOpen: false,
       videoUrl: null,
       show2: true,
@@ -1245,6 +1377,7 @@ export default {
       title6: "",
       title8: "",
       title10: "",
+      title11: "",
 
       isRouterAlive: true,
       // 查询参数
@@ -1302,6 +1435,7 @@ export default {
       form6: {},
       form8: {},
       form10: {},
+      form11: {},
       uploadAction: process.env.BASE_API + "common/fileUplaod",
       // imgfileList:[],
       // 表单校验
@@ -1586,9 +1720,23 @@ export default {
       this.open10 = true;
       this.title10 = "回寄给用户";
     },
-    playVideo(row) {
+     handleForm11(row) {
+      this.reset11();
+      const id = row.id;
+      this.form11 = { id: id, postExpressCode: row.postExpressCode };
+      this.open11 = true;
+      this.title11 = "物流单号";
+    },
+    playVideo(row,type) {
       this.videoOpen = true;
-      this.videoUrl = row.video;
+      if(type==1){
+        this.videoUrl = row.goVideo;
+      }else if(type==2){
+        this.videoUrl = row.openGoodsVideo;
+      }else if(type==3){
+        this.videoUrl = row.platGoodsAuthVideo;
+      }
+      
       // this.videoUrl =
       //   "http://baidu.paidangwang.net/admin/download?id=c379cda3f709491c867c39e8cd6cb6c4";
     },
@@ -1682,6 +1830,16 @@ export default {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open10 = false;
+          this.getList();
+        }
+      });
+    },
+     from11Submit() {
+      
+      updateGoods(this.form11).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open11 = false;
           this.getList();
         }
       });
@@ -1811,8 +1969,8 @@ export default {
       this.reset();
     },
     cancel1() {
-      this.open1 = false;
-      this.reset1();
+      this.open11 = false;
+      this.reset11();
     },
     cancel2() {
       this.open2 = false;
@@ -1915,6 +2073,13 @@ export default {
       };
       this.resetForm("form10");
     },
+     reset11() {
+      this.form11 = {
+        id: null,
+        postExpressCode: null,
+      };
+      this.resetForm("form11");
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -1943,6 +2108,12 @@ export default {
       // }, 10);
     },
     handleOperate(row) {},
+    confirmPost(row){
+       updateGoods({ id: row.id,postState:3 }).then((response) => {
+              this.msgSuccess("修改成功");
+              this.getList();
+       })
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();

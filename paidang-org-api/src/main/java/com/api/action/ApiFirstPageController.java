@@ -85,6 +85,7 @@ public class ApiFirstPageController extends ApiBaseController {
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
             pawnDetail.setAuctionCount(userPawnEx.getCnt());
+            pawnDetail.setUserState(userPawnEx.getUserState());
             pawnDetail.setId(userPawnEx.getId().toString());
             pawnDetail.setTitle(userPawnEx.getGoodsName1()!=null?userPawnEx.getGoodsName1():"");
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");
@@ -131,6 +132,7 @@ public class ApiFirstPageController extends ApiBaseController {
         for (UserPawnEx userPawnEx : list) {
             PawnDetail pawnDetail = new PawnDetail();
             pawnDetail.setAuctionCount(userPawnEx.getCnt());
+            pawnDetail.setUserState(userPawnEx.getUserState());
             pawnDetail.setId(userPawnEx.getId().toString());
             pawnDetail.setTitle(userPawnEx.getGoodsName1()!=null?userPawnEx.getGoodsName1():"");
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");

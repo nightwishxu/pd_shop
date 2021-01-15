@@ -17,6 +17,8 @@ public class OrderQo extends Order {
 
     private List<Integer> refStates;
 
+    private Integer unRefState;
+
 
 
     public List<Integer> getStates() {
@@ -33,5 +35,13 @@ public class OrderQo extends Order {
 
     public void setRefStates(List<Integer> refStates) {
         this.refStates = refStates;
+    }
+
+    public Integer getUnRefState() {
+        return unRefState;
+    }
+
+    public void setUnRefState(Integer unRefState) {
+        this.unRefState = unRefState;
     }
 }

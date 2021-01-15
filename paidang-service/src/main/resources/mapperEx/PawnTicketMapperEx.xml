@@ -36,6 +36,9 @@
     <if test="pawnerTel!= null and pawnerTel!=''">
       and a.pawner_tel = #{pawnerTel}
     </if>
+    <if test="orgId!= null">
+      and a.org_id = #{orgId}
+    </if>
     order by a.create_time desc
   </select>
   

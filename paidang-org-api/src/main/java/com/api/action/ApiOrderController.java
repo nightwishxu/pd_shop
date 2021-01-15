@@ -98,6 +98,7 @@ public class ApiOrderController extends ApiBaseController {
 
         }else {
             states.add(state);
+            qo.setUnRefState(4);
         }
         qo.setStates(states);
         qo.setRefStates(refStates);

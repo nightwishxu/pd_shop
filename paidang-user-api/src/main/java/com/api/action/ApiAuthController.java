@@ -438,13 +438,13 @@ public class ApiAuthController extends CoreController {
 				GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
 				log.setAuctionEndTime(auctionEndTime);
 				log.setAuctionStartTime(auctionStartTime);
-				log.setGoodsId(i);
+				log.setGoodsId(goods.getId());
 				log.setStatus(0);
 				log.setCreateTime(date);
-				int logId =goodsAuctionOnlineLogService.insertSelective(log);
+				goodsAuctionOnlineLogService.insertSelective(log);
 				Goods tmp = new Goods();
-				tmp.setId(i);
-				tmp.setAuctionOnlineLogId(logId);
+				tmp.setId(goods.getId());
+				tmp.setAuctionOnlineLogId(log.getId());
 				goodsService.updateByPrimaryKeySelective(tmp);
 			}
 		}else {
@@ -482,8 +482,8 @@ public class ApiAuthController extends CoreController {
 					log.setGoodsId(id);
 					log.setStatus(1);
 					log.setCreateTime(date);
-					int logId =goodsAuctionOnlineLogService.insertSelective(log);
-					goods.setAuctionOnlineLogId(logId);
+					goodsAuctionOnlineLogService.insertSelective(log);
+					goods.setAuctionOnlineLogId(log.getId());
 				}
 
 			}

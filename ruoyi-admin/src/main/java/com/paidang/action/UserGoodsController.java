@@ -19,6 +19,7 @@ import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.util.MExpressAddress;
 import com.util.MPawnMsg;
@@ -60,6 +61,9 @@ public class UserGoodsController extends CoreController{
 
 	@Autowired
 	private TokenService tokenService;
+
+	@Autowired
+	private CertificateService certificateService;
 
 
 	@RequestMapping("/list")
@@ -209,7 +213,7 @@ public class UserGoodsController extends CoreController{
     //开始拆箱--并且鉴定
 	@RequestMapping("/beginToOper")
 	@ResponseBody
-	public Ret beginToOper(UserGoods userGoods){
+	public Ret beginToOper(UserGoodsEx userGoods){
     	if(4 != userGoods.getAuthResult()){
     		Map<String, Object> map = new HashMap<>();
     		map.put("id",userGoods.getId());
@@ -241,7 +245,22 @@ public class UserGoodsController extends CoreController{
 			userGoods.setAuthResult(userGoods.getAuthResult());
 			userGoods.setAuthPrice(userGoods.getAuthPrice());
 			userGoodsService.updateByPrimaryKeySelective(userGoods);
-
+			if (StringUtils.isNotEmpty(userGoods.getCerName())){
+				Certificate entity = new Certificate();
+				entity.setCreateTime(new Date());
+				entity.setCreateYear(userGoods.getCreateYear());
+				entity.setName(userGoods.getCerName());
+				entity.setSize(userGoods.getSize());
+				entity.setUserGoodsId(userGoods.getId());
+				entity.setWeight(userGoods.getWeight());
+				entity.setMainMaterial(userGoods.getMainMaterial());
+				entity.setMaterial(userGoods.getMaterial());
+				entity.setMarketLiquidity(userGoods.getMarketLiquidity());
+				entity.setValueStability(userGoods.getValueStability());
+				entity.setMaterialVulnerability(userGoods.getMaterialVulnerability());
+				entity.setPrice(userGoods.getAuthPrice());
+				certificateService.insert(entity);
+			}
 			UserGoods userGoods2 = userGoodsService.selectByPrimaryKey(userGoods.getId());
 			User user = userService.selectByPrimaryKey(userGoods2.getUserId());
 			if(1 == userGoods2.getIsVerify()){

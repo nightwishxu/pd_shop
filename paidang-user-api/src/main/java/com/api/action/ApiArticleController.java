@@ -276,13 +276,15 @@ public class ApiArticleController extends ApiBaseController {
     @RequestParam @ApiParam(value = "昵称", required = true)String nickName
     ){
         UserReport report=new UserReport();
-        report.setArticleId(articleId);
+        report.setTargetId(articleId);
+        report.setType(1);
         report.setNickName(nickName);
         report.setCreateTime(new Date());
 //        report.setImgs(imgs);
         report.setStatus(1);
         report.setInfo(info);
         report.setUserId(mobileInfo.getUserId());
+        report.setCreateAccount(mobileInfo.getUserId().toString());
         articleService.updateArticleCount(articleId,1,4);
         return  userReportService.insert(report);
     }

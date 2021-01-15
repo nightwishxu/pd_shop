@@ -193,6 +193,9 @@ public class AppStoreGoodsDetail {
 	@ApiModelProperty(value = "店铺标签中午,分割")
 	private String orgLabelsInfo;
 
+	@ApiModelProperty(value = "用户是否关注 1关注 0未关注")
+	private Integer isFollow;
+
 	public String getBannerVideo() {
 		return bannerVideo;
 	}
@@ -686,6 +689,14 @@ public class AppStoreGoodsDetail {
 
 	public void setGoodsSource(Integer goodsSource) {
 		this.goodsSource = goodsSource;
+	}
+
+	public Integer getIsFollow() {
+		return isFollow;
+	}
+
+	public void setIsFollow(Integer isFollow) {
+		this.isFollow = isFollow;
 	}
 }
 

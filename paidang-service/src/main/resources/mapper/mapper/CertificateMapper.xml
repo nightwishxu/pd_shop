@@ -27,6 +27,7 @@
         <result column="user_goods_id" property="userGoodsId" jdbcType="INTEGER" />
         <result column="price" property="price" jdbcType="DECIMAL" />
         <result column="appraisal_dsc" property="appraisalDsc" jdbcType="VARCHAR" />
+        <result column="size" property="size" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -90,7 +91,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,name,code,length,width,height,weight,material,main_material,other_material,create_year,other,imgs,market_liquidity,value_stability,material_vulnerability,storage_condition,naked_eye_defect,finance_log,other_business,create_time,modify_time,user_goods_id,price,appraisal_dsc
+        id,name,code,length,width,height,weight,material,main_material,other_material,create_year,other,imgs,market_liquidity,value_stability,material_vulnerability,storage_condition,naked_eye_defect,finance_log,other_business,create_time,modify_time,user_goods_id,price,appraisal_dsc,size
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -136,7 +137,7 @@
         material_vulnerability,storage_condition,naked_eye_defect,
         finance_log,other_business,create_time,
         modify_time,user_goods_id,price,
-        appraisal_dsc
+        appraisal_dsc,size
         )
         values (#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},
         #{length,jdbcType=VARCHAR},#{width,jdbcType=VARCHAR},#{height,jdbcType=VARCHAR},
@@ -146,7 +147,7 @@
         #{materialVulnerability,jdbcType=TINYINT},#{storageCondition,jdbcType=VARCHAR},#{nakedEyeDefect,jdbcType=VARCHAR},
         #{financeLog,jdbcType=VARCHAR},#{otherBusiness,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
         #{modifyTime,jdbcType=TIMESTAMP},#{userGoodsId,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},
-        #{appraisalDsc,jdbcType=VARCHAR}
+        #{appraisalDsc,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -225,6 +226,9 @@
             <if test="appraisalDsc != null" >
                 appraisal_dsc,
             </if>
+            <if test="size != null" >
+                size,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="name != null" >
@@ -298,6 +302,9 @@
             </if>
             <if test="appraisalDsc != null" >
                 #{appraisalDsc,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null" >
+                #{size,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -387,6 +394,9 @@
             <if test="record.appraisalDsc != null" >
                 appraisal_dsc = #{record.appraisalDsc,jdbcType=VARCHAR},
             </if>
+            <if test="record.size != null" >
+                size = #{record.size,jdbcType=VARCHAR},
+            </if>
         </set>
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
@@ -419,7 +429,8 @@
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         user_goods_id = #{userGoodsId,jdbcType=INTEGER},
         price = #{price,jdbcType=DECIMAL},
-        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR}
+        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR},
+        size = #{size,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -500,6 +511,9 @@
             <if test="appraisalDsc != null" >
                 appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR},
             </if>
+            <if test="size != null" >
+                size = #{size,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -529,7 +543,8 @@
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         user_goods_id = #{userGoodsId,jdbcType=INTEGER},
         price = #{price,jdbcType=DECIMAL},
-        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR}
+        appraisal_dsc = #{appraisalDsc,jdbcType=VARCHAR},
+        size = #{size,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

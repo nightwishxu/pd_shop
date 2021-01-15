@@ -38,7 +38,9 @@ import com.item.service.UserNotifyService;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.OrgBalanceLogEx;
+import com.paidang.daoEx.model.PawnTicketEx;
 import com.paidang.daoEx.model.UserPawnEx;
+import com.paidang.domain.qo.PawnTicketQo;
 import com.paidang.service.*;
 import com.paidang.utils.CostGenerator;
 import com.ruoyi.common.core.page.PageDomain;
@@ -1825,6 +1827,9 @@ public class ApiMyAppController extends ApiBaseController{
         }
 
         if (org.springframework.util.StringUtils.isEmpty(pawnTicket.getContractUrl())){
+            if (org.springframework.util.StringUtils.isEmpty(pawnTicket.getContractId())){
+                throw new ApiException(400,"合同尚未签署完成，无法查看");
+            }
             String contractUrl = AnXinSignService.getContractUrl(pawnTicket.getContractId());
             String s = fileService.downLoadFromUrl(contractUrl,pawnTicket.getContractId());
             PawnTicket temp = new PawnTicket();
@@ -1865,6 +1870,38 @@ public class ApiMyAppController extends ApiBaseController{
 //        }else
 //            return new Result();
 //    }
+
+
+
+
+    /**
+     * 票据列表
+     */
+    @ApiOperation(value = "票据列表*", notes = "登陆")
+    @RequestMapping(value = "/pawnTicketList", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true, isPage = true)
+    public List<PawnTicketEx> pawnTicketList(MobileInfo mobileInfo, PageLimit pageLimit, String status) {
+        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+
+        PawnTicketExample pawnTicketExample = new PawnTicketExample();
+        //查询用户真实姓名和手机号相同的票据
+        List<String> statusList=new ArrayList<>();
+        if(status.equals("1")){
+            statusList.add("0");
+            statusList.add("1");
+        }
+        if(status.equals("2")){
+            statusList.add("2");
+            statusList.add("3");
+            statusList.add("4");
+        }
+        startPage();
+        PawnTicketQo qo = new PawnTicketQo();
+        qo.setStatusList(statusList);
+        qo.setOrgId(orgId);
+        List<PawnTicketEx> pawnTickets = pawnTicketService.findList(qo);
+        return pawnTickets;
+    }
 
     @ApiOperation(value = "物流详情",notes="物流信息")
     @RequestMapping(value = "/getExpressDetail", method = RequestMethod.POST)

@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value={"/api/userSms"}, produces={"application/json;charset=UTF-8"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -75,7 +77,10 @@ public class ApiUserSms
             mobileInfo.setToken(verify);
             return mobileInfo;
         }
-        throw new ApiException(-1,"该第三方账号未绑定过手机");
+        Map<String,Object> result = new HashMap<>();
+        result.put("errorCode",1);
+        result.put("errorMsg","该第三方账号未绑定过手机");
+        return result;
     }
 
     @ApiOperation("发送短信验证码")

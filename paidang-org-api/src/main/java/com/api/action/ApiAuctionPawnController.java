@@ -67,8 +67,13 @@ public class ApiAuctionPawnController extends ApiBaseController {
         PawnDetail pawnDetail = new PawnDetail();
         //当品信息
         UserPawnEx userPawnEx = userPawnService.getUserPawnExById(pawnId);
+        UserGoods userGoods = userGoodsService.selectByPrimaryKey(userPawnEx.getGoodsId());
         pawnDetail.setId(userPawnEx.getId().toString());
         pawnDetail.setTitle(userPawnEx.getGoodsName1());
+        if (userGoods!=null){
+            pawnDetail.setRate(userGoods.getRate());
+            pawnDetail.setMoneyRate(userGoods.getMoneyRate());
+        }
         pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");
         pawnDetail.setCollecterMoney(userPawnEx.getLoansPrice()!=null?userPawnEx.getLoansPrice().toString():"");
         pawnDetail.setCollecterRate(userPawnEx.getLoansRate()!=null?userPawnEx.getLoansRate().toString():"");

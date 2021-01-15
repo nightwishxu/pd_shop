@@ -2,19 +2,29 @@ package com.paidang.service;
 
 
 import cn.hutool.core.date.DateUnit;
+import com.base.api.ApiException;
+import com.base.api.MobileInfo;
 import com.base.util.DateUtil;
+import com.base.util.StringUtils;
+import com.item.dao.model.User;
+import com.item.service.UserService;
 import com.paidang.dao.UserPawnMapper;
-import com.paidang.dao.model.PawnContinue;
-import com.paidang.dao.model.PawnContinueExample;
-import com.paidang.dao.model.UserPawn;
-import com.paidang.dao.model.UserPawnExample;
+import com.paidang.dao.model.*;
 import com.paidang.daoEx.UserPawnMapperEx;
+import com.paidang.daoEx.model.UserGoodsEx;
 import com.paidang.daoEx.model.UserPawnEx;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.util.PaidangConst;
+import com.util.PaidangMessage;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +32,10 @@ import java.util.Map;
 
 @Service
 public class UserPawnService {
+
+
+	private static final Logger logger = LoggerFactory.getLogger(UserPawnService.class);
+
 	@Autowired
 	private UserPawnMapper userPawnMapper;
 
@@ -30,6 +44,24 @@ public class UserPawnService {
 
 	@Autowired
 	private PawnContinueService pawnContinueService;
+
+	@Autowired
+	private RedisCache redisCache;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private UserGoodsService userGoodsService;
+
+	@Autowired
+	private UserPawnService userPawnService;
+
+	@Autowired
+	private PawnOrgService pawnOrgService;
+
+	@Autowired
+	private OrgNotifyService orgNotifyService;
 
 	public int countByExample(UserPawnExample example) {
 		return this.userPawnMapper.countByExample(example);
@@ -241,5 +273,93 @@ public class UserPawnService {
 		}else {
 			return null;
 		}
+	}
+
+	/**
+	 * 未典当商品去典当
+	 * @param userId
+	 * @param id
+	 * @param loansPrice
+	 * @param loansRate
+	 * @param pawnTime
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public int gotoPawn(Integer userId,
+						Integer id,
+						String loansPrice,
+						String loansRate,
+						Integer pawnTime) throws Exception{
+		if (!redisCache.getLock("gotoPawn:"+id,5)){
+			throw new ApiException(400,"请求频繁请稍后");
+		}
+		UserGoodsEx userGoods = userGoodsService.selectGotoPawn(id);
+		if (userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
+			throw new ApiException(400,"已典当");
+		}
+		userGoods.setGotoPawn(1);
+
+		int result = userGoodsService.updateByPrimaryKeySelective(userGoods);
+		if(result == 0){
+			throw new ApiException(1006,"操作失败");
+		}
+		User user = userService.selectByPrimaryKey(userId);
+		if (user==null){
+			throw new ApiException("用户不存在");
+		}
+		//注册安心签账户
+		if (StringUtils.isBlank(user.getAnxinsignId())){
+			if (user.getIsBind()!=1){
+				throw new ApiException(400,"请先进行实名认证");
+			}
+			String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
+			User temp = new User();
+			temp.setId(userId);
+			temp.setAnxinsignId(anxinUserId);
+			temp.setModifyTime(new Date());
+			userService.updateByPrimaryKeySelective(temp);
+		}
+
+
+		UserPawn userPawn2 = new UserPawn();
+		userPawn2.setUserId(userGoods.getBelongId());
+		userPawn2.setGoodsId(id);
+		userPawn2.setLoansPrice(new BigDecimal(loansPrice));
+		userPawn2.setLoansRate(new BigDecimal(loansRate));
+		userPawn2.setIsVerify(0);
+		userPawn2.setPawnBeginTime(new Date());
+		userPawn2.setPawnEndTime(DateUtil.add(new Date(),pawnTime * 15-1));
+		userPawn2.setBeginPawnEndTime(DateUtil.add(new Date(),pawnTime * 15-1));
+//        userPawn.setPayeeName(userGoods.getUserName());
+//        userPawn.setPayeePhone(userGoods.getUserPhone());
+		userPawn2.setPayeeState(0);
+		userPawn2.setPawnTime(pawnTime);
+		userPawn2.setBeginPawnMonth(pawnTime);
+		userPawn2.setState(1);
+		userPawn2.setUserState(0);
+		userPawn2.setUserName(userGoods.getUserName());
+		userPawn2.setUserPhone(userGoods.getUserPhone());
+		userPawn2.setUserIdCard(userGoods.getIdCard());
+		userPawn2.setGoodsName(userGoods.getName());
+		userPawn2.setCreateTime(new Date());
+		//userPawn2.setOverdueRate(PaidangConst.REDEEM_OVERRATE);
+		int reuslt2 = userPawnService.insert(userPawn2);
+		if(reuslt2 == 0){
+			throw new ApiException(1006,"操作失败");
+		}
+		logger.debug("========================用户端典当成功通知所有的机构端========================");
+		//获取所有的机构端编号
+		PawnOrgExample orgExample = new PawnOrgExample();
+		orgExample.createCriteria().andTypeEqualTo(1);
+		List<PawnOrg> orgList = pawnOrgService.selectByExample(orgExample);
+		if(orgList.size() > 0){
+			for(PawnOrg org:orgList){
+				//推送
+				orgNotifyService.insertByTemplate(org.getId(), "3", PaidangMessage.USER_PAWN_NOTIFY, userGoods.getName());
+			}
+		}
+		return 1;
+
 	}
 }
