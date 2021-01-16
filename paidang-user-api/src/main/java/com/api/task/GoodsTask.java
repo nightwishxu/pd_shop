@@ -4,9 +4,11 @@ package com.api.task;
 import com.api.service.ApiUserPayService;
 import com.base.util.DateUtil;
 import com.paidang.dao.model.Goods;
+import com.paidang.dao.model.GoodsAuction;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.dao.model.OrderExample;
 import com.paidang.daoEx.model.OrderEx;
+import com.paidang.service.GoodsAuctionService;
 import com.paidang.service.GoodsService;
 import com.paidang.service.OrderService;
 import com.util.PaidangConst;
@@ -33,11 +35,14 @@ public class GoodsTask {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private GoodsAuctionService goodsAuctionService;
+
 
     /**
      * 竞拍商品处理
      */
-    @Scheduled(cron ="0 */5 * * * ?")
+    @Scheduled(cron ="0 */3 * * * ?")
     public void endAuctionGoods(){
         GoodsExample example = new GoodsExample();
         example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeLessThan(new Date())
@@ -47,7 +52,8 @@ public class GoodsTask {
         List<Goods> goods = goodsService.selectByExample(example);
         for (Goods good : goods) {
             try {
-                apiUserPayService.createOrder(good.getMaxAutionId(),good.getId(),null,null,1);
+                GoodsAuction goodsAuction = goodsAuctionService.selectByPrimaryKey(good.getMaxAutionId());
+                apiUserPayService.createOrder(goodsAuction.getUserId(),good.getId(),null,null,1);
                 good.setIsOnline(0);
                 good.setMaxAuction(null);
                 good.setMaxAutionId(null);

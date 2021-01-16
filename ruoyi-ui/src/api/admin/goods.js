@@ -59,10 +59,24 @@ export function changeState(data) {
 }
 
 
-export function getAttribute(cateCode){
+export function getAttribute(cateCode) {
   return request({
-    url: '/goodsAttribute/list?cateCode='+cateCode,
+    url: '/goodsAttribute/list?cateCode=' + cateCode,
   })
 }
 
 
+export function dismountGoods(data) {
+  return request({
+    url: '/goods/dismount',
+    params: data
+  })
+}
+
+
+export function onlineGoods(data) {
+  return request({
+    url: '/goods/online',
+    params: data
+  })
+}

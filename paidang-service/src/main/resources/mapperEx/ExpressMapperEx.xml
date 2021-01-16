@@ -10,13 +10,13 @@
 
     <!-- 名字模糊搜索快递表 -->
   <select id="searchByName" resultMap="BaseResultMap" >
-    SELECT e.express_code , e.express_state  , g.name AS goods_name , g.img  AS goods_images ,ug.id AS goods_id , p.pawn_ticket_code FROM p_express e
+    SELECT e.id,e.express_code , e.express_state  , g.name AS goods_name , g.img  AS goods_images ,ug.id AS goods_id , p.pawn_ticket_code FROM p_express e
     LEFT JOIN p_goods g ON e.fid = g.id AND e.type IN (4,5,6)
     LEFT JOIN p_user_goods ug ON g.goods_id = ug.id
     LEFT JOIN p_user_pawn p ON ug.id = p.goods_id AND p.pawn_ticket_code IS NOT NULL AND p.org_id = #{orgId}
     WHERE g.name LIKE '%${keyword}%'
     UNION
-    SELECT e.express_code , e.express_state , ug.name AS goods_name , ug.images AS goods_images , ug.id AS goods_id , p.pawn_ticket_code FROM p_express e
+    SELECT  e.id,e.express_code , e.express_state , ug.name AS goods_name , ug.images AS goods_images , ug.id AS goods_id , p.pawn_ticket_code FROM p_express e
     LEFT JOIN p_user_goods ug ON ug.id = e.fid AND e.type IN (4,5,6)
     LEFT JOIN p_user_pawn p ON ug.id = p.goods_id AND p.pawn_ticket_code IS NOT NULL AND p.org_id = #{orgId}
     WHERE ug.name LIKE '%${keyword}%'

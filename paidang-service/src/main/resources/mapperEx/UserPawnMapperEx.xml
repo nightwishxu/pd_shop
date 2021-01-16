@@ -273,7 +273,7 @@
     </select>
 
     <update id="updatebyPawnContinue" parameterType="java.util.HashMap">
-      update p_user_pawn set modify_timw = now()
+      update p_user_pawn set modify_time = now()
       <if test="pawn_end_time!=null">
         ,pawn_end_time = #{pawn_end_time}
       </if>

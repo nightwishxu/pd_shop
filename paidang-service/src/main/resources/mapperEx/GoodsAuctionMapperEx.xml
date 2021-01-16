@@ -3,6 +3,7 @@
 <mapper namespace="com.paidang.daoEx.GoodsAuctionMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.GoodsAuctionEx" extends="com.paidang.dao.GoodsAuctionMapper.BaseResultMap">
       <result column="userName" property="userName"/>
+      <result column="nickName" property="nickName"/>
       <result column="headImg" property="headImg"/>
   </resultMap>
 
@@ -14,6 +15,7 @@
         select
         A.*,
         B.name as userName,
+        B.nick_name as nickName,
         B.head_img as headImg
         from p_goods_auction A
         left join b_user B

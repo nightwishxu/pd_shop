@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PawnLogExample {
 	protected String orderByClause;
@@ -161,6 +161,66 @@ public class PawnLogExample {
 
 		public Criteria andIdNotBetween(Integer value1, Integer value2) {
 			addCriterion("id not between", value1, value2, "id");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdIsNull() {
+			addCriterion("ref_id is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdIsNotNull() {
+			addCriterion("ref_id is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdEqualTo(Integer value) {
+			addCriterion("ref_id =", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdNotEqualTo(Integer value) {
+			addCriterion("ref_id <>", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdGreaterThan(Integer value) {
+			addCriterion("ref_id >", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdGreaterThanOrEqualTo(Integer value) {
+			addCriterion("ref_id >=", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdLessThan(Integer value) {
+			addCriterion("ref_id <", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdLessThanOrEqualTo(Integer value) {
+			addCriterion("ref_id <=", value, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdIn(List<Integer> values) {
+			addCriterion("ref_id in", values, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdNotIn(List<Integer> values) {
+			addCriterion("ref_id not in", values, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdBetween(Integer value1, Integer value2) {
+			addCriterion("ref_id between", value1, value2, "refId");
+			return (Criteria) this;
+		}
+
+		public Criteria andRefIdNotBetween(Integer value1, Integer value2) {
+			addCriterion("ref_id not between", value1, value2, "refId");
 			return (Criteria) this;
 		}
 

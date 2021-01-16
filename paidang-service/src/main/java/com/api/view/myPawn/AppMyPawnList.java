@@ -5,6 +5,9 @@ import com.paidang.dao.model.PawnAuction;
 import com.paidang.daoEx.model.PawnAuctionEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
+
+import javax.persistence.Column;
 
 
 /**
@@ -99,6 +102,9 @@ public class AppMyPawnList {
 
     @ApiModelProperty("最新续当id")
     private Integer lastPawnContinueId;
+
+    @ApiModelProperty(value="用户赎当打款凭证")
+    private String redeemTicket;
 
     public Integer getId() {
         return id;
@@ -371,5 +377,13 @@ public class AppMyPawnList {
 
     public void setLastPawnContinueId(Integer lastPawnContinueId) {
         this.lastPawnContinueId = lastPawnContinueId;
+    }
+
+    public String getRedeemTicket() {
+        return redeemTicket;
+    }
+
+    public void setRedeemTicket(String redeemTicket) {
+        this.redeemTicket = redeemTicket;
     }
 }

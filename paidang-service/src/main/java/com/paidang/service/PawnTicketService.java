@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import cn.hutool.core.convert.Convert;
+import com.base.api.ApiException;
+import com.base.dao.model.Result;
 import com.item.dao.UserMapper;
 import com.item.dao.model.User;
 import com.paidang.dao.PawnOrgMapper;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.base.mybatis.plus.EntityWrapper;
 
 import com.paidang.dao.PawnTicketMapper;
+import org.springframework.util.StringUtils;
 
 @Service
 public class PawnTicketService {
@@ -39,6 +42,15 @@ public class PawnTicketService {
 
 	@Autowired
 	private PawnTicketMapperEx pawnTicketMapperEx;
+
+	@Autowired
+	private UserPawnService userPawnService;
+
+	@Autowired
+	private PawnContinueService pawnContinueService;
+
+	@Autowired
+	private BFileService fileService;
 
 	public int countByExample(PawnTicketExample example) {
 		return this.pawnTicketMapper.countByExample(example);
@@ -204,5 +216,36 @@ public class PawnTicketService {
 
 	public List<PawnTicketEx> findList(PawnTicketQo qo){
 		return pawnTicketMapperEx.findList(qo);
+	}
+
+	public String showContractUrl(Integer pawnId,Integer repawnId,Integer pawnTicketId,Integer type) throws Exception{
+		PawnTicket pawnTicket = null;
+		if (pawnId!=null){
+			UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+			pawnTicket = getByProjectCode(userPawn.getProjectCode());
+		}else if (repawnId!=null){
+			PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
+			pawnTicket = getByProjectCode(pawnContinue.getProjectCode());
+		}else if (pawnTicketId!=null){
+			pawnTicket = selectByPrimaryKey(pawnTicketId);
+		}
+
+		if (StringUtils.isEmpty(pawnTicket.getContractUrl())){
+			if (StringUtils.isEmpty(pawnTicket.getContractId())){
+				if (type!=null && type==1){
+					return null;
+				}
+				throw new ApiException(400,"合同尚未签署完成，无法查看");
+			}
+			String contractUrl = AnXinSignService.getContractUrl(pawnTicket.getContractId());
+			String s = fileService.downLoadFromUrl(contractUrl,pawnTicket.getContractId());
+			PawnTicket temp = new PawnTicket();
+			temp.setContractUrl(s);
+			temp.setId(pawnTicketId);
+			updateByPrimaryKeySelective(temp);
+			return s;
+		}else {
+			return pawnTicket.getContractUrl();
+		}
 	}
 }

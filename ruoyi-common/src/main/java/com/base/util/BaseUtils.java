@@ -212,4 +212,12 @@ public class BaseUtils {
         return resultList;
     }
 
+    public static String getSingleImage(String images){
+        if (org.apache.commons.lang3.StringUtils.isEmpty(images))
+            return "";
+        String[] i = images.split(",");
+        if (i.length == 0)
+            return "";
+        return i[0];
+    }
 }

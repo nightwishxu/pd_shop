@@ -2,6 +2,8 @@ package com.api.action;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.api.view.orgHome.OrgOperateNum;
+import com.api.view.orgRepawn.RepawnMini;
 import com.base.ConstantsCode;
 import com.base.annotation.ApiMethod;
 import com.base.dao.model.Result;
@@ -11,12 +13,10 @@ import com.demo.constant.HttpConnector;
 import com.item.service.CodeService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.PawnOrgEx;
+import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.domain.pojo.AppVersion;
 import com.paidang.domain.vo.OrderPriceCollectVo;
-import com.paidang.service.GoodsService;
-import com.paidang.service.OrderService;
-import com.paidang.service.PawnOrgService;
-import com.paidang.service.UserReturnAddressService;
+import com.paidang.service.*;
 import com.ruoyi.common.core.redis.RedisCache;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +72,12 @@ public class ApiHomeController extends ApiBaseController{
 
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private UserPawnService userPawnService;
+
+	@Autowired
+	private PawnContinueService pawnContinueService;
 
 
 	@Autowired
@@ -538,6 +545,30 @@ public class ApiHomeController extends ApiBaseController{
 
 		vo.setTotal(pawnOrg.getAmount()==null?BigDecimal.ZERO:pawnOrg.getAmount());
 		return vo;
+	}
+
+
+	@PostMapping("/operateNum/get")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "机构可操作数量")
+	public OrgOperateNum getOperateNum(MobileInfo mobileInfo){
+		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+		List<UserPawnEx> userPawnExList = userPawnService.getOrgRedeemList(orgId.toString(),"","");
+		OrgOperateNum result = new OrgOperateNum();
+		int i = 0 ;
+		if (CollectionUtils.isNotEmpty(userPawnExList)){
+
+			for (UserPawnEx ex : userPawnExList) {
+				if (ex.getState()+ex.getRedeemState()!=6){
+					i++;
+				}
+			}
+		}
+		result.setRedeemNum(i);
+		List<RepawnMini> repawnList = pawnContinueService.getRepawnList(orgId, 1);
+		result.setRepawnNum(repawnList.size());
+		return result;
+
 	}
 
 

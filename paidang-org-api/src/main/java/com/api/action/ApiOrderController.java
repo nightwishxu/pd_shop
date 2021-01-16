@@ -81,6 +81,10 @@ public class ApiOrderController extends ApiBaseController {
         qo.setOrgId(orgId);
         List<Integer> states= new ArrayList<>();
         List<Integer> refStates= new ArrayList<>();
+        if (state!=0 && state!=4){
+            refStates.add(0);
+            refStates.add(5);
+        }
         if (state==0){
 
         }else if (state==3){
@@ -88,17 +92,14 @@ public class ApiOrderController extends ApiBaseController {
             states.add(3);
             states.add(4);
             states.add(5);
-            refStates.add(0);
         }else if (state==4){
             refStates.add(1);
             refStates.add(2);
             refStates.add(3);
             refStates.add(4);
-            refStates.add(5);
 
         }else {
             states.add(state);
-            qo.setUnRefState(4);
         }
         qo.setStates(states);
         qo.setRefStates(refStates);

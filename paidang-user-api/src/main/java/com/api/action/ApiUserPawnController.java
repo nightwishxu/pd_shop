@@ -311,6 +311,7 @@ public class ApiUserPawnController extends ApiBaseController {
         for(UserPawnEx ex : list){
             AppMyPawnList detail = new AppMyPawnList();
             detail.setId(ex.getId());
+            detail.setRedeemTicket(ex.getRedeemTicket());
             detail.setLastPawnContinueId(ex.getLastPawnContinueId());
             detail.setContinuePawnStatus(ex.getContinuePawnStatus());
             detail.setPawnStatus(ex.getPawnStatus());
@@ -332,11 +333,11 @@ public class ApiUserPawnController extends ApiBaseController {
                 //没有续当操作
                 detail.setContinueState(0);
             }else {
-                if(1 == ex.getPawnContinueState()){
+                if(4 == ex.getPawnContinueState()){
                     //提交续当申请2283
-                    detail.setContinueState(1);
-                }else{
                     detail.setContinueState(0);
+                }else{
+                    detail.setContinueState(1);
                 }
             }
 
@@ -370,8 +371,8 @@ public class ApiUserPawnController extends ApiBaseController {
                 detail.setType(1);
             }
             detail.setTime(betTime+"");
-            //可以续当 到期前7天 逾期15天内
-            if (detail.getContinueState()==0 && detail.getRedeemState()==0 && (detail.getType()==1) || (detail.getType()==0 && betTime<=7)){
+            //可以续当 到期前7天 逾期10天内
+            if (detail.getContinueState()==0 && detail.getRedeemState()==0 && (detail.getType()==1 && betTime<=10) || (detail.getType()==0 && betTime<=7)){
                 detail.setIsContinue(1);
             }else {
                 detail.setIsContinue(0);
@@ -1007,6 +1008,7 @@ public class ApiUserPawnController extends ApiBaseController {
         userPawn.setPayeePhone(userBankCard.getBankCardPhone());
         userPawn.setPayeeName(userBankCard.getUserName());
         userPawn.setOrgSelectedTime(new Date());
+        userPawn.setPawnStatus(1);
 
         userPawn.setUserPhone(userBankCard.getBankCardPhone());
         userPawn.setUserName(userBankCard.getUserName());

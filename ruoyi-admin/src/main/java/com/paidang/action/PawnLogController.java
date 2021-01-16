@@ -1,16 +1,21 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
-import com.paidang.dao.model.PawnLog;
-import com.paidang.dao.model.PawnLogExample;
-import com.paidang.service.PawnLogService;
+import com.base.dao.model.Result;
+import com.paidang.dao.model.*;
+import com.paidang.daoEx.model.PawnLogEx;
+import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +27,10 @@ public class PawnLogController extends CoreController{
 
     @Autowired
     private PawnLogService pawnLogService;
+
+
+    @Autowired
+    private PawnTicketService pawnTicketService;
     
     @RequestMapping("/list")
 	@ResponseBody
@@ -63,11 +72,33 @@ public class PawnLogController extends CoreController{
 
 	@RequestMapping("/search")
 	@ResponseBody
-	public Ret list(Integer id){
+	public Ret list(Integer id) throws Exception{
 		PawnLogExample example = new PawnLogExample();
 		example.createCriteria().andGoodsIdEqualTo(id);
 		example.setOrderByClause("create_time asc");
 		List<PawnLog> list = pawnLogService.selectByExample(example);
-		return ok(list);
+		List<PawnLogEx> result = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(list)){
+			for (PawnLog log : list) {
+				PawnLogEx ex = new PawnLogEx();
+				BeanUtils.copyProperties(log,ex);
+				if (log.getType()==1){
+					//典当
+                    if (log.getRefId()!=null){
+                        String url =pawnTicketService.showContractUrl(log.getRefId(),null,null,1);
+                        ex.setContractUrl(url);
+                    }
+				}else if (log.getType()==2){
+					//续当
+                    if (log.getRefId()!=null){
+                        String url =pawnTicketService.showContractUrl(null,log.getRefId(),null,1);
+                        ex.setContractUrl(url);
+                    }
+				}
+                result.add(ex);
+			}
+
+		}
+		return ok(result);
 	}
 }

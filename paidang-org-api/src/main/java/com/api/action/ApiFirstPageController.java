@@ -22,13 +22,16 @@ import com.base.util.DateUtil;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.ExpressEx;
+import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.daoEx.model.UserPawnEx;
+import com.paidang.domain.qo.GoodsQo;
 import com.paidang.service.*;
 import com.util.PaidangConst;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -273,6 +276,9 @@ public class ApiFirstPageController extends ApiBaseController {
                     pawnDetail.setAuthPrice(userGoods.getAuthPrice().toString());//当品鉴定价
                     pawnDetail.setCollecterMoney(userPawn.getLoansPrice().toString());//当户期望价格
                     pawnDetail.setBidTimes(pawnAuctionService.getAllBidOrgCount(userPawn.getId()));//对该pawId竞拍的所有机构总数
+                    pawnDetail.setPawnDays(userPawn.getPawnTime()!=null?(userPawn.getPawnTime()*15)+"":"");
+                    pawnDetail.setPawnBeginTime(userPawn.getPawnBeginTime()!=null? DateUtil.dateToStr(userPawn.getPawnBeginTime(),"yyyy-MM-dd"):"");
+                    pawnDetail.setPawnEndTime(userPawn.getPawnEndTime()!=null? DateUtil.dateToStr(userPawn.getPawnEndTime(),"yyyy-MM-dd"):"");
                     //倒计时秒数
                     if(userPawn.getOrgId() != null) {  //用户选择了中标机构，竞拍结束，set=0
                         pawnDetail.setBidCountdownTime("0");
@@ -303,6 +309,9 @@ public class ApiFirstPageController extends ApiBaseController {
                     pawnDetail.setCollecterMoney(userPawn.getLoansPrice().toString());//当户期望价格
                     pawnDetail.setBidTimes(pawnAuctionService.getAllBidOrgCount(userPawn.getId()));//对该pawId竞拍的所有机构总数
                     pawnDetail.setBidCountdownTime("0");//已中标的典当，没有倒计时
+                    pawnDetail.setPawnDays(userPawn.getPawnTime()!=null?(userPawn.getPawnTime()*15)+"":"");
+                    pawnDetail.setPawnBeginTime(userPawn.getPawnBeginTime()!=null? DateUtil.dateToStr(userPawn.getPawnBeginTime(),"yyyy-MM-dd"):"");
+                    pawnDetail.setPawnEndTime(userPawn.getPawnEndTime()!=null? DateUtil.dateToStr(userPawn.getPawnEndTime(),"yyyy-MM-dd"):"");
                     //查看支付凭证
                     StringBuffer repawnTickets = new StringBuffer("");
                     if (pawnContinues.size() != 0){
@@ -387,13 +396,13 @@ public class ApiFirstPageController extends ApiBaseController {
         }
 
         //查商品表
-        List<DeadPawnAuctionMini> jdAuctionList = myAppController.getDeadPawnAuctionList(keyword,mobileInfo,pageLimit);
-        for (DeadPawnAuctionMini jd:jdAuctionList) {
-            Search search = new Search();
-            search.setDes("7");
-            search.setDeadPawnAuctionMini(jd);
-           retList.add(search);
-        }
+//        List<DeadPawnAuctionMini> jdAuctionList = myAppController.getDeadPawnAuctionList(keyword,mobileInfo,pageLimit);
+//        for (DeadPawnAuctionMini jd:jdAuctionList) {
+//            Search search = new Search();
+//            search.setDes("7");
+//            search.setDeadPawnAuctionMini(jd);
+//           retList.add(search);
+//        }
 
         //查快递表
         List<ExpressEx> expressExes = expressService.searchByName(keyword,orgId.toString());
@@ -405,10 +414,27 @@ public class ApiFirstPageController extends ApiBaseController {
             expressInfo.setPawnTicketCode(expressEx.getPawnTicketCode());
             expressInfo.setExpressState(expressEx.getExpressState().toString());
             expressInfo.setExpressCode(expressEx.getExpressCode());
+            expressInfo.setExpressId(String.valueOf(expressEx.getId()));
             Search search = new Search();
             search.setDes("8");
             search.setExpressInfo(expressInfo);
             retList.add(search);
+        }
+
+        List<Integer> sources = new ArrayList<>();
+        GoodsQo qo = new GoodsQo();
+        qo.setSources(sources);
+        qo.setOrgId(orgId);
+        qo.setName(keyword);
+        List<GoodsEx> goodsList = goodsService.findListEx(qo);
+        if (CollectionUtils.isNotEmpty(goodsList)){
+            for (GoodsEx ex : goodsList) {
+                Search search = new Search();
+                search.setDes("9");
+                search.setGoodsEx(ex);
+                retList.add(search);
+            }
+
         }
 
         return retList;

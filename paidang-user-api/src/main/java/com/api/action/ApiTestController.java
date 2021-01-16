@@ -16,6 +16,7 @@ import com.item.service.AdService;
 import com.paidang.dao.model.BFileExample;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.dao.model.VideoOnlineExample;
+import com.paidang.service.AnXinSignService;
 import com.paidang.service.BFileService;
 import com.paidang.service.PawnOrgService;
 import com.paidang.service.VideoOnlineService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: xww
@@ -52,5 +54,13 @@ public class ApiTestController extends ApiBaseController {
 //        System.out.println(JSONUtils.serialize(userInfoByCode));
         ApiUserPayService.payTest();
         return new Result<>(DSPConsts.Keystore);
+    }
+
+    @ApiOperation(value = "z", notes = "1")
+    @RequestMapping("/anxin/regist")
+    @ApiMethod()
+    public Object anxinRegist(String idCard,String name,String phone) throws Exception{
+        String s = AnXinSignService.personRegister(idCard, name, phone);
+        return new Result<>(s);
     }
 }

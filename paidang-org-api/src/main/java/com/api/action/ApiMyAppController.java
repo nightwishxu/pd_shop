@@ -719,6 +719,7 @@ public class ApiMyAppController extends ApiBaseController{
         PawnLog pawnLog = new PawnLog();
         pawnLog.setGoodsId(userPawn.getGoodsId());
         pawnLog.setUserId(userPawn.getUserId());
+        pawnLog.setRefId(userPawn.getId());
         pawnLog.setOrgId(userPawn.getOrgId());
         pawnLog.setGoodsName(userGoods.getName());
         pawnLog.setAuthPrice(userGoods.getAuthPrice());

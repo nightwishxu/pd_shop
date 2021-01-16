@@ -25,10 +25,12 @@ public class GoodsAttributeController extends CoreController{
     
     @RequestMapping("/list")
 	@ResponseBody 
-    public TableDataInfo list(Integer page, Integer rows){
+    public TableDataInfo list(Integer page, Integer rows,Integer cateCode){
 		startPage();
     	GoodsAttributeExample example = new GoodsAttributeExample();
-    	
+    	if (cateCode!=null){
+			example.createCriteria().andBelongToEqualTo(cateCode);
+		}
     	List<GoodsAttribute> list = goodsAttributeService.selectByExample(example);
       	return page(list);
     }

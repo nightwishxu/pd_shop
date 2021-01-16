@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="当品名称" prop="goodsName">
+      <el-form-item
+        label="当品名称"
+        prop="goodsName"
+      >
         <el-input
           v-model="queryParams.goodsName"
           placeholder="请输入当品名称"
@@ -17,7 +20,10 @@
         />
       </el-form-item>
 
-      <el-form-item label="机构名称" prop="orgId">
+      <el-form-item
+        label="机构名称"
+        prop="orgId"
+      >
         <el-input
           v-model="queryParams.orgId"
           clearable
@@ -31,17 +37,26 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -70,23 +85,43 @@
       :data="pawnList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="藏品名称" align="center" prop="goodsName1" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="藏品名称"
+        align="center"
+        prop="goodsName1"
+      />
       <el-table-column
         label="鉴定结果"
         align="center"
         prop="authResult"
         :formatter="handleAuthResult"
       />
-      <el-table-column label="鉴定价格" align="center" prop="authPrice" />
+      <el-table-column
+        label="鉴定价格"
+        align="center"
+        prop="authPrice"
+      />
 
-      <el-table-column label="宝贝图片" align="center" prop="images">
+      <el-table-column
+        label="宝贝图片"
+        align="center"
+        prop="images"
+      >
         <template scope="scope">
           <span
             v-for="(item, index) in scope.row.images.split(',')"
             :key="index"
           >
-            <el-popover placement="left" trigger="click" width="300">
+            <el-popover
+              placement="left"
+              trigger="click"
+              width="300"
+            >
               <el-image :src="item" />
               <el-image
                 slot="reference"
@@ -106,21 +141,33 @@
         :formatter="handleState"
       />
 
-      <el-table-column label="典当记录" align="center" prop="pawnRecordList">
+      <el-table-column
+        label="典当记录"
+        align="center"
+        prop="pawnRecordList"
+      >
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="handleForm1(scope.row)"
-            >查看典当记录</el-button
-          >
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleForm1(scope.row)"
+          >查看典当记录</el-button>
         </template>
       </el-table-column>
 
-      <el-table-column label="电子凭证" align="center" prop="pawnTicket">
+      <!-- <el-table-column
+        label="电子凭证"
+        align="center"
+        prop="pawnTicket"
+      >
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="handleForm3(scope.row)"
-            >查看电子凭证</el-button
-          >
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleForm3(scope.row)"
+          >查看电子凭证</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         label="典当开始时间"
@@ -129,14 +176,11 @@
         width="180"
       >
         <template slot-scope="scope">
-          <span
-            v-if="
+          <span v-if="
               scope.row.sate != 1 &&
               scope.row.sate != -1 &&
               scope.row.pawnBeginTime
-            "
-            >{{ scope.row.pawnBeginTime | dateYMDFormat }}</span
-          >
+            ">{{ scope.row.pawnBeginTime | dateYMDFormat }}</span>
         </template>
       </el-table-column>
 
@@ -147,14 +191,11 @@
         width="180"
       >
         <template slot-scope="scope">
-          <span
-            v-if="
+          <span v-if="
               scope.row.sate != 1 &&
               scope.row.sate != -1 &&
               scope.row.pawnEndTime
-            "
-            >{{ scope.row.pawnEndTime | dateYMDFormat }}</span
-          >
+            ">{{ scope.row.pawnEndTime | dateYMDFormat }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -178,24 +219,70 @@
         @selection-change="handleSelectionChange"
         :row-class-name="rowClassName"
       >
-        <el-table-column prop="id" width="55" align="center" label="次数" />
-        <el-table-column label="藏品名称" align="center" prop="goodsName" />
-        <el-table-column label="机构名称" align="center" prop="orgName" />
-        <el-table-column label="金额" align="center" prop="money" />
-        <el-table-column label="典当时长" align="center" prop="pawnMonth" />
-        <el-table-column label="用户姓名" align="center" prop="userName" />
+        <el-table-column
+          prop="id"
+          width="55"
+          align="center"
+          label="次数"
+        />
+        <el-table-column
+          label="藏品名称"
+          align="center"
+          prop="goodsName"
+        />
+        <el-table-column
+          label="机构名称"
+          align="center"
+          prop="orgName"
+        />
+        <el-table-column
+          label="金额"
+          align="center"
+          prop="money"
+        />
+        <el-table-column
+          label="典当时长"
+          align="center"
+          prop="pawnMonth"
+          :formatter="handlePawnMonth"
+        />
+        <el-table-column
+          label="用户姓名"
+          align="center"
+          prop="userName"
+        />
         <el-table-column
           label="类型"
           align="center"
           prop="type"
           :formatter="handleType"
         />
-        <el-table-column label="银行" align="center" prop="tradeCardBank" />
+        <el-table-column
+          label="银行"
+          align="center"
+          prop="tradeCardBank"
+        />
         <el-table-column
           label="交易所用的银行卡"
           align="center"
           prop="tradeCardCode"
         />
+        <el-table-column
+          label="电子凭证"
+          align="center"
+          prop="contractUrl"
+        >
+
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              v-if="scope.row.contractUrl!=undefined && scope.row.contractUrl!=null && scope.row.contractUrl!=''"
+              @click="viewTicket(scope.row)"
+            >查看电子凭证</el-button>
+          </template>
+
+        </el-table-column>
       </el-table>
     </el-dialog>
 
@@ -731,6 +818,14 @@ export default {
         contractId: null,
       };
       this.resetForm("form");
+    },
+    handlePawnMonth(row, column){
+      if(row.pawnMonth!=undefined && row.pawnMonth!=null ){
+        return row.pawnMonth * 15;
+      }
+    },
+    viewTicket(row, column){
+         window.open(row.contractUrl,"_blank")
     },
     handleAuthResult(row, column) {
       if (row.authResult === 0) {

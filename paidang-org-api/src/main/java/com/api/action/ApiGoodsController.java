@@ -64,8 +64,9 @@ public class ApiGoodsController extends ApiBaseController {
                     , @ApiParam(value = "拍卖结束时间",required = false)Date auctionEndTime, @ApiParam(value = "起拍价",required = false)BigDecimal startPrice
                     , @ApiParam(value = "加价幅度",required = false)BigDecimal raisePriceRange, @ApiParam(value = "标签",required = false)String labels
                     , @ApiParam(value = "商品属性",required = true)String goodsAttribute, @ApiParam(value = "商品图片",required = true)String imgs
-                     ,@ApiParam(value = "库存 一口价传值 ",required = false) Integer total
-                     ,@ApiParam(value = "商品编号",required = true) String goodsCode
+                    , @ApiParam(value = "视频",required = false) String bannerVideo
+                    , @ApiParam(value = "库存 一口价传值 ",required = false) Integer total
+                    , @ApiParam(value = "商品编号",required = true) String goodsCode
 
 
 
@@ -86,6 +87,7 @@ public class ApiGoodsController extends ApiBaseController {
         goods.setPrice(price);
         goods.setIntroduction(introduction);
         goods.setDealType(dealType);
+        goods.setBannerVideo(bannerVideo);
 //        goods.setOnlineTime(onlineTime);
 //        goods.setUserId(mobileInfo.getUserId());
         goods.setAuctionStartTime(auctionStartTime);
@@ -107,61 +109,64 @@ public class ApiGoodsController extends ApiBaseController {
             goods.setSoldOut(0);
             goods.setState(1);
             goods.setCreateTime(date);
-            int i = goodsService.insertSelective(goods);
-            if (dealType == 2){
-                //保存竞拍日志
-                GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-                log.setAuctionEndTime(auctionEndTime);
-                log.setAuctionStartTime(auctionStartTime);
-                log.setGoodsId(goods.getId());
-                log.setStatus(0);
-                log.setCreateTime(date);
-                goodsAuctionOnlineLogService.insertSelective(log);
-                Goods tmp = new Goods();
-                tmp.setId(goods.getId());
-                tmp.setAuctionOnlineLogId(log.getId());
-                goodsService.updateByPrimaryKeySelective(tmp);
-            }
+            goodsService.insertSelective(goods);
+//            if (dealType == 2){
+//                //保存竞拍日志
+//                GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//                log.setAuctionEndTime(auctionEndTime);
+//                log.setAuctionStartTime(auctionStartTime);
+//                log.setGoodsId(goods.getId());
+//                log.setStatus(0);
+//                log.setCreateTime(date);
+//                goodsAuctionOnlineLogService.insertSelective(log);
+//                Goods tmp = new Goods();
+//                tmp.setId(goods.getId());
+//                tmp.setAuctionOnlineLogId(log.getId());
+//                goodsService.updateByPrimaryKeySelective(tmp);
+//            }
         }else {
 
             Goods goods1 = goodsService.selectByPrimaryKey(id);
-            if (goods1.getDealType()!=null && goods1.getDealType()==2 && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
-                throw new ApiException(400,"竞拍中禁止修改商品信息");
+            if (goods1.getIsOnline()==1 ){
+                throw new ApiException(400,"请先下架再修改商品信息");
             }
+//			if (goods1.getDealType()==2  && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
+//				throw new ApiException(400,"竞拍中禁止修改商品信息");
+//			}
             if(!Objects.equals(orgId,goods1.getOrgId())){
                 throw new ApiException("机构异常");
             }
-            if (dealType!=null && dealType==2){
-                if(date.compareTo(auctionStartTime)<0){
-                    boolean flag = false;
-                    if (auctionStartTime!=null && goods1.getAuctionStartTime().compareTo(auctionStartTime)!=0){
-                        flag = true;
-                    }
-                    if (auctionEndTime!=null && goods1.getAuctionEndTime().compareTo(auctionEndTime)!=0){
-                        flag = true;
-                    }
-                    //修改上架记录表
-                    if (flag){
-                        GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-                        log.setId(goods1.getAuctionOnlineLogId());
-                        log.setAuctionStartTime(auctionStartTime);
-                        log.setAuctionEndTime(auctionEndTime);
-                        log.setModifyTime(date);
-                        log.setModifyAccount(mobileInfo.getUserId().toString());
-                        goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
-                    }
-                }else if (date.compareTo(auctionEndTime)>0){
-                    GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-                    log.setAuctionEndTime(auctionEndTime);
-                    log.setAuctionStartTime(auctionStartTime);
-                    log.setGoodsId(id);
-                    log.setStatus(1);
-                    log.setCreateTime(date);
-                    goodsAuctionOnlineLogService.insertSelective(log);
-                    goods.setAuctionOnlineLogId(log.getId());
-                }
-
-            }
+//            if (dealType!=null && dealType==2){
+//                if(date.compareTo(auctionStartTime)<0){
+//                    boolean flag = false;
+//                    if (auctionStartTime!=null && goods1.getAuctionStartTime().compareTo(auctionStartTime)!=0){
+//                        flag = true;
+//                    }
+//                    if (auctionEndTime!=null && goods1.getAuctionEndTime().compareTo(auctionEndTime)!=0){
+//                        flag = true;
+//                    }
+//                    //修改上架记录表
+//                    if (flag){
+//                        GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//                        log.setId(goods1.getAuctionOnlineLogId());
+//                        log.setAuctionStartTime(auctionStartTime);
+//                        log.setAuctionEndTime(auctionEndTime);
+//                        log.setModifyTime(date);
+//                        log.setModifyAccount(mobileInfo.getUserId().toString());
+//                        goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
+//                    }
+//                }else if (date.compareTo(auctionEndTime)>0){
+//                    GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//                    log.setAuctionEndTime(auctionEndTime);
+//                    log.setAuctionStartTime(auctionStartTime);
+//                    log.setGoodsId(id);
+//                    log.setStatus(1);
+//                    log.setCreateTime(date);
+//                    goodsAuctionOnlineLogService.insertSelective(log);
+//                    goods.setAuctionOnlineLogId(log.getId());
+//                }
+//
+//            }
             goods.setId(id);
             goods.setModifyTime(new Date());
             goodsService.updateByPrimaryKeySelective(goods);
@@ -241,16 +246,18 @@ public class ApiGoodsController extends ApiBaseController {
         goods.setIsOnline(1);
         goods.setOnlineTime(new Date());
         goods.setReasonOfDismounting("");
-        goodsService.updateByPrimaryKeySelective(goods);
         //
         if (goods.getDealType()==2){
             GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-            log.setId(goods.getAuctionOnlineLogId());
+            log.setAuctionEndTime(goods.getAuctionEndTime());
+            log.setAuctionStartTime(goods.getAuctionStartTime());
+            log.setGoodsId(goods.getId());
             log.setStatus(1);
-            log.setModifyTime(date);
-            log.setModifyAccount(mobileInfo.getUserId().toString());
-            goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
+            log.setCreateTime(date);
+            goodsAuctionOnlineLogService.insertSelective(log);
+            goods.setAuctionOnlineLogId(log.getId());
         }
+        goodsService.updateByPrimaryKeySelective(goods);
         return 1;
     }
 

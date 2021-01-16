@@ -261,8 +261,13 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
-            record.setPrice(ex.getPrice()+"");
+            if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
+                record.setPrice(ex.getMaxAuction() + "");
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
             record.setOrgId(ex.getOrgId());
+            record.setBannerVideo(ex.getBannerVideo());
             record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
@@ -306,8 +311,17 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
-            record.setPrice(ex.getPrice()+"");
+            if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
+                if (ex.getMaxAuction()!=null){
+                    record.setPrice(ex.getMaxAuction() + "");
+                }else {
+                    record.setPrice(ex.getStartPrice() + "");
+                }
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
             record.setOrgId(ex.getOrgId());
+            record.setBannerVideo(ex.getBannerVideo());
             record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
             list2.add(record);
@@ -356,7 +370,15 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
-            record.setPrice(ex.getPrice()+"");
+            if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
+                if (ex.getMaxAuction()!=null){
+                    record.setPrice(ex.getMaxAuction() + "");
+                }else {
+                    record.setPrice(ex.getStartPrice() + "");
+                }
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
             record.setOrgId(ex.getOrgId());
             record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());
@@ -410,7 +432,16 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setTitle(ex.getName());
-            record.setPrice(ex.getPrice() + "");
+            if (ex.getDealType()!=null && ex.getDealType()==2){
+                if (ex.getMaxAuction()!=null){
+                    record.setPrice(ex.getMaxAuction() + "");
+                }else {
+                    record.setPrice(ex.getStartPrice() + "");
+                }
+
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
             record.setAuthPrice(ex.getPrice()+"");
             record.setSource(ex.getSource());
             record.setOrgId(ex.getOrgId());
@@ -423,6 +454,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setAuctionEndTime(ex.getAuctionEndTime());
             record.setRaisePriceRange(ex.getRaisePriceRange());
             record.setOnlineTime(ex.getOnlineTime());
+            record.setBannerVideo(ex.getBannerVideo());
             list2.add(record);
         }
         return list2;
@@ -454,6 +486,11 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setLabels(ex.getLabels());
         appStoreGoodsDetail.setMaxAuction(ex.getMaxAuction());
         appStoreGoodsDetail.setCateCode(ex.getCateCode());
+        appStoreGoodsDetail.setBannerVideo(ex.getBannerVideo());
+
+        if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
+            appStoreGoodsDetail.setPrice(ex.getMaxAuction() + "");
+        }
         if (mobileInfo!=null && mobileInfo.getUserId()!=null){
             appStoreGoodsDetail.setIsFollow(userFollowService.getIsFollow(mobileInfo.getUserId(),id,2));
         }else {
@@ -490,7 +527,7 @@ public class ApiStoreController extends ApiBaseController {
     @ApiOperation(value = "认证商场物品详情", notes = "不需要登录")
     @RequestMapping("/storeGoodsDetail")
     @ApiMethod(isLogin = false)
-    public AppStoreGoodsDetail storeGoodsDetail(@ApiParam(value="id",required = true) Integer id){
+    public AppStoreGoodsDetail storeGoodsDetail(@ApiParam(value="id",required = true) Integer id,MobileInfo mobileInfo){
         AppStoreGoodsDetail appStoreGoodsDetail = new AppStoreGoodsDetail();
         Goods ex = goodsService.selectByPrimaryKey(id);
         appStoreGoodsDetail.setId(ex.getId());
@@ -512,6 +549,12 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setRaisePriceRange(ex.getRaisePriceRange());
         appStoreGoodsDetail.setLabels(ex.getLabels());
         appStoreGoodsDetail.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
+        appStoreGoodsDetail.setBannerVideo(ex.getBannerVideo());
+        if (mobileInfo!=null && mobileInfo.getUserId()!=null){
+            appStoreGoodsDetail.setIsFollow(userFollowService.getIsFollow(mobileInfo.getUserId(),id,2));
+        }else {
+            appStoreGoodsDetail.setIsFollow(0);
+        }
         //机构上传
         if(ex.getOrgId()!=null){
             PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
@@ -742,57 +785,74 @@ public class ApiStoreController extends ApiBaseController {
 
         List<Goods> goodsList = goodsService.selectByExample(example);
         for(Goods ex : goodsList){
-            AppStoreGoodsDetail c = new AppStoreGoodsDetail();
-            c.setSource(ex.getSource());
-            c.setOrgId(ex.getOrgId());
-            c.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
-            c.setStartPrice(ex.getStartPrice());
-            c.setGoodsAttribute(ex.getGoodsAttribute());
-            c.setLabels(ex.getLabels());
-            c.setAuctionStartTime(ex.getAuctionStartTime());
-            c.setAuctionEndTime(ex.getAuctionEndTime());
-            c.setRaisePriceRange(ex.getRaisePriceRange());
-            c.setOnlineTime(ex.getOnlineTime());
-            c.setMaxAuction(ex.getMaxAuction());
-                if(ex.getPrice().compareTo(new BigDecimal("30000")) == -1 || null == ex.getGoodsId()){
-                    //普通绝当商品
-                    c.setType(0);
-                    c.setId(ex.getId());
-                    c.setTitle(ex.getName());
-                    c.setImg(ex.getImg());
-                    c.setImages(ex.getImgs());
-                    c.setWidth(ex.getWidth());
-                    c.setHeight(ex.getHeight());
-                    c.setPrice(ex.getPrice()+"");
-                    c.setAuthPrice(ex.getPrice()+"");
-                }else{
-                    //竞拍的商品
-                    long second = DateUtil.secondsAfter(DateUtil.addMinute(ex.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
-                    if(second > 0){
-                        //正在竞拍的商品
-                        c.setType(1);
-                        c.setId(ex.getId());
-                        c.setTitle(ex.getName());
-                        c.setImg(ex.getImg());
-                        c.setImages(ex.getImgs());
-                        c.setWidth(ex.getWidth());
-                        c.setHeight(ex.getHeight());
-                        c.setPrice(ex.getMaxAuction() == null? ex.getPrice()+"" : ex.getMaxAuction()+"");
-                        c.setAuthPrice(ex.getPrice()+"");
-                        //查找该物品的竞拍次数
-                        GoodsAuctionExample goodsAuctionExample = new GoodsAuctionExample();
-                        goodsAuctionExample.createCriteria().andGoodsIdEqualTo(ex.getId());
-                        int count = goodsAuctionService.countByExample(goodsAuctionExample);
-                        c.setCount(count);
-                    }else{
-                        //超过时间不显示，并且修改他为竞拍失效
-                        ex.setState(0);
-                        goodsService.updateByPrimaryKeySelective(ex);
-                        continue;
-                    }
-            }
+            AppStoreGoodsDetail record = new AppStoreGoodsDetail();
+            record.setId(ex.getId());
+            record.setImg(ex.getImg());
+            record.setImages(ex.getImgs());
+            record.setWidth(ex.getWidth());
+            record.setHeight(ex.getHeight());
+            record.setTitle(ex.getName());
+            if (ex.getDealType()!=null && ex.getDealType()==2){
+                if (ex.getMaxAuction()!=null){
+                    record.setPrice(ex.getMaxAuction() + "");
+                }else {
+                    record.setPrice(ex.getStartPrice() + "");
+                }
 
-            ret.add(c);
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
+            record.setAuthPrice(ex.getPrice()+"");
+            record.setSource(ex.getSource());
+            record.setOrgId(ex.getOrgId());
+            record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
+            record.setStartPrice(ex.getStartPrice());
+            record.setGoodsAttribute(ex.getGoodsAttribute());
+            record.setLabels(ex.getLabels());
+            record.setAuctionStartTime(ex.getAuctionStartTime());
+            record.setAuctionEndTime(ex.getAuctionEndTime());
+            record.setRaisePriceRange(ex.getRaisePriceRange());
+            record.setOnlineTime(ex.getOnlineTime());
+            record.setBannerVideo(ex.getBannerVideo());
+//                if(ex.getPrice().compareTo(new BigDecimal("30000")) == -1 || null == ex.getGoodsId()){
+//                    //普通绝当商品
+//                    c.setType(0);
+//                    c.setId(ex.getId());
+//                    c.setTitle(ex.getName());
+//                    c.setImg(ex.getImg());
+//                    c.setImages(ex.getImgs());
+//                    c.setWidth(ex.getWidth());
+//                    c.setHeight(ex.getHeight());
+//                    c.setPrice(ex.getPrice()+"");
+//                    c.setAuthPrice(ex.getPrice()+"");
+//                }else{
+//                    //竞拍的商品
+//                    long second = DateUtil.secondsAfter(DateUtil.addMinute(ex.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
+//                    if(second > 0){
+//                        //正在竞拍的商品
+//                        c.setType(1);
+//                        c.setId(ex.getId());
+//                        c.setTitle(ex.getName());
+//                        c.setImg(ex.getImg());
+//                        c.setImages(ex.getImgs());
+//                        c.setWidth(ex.getWidth());
+//                        c.setHeight(ex.getHeight());
+//                        c.setPrice(ex.getMaxAuction() == null? ex.getPrice()+"" : ex.getMaxAuction()+"");
+//                        c.setAuthPrice(ex.getPrice()+"");
+//                        //查找该物品的竞拍次数
+//                        GoodsAuctionExample goodsAuctionExample = new GoodsAuctionExample();
+//                        goodsAuctionExample.createCriteria().andGoodsIdEqualTo(ex.getId());
+//                        int count = goodsAuctionService.countByExample(goodsAuctionExample);
+//                        c.setCount(count);
+//                    }else{
+//                        //超过时间不显示，并且修改他为竞拍失效
+//                        ex.setState(0);
+//                        goodsService.updateByPrimaryKeySelective(ex);
+//                        continue;
+//                    }
+//            }
+
+            ret.add(record);
         }
         return ret;
     }
@@ -800,7 +860,7 @@ public class ApiStoreController extends ApiBaseController {
     @ApiOperation(value = "绝当商城竞拍出价", notes = "登陆")
     @RequestMapping("/autionBid")
     @ApiMethod(isLogin = true)
-    public void auctionBid(MobileInfo mobileInfo,
+    public Integer auctionBid(MobileInfo mobileInfo,
                               @ApiParam(value="商品id",required = true) Integer id,
                               @ApiParam(value="出价",required = true) BigDecimal price){
         if (redisCache.exists("auctionBid:"+id)){
@@ -852,6 +912,7 @@ public class ApiStoreController extends ApiBaseController {
         if(result2 == 0){
             throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
         }
+        return 1;
     }
 
     /**
@@ -1114,7 +1175,11 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
-            record.setPrice(ex.getPrice()+"");
+            if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
+                record.setPrice(ex.getMaxAuction() + "");
+            }else {
+                record.setPrice(ex.getPrice() + "");
+            }
             record.setOrgId(ex.getOrgId());
             record.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
             record.setOrgIntegral(ex.getOrgIntegral());

@@ -235,8 +235,8 @@ public class ApiRedeemController extends ApiBaseController{
         String bankCardUserName = userPawnEx.getPayName()!=null? userPawnEx.getPayName():"";
         String bankCardNo = userPawnEx.getPayBacnkCardCode()!=null?userPawnEx.getPayBacnkCardCode():"";
         String currentPayTicket = userPawnEx.getRedeemTicket();//用户赎当时上传的打款凭证
-        Integer state = userPawnEx.getState();
-        Integer redeemState = userPawnEx.getRedeemState();
+        Integer state = userPawnEx.getState();//-1已取消1竞拍中  2已典当 3赎当 4绝当 5宝祥兜底
+        Integer redeemState = userPawnEx.getRedeemState();//0-默认值1申请赎当2用户已打款3机构确认收款
         if (state+redeemState == 6){
             redeemDetail.setIsConfirmed("1");
         }else {
@@ -296,6 +296,7 @@ public class ApiRedeemController extends ApiBaseController{
         pawnLog.setGoodsCate(userGoods.getCateCode());
         pawnLog.setGoodsCateId(userGoods.getCateId());
         pawnLog.setGoodsId(goodsId);
+        pawnLog.setRefId(userPawn.getId());
         pawnLog.setUserId(userGoods.getUserId());
         pawnLog.setOrgId(orgId);
         pawnLog.setOrgName(pawnOrg.getName());

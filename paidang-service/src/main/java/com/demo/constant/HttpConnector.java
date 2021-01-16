@@ -21,7 +21,7 @@ public class HttpConnector {
 //    public static String JKS_PATH = PropertySupport.getProperty("jks.path");;
 //    public static String JKS_PATH = PropertySupport.getProperty("anxinSign.url");;
     public static String JKS_PATH = PropertySupport.getProperty("jks.path");
-    public static String JKS_PWD = "paidang";
+    public static String JKS_PWD = PropertySupport.getProperty("jks.pwd");
     public static String ALIAS = "anxinsign";
 
     // public static String JKS_PATH = "./jks/clientceshi.jks";

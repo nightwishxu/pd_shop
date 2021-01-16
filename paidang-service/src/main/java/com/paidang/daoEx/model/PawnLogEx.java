@@ -13,6 +13,8 @@ public class PawnLogEx extends PawnLog {
 
     private String goodsImages;
 
+    private String contractUrl;
+
     @Override
     public String getOrgName() {
         return orgName;
@@ -37,5 +39,13 @@ public class PawnLogEx extends PawnLog {
 
     public void setGoodsImages(String goodsImages) {
         this.goodsImages = goodsImages;
+    }
+
+    public String getContractUrl() {
+        return contractUrl;
+    }
+
+    public void setContractUrl(String contractUrl) {
+        this.contractUrl = contractUrl;
     }
 }

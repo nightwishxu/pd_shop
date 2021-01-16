@@ -102,7 +102,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             if (annotation == null) return true;
 
             String time = DateUtil.getCurrentTime("yyyy-MM-dd HH:mm:ss");
-            logger.info("[限流入口统计] |date={}|memberId={}|apiName={}|params={}|jsonParam={}|startIp={}", time, userId, url, JSONUtils.serialize(paramsMap), null,startIp);
+            logger.info("[限流入口统计] |date={}|appVersion={}|memberId={}|apiName={}|params={}|jsonParam={}|startIp={}", time,appVersion, userId, url, JSONUtils.serialize(paramsMap), null,startIp);
 
             //从header中获取token
             String token = request.getHeader(TOKEN);

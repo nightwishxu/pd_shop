@@ -186,7 +186,25 @@
         align="center"
         prop="soldOut"
       />
-      <!-- <el-table-column label="状态" align="center" prop="isOnline" :formatter="handleIsOnline" /> -->
+      <el-table-column
+        label="商品状态"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.isOnline === 1"
+            @click="handleIsOnline(scope.row)"
+          >上架</el-button>
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.isOnline === 0"
+            @click="handleIsOnline(scope.row)"
+          >下架</el-button>
+        </template>
+      </el-table-column>
       <el-table-column
         label="审核"
         align="center"
@@ -397,7 +415,7 @@
             placeholder="请输入库存"
           />
         </el-form-item>
-        <el-form-item
+        <!-- <el-form-item
           label="商品封面"
           prop="img"
         >
@@ -405,7 +423,7 @@
             v-model="form.img"
             style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="组图">
           <!-- <el-input v-model="form.imgs" placeholder="请输入图片" /> -->
           <multi-upload
@@ -413,7 +431,15 @@
             v-model="imgfileList"
           ></multi-upload>
         </el-form-item>
-
+        <el-form-item
+          label="轮播图视频"
+          prop="bannerVideo"
+        >
+          <video-upload
+            v-model="form.bannerVideo"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></video-upload>
+        </el-form-item>
         <el-form-item
           label="排序(倒序)"
           prop="sortOrder"
@@ -429,12 +455,7 @@
             style="width: 300px; display: inline-block; margin-left: 10px"
           ></single-upload>
         </el-form-item>
-        <el-form-item label="轮播图视频" prop="bannerVideo">
-          <video-upload
-            v-model="form.bannerVideo"
-            style="width: 300px; display: inline-block; margin-left: 10px"
-          ></video-upload>
-        </el-form-item>
+       
         <el-form-item label="封面宽度" prop="width">
           <el-input v-model="form.width" placeholder="请输入封面宽度" />
         </el-form-item>
@@ -484,7 +505,7 @@
               <el-col :span="8">
                 <el-form-item>
                   <el-select
-                    v-model="item.label"
+                    v-model="item.name"
                     placeholder="选项名"
                     clearable
                     :style="{ width: '100%' }"
@@ -726,6 +747,8 @@ import {
   getGoods,
   delGoods,
   addGoods,
+  dismountGoods,
+  onlineGoods,
   updateGoods,
   changeState,
   exportGoods,
@@ -1031,7 +1054,7 @@ export default {
     },
     addSelectItem() {
       this.attributeOptions.push({
-        label: '',
+        name: '',
         value: ''
       })
     },
@@ -1045,12 +1068,42 @@ export default {
     setOptionValue(item, val) {
       item.value = isNumberStr(val) ? +val : val
     },
-    handleIsOnline(row, column) {
-      if (row.isOnline === 0) {
-        return "下架";
-      } else if (row.isOnline === 1) {
-        return "上架";
+    // handleIsOnline(row, column) {
+    //   if (row.isOnline === 0) {
+    //     return "下架";
+    //   } else if (row.isOnline === 1) {
+    //     return "上架";
+    //   }
+    // },
+    handleIsOnline(row, column){
+      var notice = "";
+      if(row.isOnline===0){
+         notice = "上架"
+      }else if (row.isOnline===1){
+        notice = "下架"
       }
+       this.$confirm('是否确认' + notice + '该商品?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          // return delRole(roleIds);
+          if(row.isOnline===0){
+            var data = { id: row.id};
+            console.info(JSON.stringify(data))
+            onlineGoods(data).then((response) => {
+            
+            });
+          }else if (row.isOnline===1){
+           var data = { id: row.id};
+            dismountGoods(data).then((response) => {
+            
+            });
+          }
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("操作成功");
+        }).catch(function() {});
     },
     //1审核中2通过3不通过
     handleIsVerify(row) {
@@ -1317,7 +1370,8 @@ export default {
           }
         }
         getAttribute(response.data.cateCode).then((response)=>{
-          this.attributeKeyOptions = response
+          console.info("artr="+ response.data)
+          this.attributeKeyOptions = response.rows
         })
         if(response.data.goodsAttribute!=undefined && response.data.goodsAttribute!=null){
           this.attributeOptions = JSON.parse(response.data.goodsAttribute)
@@ -1351,6 +1405,8 @@ export default {
               }
             });
           } else {
+            this.form.source = 3;
+            this.form.type = 1;
             addGoods(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");

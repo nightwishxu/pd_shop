@@ -6,6 +6,7 @@ import com.api.view.orgDeadPawnage.ExpressInfo;
 import com.api.view.orgHome.deadPawnAuction.DeadPawnAuctionMini;
 import com.api.view.orgRedeem.RedeemMini;
 import com.api.view.orgRepawn.RepawnMini;
+import com.paidang.daoEx.model.GoodsEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -34,16 +35,20 @@ public class Search {
     @ApiModelProperty("物流")
     private ExpressInfo expressInfo;
 
-    @ApiModelProperty("点击跳转目标：1.典当 2.续当 3.竞拍中 4.已中标 5.赎当 6.绝当 7.绝当竞拍 8.物流")
+    @ApiModelProperty("商品信息")
+    private GoodsEx goodsEx;
+
+    @ApiModelProperty("点击跳转目标：1.典当 2.续当 3.竞拍中 4.已中标 5.赎当 6.绝当 7.绝当竞拍 8.物流  9 商品")
     private String des;
 
     public Search(){
-        this.repawnMini = new RepawnMini();
-        this.pawnDetail = new PawnDetail();
-        this.redeemMini = new RedeemMini();
-        this.deadPawnMini = new DeadPawnMini();
-        this.deadPawnAuctionMini = new DeadPawnAuctionMini();
-        this.expressInfo = new ExpressInfo();
+//        this.repawnMini = new RepawnMini();
+//        this.pawnDetail = new PawnDetail();
+//        this.redeemMini = new RedeemMini();
+//        this.deadPawnMini = new DeadPawnMini();
+//        this.deadPawnAuctionMini = new DeadPawnAuctionMini();
+//        this.expressInfo = new ExpressInfo();
+//        this.goodsEx = new GoodsEx();
     }
 
     public RepawnMini getRepawnMini() {
@@ -100,5 +105,13 @@ public class Search {
 
     public void setDes(String des) {
         this.des = des;
+    }
+
+    public GoodsEx getGoodsEx() {
+        return goodsEx;
+    }
+
+    public void setGoodsEx(GoodsEx goodsEx) {
+        this.goodsEx = goodsEx;
     }
 }

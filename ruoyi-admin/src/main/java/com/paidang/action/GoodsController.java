@@ -103,69 +103,159 @@ public class GoodsController extends CoreController{
 			}
 			goods.setState(1);//(针对竞拍)- 0已失效 1有效；现后台只能上传3万以下物品，且不是拍卖，是直接买卖
 			goods.setSoldOut(0);//已售
-			if (goods.getIsOnline()==null){
-				goods.setIsOnline(1);
-			}
+			goods.setIsOnline(0);
 			if (goods.getIsVerfiy() ==null){
 				goods.setIsVerfiy(2);
 			}
 			goods.setCreateTime(new Date());
 			goodsService.insert(goods);
-			if (goods.getDealType()!=null && goods.getDealType() == 2){
-				//保存竞拍日志
-				GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-				log.setAuctionEndTime(goods.getAuctionEndTime());
-				log.setAuctionStartTime(goods.getAuctionStartTime());
-				log.setGoodsId(goods.getId());
-				log.setStatus(0);
-				log.setCreateTime(new Date());
-				goodsAuctionOnlineLogService.insertSelective(log);
-				Goods tmp = new Goods();
-				tmp.setId(goods.getId());
-				tmp.setAuctionOnlineLogId(log.getId());
-				goodsService.updateByPrimaryKeySelective(tmp);
-			}
+//			if (goods.getDealType()!=null && goods.getDealType() == 2){
+//				//保存竞拍日志
+//				GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//				log.setAuctionEndTime(goods.getAuctionEndTime());
+//				log.setAuctionStartTime(goods.getAuctionStartTime());
+//				log.setGoodsId(goods.getId());
+//				log.setStatus(0);
+//				log.setCreateTime(new Date());
+//				goodsAuctionOnlineLogService.insertSelective(log);
+//				Goods tmp = new Goods();
+//				tmp.setId(goods.getId());
+//				tmp.setAuctionOnlineLogId(log.getId());
+//				goodsService.updateByPrimaryKeySelective(tmp);
+//			}
 		}else{
 			Date date = new Date();
 
 			Goods goods1 = goodsService.selectByPrimaryKey(goods.getId());
-			if (goods1.getDealType()!=null && goods1.getDealType()==2 && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
-				throw new ApiException(400,"竞拍中禁止修改商品信息");
+			if (goods1.getIsOnline()==1 ){
+				throw new ApiException(400,"请先下架再修改商品信息");
 			}
-			if (goods.getDealType()!=null && goods.getDealType()==2){
-				if(date.compareTo(goods.getAuctionStartTime())<0){
-					boolean flag = false;
-					if (goods.getAuctionStartTime()!=null && goods1.getAuctionStartTime().compareTo(goods.getAuctionStartTime())!=0){
-						flag = true;
-					}
-					if (goods.getAuctionEndTime()!=null && goods1.getAuctionEndTime().compareTo(goods.getAuctionEndTime())!=0){
-						flag = true;
-					}
-					//修改上架记录表
-					if (flag){
-						GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-						log.setId(goods1.getAuctionOnlineLogId());
-						log.setAuctionStartTime(goods.getAuctionStartTime());
-						log.setAuctionEndTime(goods.getAuctionEndTime());
-						log.setModifyTime(date);
-						goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
-					}
-				}else if (date.compareTo(goods.getAuctionEndTime())>0){
-					GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
-					log.setAuctionEndTime(goods.getAuctionEndTime());
-					log.setAuctionStartTime(goods.getAuctionStartTime());
-					log.setGoodsId(goods.getId());
-					log.setStatus(1);
-					log.setCreateTime(date);
-					goodsAuctionOnlineLogService.insertSelective(log);
-					goods.setAuctionOnlineLogId(log.getId());
-				}
-
-			}
+//			if (goods1.getDealType()==2  && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
+//				throw new ApiException(400,"竞拍中禁止修改商品信息");
+//			}
+//			if (goods.getDealType()!=null && goods.getDealType()==2){
+//				if(date.compareTo(goods.getAuctionStartTime())<0){
+//					boolean flag = false;
+//					if (goods.getAuctionStartTime()!=null && goods1.getAuctionStartTime().compareTo(goods.getAuctionStartTime())!=0){
+//						flag = true;
+//					}
+//					if (goods.getAuctionEndTime()!=null && goods1.getAuctionEndTime().compareTo(goods.getAuctionEndTime())!=0){
+//						flag = true;
+//					}
+//					//修改上架记录表
+//					if (flag){
+//						GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//						log.setId(goods1.getAuctionOnlineLogId());
+//						log.setAuctionStartTime(goods.getAuctionStartTime());
+//						log.setAuctionEndTime(goods.getAuctionEndTime());
+//						log.setModifyTime(date);
+//						goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
+//					}
+//				}else if (date.compareTo(goods.getAuctionEndTime())>0){
+//					GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+//					log.setAuctionEndTime(goods.getAuctionEndTime());
+//					log.setAuctionStartTime(goods.getAuctionStartTime());
+//					log.setGoodsId(goods.getId());
+//					log.setStatus(1);
+//					log.setCreateTime(date);
+//					goodsAuctionOnlineLogService.insertSelective(log);
+//					goods.setAuctionOnlineLogId(log.getId());
+//				}
+//
+//			}
 			goodsService.updateByPrimaryKeySelective(goods);
 		}
 		return ok();
 	}
+
+
+
+
+	@RequestMapping("/dismount")
+	@ResponseBody
+	public int goodsDismount(Integer id, String reasonOfDismounting){
+		//判断当前商品是否是下架状态
+		Goods goods = goodsService.selectByPrimaryKey(id);
+		Date date = new Date();
+		if (goods.getDealType()==2 && date.compareTo(goods.getAuctionStartTime())>=0 && date.compareTo(goods.getAuctionEndTime())<=0){
+			throw new ApiException(400,"竞拍中禁止下架");
+		}
+
+
+		if(goods.getIsOnline()==0||goods.getIsOnline()==2){
+			throw new ApiException(400,"商品已经处于下架状态或者还是待上架状态");
+		}
+		if(goods.getIsOnline()==-1){
+			throw new ApiException(400,"商品已经已被删除");
+		}
+		//修改上架信息
+		if (goods.getDealType()==2){
+			GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+			log.setId(goods.getAuctionOnlineLogId());
+			log.setStatus(0);
+			log.setModifyTime(date);
+			log.setModifyAccount(null);
+			goodsAuctionOnlineLogService.updateByPrimaryKeySelective(log);
+		}
+		Goods updateGoods = new Goods();
+		updateGoods.setId(id);
+		updateGoods.setIsOnline(0);
+		updateGoods.setReasonOfDismounting(reasonOfDismounting);
+		goodsService.updateByPrimaryKeySelective(updateGoods);
+		return 1;
+	}
+
+
+	@RequestMapping("/online")
+	@ResponseBody
+	public Integer goodsonline(Integer id){
+		//判断当前商品是否是下架状态
+		Goods goods = goodsService.selectByPrimaryKey(id);
+//		Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+//		if (!Objects.equals(orgId,goods.getOrgId())){
+//			throw new ApiException(400,"机构异常");
+//		}
+		if(goods.getIsVerfiy()!=2){
+			throw new ApiException(400,"商品未审核通过无法上架");
+		}
+		if(goods.getIsOnline()==-1){
+			throw new ApiException(40006,"商品已经已被删除");
+		}
+		Date date = new Date();
+		if (goods.getDealType()==2 && date.compareTo(goods.getAuctionStartTime())>=0){
+			throw new ApiException(400,"已过竞拍开始时间，无法上架");
+		}
+		if (goods.getDealType()==1 && goods.getTotal()<=0){
+			throw new ApiException(400,"库存不足,无法上架");
+		}
+		if (goods.getDealType()==2 && goods.getTotal()<=0){
+			goods.setTotal(1);
+		}
+		goods.setIsOnline(1);
+		goods.setOnlineTime(new Date());
+		goods.setReasonOfDismounting("");
+		if (goods.getDealType()==2){
+			GoodsAuctionOnlineLog log = new GoodsAuctionOnlineLog();
+			log.setAuctionEndTime(goods.getAuctionEndTime());
+			log.setAuctionStartTime(goods.getAuctionStartTime());
+			log.setGoodsId(goods.getId());
+			log.setStatus(1);
+			log.setCreateTime(date);
+			goodsAuctionOnlineLogService.insertSelective(log);
+			goods.setAuctionOnlineLogId(log.getId());
+		}
+		goodsService.updateByPrimaryKeySelective(goods);
+		return 1;
+	}
+
+
+
+
+
+
+
+
+
 
 	@RequestMapping("/findByType")
 	@ResponseBody

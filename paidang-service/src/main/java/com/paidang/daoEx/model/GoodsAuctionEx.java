@@ -10,6 +10,8 @@ public class GoodsAuctionEx extends GoodsAuction {
     private String userName;
     private String headImg;
 
+    private String nickName;
+
     public String getMaxPrice() {
         return maxPrice;
     }
@@ -32,5 +34,13 @@ public class GoodsAuctionEx extends GoodsAuction {
 
     public void setHeadImg(String headImg) {
         this.headImg = headImg;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
