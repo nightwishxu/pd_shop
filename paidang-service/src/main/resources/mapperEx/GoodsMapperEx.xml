@@ -200,7 +200,14 @@
 
     <update id="sellAuctionGoods">
         update p_goods set is_online = #{isOnline},max_aution_id=#{maxAutionId},max_auction=#{maxAuction}
+        <if test="onlineTime!=null">
+            online_time = #{onlineTime}
+        </if>
         where id = #{id}
+    </update>
+
+    <update id="offlineAuctionGoods">
+        update p_goods set is_online = 0,max_auction=null where deal_type=2 and auction_end_time &lt;now() and is_online=1 and is_verfiy=2 and state=1 and max_aution_id is null
     </update>
 
     <select id="getAuctionCount" resultType="java.lang.Integer">
@@ -212,5 +219,5 @@
             and goods_owner = #{goodsOwner}
         </if>
     </select>
-    
+
 </mapper>

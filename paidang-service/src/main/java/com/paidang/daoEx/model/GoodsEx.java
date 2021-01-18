@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
 @author sun
@@ -46,6 +47,8 @@ public class GoodsEx extends Goods {
 
     @ApiModelProperty(value="上架次数")
     private Integer onlineCnt;//上架次数
+
+    private List<Integer> ids;
 
     @Override
     public String getImg() {
@@ -209,5 +212,14 @@ public class GoodsEx extends Goods {
 
     public void setOnlineCnt(Integer onlineCnt) {
         this.onlineCnt = onlineCnt;
+    }
+
+
+    public List<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
     }
 }

@@ -553,6 +553,10 @@ export default {
           value: 4,
         },
         {
+          label: "视频",
+          value: 5,
+        },
+        {
           label: "店铺详情",
           value: 6,
         },

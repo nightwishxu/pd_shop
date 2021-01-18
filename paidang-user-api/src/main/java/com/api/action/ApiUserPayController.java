@@ -58,7 +58,7 @@ public class ApiUserPayController extends ApiBaseController{
 	@RequestMapping("/buyPay")
 	@ApiMethod(isLogin = true)
 	public PayResult buyPay(MobileInfo mobileInfo,
-                            @ApiParam(value = "支付方式:1:支付宝 2:微信", required = true)Integer platform,
+                            @ApiParam(value = "支付方式:1:支付宝 2:微信 4:转账支付", required = true)Integer platform,
 							@ApiParam(value = "地址id", required = false)Integer addressId,
                             @ApiParam(value = "订单id", required = true)Integer orderId) throws Exception{
 
@@ -93,8 +93,8 @@ public class ApiUserPayController extends ApiBaseController{
 	@RequestMapping("/buyShopCartPay")
 	@ApiMethod(isLogin = true)
 	public PayResult buyShopCartPay(MobileInfo mobileInfo,
-                                    @ApiParam(value = "支付方式:1:支付宝 2:微信", required = true)Integer platform,
-                                    @ApiParam(value = "订单id,以,相隔", required = true)String orderIds){
+                                    @ApiParam(value = "支付方式:1:支付宝 2:微信  4:转账支付", required = true)Integer platform,
+                                    @ApiParam(value = "订单id,以,相隔", required = true)String orderIds) throws Exception{
 		if (platform == null){
 			throw new ApiException("platform");
 		}
@@ -112,6 +112,16 @@ public class ApiUserPayController extends ApiBaseController{
 
 
 
+	}
+
+
+	@ApiOperation(value = "转账汇款获取汇款信息", notes = "登陆")
+	@RequestMapping("/orderTransferInfo/get")
+	@ApiMethod(isLogin = true)
+	public Object getOrderTransferInfo(MobileInfo mobileInfo,
+							@ApiParam(value = "订单id", required = true)Integer orderId) throws Exception{
+
+		return apiUserPayService.getOrderTransferInfo(mobileInfo.getUserId(),orderId);
 	}
 
 

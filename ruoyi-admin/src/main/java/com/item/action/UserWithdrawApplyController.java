@@ -1,14 +1,12 @@
 package com.item.action;
 
 import com.base.action.CoreController;
-import com.base.api.ApiException;
-import com.item.service.OrgAmountLogService;
-import com.paidang.dao.model.OrgWithdrawApply;
-import com.paidang.dao.model.OrgWithdrawApplyExample;
-import com.paidang.dao.model.PawnOrg;
-import com.paidang.daoEx.model.OrgWithdrawApplyEx;
-import com.paidang.domain.qo.OrgWithdrawApplyQo;
-import com.paidang.service.OrgWithdrawApplyService;
+
+import com.item.service.UserWithdrawApplyService;
+import com.paidang.dao.model.UserWithdrawApply;
+import com.paidang.dao.model.UserWithdrawApplyExample;
+import com.paidang.daoEx.model.UserWithdrawApplyEx;
+import com.paidang.domain.qo.UserWithdrawApplyQo;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +20,29 @@ import java.util.List;
 /**
 @author sun
 */
-@RequestMapping("orgWithdrawApply")
+@RequestMapping("userWithdrawApply")
 @Controller
-public class OrgWithdrawApplyController extends CoreController {
+public class UserWithdrawApplyController extends CoreController {
 
     @Autowired
-    private OrgWithdrawApplyService orgWithdrawApplyService;
-
-    @Autowired
-	private OrgAmountLogService orgAmountLogService;
+    private UserWithdrawApplyService userWithdrawApplyService;
     
     @RequestMapping("/list")
 	@ResponseBody
-    public TableDataInfo list(OrgWithdrawApplyQo qo){
+    public TableDataInfo list(UserWithdrawApplyQo qo){
     	startPage();
-    	List<OrgWithdrawApplyEx> list = orgWithdrawApplyService.findList(qo);
+    	
+    	List<UserWithdrawApplyEx> list = userWithdrawApplyService.findList(qo);
       	return page(list);
     }
     
     @RequestMapping("/save")
 	@ResponseBody
-    public Ret save(OrgWithdrawApply orgWithdrawApply){
-    	if (orgWithdrawApply.getId() == null){
-    		orgWithdrawApplyService.insert(orgWithdrawApply);
+    public Ret save(UserWithdrawApply userWithdrawApply){
+    	if (userWithdrawApply.getId() == null){
+    		userWithdrawApplyService.insert(userWithdrawApply);
     	}else{
-    		orgWithdrawApplyService.updateByPrimaryKeySelective(orgWithdrawApply);
+    		userWithdrawApplyService.updateByPrimaryKeySelective(userWithdrawApply);
     	}
        	return ok();
     }
@@ -54,8 +50,8 @@ public class OrgWithdrawApplyController extends CoreController {
     @RequestMapping("/findById")
 	@ResponseBody
     public Ret find(Integer id){
-    	OrgWithdrawApply orgWithdrawApply = orgWithdrawApplyService.selectByPrimaryKey(id);
-       	return ok(orgWithdrawApply);
+    	UserWithdrawApply userWithdrawApply = userWithdrawApplyService.selectByPrimaryKey(id);
+       	return ok(userWithdrawApply);
     }
     
     @RequestMapping("/del")
@@ -63,29 +59,31 @@ public class OrgWithdrawApplyController extends CoreController {
     public Ret del(String id){
     	String[] ids = id.split(",");
     	for (String str : ids){
-    		orgWithdrawApplyService.deleteByPrimaryKey(Integer.parseInt(str));
+    		userWithdrawApplyService.deleteByPrimaryKey(Integer.parseInt(str));
     	}
        	return ok();
     }
 
+
 	@RequestMapping("/changeState")
 	@ResponseBody
 	public Ret changeState(Integer id,Integer status){
-		OrgWithdrawApply apply1 = orgWithdrawApplyService.selectByPrimaryKey(id);
+		UserWithdrawApply apply1 = userWithdrawApplyService.selectByPrimaryKey(id);
 		if (apply1.getStatus()==status){
 			return Ret.error("状态异常");
 		}
-		OrgWithdrawApply apply = new OrgWithdrawApply();
+		UserWithdrawApply apply = new UserWithdrawApply();
 		apply.setId(id);
 		apply.setStatus(status);
 		apply.setModifyTime(new Date());
-		orgWithdrawApplyService.updateByPrimaryKeySelective(apply);
+		userWithdrawApplyService.updateByPrimaryKeySelective(apply);
 //		if (status==1){
 //			OrgWithdrawApply orgWithdrawApply = orgWithdrawApplyService.selectByPrimaryKey(id);
 //			orgAmountLogService.saveLog(orgWithdrawApply.getOrgId(),null,orgWithdrawApply.getAmount(),"2","提现到账",orgWithdrawApply.getId(),null);
 //		}
 		return ok();
 	}
+
 
 
 }

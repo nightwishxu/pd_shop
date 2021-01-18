@@ -91,6 +91,12 @@
     <if test="payType !=null and payType!= ''">
       and A.pay_type = #{payType}
     </if>
+    <if test="randomCode !=null and randomCode!= ''">
+      and A.random_code = #{randomCode}
+    </if>
+    <if test="isConfirm !=null">
+      and A.is_confirm = #{isConfirm}
+    </if>
     <if test="createTimeEnd!=null">
       and A.create_time &lt;=#{createTimeEnd}
     </if>

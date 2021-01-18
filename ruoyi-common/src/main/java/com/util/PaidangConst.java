@@ -10,7 +10,7 @@ public interface PaidangConst {
 //     * 竞拍时间 30min * 60 = 1800 seconds
      48小时
      */
-    int AUCTION_TIME = 120*60*24;
+    int AUCTION_TIME = 60*60*48;
 
     /*
     * 用户选择中标机构，该机构需要在 PAY_LIMIT_TIME 分钟内支付贷款

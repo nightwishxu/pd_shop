@@ -189,16 +189,12 @@ public class ApiAuctionPawnController extends ApiBaseController {
 //        pawnAuctionExample.clear();
 //        //对同一物品的可能的前后数次竞拍当号要保持一致
 //        pawnAuctionExample.setOrderByClause("create_time");
-//        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andOrgIdEqualTo(orgId);
-//        List<PawnAuction> auctions = pawnAuctionService.selectByExample(pawnAuctionExample);
-//        if (auctions.size() != 0){
-//            PawnAuction record = auctions.get(0);
-//            if (record != null){
-//                if (!record.getPawnCode().equals(pawnTicketCode)){
-//                    throw new ApiException(MEnumError.PAWNTICKETCODE_NOTSAME);
-//                }
-//            }
-//        }
+        PawnAuctionExample pawnAuctionExample = new PawnAuctionExample();
+        pawnAuctionExample.createCriteria().andPawnIdEqualTo(pid).andOrgIdEqualTo(orgId);
+        List<PawnAuction> auctions = pawnAuctionService.selectByExample(pawnAuctionExample);
+        if (auctions.size() != 0){
+           throw new ApiException(400,"您已经出过一次价了");
+        }
         BigDecimal m ;
         BigDecimal r ;
         BigDecimal mr ;

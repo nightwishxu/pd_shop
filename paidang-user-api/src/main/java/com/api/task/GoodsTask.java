@@ -44,10 +44,13 @@ public class GoodsTask {
      */
     @Scheduled(cron ="0 */3 * * * ?")
     public void endAuctionGoods(){
+
+        goodsService.offlineAuctionGoods();
+
         GoodsExample example = new GoodsExample();
         example.createCriteria().andDealTypeEqualTo(2).andAuctionEndTimeLessThan(new Date())
                 .andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andStateEqualTo(1).andTotalGreaterThanOrEqualTo(1)
-                .andMaxAutionIdIsNotNull().andMaxAuctionIsNotNull();
+                .andMaxAutionIdIsNotNull();
 
         List<Goods> goods = goodsService.selectByExample(example);
         for (Goods good : goods) {

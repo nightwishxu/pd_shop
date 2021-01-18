@@ -2874,6 +2874,136 @@ public class OrderExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andRandomCodeIsNull() {
+			addCriterion("random_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeIsNotNull() {
+			addCriterion("random_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeEqualTo(String value) {
+			addCriterion("random_code =", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeNotEqualTo(String value) {
+			addCriterion("random_code <>", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeGreaterThan(String value) {
+			addCriterion("random_code >", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("random_code >=", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeLessThan(String value) {
+			addCriterion("random_code <", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeLessThanOrEqualTo(String value) {
+			addCriterion("random_code <=", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeLike(String value) {
+			addCriterion("random_code like", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeNotLike(String value) {
+			addCriterion("random_code not like", value, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeIn(List<String> values) {
+			addCriterion("random_code in", values, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeNotIn(List<String> values) {
+			addCriterion("random_code not in", values, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeBetween(String value1, String value2) {
+			addCriterion("random_code between", value1, value2, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andRandomCodeNotBetween(String value1, String value2) {
+			addCriterion("random_code not between", value1, value2, "randomCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmIsNull() {
+			addCriterion("is_confirm is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmIsNotNull() {
+			addCriterion("is_confirm is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmEqualTo(Integer value) {
+			addCriterion("is_confirm =", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmNotEqualTo(Integer value) {
+			addCriterion("is_confirm <>", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmGreaterThan(Integer value) {
+			addCriterion("is_confirm >", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmGreaterThanOrEqualTo(Integer value) {
+			addCriterion("is_confirm >=", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmLessThan(Integer value) {
+			addCriterion("is_confirm <", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmLessThanOrEqualTo(Integer value) {
+			addCriterion("is_confirm <=", value, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmIn(List<Integer> values) {
+			addCriterion("is_confirm in", values, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmNotIn(List<Integer> values) {
+			addCriterion("is_confirm not in", values, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmBetween(Integer value1, Integer value2) {
+			addCriterion("is_confirm between", value1, value2, "isConfirm");
+			return (Criteria) this;
+		}
+
+		public Criteria andIsConfirmNotBetween(Integer value1, Integer value2) {
+			addCriterion("is_confirm not between", value1, value2, "isConfirm");
+			return (Criteria) this;
+		}
+
 }
 
 	public static class Criteria extends GeneratedCriteria {

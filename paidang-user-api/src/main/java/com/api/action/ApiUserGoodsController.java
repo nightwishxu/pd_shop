@@ -316,7 +316,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         if (userGoods.getPostState()!=3 && userGoods.getPostState()!=4){
             throw new ApiException(1100,"平台未确认收货");
         }
-        if (userGoods.getPostState()==1){
+        if (userGoods.getIsSell()==1){
             throw new ApiException(1100,"该商品已寄拍");
         }
         if (userGoods.getAuthResult()!=null&&userGoods.getAuthResult()==4){
@@ -1225,7 +1225,9 @@ public class ApiUserGoodsController extends ApiBaseController {
 
         if(null !=  userGoods){
             //经过在线申请
-
+            if (userGoods.getPostState()>=2){
+                throw new ApiException(400,"已邮寄");
+            }
             userGoods.setPostExpressCode(pid);
             userGoods.setPostState(2);
             userGoods.setPostExpress(MPostExpressAddress.xfAddress);

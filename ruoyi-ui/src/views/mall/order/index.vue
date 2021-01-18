@@ -167,6 +167,33 @@
         prop="payType"
         :formatter="handlePayType"
       />
+
+      <el-table-column
+        label="订单随机码"
+        align="center"
+        prop="randomCode"
+      >
+        <template slot-scope="scope">
+          <div v-if="scope.row.payType == 4 ">{{scope.row.randomCode}}</div>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="转账确认收款"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <div v-if="scope.row.payType == 4">
+            <el-button
+              type="text"
+              size="mini"
+              v-if="(scope.row.state == 1 || scope.row.state == 2) && scope.row.isConfirm==0"
+              @click="confirmTransfer(scope.row)"
+            >确认到账</el-button>
+            <a v-else-if="scope.row.isConfirm==1">已确认到账</a>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="订单价格"
         align="center"
@@ -212,9 +239,16 @@
             <el-button
               type="text"
               size="mini"
-              v-if="scope.row.state == 1 || scope.row.state == 2"
+              v-if="scope.row.payType!=4 && (scope.row.state == 1 || scope.row.state == 2)"
               @click="delivery(scope.row)"
             >发货</el-button>
+            <el-button
+              type="text"
+              size="mini"
+              v-else-if="scope.row.payType==4 && scope.row.isConfirm==1 && (scope.row.state == 1 || scope.row.state == 2)"
+              @click="delivery(scope.row)"
+            >发货</el-button>
+            <a v-else-if="scope.row.payType==4 && scope.row.isConfirm==0 && (scope.row.state == 1 || scope.row.state == 2)">暂无操作</a>
             <a v-else-if="scope.row.state == -1">暂无操作</a>
             <a v-else>已发货</a>
           </div>
@@ -696,6 +730,10 @@ export default {
           label: "线下",
           value: 3,
         },
+         {
+          label: "转账汇款",
+          value: 4,
+        },
       ],
       //1已取消1待付款2已付款3已发货4确认收货5已评价不能为空
       stateOptions: [
@@ -759,6 +797,8 @@ export default {
         return "支付宝";
       } else if (row.payType === 3) {
         return "线下";
+      }  else if (row.payType ===4) {
+        return "转账汇款";
       } else {
         return "--";
       }
@@ -910,6 +950,28 @@ export default {
         }
       });
     },
+    //确认到账
+     confirmTransfer(row) {
+      
+       this.$confirm('是否确认该笔订单款项到账?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+           var data = { id: row.id, isConfirm: 1 };
+         updateOrder(data).then((response) => {
+        // if (response.code === 200) {
+        //   this.getList();
+        // }
+      });
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("操作成功");
+        }).catch(function() {});
+          
+     
+    },
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();

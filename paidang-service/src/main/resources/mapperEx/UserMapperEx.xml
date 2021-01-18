@@ -199,5 +199,9 @@
 	<update id="addIntegral">
         update b_user set integral = ifnull(integral,0) +#{integral} where id = #{id}
     </update>
-  	
+
+	<update id="reSumBalance">
+        update b_user set balance = (select ifnull(sum(amount_new),0) from p_user_amount_log where user_id = #{userId}) where id = #{userId}
+    </update>
+
 </mapper>

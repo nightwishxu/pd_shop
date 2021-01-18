@@ -119,6 +119,7 @@ public class ApiHomeController extends ApiBaseController {
         userInfo.setNickName(record.getNickName());
         userInfo.setAccount(record.getAccount());
         userInfo.setIsBind(record.getIsBind());
+        userInfo.setBalance(record.getBalance()==null?BigDecimal.ZERO:record.getBalance());
         if (record.getIsBind()!=null &&record.getIsBind()==1){
             userInfo.setAuthStatus(4);
         }else {
@@ -496,12 +497,20 @@ public class ApiHomeController extends ApiBaseController {
                             @ApiParam(value = "收件人联系方式", required = true) String phone,
                             @ApiParam(value = "省市区", required = true) String area,
                             @ApiParam(value = "详细地址", required = true) String address) {
+        UserAddressExample example = new UserAddressExample();
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
+        example.setOrderByClause("is_default desc, create_time desc");
+        List<UserAddress> list = userAddressService.selectByExample(example);
         UserAddress record = new UserAddress();
         record.setUserId(mobileInfo.getUserId());
         record.setUserName(userName);
         record.setArea(area);
         record.setAddress(address);
-        record.setIsDefault(0);
+        if (CollectionUtils.isEmpty(list)){
+            record.setIsDefault(1);
+        }else {
+            record.setIsDefault(0);
+        }
         record.setPhone(phone);
         record.setCreateTime(new Date());
 

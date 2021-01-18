@@ -197,4 +197,8 @@ public class UserService {
 	public int addIntegral(Integer id,BigDecimal integral){
 		return userMapperEx.addIntegral(id,integral);
 	}
+
+	public int reSumBalance(Integer userId){
+		return userMapperEx.reSumBalance(userId);
+	}
 }

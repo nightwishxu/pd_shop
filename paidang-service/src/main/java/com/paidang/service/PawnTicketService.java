@@ -187,6 +187,7 @@ public class PawnTicketService {
 		ticket.setOrgAdress(pawnOrg.getAdress());
 		ticket.setPawnerName(repawn.getPawnerName());
 		ticket.setBusinessLicense(pawnOrg.getBusinessLicenseCode());
+		ticket.setOrgId(pawnOrg.getId());
 		ticket.setPawnerName(userName);
 		ticket.setGoodsName(userPawn.getGoodsName());
 		ticket.setPawnerTel(userTel);

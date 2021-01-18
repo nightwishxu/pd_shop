@@ -21,6 +21,7 @@ export function getPage(code) {
 export function addPage(data) {
   return request({
     url: '/sp/save',
+    method: 'post',
     params: data
   })
 }
@@ -29,6 +30,7 @@ export function addPage(data) {
 export function updatePage(data) {
   return request({
     url: '/sp/save',
+    method: 'post',
     params: data
   })
 }

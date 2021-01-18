@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
+import java.math.BigDecimal;
+
 @ApiModel(value="userInfo")
 public class UserInfo {
 
@@ -22,7 +24,7 @@ public class UserInfo {
 	@ApiModelProperty(value="性别0:女 1:男")
 	private Integer sex;
 	@ApiModelProperty(value="用户余额")
-	private String balance;
+	private BigDecimal balance;
 	@ApiModelProperty(value="地址")
 	private String address;
 	@ApiModelProperty(value="身份证正面")
@@ -75,10 +77,10 @@ public class UserInfo {
 	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
-	public String getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
-	public void setBalance(String balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
 

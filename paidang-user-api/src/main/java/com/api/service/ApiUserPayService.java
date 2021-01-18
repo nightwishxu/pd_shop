@@ -24,10 +24,8 @@ import com.ijpay.wxpay.WxPayApi;
 import com.ijpay.wxpay.WxPayApiConfig;
 import com.ijpay.wxpay.WxPayApiConfigKit;
 import com.ijpay.wxpay.model.UnifiedOrderModel;
-import com.item.dao.model.PayLog;
-import com.item.dao.model.PayLogExample;
-import com.item.dao.model.ShopCart;
-import com.item.dao.model.ShopCartExample;
+import com.item.dao.model.*;
+import com.item.service.CodeService;
 import com.item.service.PayLogService;
 import com.item.service.ShopCartService;
 import com.paidang.dao.model.*;
@@ -70,6 +68,12 @@ public class ApiUserPayService {
     @Autowired
     private OutOrderService outOrderService;
 
+    @Autowired
+    private UserGoodsService userGoodsService;
+
+    @Autowired
+    private CodeService codeService;
+
 
 
     public WxPayApiConfig getApiConfig() {
@@ -105,6 +109,7 @@ public class ApiUserPayService {
         Date date=new Date();
 //        [{"goodsId":"10","num":"2"},{"goodsId":"10","num":"2"}]
         int i=0;
+        String randomCode = BaseUtils.getRandomNum(6);
         for (Map map:mapList){
             PayResult payResult = new PayResult();
             Integer goodsId=Integer.valueOf((String)map.get("goodsId"));
@@ -153,6 +158,7 @@ public class ApiUserPayService {
             order.setGoodsPrice(goods.getPrice());
             order.setGoodsCost(goods.getCost());
             order.setCommentState(0);
+            order.setRandomCode(randomCode);
             order.setCreateTime(date);
             BigDecimal finalPrice = null;
             i++;
@@ -222,7 +228,7 @@ public class ApiUserPayService {
     }
 
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public PayResult buyShopCartPay(MobileInfo mobileInfo, Integer platform, String orderIds){
+    public PayResult buyShopCartPay(MobileInfo mobileInfo, Integer platform, String orderIds) throws Exception{
         String logIds="";
         List<PayLog> logList=new ArrayList<>();
         BigDecimal price=new BigDecimal(0);
@@ -230,7 +236,8 @@ public class ApiUserPayService {
         String code = "";
         Date date= new Date();
         boolean tmp = false;
-
+        Map<String,PayLog> map = new HashMap<>();
+        Map<String,Order> orderMap = new HashMap<>();
         for (String id:orderArray){
             Integer orderId=Integer.valueOf(id);
             Order order = orderService.selectByPrimaryKey(orderId);
@@ -242,7 +249,14 @@ public class ApiUserPayService {
                 date= order.getCreateTime();
                 tmp = true;
             }
-            order.setPayType(platform==1?2:1);
+            if (platform==1){
+                order.setPayType(2);
+            }else if (platform==2){
+                order.setPayType(1);
+            }else {
+                order.setPayType(platform);
+            }
+
             orderService.updateByPrimaryKeySelective(order);
             PayLog log = new PayLog();
             log.setOrderId(order.getId());
@@ -255,6 +269,8 @@ public class ApiUserPayService {
             price=price.add(order.getPrice());
             logList.add(log);
             logIds+=log.getId()+"-";
+            map.put(id,log);
+            orderMap.put(id,order);
 
         }
         boolean flag=logIds.charAt(logIds.length()-1)=='-';
@@ -276,9 +292,16 @@ public class ApiUserPayService {
                 //                result.setId(outOrder.getOutOrderId()+"_"+ MPaidangPayType.NORMAL_BUY.name());
 //                result.setMoney(price.toString());
 //                result.setBackUrl(PayMethod.urlToUrl(AlipayConfig.notify_url));
-                Map<String, Object> payParam = PayMethod.aliAppPay(outOrder.getOutOrderId() + "_" + MPaidangPayType.NORMAL_BUY.name(), price, "订单支付", PayMethod.urlToUrl(AlipayConfig.notify_url), AlipayConfig.app_id,
-                        AlipayConfig.seller_id, AlipayConfig.payKey, null);
-//                result.setAliPay(payParam);
+                AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+                //对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。
+//                model.setBody("我是测试数据-By Javen");
+                model.setSubject("订单支付");
+                model.setOutTradeNo(outOrder.getOutOrderId() + "_" + MPaidangPayType.NORMAL_BUY.name());
+                model.setTimeoutExpress("30m");
+                model.setTotalAmount(price.toString());
+                String orderInfo = AliPayApi.appPayToResponse(model, PayMethod.urlToUrl(AlipayConfig.notify_url)).getBody();
+
+                result.setAliPay(orderInfo);
                 break;
             case 2:
                 //微信
@@ -286,10 +309,60 @@ public class ApiUserPayService {
 //                if (StringUtil.isBlank(wxId)){
 //                    throw new ApiException(MEnumError.SERVER_BUSY_ERROR);
 //                }
-                HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-                Map<String, String> map = PayMethod.wxAppPayInfo(price, outOrder.getOutOrderId(), "订单支付", IpUtils.getIpAddr(request), MFramePayType.NORMAL_BUY);
-//                result.setWxPay(map);
-                //                result.setId(wxId);
+                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+                String ip = IPUtil.getClientIP(request);
+                if (StringUtils.isBlank(ip)) {
+                    ip = "127.0.0.1";
+                }
+                WxPayApiConfig wxPayApiConfig = getApiConfig();
+
+                Map<String, String> params = UnifiedOrderModel
+                        .builder()
+                        .appid(wxPayApiConfig.getAppId())
+                        .mch_id(wxPayApiConfig.getMchId())
+                        .nonce_str(WxPayKit.generateStr())
+                        .body("订单支付")
+//                    .body("App")
+                        .attach(MPaidangPayType.NORMAL_BUY.name())
+                        .out_trade_no(outOrder.getOutOrderId())
+                        .total_fee(getMoney(price.toString()))
+                        .spbill_create_ip(ip)
+                        .notify_url(wxPayApiConfig.getDomain()+"")
+                        .trade_type(TradeType.APP.getTradeType())
+                        .build()
+                        .createSign(wxPayApiConfig.getPartnerKey(), SignType.HMACSHA256);
+
+                String xmlResult = WxPayApi.pushOrder(false, params);
+
+                logger.info(xmlResult);
+                Map<String, String> wxRes = WxPayKit.xmlToMap(xmlResult);
+
+                String returnCode = wxRes.get("return_code");
+                String returnMsg = wxRes.get("return_msg");
+                if (!WxPayKit.codeIsOk(returnCode)) {
+                    throw new ApiException(returnMsg);
+                }
+                String resultCode = wxRes.get("result_code");
+                if (!WxPayKit.codeIsOk(resultCode)) {
+                    throw new ApiException(returnMsg);
+                }
+                // 以下字段在 return_code 和 result_code 都为 SUCCESS 的时候有返回
+                String prepayId = wxRes.get("prepay_id");
+
+                Map<String, String> packageParams = WxPayKit.appPrepayIdCreateSign(wxPayApiConfig.getAppId(), wxPayApiConfig.getMchId(), prepayId,
+                        wxPayApiConfig.getPartnerKey(), SignType.HMACSHA256);
+
+                String jsonStr = com.alibaba.druid.support.json.JSONUtils.toJSONString(packageParams);
+                logger.info("返回apk的参数:" + jsonStr);
+//                resultPay.put("weixinParam",jsonStr);
+
+//                Map<String, String> map = PayMethod.wxAppPayInfo(order.getPrice(), log.getId().toString(), "订单支付", IpUtils.getIpAddr(request), MFramePayType.NORMAL_BUY);
+                result.setWxPay(jsonStr);
+                break;
+            case 4:
+                for (String s : orderArray) {
+                    afterTransfer(Integer.valueOf(s),orderMap.get(s),map.get(s));
+                }
                 break;
             default:
                 throw new ApiException(MEnumError.PAY_TYPE_ERRPR);
@@ -394,6 +467,7 @@ public class ApiUserPayService {
         }
         order.setCouponId(couponId);
         order.setIsDel(0);
+        order.setRandomCode(BaseUtils.getRandomNum(6));
         order.setCreateTime(new Date());
         int result = orderService.insert(order);
         if(0 == result){
@@ -440,6 +514,9 @@ public class ApiUserPayService {
         }
 
         Order order = orderService.selectByPrimaryKey(orderId);
+        if (order.getState()>=2){
+            throw new ApiException(400,"订单已付款");
+        }
         if (StringUtils.isAnyBlank(order.getShipUser(), order.getShipAddress(), order.getShipPhone()) && addressId==null){
             throw new ApiException(400,"请选择收货地址");
         }
@@ -549,10 +626,59 @@ public class ApiUserPayService {
 //                Map<String, String> map = PayMethod.wxAppPayInfo(order.getPrice(), log.getId().toString(), "订单支付", IpUtils.getIpAddr(request), MFramePayType.NORMAL_BUY);
                 result.setWxPay(jsonStr);
                 break;
+            case 4:
+                afterTransfer(orderId,order,log);
+                break;
             default:
                 throw new ApiException(MEnumError.PAY_TYPE_ERRPR);
         }
         return result;
+    }
+
+
+    public void afterTransfer(Integer orderId,Order order,PayLog payLog){
+        Order orderUpdate = orderService.selectByPrimaryKey(orderId);
+        orderUpdate.setState(2);
+        orderUpdate.setPayType(4);
+        orderUpdate.setIsConfirm(0);
+        orderUpdate.setPayTime(new Date());
+        int update = orderService.updateByPrimaryKeySelective(orderUpdate);
+//        if (update == 0) {
+//            logger.info("$$$$业务订单没有更新成功!——商户订单号:" + no + ";交易号:" + trade_no + ",交易状态:" + trade_status);
+//        }
+        Goods goods = goodsService.selectByPrimaryKey(order.getGoodsId());
+
+        //商品
+        Goods goodsUpdate = new Goods();
+        goodsUpdate.setId(order.getGoodsId());
+        Goods old = goodsService.selectByPrimaryKey(order.getGoodsId());
+        if (old.getTotal() == 0) {
+            goodsUpdate.setState(-1);
+            goodsUpdate.setIsOnline(0);
+            update = goodsService.updateByPrimaryKeySelective(goodsUpdate);
+        }
+        payLog.setState(9);
+        payLog.setModifyTime(new Date());
+        payLog.setPlatform(4); // 1支付宝2银联3微信
+//        payLog.setRealPay(total);
+//        payLog.setTradeNo(trade_no);
+//        payLog.setBuyer(buyerEmail);
+        payLogService.updateByPrimaryKeySelective(payLog);
+        if (update == 0) {
+//            logger.info("$$$$商品没有更新成功!——商户订单号:" + no + ";交易号:" + trade_no + ",交易状态:" + trade_status);
+        }
+        //藏品更新
+        if (goods.getSource() == 2) {
+            //绝当品归属权
+            UserGoods userGoods = new UserGoods();
+            userGoods.setId(goods.getGoodsId());
+            userGoods.setBelongType(1);
+            userGoods.setBelongId(order.getUserId());
+            update = userGoodsService.updateByPrimaryKeySelective(userGoods);
+//            if (update == 0) {
+//                logger.info("$$$$藏品没有更新成功!——商户订单号:" + no + ";交易号:" + trade_no + ",交易状态:" + trade_status);
+//            }
+        }
     }
 
     /**
@@ -670,4 +796,14 @@ public class ApiUserPayService {
         }
         return unifiedResult;
     }
+
+    public Map getOrderTransferInfo(Integer userId,
+                                       Integer orderId) throws Exception{
+        Code c = codeService.selectByPrimaryKey("orderTransferInfo");
+        Map map = JSONUtils.deserialize(c.getValue(), Map.class);
+        Order order = orderService.selectByPrimaryKey(orderId);
+        map.put("randomCode",order.getRandomCode());
+        return map;
+    }
+
 }

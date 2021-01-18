@@ -344,10 +344,10 @@ public class Order implements Serializable {
 	private Integer backState;
 
 	/**
-	 *支付方式 1微信 2支付宝 3线下
+	 *支付方式 1微信 2支付宝 3线下 4 转账汇款
 	 */
-	@ApiModelProperty(value="支付方式 1微信 2支付宝 3线下")
-	@ApiParam(value="支付方式 1微信 2支付宝 3线下")
+	@ApiModelProperty(value="支付方式 1微信 2支付宝 3线下 4 转账汇款")
+	@ApiParam(value="支付方式 1微信 2支付宝 3线下 4 转账汇款")
 	@Column(name = "pay_type")
 	private Integer payType;
 
@@ -358,6 +358,22 @@ public class Order implements Serializable {
 	@ApiParam(value="评论状态0未评价，1已评价")
 	@Column(name = "comment_state")
 	private Integer commentState;
+
+	/**
+	 *订单附言随机码
+	 */
+	@ApiModelProperty(value="订单附言随机码")
+	@ApiParam(value="订单附言随机码")
+	@Column(name = "random_code")
+	private String randomCode;
+
+	/**
+	 *是否确认转账汇款到账 0 没有 1有
+	 */
+	@ApiModelProperty(value="是否确认转账汇款到账 0 没有 1有")
+	@ApiParam(value="是否确认转账汇款到账 0 没有 1有")
+	@Column(name = "is_confirm")
+	private Integer isConfirm;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -701,6 +717,22 @@ public class Order implements Serializable {
 
 	public Integer getCommentState() {
 		return commentState;
+	}
+
+	public void setRandomCode(String randomCode) {
+		this.randomCode=randomCode == null ? randomCode : randomCode.trim();
+	}
+
+	public String getRandomCode() {
+		return randomCode;
+	}
+
+	public void setIsConfirm(Integer isConfirm) {
+		this.isConfirm=isConfirm;
+	}
+
+	public Integer getIsConfirm() {
+		return isConfirm;
 	}
 
 }

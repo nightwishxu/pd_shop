@@ -7,7 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="编号" prop="parent">
+      <el-form-item
+        label="编号"
+        prop="parent"
+      >
         <el-input
           v-model="queryParams.code"
           placeholder="请输入编号"
@@ -22,15 +25,19 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -39,11 +46,15 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:code:edit']"
-          >修改</el-button
-        >
+        >修改</el-button>
       </el-col>
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -72,10 +83,26 @@
       :data="codeList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="code" />
-      <el-table-column label="值" align="center" prop="value" />
-      <el-table-column label="描述" align="center" prop="remark" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="编号"
+        align="center"
+        prop="code"
+      />
+      <el-table-column
+        label="值"
+        align="center"
+        prop="value"
+      />
+      <el-table-column
+        label="描述"
+        align="center"
+        prop="remark"
+      />
     </el-table>
 
     <pagination
@@ -87,23 +114,42 @@
     />
 
     <!-- 添加或修改基础参数对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="编号" prop="parent">
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+      >
+        <el-form-item
+          label="编号"
+          prop="parent"
+        >
           <el-input
             v-model="form.code"
             type="textarea"
             placeholder="请输入编号"
           />
         </el-form-item>
-        <el-form-item label="值" prop="value">
+        <el-form-item
+          label="值"
+          prop="value"
+        >
           <el-input
             v-model="form.value"
             type="textarea"
             placeholder="请输入值"
           />
         </el-form-item>
-        <el-form-item label="备注" prop="value">
+        <el-form-item
+          label="备注"
+          prop="value"
+        >
           <el-input
             v-model="form.remark"
             type="textarea"
@@ -111,8 +157,14 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -164,7 +216,7 @@ export default {
       rules: {
         parent: [
           {
-            required: true,
+            required: false,
             message: "组SYS系统参数，SINGLE独立参数不能为空",
             trigger: "blur",
           },

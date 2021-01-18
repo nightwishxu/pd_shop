@@ -9,6 +9,7 @@ import com.base.util.BaseUtils;
 import com.item.dao.model.User;
 import com.item.dao.model.UserNotify;
 import com.item.service.OrgAmountLogService;
+import com.item.service.UserAmountLogService;
 import com.item.service.UserNotifyService;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
@@ -66,6 +67,12 @@ public class ApiOrderController extends ApiBaseController {
 
     @Autowired
     private OrgAddressService orgAddressService;
+
+    @Autowired
+    private UserAmountLogService userAmountLogService;
+
+    @Autowired
+    private UserGoodsService userGoodsService;
 
     //订单状态-1已取消1待付款2已付款3已发货4确认收货5已评价
     //退款状态 0未退款 1申请退款 2同意退款 3提交单号 4已退款 5拒绝退款
@@ -249,6 +256,17 @@ public class ApiOrderController extends ApiBaseController {
                 OrgAmountLog log = orgAmountLogs.get(0);
                 orgAmountLogService.saveLog(order.getOrgId(),null,log.getAmount(),"4","订单退款："+order.getCode(),order.getId(),null);
             }
+        }else if (order.getGoodsSource()==5 && order.getState()>=4){
+//            Goods goods = goodsService.selectByPrimaryKey(order.getGoodsId());
+//            userGoodsService
+//            UserAmountLogExample logExample = new UserAmountLogExample();
+//            logExample.createCriteria().andFidEqualTo(order.getId()).andUserIdEqualTo(order.getOrgId()).andItemEqualTo("1");
+//            logExample.setOrderByClause("id desc");
+//            List<UserAmountLog> userAmountLogs = userAmountLogService.selectByExample(logExample);
+//            if (CollectionUtils.isNotEmpty(userAmountLogs)){
+//                UserAmountLog log = userAmountLogs.get(0);
+//                userAmountLogService.saveLog(null,log.getAmount(),"4","订单退款："+order.getCode(),order.getId(),null);
+//            }
         }
         return 1;
     }

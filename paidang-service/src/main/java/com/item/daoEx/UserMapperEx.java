@@ -57,4 +57,7 @@ public interface UserMapperEx{
 
 	int addIntegral(@Param("id")Integer id,@Param("integral")BigDecimal integral);
 
+	int reSumBalance(@Param("userId")Integer userId);
+
+
 } 

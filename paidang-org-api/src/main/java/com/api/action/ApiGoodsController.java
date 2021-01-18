@@ -244,6 +244,8 @@ public class ApiGoodsController extends ApiBaseController {
             goods.setTotal(1);
         }
         goods.setIsOnline(1);
+        goods.setMaxAutionId(null);
+        goods.setMaxAuction(null);
         goods.setOnlineTime(new Date());
         goods.setReasonOfDismounting("");
         //
@@ -257,7 +259,7 @@ public class ApiGoodsController extends ApiBaseController {
             goodsAuctionOnlineLogService.insertSelective(log);
             goods.setAuctionOnlineLogId(log.getId());
         }
-        goodsService.updateByPrimaryKeySelective(goods);
+        goodsService.sellAuctionGoods(goods);
         return 1;
     }
 

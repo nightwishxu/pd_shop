@@ -10,6 +10,18 @@ public class BaseUtils {
 
     public static final String  areaUrl="http://mobsec-dianhua.baidu.com/dianhua_api/open/location?tel=";
 
+    private static final int[] numArr = {0,1,2,3,4,5,6,7,8,9};
+
+
+    public static String getRandomNum(int length){
+        Random rand = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i=0;i<length;i++){
+            builder.append(rand.nextInt(10));
+        }
+        return builder.toString();
+    }
+
     /**
      * @Description: 产生订单编号随机数
      * @param uuid

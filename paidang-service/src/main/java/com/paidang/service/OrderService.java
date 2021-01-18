@@ -5,6 +5,7 @@ import com.constants.PaidangConstants;
 import com.item.service.BaseService;
 import com.item.service.IntegralLogService;
 import com.item.service.OrgAmountLogService;
+import com.item.service.UserAmountLogService;
 import com.paidang.dao.*;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.OrderMapperEx;
@@ -39,6 +40,15 @@ public class OrderService {
 
 	@Autowired
 	private PawnOrgMapper pawnOrgMapper;
+
+	@Autowired
+	private UserAmountLogService userAmountLogService;
+
+	@Autowired
+	private UserGoodsService userGoodsService;
+
+	@Autowired
+	private GoodsService goodsService;
 
 
 	public int countByExample(OrderExample example) {
@@ -171,18 +181,23 @@ public class OrderService {
 
 		}
 		if(order.getGoodsSource()==5){
-			return;
+			Goods goods = goodsService.selectByPrimaryKey(order.getGoodsId());
+			UserGoods userGoods = userGoodsService.selectByPrimaryKey(goods.getGoodsId());
+			//机构订单流水保存
+			userAmountLogService.saveLog(userGoods.getUserId(),order.getPrice(),"1","用户确认收货",order.getId(),null);
+		}else {
+			//机构订单流水保存
+			orgAmountLogService.saveLog(order.getOrgId(),null,order.getPrice(),"1","用户确认收货",order.getId(),null);
+			PawnOrg pawnOrg = pawnOrgMapper.selectByPrimaryKey(order.getOrgId());
+			BigDecimal serviceRates = pawnOrg.getServiceRates();
+			if (serviceRates==null){
+				serviceRates = PaidangConstants.default_service_rates;
+			}
+			//手续费
+			orgAmountLogService.saveLog(order.getOrgId(),null,(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
+					"3","订单手续费",order.getId(),null);
 		}
-		//机构订单流水保存
-		orgAmountLogService.saveLog(order.getOrgId(),null,order.getPrice(),"1","用户确认收货",order.getId(),null);
-		PawnOrg pawnOrg = pawnOrgMapper.selectByPrimaryKey(order.getOrgId());
-		BigDecimal serviceRates = pawnOrg.getServiceRates();
-		if (serviceRates==null){
-			serviceRates = PaidangConstants.default_service_rates;
-		}
-		//手续费
-		orgAmountLogService.saveLog(order.getOrgId(),null,(order.getPrice().multiply(serviceRates).setScale(2,BigDecimal.ROUND_HALF_DOWN)),
-				"3","订单手续费",order.getId(),null);
+
 
 	}
 
