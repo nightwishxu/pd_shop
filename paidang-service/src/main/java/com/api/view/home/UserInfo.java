@@ -39,6 +39,9 @@ public class UserInfo {
 	@ApiModelProperty(value="会员等级")
 	private String memberLevel;
 
+	@ApiModelProperty(value="是否有支付密码 1有 0没有")
+	private Integer hasPayPassword;
+
 	public UserInfo(){};
 
 	public UserInfo(Integer id,String nickName){
@@ -130,5 +133,13 @@ public class UserInfo {
 
 	public void setMemberLevel(String memberLevel) {
 		this.memberLevel = memberLevel;
+	}
+
+	public Integer getHasPayPassword() {
+		return hasPayPassword;
+	}
+
+	public void setHasPayPassword(Integer hasPayPassword) {
+		this.hasPayPassword = hasPayPassword;
 	}
 }

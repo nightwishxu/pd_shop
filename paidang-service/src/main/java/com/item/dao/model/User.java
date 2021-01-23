@@ -40,6 +40,14 @@ public class User implements Serializable {
 	private String password;
 
 	/**
+	 *支付密码
+	 */
+	@ApiModelProperty(value="支付密码")
+	@ApiParam(value="支付密码")
+	@Column(name = "pay_password")
+	private String payPassword;
+
+	/**
 	 *用户昵称
 	 */
 	@ApiModelProperty(value="用户昵称")
@@ -349,6 +357,14 @@ public class User implements Serializable {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public void setPayPassword(String payPassword) {
+		this.payPassword=payPassword == null ? payPassword : payPassword.trim();
+	}
+
+	public String getPayPassword() {
+		return payPassword;
 	}
 
 	public void setNickName(String nickName) {

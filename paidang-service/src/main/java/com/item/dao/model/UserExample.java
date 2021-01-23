@@ -304,6 +304,76 @@ public class UserExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andPayPasswordIsNull() {
+			addCriterion("pay_password is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordIsNotNull() {
+			addCriterion("pay_password is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordEqualTo(String value) {
+			addCriterion("pay_password =", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordNotEqualTo(String value) {
+			addCriterion("pay_password <>", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordGreaterThan(String value) {
+			addCriterion("pay_password >", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordGreaterThanOrEqualTo(String value) {
+			addCriterion("pay_password >=", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordLessThan(String value) {
+			addCriterion("pay_password <", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordLessThanOrEqualTo(String value) {
+			addCriterion("pay_password <=", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordLike(String value) {
+			addCriterion("pay_password like", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordNotLike(String value) {
+			addCriterion("pay_password not like", value, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordIn(List<String> values) {
+			addCriterion("pay_password in", values, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordNotIn(List<String> values) {
+			addCriterion("pay_password not in", values, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordBetween(String value1, String value2) {
+			addCriterion("pay_password between", value1, value2, "payPassword");
+			return (Criteria) this;
+		}
+
+		public Criteria andPayPasswordNotBetween(String value1, String value2) {
+			addCriterion("pay_password not between", value1, value2, "payPassword");
+			return (Criteria) this;
+		}
+
 		public Criteria andNickNameIsNull() {
 			addCriterion("nick_name is null");
 			return (Criteria) this;

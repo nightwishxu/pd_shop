@@ -3,6 +3,7 @@ package com.api.action;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.MobileInfo;
+import com.base.util.BaseUtils;
 import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
 import com.google.common.collect.Lists;
@@ -56,6 +57,7 @@ public class ApiAdController extends ApiBaseController {
                              @ApiParam(value="广告展示位置 多种类型以,分割 : " +
                                      "1首页轮播图；2认证商城轮播图；3绝当商城轮播图; 4拍档头条 5关键词搜索" +
                                      "6 首页，7c端个人中心，8商家入驻引导页，9机构端个人中心，10商家端个人中心  11 首页底部 12 优惠券",required = true) String locations){
+        BaseUtils.checkBlankParam(locations);
         String[] split = locations.split(",");
         List<Integer> list = Lists.newArrayList();
         for (String s : split) {

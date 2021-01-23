@@ -27,6 +27,7 @@ import com.base.util.CoreConstants;
 import com.base.util.DateUtil;
 import com.base.util.JSONUtils;
 import com.base.util.StringUtil;
+import com.google.common.collect.Lists;
 import com.item.dao.model.*;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
@@ -45,6 +46,7 @@ import com.util.PaidangConst;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,7 +318,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         if (userGoods.getPostState()!=3 && userGoods.getPostState()!=4){
             throw new ApiException(1100,"平台未确认收货");
         }
-        if (userGoods.getIsSell()==1){
+        if (userGoods.getIsSell()!=null && userGoods.getIsSell()==1){
             throw new ApiException(1100,"该商品已寄拍");
         }
         if (userGoods.getAuthResult()!=null&&userGoods.getAuthResult()==4){
@@ -932,6 +934,20 @@ public class ApiUserGoodsController extends ApiBaseController {
              *         sf("11","书法"),
              *         wwzx("12","文玩杂项"),
              */
+            if (StringUtils.isNotBlank(content) && StringUtils.isBlank(images)){
+                List contentArr = JSONUtils.deserialize(content, List.class);
+                List<String> imgArr = Lists.newArrayList();
+                for (Object o : contentArr) {
+                    Map map = (Map)o;
+                    if ("3".equals(map.get("contentType"))){
+                        imgArr.add((String)map.get("content"));
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(imgArr)){
+                    images = String.join(",",imgArr);
+                }
+
+            }
             //其他
             userGoods.setImages(images);
             userGoods.setUserId(mobileInfo.getUserId());

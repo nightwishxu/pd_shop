@@ -619,8 +619,8 @@ public class ApiMyAppController extends ApiBaseController{
             }else {
                 String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
                         user.getAnxinsignId(),pawnTicket.getUserLocation(),userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
-                        ip,signTime,pawnTicket,pawnContinue);
-                pawnContinue.setState(2);
+                        ip,signTime,pawnTicket,userPawn);
+                pawnContinue.setState(4);
                 pawnContinue.setContractId(contractNo);
                 temp.setContractId(contractNo);
                 pawnContinueService.updateByPrimaryKeySelective(pawnContinue);

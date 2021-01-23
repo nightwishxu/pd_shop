@@ -7,9 +7,11 @@ import com.base.util.JSONUtils;
 import com.base.util.Md5;
 import com.item.dao.model.User;
 import com.item.service.UserService;
+import com.paidang.dao.model.PawnTicket;
 import com.paidang.daoEx.model.PawnContinueEx;
 import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.service.PawnContinueService;
+import com.paidang.service.PawnTicketService;
 import com.paidang.service.UserPawnService;
 import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.domain.Ret;
@@ -52,20 +54,24 @@ public class PawnTicketController extends H5BaseController {
     @Autowired
     private QysService qysService;
 
+    @Autowired
+    private PawnTicketService pawnTicketService;
+
 
     public static final String  URL= CoreConstants.getProperty("electronic_signature_url")+"/v2/seal/image";
     public static final String  APP_TOKEN= CoreConstants.getProperty("electronic_signature_app_token");
     public static final String  APP_SECRET= CoreConstants.getProperty("electronic_signature_app_secret");
 
     @ApiOperation(value = "查看合同")
-    @RequestMapping(value = "/showContract/{contractId}",method = {RequestMethod.POST})
+    @RequestMapping(value = "/showContract",method = {RequestMethod.POST})
     @ResponseBody
     @ApiMethod
-    public Object showContract(@PathVariable String contractId){
-        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pageUrl",pageUrl);
-        return jsonObject;
+    public Object showContract( Integer pawnTicketId) throws Exception{
+//        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("pageUrl",pageUrl);
+//        return jsonObject;
+        return pawnTicketService.showContractUrl(null,null,pawnTicketId,null);
     }
 
     @PostMapping("/loadTicketData")

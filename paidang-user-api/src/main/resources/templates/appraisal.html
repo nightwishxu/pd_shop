@@ -85,157 +85,7 @@
     <script type="text/javascript" src="./static/fastclick.js.下载"></script>
     <script type="text/javascript" src="./static/amazeui.js.下载"></script>
     <script type="text/javascript" src="./static/video.min.js.下载"></script>
-    <script type="text/javascript">
-        $(function () {
-            var obj;
-            var expId;
-            var experId;
-            $("#sub").click(function () {
-                if ($(".apprai").val() == null || $(".apprai").val() == '') {
-                    return layer.msg("请输入您的评价");
-                }
-                if ($("#phone").val() == null || $("#phone").val() == '') {
-                    return layer.msg("请输入手机号");
-                }
-                if ($("#code").val() == null || $("#code").val() == '') {
-                    return layer.msg("请输入验证码");
-                }
 
-                var res;
-                //验证验证码
-                $.post(sy.contextPath + '/webApi/account/checkCode', {
-                    phone: $("#phone").val(),
-                    code: $("#code").val(),
-                    type: 3
-                }, function (result) {
-                    if (result.code == 1) {
-                        var url = sy.contextPath + '/m/pawn/saveExperterInfo';
-                        var obj = {
-                            id: expId,
-                            info: $(".apprai").val(),
-                        };
-                        $.post(url, obj, function (result) {
-                            if (result.code == 1) {
-                                return layer.msg(result.msg);
-                            } else {
-                                return layer.msg(result.msg)
-                            }
-                        }, 'json');
-                    } else {
-                        return layer.msg(result.msg)
-                    }
-                }, 'json');
-
-
-            });
-
-
-            $("#yzm").click(function () {
-                var phone = $("#phone").val().trim();
-                var url = sy.contextPath + '/m/pawn/checkEx';
-                var obj = {
-                    phone: phone,
-                    exId: experId
-                };
-                $.post(url, obj, function (result) {
-                    if (result.code == 0) {
-                        layer.msg("您不是被指定专家，无权鉴定");
-                        return;
-
-                    } else {
-                        //获取验证码
-                        var url2 = sy.contextPath + "/webApi/account/getMobileMsg";
-                        var obj = {
-                            phone: phone,
-                            type: 3
-                        }
-                        $.post(url2, obj, function (result) {
-                            console.log(result)
-                        }, 'json');
-                    }
-                }, 'json');
-            });
-
-            var experterId = getQueryString('id')
-            if (experterId != '') {
-                $.post(sy.contextPath + '/m/pawn/getExpertInfo', {
-                    id: experterId
-                }, function (result) {
-                    // var data = JSON.parse(result);
-                    obj = result;
-                    expId = obj.id;
-                    experId = obj.experterId
-                    console.info(obj.id);
-                    /*
-                     <li>
-                            <div class="am-gallery-item"><img src="./static/download" data-am-pureviewed="1"></div>
-                        </li>
-                    */
-                    var html = '';
-                    var imgArr = obj.images.split(",");
-                    for (var i = 0; i < imgArr.length; i++) {
-                        html += "<li>"
-                        html += '<div class="<div class="am-gallery-item"><img src="' + imgArr[i] + '" data-am-pureviewed="1"></div>'
-                        html += "</li>"
-                    }
-                    console.info(html)
-                    $("#myImg").append(html)
-                    $.post(sy.contextPath + '/m/pawn/checkDetail', {
-                        id: obj.goodsId
-                    }, function (result) {
-                        var data = JSON.parse(result[0].content);
-
-                        var htmls = '';
-                        var flag = true;
-                        for (var i = 0; i < data.length; i++) {
-                            var json = data[i];
-                            var content = json.content;
-
-                            if (json.contentType == 3) {
-                                // content = po.showImg(content,20,20);
-                                continue;
-                            } else if (json.contentType == 4) {
-                                flag = false;
-                                content =
-                                    '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
-                                    '<source src="' + content + '" type="video/mp4">' +
-                                    ' </video>';
-                            }
-                            htmls += "<dd>"
-                            htmls += '<span>' + json.name + ':</span>';
-                            htmls += '<span>' + content + '</span>';
-                            htmls += "</dd>"
-                        }
-                        if (flag) {
-                            var content =
-                                '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
-                                '<source src="' + result.video + '" type="video/mp4">' +
-                                ' </video>';
-                            htmls += "<dd>"
-                            htmls += '<span>宝贝视频：</span>';
-                            htmls += '<span>' + content + '</span>';
-                            htmls += "</dd>"
-                        }
-                        $(".twoblock").eq(0).append(htmls);
-                        // $(".content-div-cc").eq(0).append(htmls);
-                        videojs("my-video");
-                    }, 'json');
-
-
-                }, 'json');
-            }
-
-
-
-        });
-
-        function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]);
-            return null;
-        } 
-    </script>
 </head>
 
 
@@ -275,6 +125,8 @@
                     <div class="btn-link"><a class="a-link a-regist" id="sub">提交</a></div>
                 </dl>
         </div>
+<!--        <img alt="" style="display:none" id="displayImg" src="" />-->
+
         <!-- <div class="am-pureview am-pureview-bar-active" id="am-pureview-iugav">
             <ul class="am-pureview-slider"
                 style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
@@ -323,8 +175,183 @@
                         class="am-pureview-total">1</span></div>
             </div>
             <div class="am-pureview-actions am-active"><a href="javascript: void(0)" class="am-icon-chevron-left"
-                    data-am-close="pureview"></a></div>
-        </div> -->
+                    data-am-close="pureview"></a></div> -->
+        </div>
 </body>
+<script type="text/javascript">
+    $(function () {
+        var obj;
+        var expId;
+        var experId;
+        $('#photo-list img').on('click', function () {
+            layer.photos({
+                photos: '#am-gallery-item',
+                shadeClose: false,
+                closeBtn: 2,
+                anim: 0
+            });
+            console.info("122")
+        })
 
+        $("#sub").click(function () {
+            if ($(".apprai").val() == null || $(".apprai").val() == '') {
+                return layer.msg("请输入您的评价");
+            }
+            if ($("#phone").val() == null || $("#phone").val() == '') {
+                return layer.msg("请输入手机号");
+            }
+            if ($("#code").val() == null || $("#code").val() == '') {
+                return layer.msg("请输入验证码");
+            }
+
+            var res;
+            //验证验证码
+            $.post(sy.contextPath + '/webApi/account/checkCode', {
+                phone: $("#phone").val(),
+                code: $("#code").val(),
+                type: 3
+            }, function (result) {
+                if (result.code == 1) {
+                    var url = sy.contextPath + '/m/pawn/saveExperterInfo';
+                    var obj = {
+                        id: expId,
+                        info: $(".apprai").val(),
+                    };
+                    $.post(url, obj, function (result) {
+                        if (result.code == 1) {
+                            return layer.msg(result.msg);
+                        } else {
+                            return layer.msg(result.msg)
+                        }
+                    }, 'json');
+                } else {
+                    return layer.msg(result.msg)
+                }
+            }, 'json');
+
+
+        });
+
+
+        $("#yzm").click(function () {
+            var phone = $("#phone").val().trim();
+            var url = sy.contextPath + '/m/pawn/checkEx';
+            var obj = {
+                phone: phone,
+                exId: experId
+            };
+            $.post(url, obj, function (result) {
+                if (result.code == 0) {
+                    layer.msg("您不是被指定专家，无权鉴定");
+                    return;
+
+                } else {
+                    //获取验证码
+                    var url2 = sy.contextPath + "/webApi/account/getMobileMsg";
+                    var obj = {
+                        phone: phone,
+                        type: 3
+                    }
+                    $.post(url2, obj, function (result) {
+                        console.log(result)
+                    }, 'json');
+                }
+            }, 'json');
+        });
+
+        var experterId = getQueryString('id')
+        if (experterId != '') {
+            $.post(sy.contextPath + '/m/pawn/getExpertInfo', {
+                id: experterId
+            }, function (result) {
+                // var data = JSON.parse(result);
+                obj = result;
+                expId = obj.id;
+                experId = obj.experterId
+                console.info(obj.id);
+                /*
+                 <li>
+                        <div class="am-gallery-item"><img src="./static/download" data-am-pureviewed="1"></div>
+                    </li>
+                */
+                var html = '';
+                var imgArr = obj.images.split(",");
+                for (var i = 0; i < imgArr.length; i++) {
+                    html += "<li>"
+                    html += '<div class="<div class="am-gallery-item"><img src="' + imgArr[i] + '" ></div>'
+                    html += "</li>"
+                }
+                console.info(html)
+                $("#myImg").append(html)
+                $.post(sy.contextPath + '/m/pawn/checkDetail', {
+                    id: obj.goodsId
+                }, function (result) {
+                    var data = JSON.parse(result[0].content);
+
+                    var htmls = '';
+                    var flag = true;
+                    for (var i = 0; i < data.length; i++) {
+                        var json = data[i];
+                        var content = json.content;
+
+                        if (json.contentType == 3) {
+                            // content = po.showImg(content,20,20);
+                            continue;
+                        } else if (json.contentType == 4) {
+                            flag = false;
+                            content =
+                                '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
+                                '<source src="' + content + '" type="video/mp4">' +
+                                ' </video>';
+                        }
+                        htmls += "<dd>"
+                        htmls += '<span>' + json.name + ':</span>';
+                        htmls += '<span>' + content + '</span>';
+                        htmls += "</dd>"
+                    }
+                    if (flag) {
+                        var content =
+                            '<video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" width="' + (document.documentElement.clientWidth - 40) + '" >' +
+                            '<source src="' + result.video + '" type="video/mp4">' +
+                            ' </video>';
+                        htmls += "<dd>"
+                        htmls += '<span>宝贝视频：</span>';
+                        htmls += '<span>' + content + '</span>';
+                        htmls += "</dd>"
+                    }
+                    $(".twoblock").eq(0).append(htmls);
+                    // $(".content-div-cc").eq(0).append(htmls);
+                    videojs("my-video");
+                }, 'json');
+
+
+            }, 'json');
+        }
+
+
+
+    });
+
+    // function amplificationImg( url) {
+    //     console.info(url)
+    //     $("#displayImg").attr("src", url);
+    //     var height = $("#displayImg").height();//拿的图片原来宽高，建议自定义宽高
+    //     var width = $("#displayImg").width();
+    //     layer.open({
+    //         type: 1,
+    //         title: false,
+    //         closeBtn: 0,
+    //         shadeClose: true,
+    //         area: [width + 'px', height + 'px'], //宽高
+    //         content: "<img src=" + url + " />"
+    //     });
+    // }
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+</script>
 </html>

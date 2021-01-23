@@ -113,7 +113,7 @@ public class ShopCartEx extends ShopCart {
     }
 
     public Integer getCouponFlag() {
-        if (source==3){
+        if (source!=null && source==3){
             return 1;
         }else {
             return 0;

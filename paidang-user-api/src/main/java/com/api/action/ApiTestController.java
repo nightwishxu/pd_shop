@@ -52,7 +52,7 @@ public class ApiTestController extends ApiBaseController {
 //        String get_user_info = OauthQQ.me().getAuthorizeUrl("get_user_info");
 //        JSONObject userInfoByCode = OauthQQ.me().getUserInfoByCode(get_user_info);
 //        System.out.println(JSONUtils.serialize(userInfoByCode));
-        ApiUserPayService.payTest();
+//        ApiUserPayService.payTest();
         return new Result<>(DSPConsts.Keystore);
     }
 

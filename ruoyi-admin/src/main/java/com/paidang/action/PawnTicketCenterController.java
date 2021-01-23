@@ -98,14 +98,8 @@ public class PawnTicketCenterController extends CoreController{
 	 */
 	@RequestMapping(value = "/showContract")
 	@ResponseBody
-	public Object showContract(Integer pawnTicketId) {
-		PawnTicket pawnTicket = pawnTicketService.selectByPrimaryKey(pawnTicketId);
-		String contractId= pawnTicket.getContractId();
-		String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("pageUrl",pageUrl);
-		logger.info("==================合同查看地址:{}",pageUrl);
-		return jsonObject;
+	public Object showContract(Integer pawnTicketId) throws Exception {
+		return pawnTicketService.showContractUrl(null,null,pawnTicketId,null);
 	}
 
 }

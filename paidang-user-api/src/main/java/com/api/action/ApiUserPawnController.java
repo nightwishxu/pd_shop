@@ -489,8 +489,8 @@ public class ApiUserPawnController extends ApiBaseController {
                 PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
                 String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
                         user.getAnxinsignId(),ip,userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
-                        pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket,pawnContinue);
-                pawnContinue.setState(2);
+                        pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket,userPawn);
+                pawnContinue.setState(4);
                 pawnContinue.setContractId(contractNo);
                 temp.setContractId(contractNo);
                 pawnContinueService.updateByPrimaryKeySelective(pawnContinue);

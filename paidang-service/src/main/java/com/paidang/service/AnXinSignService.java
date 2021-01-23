@@ -14,6 +14,7 @@ import com.demo.util.SecurityUtil;
 import com.demo.util.TimeUtil;
 import com.paidang.dao.model.PawnContinue;
 import com.paidang.dao.model.PawnTicket;
+import com.paidang.dao.model.UserPawn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -421,7 +422,7 @@ public class AnXinSignService {
      */
     public  static String createXdContract(String templateId, String contractName, String userId, String userLocation,
                                            String projectCode, Date authorizationTime, String orgUserId, String orgLocation,
-                                           Date orgAuthorizationTime, PawnTicket ticket, PawnContinue pawnContinue) throws Exception{
+                                           Date orgAuthorizationTime, PawnTicket ticket, UserPawn userPawn) throws Exception{
         HttpConnector httpConnector = new HttpConnector();
         httpConnector.init();
 
@@ -440,7 +441,7 @@ public class AnXinSignService {
 
         fieldMap.put("1", ticket.getPawnTicketCode());//当票号
         fieldMap.put("2", ticket.getOrgName());//典当行名称
-        fieldMap.put("3", ticket.getPawnTicketCode());//原当票好
+        fieldMap.put("3", userPawn.getPawnTicketCode());//原当票好
         fieldMap.put("4", ticket.getPawnerName());//当户名称
         fieldMap.put("5", ticket.getPawnerTel());//当户联系电话
         fieldMap.put("6", ticket.getLoanMoneyCN());//原典当金额大写

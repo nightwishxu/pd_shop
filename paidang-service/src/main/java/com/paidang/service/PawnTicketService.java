@@ -135,7 +135,7 @@ public class PawnTicketService {
 		entity.setAuthPriceTest(userGoods.getAuthPrice().toString());
 		entity.setAuthPrice(userPawn.getMoney());
 		BigDecimal total = userPawn.getMoney();
-		BigDecimal pawnMoney = total.multiply(userPawn.getRate()).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_DOWN);
+		BigDecimal pawnMoney = total.multiply(userPawn.getRate()).divide(new BigDecimal(100),2,BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(userPawn.getBeginPawnMonth()).divide(new BigDecimal("2"),2,BigDecimal.ROUND_HALF_DOWN));
 		BigDecimal userMoney = total.subtract(pawnMoney);
 		entity.setCost(pawnMoney.toString());
 		entity.setCostCN(Convert.digitToChinese(pawnMoney));

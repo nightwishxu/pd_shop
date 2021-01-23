@@ -120,6 +120,7 @@ public class ApiHomeController extends ApiBaseController {
         userInfo.setAccount(record.getAccount());
         userInfo.setIsBind(record.getIsBind());
         userInfo.setBalance(record.getBalance()==null?BigDecimal.ZERO:record.getBalance());
+        userInfo.setHasPayPassword(StringUtils.isNotBlank(record.getPayPassword())?1:0);
         if (record.getIsBind()!=null &&record.getIsBind()==1){
             userInfo.setAuthStatus(4);
         }else {

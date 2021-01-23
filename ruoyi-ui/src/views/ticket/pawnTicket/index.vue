@@ -13,12 +13,14 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
+        >搜索</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row
+      :gutter="10"
+      class="mb8"
+    >
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -26,8 +28,7 @@
           size="mini"
           @click="handleAdd(1)"
           v-hasPermi="['system:ticket:add']"
-          >添加典当</el-button
-        >
+        >添加典当</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -36,8 +37,7 @@
           size="mini"
           @click="handleAdd(2)"
           v-hasPermi="['system:ticket:add']"
-          >添加续当</el-button
-        >
+        >添加续当</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -47,8 +47,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:ticket:edit']"
-          >修改</el-button
-        >
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -58,11 +57,15 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:ticket:remove']"
-          >删除</el-button
-        >
+        >删除</el-button>
       </el-col>
       <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新"
+          placement="top"
+        >
           <el-button
             size="mini"
             circle
@@ -91,21 +94,61 @@
       :data="ticketList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="当票号" align="center" prop="pawnTicketCode" />
-      <el-table-column label="机构名称" align="center" prop="orgName" />
-      <el-table-column label="机构电话" align="center" prop="orgTel" />
-      <el-table-column label="当户名称" align="center" prop="pawnerName" />
-      <el-table-column label="联系电话" align="center" prop="pawnerTel" />
-      <el-table-column label="身份证号" align="center" prop="pawnerIdCard" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="当票号"
+        align="center"
+        prop="pawnTicketCode"
+      />
+      <el-table-column
+        label="机构名称"
+        align="center"
+        prop="orgName"
+      />
+      <el-table-column
+        label="机构电话"
+        align="center"
+        prop="orgTel"
+      />
+      <el-table-column
+        label="当户名称"
+        align="center"
+        prop="pawnerName"
+      />
+      <el-table-column
+        label="联系电话"
+        align="center"
+        prop="pawnerTel"
+      />
+      <el-table-column
+        label="身份证号"
+        align="center"
+        prop="pawnerIdCard"
+      />
       <el-table-column
         label="证件类型（身份证）"
         align="center"
         prop="pawnerCert"
       />
-      <el-table-column label="联系人" align="center" prop="contactor" />
-      <el-table-column label="地址" align="center" prop="pawnerAddr" />
-      <el-table-column label="商品名称" align="center" prop="goodsName" />
+      <el-table-column
+        label="联系人"
+        align="center"
+        prop="contactor"
+      />
+      <el-table-column
+        label="地址"
+        align="center"
+        prop="pawnerAddr"
+      />
+      <el-table-column
+        label="商品名称"
+        align="center"
+        prop="goodsName"
+      />
       <el-table-column
         label="票据类型"
         align="center"
@@ -130,8 +173,7 @@
             type="text"
             v-if="scope.row.status > 0"
             @click="showContractBtn(scope.row)"
-            >查看合同</el-button
-          >
+          >查看合同</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,7 +194,11 @@
         id="iframe"
       ></iframe>
     </div> -->
-    <el-dialog :visible.sync="open1" class="abow_dialog" append-to-body>
+    <el-dialog
+      :visible.sync="open1"
+      class="abow_dialog"
+      append-to-body
+    >
       <div style="height: 1000px">
         <iframe
           id="show-iframe"
@@ -166,10 +212,23 @@
     </el-dialog>
 
     <!-- 添加或修改【请填写功能名称】对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="800px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="150px"
+      >
         <el-form-item label="票据种类">
-          <el-select v-model="form.type" :style="{ width: '100%' }">
+          <el-select
+            v-model="form.type"
+            :style="{ width: '100%' }"
+          >
             <el-option
               v-for="item in typeOptions"
               :key="item.value"
@@ -180,7 +239,10 @@
         </el-form-item>
 
         <el-form-item label="机构">
-          <el-select v-model="form.orgId" :style="{ width: '100%' }">
+          <el-select
+            v-model="form.orgId"
+            :style="{ width: '100%' }"
+          >
             <el-option
               v-for="item in orgOptions"
               :key="item.id"
@@ -191,7 +253,10 @@
         </el-form-item>
 
         <el-form-item label="除当票外双方其他约定">
-          <el-select v-model="form.otherOrder" :style="{ width: '100%' }">
+          <el-select
+            v-model="form.otherOrder"
+            :style="{ width: '100%' }"
+          >
             <el-option
               v-for="item in otherOrderOptions"
               :key="item.value"
@@ -201,7 +266,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="典当开始时间" prop="pawnBeginTime">
+        <el-form-item
+          label="典当开始时间"
+          prop="pawnBeginTime"
+        >
           <el-date-picker
             clearable
             size="small"
@@ -213,7 +281,10 @@
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="首期典当结束时间" prop="beginPawnEndTime">
+        <el-form-item
+          label="首期典当结束时间"
+          prop="beginPawnEndTime"
+        >
           <el-date-picker
             clearable
             size="small"
@@ -224,72 +295,192 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="当票号" prop="pawnTicketCode">
-          <el-input v-model="form.pawnTicketCode" placeholder="请输入当票号" />
+        <el-form-item
+          label="当票号"
+          prop="pawnTicketCode"
+        >
+          <el-input
+            v-model="form.pawnTicketCode"
+            placeholder="请输入当票号"
+          />
         </el-form-item>
-        <el-form-item label="当户名称" prop="pawnerName">
-          <el-input v-model="form.pawnerName" placeholder="请输入当户名称" />
+        <el-form-item
+          label="当户名称"
+          prop="pawnerName"
+        >
+          <el-input
+            v-model="form.pawnerName"
+            placeholder="请输入当户名称"
+          />
         </el-form-item>
-        <el-form-item label="联系电话" prop="pawnerTel">
-          <el-input v-model="form.pawnerTel" placeholder="请输入联系电话" />
+        <el-form-item
+          label="联系电话"
+          prop="pawnerTel"
+        >
+          <el-input
+            v-model="form.pawnerTel"
+            placeholder="请输入联系电话"
+          />
         </el-form-item>
-        <el-form-item label="当户身份证号" prop="pawnerIdCard">
+        <el-form-item
+          label="当户身份证号"
+          prop="pawnerIdCard"
+        >
           <el-input
             v-model="form.pawnerIdCard"
             placeholder="请输入当户身份证号"
           />
         </el-form-item>
 
-        <el-form-item label="联系人" prop="contactor">
-          <el-input v-model="form.contactor" placeholder="请输入联系人" />
+        <el-form-item
+          label="联系人"
+          prop="contactor"
+        >
+          <el-input
+            v-model="form.contactor"
+            placeholder="请输入联系人"
+          />
         </el-form-item>
-        <el-form-item label="地址" prop="pawnerAddr">
-          <el-input v-model="form.pawnerAddr" placeholder="请输入地址" />
+        <el-form-item
+          label="地址"
+          prop="pawnerAddr"
+        >
+          <el-input
+            v-model="form.pawnerAddr"
+            placeholder="请输入地址"
+          />
         </el-form-item>
-        <el-form-item label="商品名称" prop="goodsName">
-          <el-input v-model="form.goodsName" placeholder="请输入商品名称" />
+        <el-form-item
+          label="商品名称"
+          prop="goodsName"
+        >
+          <el-input
+            v-model="form.goodsName"
+            placeholder="请输入商品名称"
+          />
         </el-form-item>
-        <el-form-item label="估价" prop="authPriceTest">
-          <el-input v-model="form.authPriceTest" placeholder="请输入估价" />
+        <el-form-item
+          label="估价"
+          prop="authPriceTest"
+        >
+          <el-input
+            v-model="form.authPriceTest"
+            placeholder="请输入估价"
+          />
         </el-form-item>
-        <el-form-item label="鉴定价" prop="authPrice">
-          <el-input v-model="form.authPrice" placeholder="请输入鉴定价" />
+        <el-form-item
+          label="鉴定价"
+          prop="authPrice"
+        >
+          <el-input
+            v-model="form.authPrice"
+            placeholder="请输入鉴定价"
+          />
         </el-form-item>
-        <el-form-item label="折当率" prop="equivalentRatio">
-          <el-input v-model="form.equivalentRatio" placeholder="请输入折当率" />
+        <el-form-item
+          label="折当率"
+          prop="equivalentRatio"
+        >
+          <el-input
+            v-model="form.equivalentRatio"
+            placeholder="请输入折当率"
+          />
         </el-form-item>
-        <el-form-item label="合计" prop="loanMoney">
-          <el-input v-model="form.loanMoney" placeholder="请输入合计" />
+        <el-form-item
+          label="合计"
+          prop="loanMoney"
+        >
+          <el-input
+            v-model="form.loanMoney"
+            placeholder="请输入合计"
+          />
         </el-form-item>
-        <el-form-item label="实付金额（小写）" prop="userMoney">
-          <el-input v-model="form.userMoney" placeholder="请输入实付金额" />
+        <el-form-item
+          label="实付金额（小写）"
+          prop="userMoney"
+        >
+          <el-input
+            v-model="form.userMoney"
+            placeholder="请输入实付金额"
+          />
         </el-form-item>
-        <el-form-item label="综合费用（小写）" prop="pawnMoney">
-          <el-input v-model="form.pawnMoney" placeholder="请输入综合费用" />
+        <el-form-item
+          label="综合费用（小写）"
+          prop="pawnMoney"
+        >
+          <el-input
+            v-model="form.pawnMoney"
+            placeholder="请输入综合费用"
+          />
         </el-form-item>
-        <el-form-item label="典当金额（大写）" prop="loanMoneyCN">
-          <el-input v-model="form.loanMoneyCN" placeholder="请输入典当金额" />
+        <el-form-item
+          label="典当金额（大写）"
+          prop="loanMoneyCN"
+        >
+          <el-input
+            v-model="form.loanMoneyCN"
+            placeholder="请输入典当金额"
+          />
         </el-form-item>
-        <el-form-item label="实付金额（大写）" prop="userMoneyCN">
-          <el-input v-model="form.userMoneyCN" placeholder="请输入实付金额" />
+        <el-form-item
+          label="实付金额（大写）"
+          prop="userMoneyCN"
+        >
+          <el-input
+            v-model="form.userMoneyCN"
+            placeholder="请输入实付金额"
+          />
         </el-form-item>
-        <el-form-item label="综合费用（大写）" prop="pawnMoneyCN">
-          <el-input v-model="form.pawnMoneyCN" placeholder="请输入综合费用" />
+        <el-form-item
+          label="综合费用（大写）"
+          prop="pawnMoneyCN"
+        >
+          <el-input
+            v-model="form.pawnMoneyCN"
+            placeholder="请输入综合费用"
+          />
         </el-form-item>
-        <el-form-item label="月费率" prop="rate">
-          <el-input v-model="form.rate" placeholder="请输入月费率" />
+        <el-form-item
+          label="月费率"
+          prop="rate"
+        >
+          <el-input
+            v-model="form.rate"
+            placeholder="请输入月费率"
+          />
         </el-form-item>
-        <el-form-item label="月利率" prop="moneyRate">
-          <el-input v-model="form.moneyRate" placeholder="请输入月利率" />
+        <el-form-item
+          label="月利率"
+          prop="moneyRate"
+        >
+          <el-input
+            v-model="form.moneyRate"
+            placeholder="请输入月利率"
+          />
         </el-form-item>
 
-        <el-form-item label="复核" prop="checker">
-          <el-input v-model="form.checker" placeholder="请输入复核" />
+        <el-form-item
+          label="复核"
+          prop="checker"
+        >
+          <el-input
+            v-model="form.checker"
+            placeholder="请输入复核"
+          />
         </el-form-item>
-        <el-form-item label="经办" prop="handler">
-          <el-input v-model="form.handler" placeholder="请输入经办" />
+        <el-form-item
+          label="经办"
+          prop="handler"
+        >
+          <el-input
+            v-model="form.handler"
+            placeholder="请输入经办"
+          />
         </el-form-item>
-        <el-form-item label="备注" prop="userId">
+        <el-form-item
+          label="备注"
+          prop="userId"
+        >
           <el-input
             v-model="form.userId"
             type="textarea"
@@ -297,8 +488,14 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -309,9 +506,17 @@
       width="800px"
       append-to-body
     >
-      <el-form ref="form2" :model="form2" :rules="rules" label-width="150px">
+      <el-form
+        ref="form2"
+        :model="form2"
+        :rules="rules"
+        label-width="150px"
+      >
         <el-form-item label="票据种类">
-          <el-select v-model="form2.type" :style="{ width: '100%' }">
+          <el-select
+            v-model="form2.type"
+            :style="{ width: '100%' }"
+          >
             <el-option
               v-for="item in typeOptions"
               :key="item.value"
@@ -322,7 +527,10 @@
         </el-form-item>
 
         <el-form-item label="机构">
-          <el-select v-model="form2.orgId" :style="{ width: '100%' }">
+          <el-select
+            v-model="form2.orgId"
+            :style="{ width: '100%' }"
+          >
             <el-option
               v-for="item in orgOptions"
               :key="item.id"
@@ -332,7 +540,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="续当开始时间" prop="pawnBeginTime">
+        <el-form-item
+          label="续当开始时间"
+          prop="pawnBeginTime"
+        >
           <el-date-picker
             clearable
             size="small"
@@ -344,7 +555,10 @@
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="续当结束时间" prop="pawnBeginTime">
+        <el-form-item
+          label="续当结束时间"
+          prop="pawnBeginTime"
+        >
           <el-date-picker
             clearable
             size="small"
@@ -356,88 +570,187 @@
           </el-date-picker>
         </el-form-item>
 
-        <el-form-item label="当票号" prop="pawnTicketCode">
-          <el-input v-model="form2.pawnTicketCode" placeholder="请输入当票号" />
+        <el-form-item
+          label="当票号"
+          prop="pawnTicketCode"
+        >
+          <el-input
+            v-model="form2.pawnTicketCode"
+            placeholder="请输入当票号"
+          />
         </el-form-item>
-        <el-form-item label="当户名称" prop="pawnerName">
-          <el-input v-model="form2.pawnerName" placeholder="请输入当户名称" />
+        <el-form-item
+          label="当户名称"
+          prop="pawnerName"
+        >
+          <el-input
+            v-model="form2.pawnerName"
+            placeholder="请输入当户名称"
+          />
         </el-form-item>
-        <el-form-item label="联系电话" prop="pawnerTel">
-          <el-input v-model="form2.pawnerTel" placeholder="请输入联系电话" />
+        <el-form-item
+          label="联系电话"
+          prop="pawnerTel"
+        >
+          <el-input
+            v-model="form2.pawnerTel"
+            placeholder="请输入联系电话"
+          />
         </el-form-item>
-        <el-form-item label="当户身份证号" prop="pawnerIdCard">
+        <el-form-item
+          label="当户身份证号"
+          prop="pawnerIdCard"
+        >
           <el-input
             v-model="form2.pawnerIdCard"
             placeholder="请输入当户身份证号"
           />
         </el-form-item>
 
-        <el-form-item label="联系人" prop="contactor">
-          <el-input v-model="form2.contactor" placeholder="请输入联系人" />
+        <el-form-item
+          label="联系人"
+          prop="contactor"
+        >
+          <el-input
+            v-model="form2.contactor"
+            placeholder="请输入联系人"
+          />
         </el-form-item>
-        <el-form-item label="地址" prop="pawnerAddr">
-          <el-input v-model="form2.pawnerAddr" placeholder="请输入地址" />
+        <el-form-item
+          label="地址"
+          prop="pawnerAddr"
+        >
+          <el-input
+            v-model="form2.pawnerAddr"
+            placeholder="请输入地址"
+          />
         </el-form-item>
-        <el-form-item label="商品名称" prop="goodsName">
-          <el-input v-model="form2.goodsName" placeholder="请输入商品名称" />
+        <el-form-item
+          label="商品名称"
+          prop="goodsName"
+        >
+          <el-input
+            v-model="form2.goodsName"
+            placeholder="请输入商品名称"
+          />
         </el-form-item>
-        <el-form-item label="原典当金额（大写）" prop="loanMoneyCN">
+        <el-form-item
+          label="原典当金额（大写）"
+          prop="loanMoneyCN"
+        >
           <el-input
             v-model="form2.loanMoneyCN"
             placeholder="请输入原典当金额"
           />
         </el-form-item>
-        <el-form-item label="原典当金额（小写）" prop="loanMoney">
-          <el-input v-model="form2.loanMoney" placeholder="请输入原典当金额" />
+        <el-form-item
+          label="原典当金额（小写）"
+          prop="loanMoney"
+        >
+          <el-input
+            v-model="form2.loanMoney"
+            placeholder="请输入原典当金额"
+          />
         </el-form-item>
 
-        <el-form-item label="续当综合费用（大写）" prop="costCN">
-          <el-input v-model="form2.costCN" placeholder="请输入续当综合费用" />
+        <el-form-item
+          label="续当综合费用（大写）"
+          prop="costCN"
+        >
+          <el-input
+            v-model="form2.costCN"
+            placeholder="请输入续当综合费用"
+          />
         </el-form-item>
-        <el-form-item label="续当综合费用（小写）" prop="cost">
-          <el-input v-model="form2.cost" placeholder="请输入续当综合费用" />
+        <el-form-item
+          label="续当综合费用（小写）"
+          prop="cost"
+        >
+          <el-input
+            v-model="form2.cost"
+            placeholder="请输入续当综合费用"
+          />
         </el-form-item>
 
-        <el-form-item label="当户应付上期利息（大写）" prop="moneyCostCN">
+        <el-form-item
+          label="当户应付上期利息（大写）"
+          prop="moneyCostCN"
+        >
           <el-input
             v-model="form2.moneyCostCN"
             placeholder="请输入当户应付上期利息"
           />
         </el-form-item>
-        <el-form-item label="当户应付上期利息（小写）" prop="moneyCost">
+        <el-form-item
+          label="当户应付上期利息（小写）"
+          prop="moneyCost"
+        >
           <el-input
             v-model="form2.moneyCost"
             placeholder="请输入当户应付上期利息"
           />
         </el-form-item>
 
-        <el-form-item label="当户总计交付金额（大写）" prop="repawnTotalCN">
+        <el-form-item
+          label="当户总计交付金额（大写）"
+          prop="repawnTotalCN"
+        >
           <el-input
             v-model="form2.repawnTotalCN"
             placeholder="请输入当户总计交付金额"
           />
         </el-form-item>
-        <el-form-item label="当户总计交付金额（小写）" prop="repawnTotal">
+        <el-form-item
+          label="当户总计交付金额（小写）"
+          prop="repawnTotal"
+        >
           <el-input
             v-model="form2.repawnTotal"
             placeholder="请输入当户总计交付金额"
           />
         </el-form-item>
 
-        <el-form-item label="月费率" prop="rate">
-          <el-input v-model="form2.rate" placeholder="请输入月费率" />
+        <el-form-item
+          label="月费率"
+          prop="rate"
+        >
+          <el-input
+            v-model="form2.rate"
+            placeholder="请输入月费率"
+          />
         </el-form-item>
-        <el-form-item label="月利率" prop="moneyRate">
-          <el-input v-model="form2.moneyRate" placeholder="请输入月利率" />
+        <el-form-item
+          label="月利率"
+          prop="moneyRate"
+        >
+          <el-input
+            v-model="form2.moneyRate"
+            placeholder="请输入月利率"
+          />
         </el-form-item>
 
-        <el-form-item label="复核" prop="checker">
-          <el-input v-model="form2.checker" placeholder="请输入复核" />
+        <el-form-item
+          label="复核"
+          prop="checker"
+        >
+          <el-input
+            v-model="form2.checker"
+            placeholder="请输入复核"
+          />
         </el-form-item>
-        <el-form-item label="经办" prop="handler">
-          <el-input v-model="form2.handler" placeholder="请输入经办" />
+        <el-form-item
+          label="经办"
+          prop="handler"
+        >
+          <el-input
+            v-model="form2.handler"
+            placeholder="请输入经办"
+          />
         </el-form-item>
-        <el-form-item label="备注" prop="userId">
+        <el-form-item
+          label="备注"
+          prop="userId"
+        >
           <el-input
             v-model="form2.userId"
             type="textarea"
@@ -445,8 +758,14 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm2">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm2"
+        >确 定</el-button>
         <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
@@ -769,9 +1088,12 @@ export default {
     showContractBtn(row) {
       showContract(row.id).then((response) => {
         // this.form = response.data;
-        this.open1 = true;
+        // this.open1 = true;
         // // this.title = "修改【请填写功能名称】";
-        this.contractUrl = response.pageUrl;
+        this.contractUrl = response;
+        
+        window.open(row.contractUrl,"_blank")
+
         // window.location.href = response.pageUrl;
         // console.info(response.pageUrl);
       });

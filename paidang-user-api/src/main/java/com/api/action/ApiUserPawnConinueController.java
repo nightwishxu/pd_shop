@@ -308,8 +308,9 @@ public class ApiUserPawnConinueController extends ApiBaseController {
     public Integer goPawnContinue(MobileInfo mobileInfo,
                               @ApiParam(value="id",required = true) Integer id,
                               @ApiParam(value="续当时间",required = true)Integer pawnTime
-//            , @ApiParam(value="打款凭证",required = true)String platformImage
+            , @ApiParam(value="打款凭证",required = true)String platformImage
     ){
+        BaseUtils.checkBlankParam(id,pawnTime,platformImage);
         Map<String, Object> map2 = new HashMap<String, Object>();
         map2.put("id",id);
         map2.put("userId",mobileInfo.getUserId());
@@ -424,7 +425,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         //pawnContinue.setPlatformMoney(userPawn.getPawnMoney().multiply(userPawn.getPlatformRate()));
         pawnContinue.setState(0);
         //pawnContinue.setPlatformState(1);
-//        pawnContinue.setPayTicket(platformImage);
+        pawnContinue.setPayTicket(platformImage);
         pawnContinue.setPawnTicket(userPawn.getPawnTicket());
         pawnContinue.setPayTime(new Date());
         pawnContinue.setUserName(userPawn.getUserName());

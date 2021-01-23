@@ -5,6 +5,7 @@
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="account" property="account" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="pay_password" property="payPassword" jdbcType="VARCHAR" />
         <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
         <result column="head_img" property="headImg" jdbcType="VARCHAR" />
         <result column="sex" property="sex" jdbcType="TINYINT" />
@@ -104,7 +105,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,account,password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count,auth_status,txsn,anxinsign_id,integral
+        id,account,password,pay_password,nick_name,head_img,sex,name,phone,id_card,id_card_img,id_card_reverse,id_card_hand,head_shake,head_nod,head_eye,is_bind,type,org_id,create_time,modify_time,is_complete,balance,state,credit,login_time,sobot_token,last_sobot_token_time,im_token,wx_openid,qq_openid,recommend_sort,article_count,follow_count,fans_count,order_count,auth_status,txsn,anxinsign_id,integral
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -143,32 +144,34 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
         insert into b_user (account,password,
-        nick_name,head_img,sex,
-        name,phone,id_card,
-        id_card_img,id_card_reverse,id_card_hand,
-        head_shake,head_nod,head_eye,
-        is_bind,type,org_id,
-        create_time,modify_time,is_complete,
-        balance,state,credit,
-        login_time,sobot_token,last_sobot_token_time,
-        im_token,wx_openid,qq_openid,
-        recommend_sort,article_count,follow_count,
-        fans_count,order_count,auth_status,
-        txsn,anxinsign_id,integral
+        pay_password,nick_name,head_img,
+        sex,name,phone,
+        id_card,id_card_img,id_card_reverse,
+        id_card_hand,head_shake,head_nod,
+        head_eye,is_bind,type,
+        org_id,create_time,modify_time,
+        is_complete,balance,state,
+        credit,login_time,sobot_token,
+        last_sobot_token_time,im_token,wx_openid,
+        qq_openid,recommend_sort,article_count,
+        follow_count,fans_count,order_count,
+        auth_status,txsn,anxinsign_id,
+        integral
         )
         values (#{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
-        #{nickName,jdbcType=VARCHAR},#{headImg,jdbcType=VARCHAR},#{sex,jdbcType=TINYINT},
-        #{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{idCard,jdbcType=VARCHAR},
-        #{idCardImg,jdbcType=VARCHAR},#{idCardReverse,jdbcType=VARCHAR},#{idCardHand,jdbcType=VARCHAR},
-        #{headShake,jdbcType=VARCHAR},#{headNod,jdbcType=VARCHAR},#{headEye,jdbcType=VARCHAR},
-        #{isBind,jdbcType=TINYINT},#{type,jdbcType=TINYINT},#{orgId,jdbcType=INTEGER},
-        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{isComplete,jdbcType=TINYINT},
-        #{balance,jdbcType=DECIMAL},#{state,jdbcType=TINYINT},#{credit,jdbcType=INTEGER},
-        #{loginTime,jdbcType=TIMESTAMP},#{sobotToken,jdbcType=VARCHAR},#{lastSobotTokenTime,jdbcType=TIMESTAMP},
-        #{imToken,jdbcType=VARCHAR},#{wxOpenid,jdbcType=VARCHAR},#{qqOpenid,jdbcType=VARCHAR},
-        #{recommendSort,jdbcType=INTEGER},#{articleCount,jdbcType=INTEGER},#{followCount,jdbcType=INTEGER},
-        #{fansCount,jdbcType=INTEGER},#{orderCount,jdbcType=INTEGER},#{authStatus,jdbcType=INTEGER},
-        #{txsn,jdbcType=VARCHAR},#{anxinsignId,jdbcType=VARCHAR},#{integral,jdbcType=DECIMAL}
+        #{payPassword,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR},#{headImg,jdbcType=VARCHAR},
+        #{sex,jdbcType=TINYINT},#{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+        #{idCard,jdbcType=VARCHAR},#{idCardImg,jdbcType=VARCHAR},#{idCardReverse,jdbcType=VARCHAR},
+        #{idCardHand,jdbcType=VARCHAR},#{headShake,jdbcType=VARCHAR},#{headNod,jdbcType=VARCHAR},
+        #{headEye,jdbcType=VARCHAR},#{isBind,jdbcType=TINYINT},#{type,jdbcType=TINYINT},
+        #{orgId,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
+        #{isComplete,jdbcType=TINYINT},#{balance,jdbcType=DECIMAL},#{state,jdbcType=TINYINT},
+        #{credit,jdbcType=INTEGER},#{loginTime,jdbcType=TIMESTAMP},#{sobotToken,jdbcType=VARCHAR},
+        #{lastSobotTokenTime,jdbcType=TIMESTAMP},#{imToken,jdbcType=VARCHAR},#{wxOpenid,jdbcType=VARCHAR},
+        #{qqOpenid,jdbcType=VARCHAR},#{recommendSort,jdbcType=INTEGER},#{articleCount,jdbcType=INTEGER},
+        #{followCount,jdbcType=INTEGER},#{fansCount,jdbcType=INTEGER},#{orderCount,jdbcType=INTEGER},
+        #{authStatus,jdbcType=INTEGER},#{txsn,jdbcType=VARCHAR},#{anxinsignId,jdbcType=VARCHAR},
+        #{integral,jdbcType=DECIMAL}
         )
     </insert>
 
@@ -180,6 +183,9 @@
             </if>
             <if test="password != null" >
                 password,
+            </if>
+            <if test="payPassword != null" >
+                pay_password,
             </if>
             <if test="nickName != null" >
                 nick_name,
@@ -296,6 +302,9 @@
             </if>
             <if test="password != null" >
                 #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null" >
+                #{payPassword,jdbcType=VARCHAR},
             </if>
             <if test="nickName != null" >
                 #{nickName,jdbcType=VARCHAR},
@@ -427,6 +436,9 @@
             <if test="record.password != null" >
                 password = #{record.password,jdbcType=VARCHAR},
             </if>
+            <if test="record.payPassword != null" >
+                pay_password = #{record.payPassword,jdbcType=VARCHAR},
+            </if>
             <if test="record.nickName != null" >
                 nick_name = #{record.nickName,jdbcType=VARCHAR},
             </if>
@@ -546,6 +558,7 @@
         set id = #{id,jdbcType=INTEGER},
         account = #{account,jdbcType=VARCHAR},
         password = #{password,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR},
         nick_name = #{nickName,jdbcType=VARCHAR},
         head_img = #{headImg,jdbcType=VARCHAR},
         sex = #{sex,jdbcType=TINYINT},
@@ -595,6 +608,9 @@
             </if>
             <if test="password != null" >
                 password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null" >
+                pay_password = #{payPassword,jdbcType=VARCHAR},
             </if>
             <if test="nickName != null" >
                 nick_name = #{nickName,jdbcType=VARCHAR},
@@ -712,6 +728,7 @@
         update b_user
         set account = #{account,jdbcType=VARCHAR},
         password = #{password,jdbcType=VARCHAR},
+        pay_password = #{payPassword,jdbcType=VARCHAR},
         nick_name = #{nickName,jdbcType=VARCHAR},
         head_img = #{headImg,jdbcType=VARCHAR},
         sex = #{sex,jdbcType=TINYINT},
