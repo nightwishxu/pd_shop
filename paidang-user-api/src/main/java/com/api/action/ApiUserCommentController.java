@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/userComment", produces = { "application/json;charset=UTF-8" }, method = RequestMethod.POST)
+@RequestMapping(value = "/api/userComment", produces = {"application/json;charset=UTF-8"}, method = RequestMethod.POST)
 @Api(tags = "用户评价(用户端)")
 public class ApiUserCommentController extends ApiBaseController {
 
@@ -60,24 +60,24 @@ public class ApiUserCommentController extends ApiBaseController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
     public Object add(MobileInfo mobileInfo,
-                      @ApiParam(value = "评论", required = true)String info,
-                      @ApiParam(value = "商品id", required = true)Integer goodsId,
-                      @ApiParam(value = "订单id", required = true)Integer orderId,
-                      @ApiParam(value = "图片", required = false)String img,
-                      @ApiParam(value = "评分1-5", required = true)Integer score,
-                      @ApiParam(value = "物流评分1-5", required = true)Integer expressScore,
-                      @ApiParam(value = "服务评分1-5", required = true)Integer serviceScore
-                      ){
-        UserComment userComment=new UserComment();
+                      @ApiParam(value = "评论", required = true) String info,
+                      @ApiParam(value = "商品id", required = true) Integer goodsId,
+                      @ApiParam(value = "订单id", required = true) Integer orderId,
+                      @ApiParam(value = "图片", required = false) String img,
+                      @ApiParam(value = "评分1-5", required = true) Integer score,
+                      @ApiParam(value = "物流评分1-5", required = true) Integer expressScore,
+                      @ApiParam(value = "服务评分1-5", required = true) Integer serviceScore
+    ) {
+        UserComment userComment = new UserComment();
 
-        OrderExample example=new OrderExample();
+        OrderExample example = new OrderExample();
         example.or().andIdEqualTo(orderId).andStateEqualTo(4).andCommentStateNotEqualTo(1);
         example.or().andIdEqualTo(orderId).andStateEqualTo(4).andCommentStateIsNull();
-        List<Order> orders=orderService.selectByExample(example);
-        if (orders==null || orders.size()==0){
+        List<Order> orders = orderService.selectByExample(example);
+        if (orders == null || orders.size() == 0) {
             throw new ApiException("该订单不是未评价订单");
         }
-        Date date=new Date();
+        Date date = new Date();
         userComment.setInfo(info);
         userComment.setStatus(1);
         userComment.setScore(score);
@@ -90,23 +90,23 @@ public class ApiUserCommentController extends ApiBaseController {
         userComment.setExpressScore(expressScore);
         userComment.setServiceScore(serviceScore);
         userComment.setCreateTime(date);
-        if (userComment.getShowName()==null){
+        if (userComment.getShowName() == null) {
             userComment.setShowName(0);
         }
         //敏感词汇过滤
-        if (StringUtils.isNotBlank(userComment.getInfo())){
+        if (StringUtils.isNotBlank(userComment.getInfo())) {
             userComment.setInfo(sensitivWordsService.relpSensitivWords(info));
         }
-        Goods goods=goodsService.selectByPrimaryKey(orders.get(0).getGoodsId());
+        Goods goods = goodsService.selectByPrimaryKey(orders.get(0).getGoodsId());
 
-        userComment.setGoodsName(goods==null?"":goods.getName());
+        userComment.setGoodsName(goods == null ? "" : goods.getName());
         userComment.setUserName(userService.selectByPrimaryKey(mobileInfo.getUserId()).getNickName());
-        Integer result=userCommentService.insert(userComment);
-        if (result>0){
-            com.paidang.dao.model.Order order=new  com.paidang.dao.model.Order();
+        Integer result = userCommentService.insert(userComment);
+        if (result > 0) {
+            com.paidang.dao.model.Order order = new com.paidang.dao.model.Order();
             order.setCommentState(1);
             order.setState(5);
-            orderService.updateByExampleSelective(order,example);
+            orderService.updateByExampleSelective(order, example);
         }
         pawnOrgService.updateCommentCount(userComment.getOrgId());
         pawnOrgService.updateCommentScore(userComment.getOrgId());
@@ -117,8 +117,8 @@ public class ApiUserCommentController extends ApiBaseController {
     @ApiOperation(value = "更新用户评价", notes = "登陆")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
-    public Object update(@ApiParam(value = "评价id", required = true)Integer id, @ApiParam(value = "评论", required = true)String info){
-        UserComment userComment=new UserComment();
+    public Object update(@ApiParam(value = "评价id", required = true) Integer id, @ApiParam(value = "评论", required = true) String info) {
+        UserComment userComment = new UserComment();
         userComment.setId(id);
         userComment.setInfo(sensitivWordsService.relpSensitivWords(info));
         return userCommentService.updateByPrimaryKeySelective(userComment);
@@ -128,8 +128,8 @@ public class ApiUserCommentController extends ApiBaseController {
     @ApiOperation(value = "商品评价列表", notes = "不需要登陆")
     @RequestMapping(value = "/goodsCommentList", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
-    public Object goodsCommentList(@ApiParam(value = "商品id", required = true)Integer goodsId){
-        UserComment comment=new UserComment();
+    public Object goodsCommentList(@ApiParam(value = "商品id", required = true) Integer goodsId) {
+        UserComment comment = new UserComment();
         comment.setGoodsId(goodsId);
         comment.setExpressScore(1);
         return userCommentService.findList(comment);
@@ -138,26 +138,28 @@ public class ApiUserCommentController extends ApiBaseController {
     @ApiOperation(value = "机构评价列表", notes = "不需要登陆")
     @RequestMapping(value = "/getGoodsComment", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
-    public Object getGoodsComment(@ApiParam(value = "机构id", required = true)Integer orgId){
+    public Object getGoodsComment(@ApiParam(value = "机构id", required = true) Integer orgId) {
         startPage();
-        UserComment comment=new UserComment();
+        UserComment comment = new UserComment();
         comment.setOrgId(orgId);
         comment.setExpressScore(1);
         List<UserCommentEx> list = userCommentService.findList(comment);
-        Map<String,Object> result = new HashMap<>();
-        result.put("commentList",list);
+        Map<String, Object> result = new HashMap<>();
+        result.put("commentList", list);
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
-        result.put("commentScore",pawnOrg.getScore()==null? new BigDecimal(5):pawnOrg.getScore());
-        result.put("commentCount",pawnOrg.getCommentCount()==null?0:pawnOrg.getCommentCount());
+        if (pawnOrg != null) {
+            result.put("commentScore", pawnOrg.getScore() == null ? new BigDecimal(5) : pawnOrg.getScore());
+            result.put("commentCount", pawnOrg.getCommentCount() == null ? 0 : pawnOrg.getCommentCount());
+        }
         return result;
     }
 
     @ApiOperation(value = "test", notes = "登陆")
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
-    public Object test(@ApiParam(value = "评论", required = true)String info){
+    public Object test(@ApiParam(value = "评论", required = true) String info) {
         System.out.println(info);
-        System.out.println("过滤="+sensitivWordsService.relpSensitivWords(info));
+        System.out.println("过滤=" + sensitivWordsService.relpSensitivWords(info));
         return sensitivWordsService.relpSensitivWords(info);
     }
 

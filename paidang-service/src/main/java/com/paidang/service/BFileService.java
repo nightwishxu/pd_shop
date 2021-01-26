@@ -11,9 +11,12 @@ import com.paidang.dao.BFileMapper;
 import com.paidang.dao.model.BFile;
 import com.paidang.dao.model.BFileExample;
 import com.paidang.domain.pojo.FileConstants;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.file.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +29,12 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class BFileService {
@@ -40,11 +45,24 @@ public class BFileService {
 	public static  String OSS = "oss";
 	public static  String COS = "cos";
 
-	private static  String ACCESS_KEY_ID = PropertySupport.getProperty("baidu.accessKey");
-	private static  String SECRET_ACCESS_KEY = PropertySupport.getProperty("baidu.secretKey");
-	private static  String ENDPOINT = PropertySupport.getProperty("baidu.endPoint");
+	@Value("${baidu.accessKey}")
+	private   String ACCESS_KEY_ID;
+	@Value("${baidu.secretKey}")
+	private   String SECRET_ACCESS_KEY;
+	@Value("${baidu.endPoint}")
+	private   String ENDPOINT ;
 
-	private static  String BUCKET_NAME = PropertySupport.getProperty("baidu.bucketName");
+	@Value("${baidu.back.endPoint}")
+	private   String BACK_ENDPOINT ;
+
+	@Value("${baidu.bucketName}")
+	private  String BUCKET_NAME ;
+
+	@Value("${baidu.back.bucketName}")
+	private  String BUCKET_BACK_NAME ;
+
+	@Autowired
+	private RedisCache redisCache;
 
 	private static BosClientConfiguration config = new BosClientConfiguration();
 
@@ -264,6 +282,25 @@ public class BFileService {
 		}
 	}
 
+	public String getFileForBos(String id){
+		if(StringUtils.isBlank(id)){
+			return null;
+		}
+		String url = (String)redisCache.getCacheObject("file:" + id);
+		if (url==null){
+			BFile item = bFileMapper.selectByPrimaryKey(id);
+			if (item==null){
+				return null;
+			}
+			url = CoreConstants.BOS_BACK_URL+item.getFilePath();
+			redisCache.setCacheObject("file:" + id,url,30, TimeUnit.DAYS);
+			return url;
+		}else {
+			return url;
+		}
+
+	}
+
 
 	public void putObject(byte[] byte1, String fileName){
 //		// 获取指定文件
@@ -280,7 +317,10 @@ public class BFileService {
 //		// 以数据流形式上传Object
 //		PutObjectResponse putObjectResponseFromInputStream = client.putObject(bucketName, objectKey, inputStream);
 		// 以二进制串上传Object
+		long start = System.currentTimeMillis();
 		PutObjectResponse putObjectResponseFromByte = client.putObject(BUCKET_NAME, fileName, byte1);
+		long end = System.currentTimeMillis();
+		logger.info("uploadFile time:{}s,fileName:{}",(end-start)/1000.0,fileName);
 		// 以字符串上传Object
 //		PutObjectResponse putObjectResponseFromString = client.putObject(bucketName, objectKey, string1);
 //
@@ -289,7 +329,22 @@ public class BFileService {
 	}
 
 
-	public static void putObjectSimple(byte[] bytes,String fileId) throws FileNotFoundException {
+	public void putObjectBack(byte[] byte1, String fileName){
+
+		if (client ==null){
+			config.setCredentials(new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY));
+			config.setEndpoint(BACK_ENDPOINT);
+			client = new BosClient(config);
+		}
+
+		long start = System.currentTimeMillis();
+		PutObjectResponse putObjectResponseFromByte = client.putObject(BUCKET_BACK_NAME, fileName, byte1);
+		long end = System.currentTimeMillis();
+		logger.info("uploadFile time:{}s,fileName:{}",(end-start)/1000.0,fileName);
+	}
+
+
+	public  void putObjectSimple(byte[] bytes,String fileId) throws FileNotFoundException {
 		// 初始化一个BosClient
 //		BosClientConfiguration config = new BosClientConfiguration();
 //		config.setCredentials(new DefaultBceCredentials(ACCESS_KEY_ID, SECRET_ACCESS_KEY));
@@ -575,5 +630,39 @@ public class BFileService {
 			output.write(buffer, 0, n);
 		}
 		return output.toByteArray();
+	}
+
+
+	public void transferFile(String startTime) throws Exception{
+//		http://baidu.paidangwang.net/admin//download?id=9497c7de6bc24a8e93721a4f7d1ddde0
+//		http://baidu.paidangwang.net/admin//download?id=0768268a2d0b4ba9ad0ac0de4c82e9a6_normal
+		//0768268a2d0b4ba9ad0ac0de4c82e9a6_normal
+		String prefix = "http://baidu.paidangwang.net/admin//download?id=";
+		//
+		BaseUtils.checkBlankParam(startTime);
+		String time = "2021-01-22 18:31:49";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		BFileExample example = new BFileExample();
+		example.createCriteria().andFileCreatetimeLessThanOrEqualTo(sdf.parse(time)).andFileCreatetimeGreaterThanOrEqualTo(sdf.parse(startTime));
+		example.setOrderByClause("file_createtime asc");
+		List<BFile> bFiles = selectByExample(example);
+		int i = 1;
+		for (BFile file : bFiles) {
+			try {
+				String fileId= file.getFileId();
+				byte[] fileStream = FileUtils.getFileStream(prefix + fileId);
+				putObject(fileStream,file.getFilePath());
+				logger.info("upload:"+i + "  "+ file.getFilePath() + "  "+ sdf.format(file.getFileCreatetime()));
+				i++;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+//		BFile bFile = selectByPrimaryKey("0768268a2d0b4ba9ad0ac0de4c82e9a6_normal");
+//		String fileId= bFile.getFileId();
+//		byte[] fileStream = FileUtils.getFileStream(prefix + fileId);
+//		putObject(fileStream,bFile.getFilePath());
+//		System.out.println(bFile.getFilePath());
 	}
 }

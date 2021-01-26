@@ -275,6 +275,9 @@ public class ApiUserGoodsController extends ApiBaseController {
         if (sellStatus==1 && (StringUtil.isBlank(userGoods.getSellInfo()) || userGoods.getSellPrice() == null || StringUtil.isBlank(userGoods.getSellImgs()))){
             throw new ApiException(1100,"上架前请先完善商品寄拍信息！");
         }
+        if (sellStatus==1 && userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
+            throw new ApiException(1100,"该商品已去典当！");
+        }
         if (userGoods.getSellCheck()==2){
             throw new ApiException(1100,"寄卖上架审核中，请等待寄卖审核完成！");
         }

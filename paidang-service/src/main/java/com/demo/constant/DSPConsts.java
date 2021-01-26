@@ -33,10 +33,10 @@ public class DSPConsts {
 //    public static final String SCORE_URL_PRO = "https://score.cpcn.com.cn:2443/DSPGateway4Score/InterfaceVII";
 
 
-    /** 私钥文件地址(测试) */
+    /** 私钥文件地址 */
     public static String Keystore  =  CoreConstants.getProperty("Keystore");
     public static String myKeystorePassword  =  CoreConstants.getProperty("myKeystorePassword");
-    /** 公钥文件地址（测试） */
+    /** 公钥文件地址 */
     public static String publicKey  =  CoreConstants.getProperty("publicKey") ;
 
 
@@ -48,7 +48,7 @@ public class DSPConsts {
 //    
 //    /** 公钥文件地址（生产） 中金生产公钥*/
 //    //注意：生产环境请勿修改此项   务必加载 dspCertificate.cer 
-//    public static String publicKey_pro = "E:/work_space_wb/paidang/certificates/dspCertificate.cer";
+    public static String publicKey_pro = "/project/paidang/certificates/dspCertificate.cer";
 
     public static String institutionID  =  CoreConstants.getProperty("institution.id") ;
 

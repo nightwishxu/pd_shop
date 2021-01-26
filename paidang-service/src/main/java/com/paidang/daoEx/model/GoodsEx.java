@@ -50,40 +50,40 @@ public class GoodsEx extends Goods {
 
     private List<Integer> ids;
 
-    @Override
-    public String getImg() {
-        return processImg(super.getImg());
-    }
+//    @Override
+//    public String getImg() {
+//        return processImg(super.getImg());
+//    }
+//
+//    @Override
+//    public String getBannerVideo() {
+//        return processImg(super.getBannerVideo());
+//    }
+//
+//    @Override
+//    public String getBannerVideoFace() {
+//        return processImg(super.getBannerVideoFace());
+//    }
 
-    @Override
-    public String getBannerVideo() {
-        return processImg(super.getBannerVideo());
-    }
-
-    @Override
-    public String getBannerVideoFace() {
-        return processImg(super.getBannerVideoFace());
-    }
-
-    @Override
-    public String getImgs() {
-        if (StringUtils.isNoneBlank(super.getImgs())){
-            String[] paths = super.getImgs().split(",");
-            for (int i=0;i<paths.length;i++){
-                paths[i] = processImg(paths[i]);
-            }
-            return String.join(",",paths);
-        }
-        return super.getImgs();
-    }
-
-
-    public String processImg(String path){
-        if (StringUtils.isNoneBlank(path) && !path.startsWith("http")){
-            return CoreConstants.SERVER_URL+"download?id="+path;
-        }
-        return path;
-    }
+//    @Override
+//    public String getImgs() {
+//        if (StringUtils.isNoneBlank(super.getImgs())){
+//            String[] paths = super.getImgs().split(",");
+//            for (int i=0;i<paths.length;i++){
+//                paths[i] = processImg(paths[i]);
+//            }
+//            return String.join(",",paths);
+//        }
+//        return super.getImgs();
+//    }
+//
+//
+//    public String processImg(String path){
+//        if (StringUtils.isNoneBlank(path) && !path.startsWith("http")){
+//            return CoreConstants.SERVER_URL+"download?id="+path;
+//        }
+//        return path;
+//    }
 
 
     public String getGoodsOwnerAccount() {

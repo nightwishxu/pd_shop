@@ -40,6 +40,8 @@ public class CoreConstants {
 
     public static  String BOS_URL;
 
+    public static String BOS_BACK_URL;
+
     public static String FILE_PATH;
 
     public static String FILE_MAXSIZE;
@@ -99,5 +101,10 @@ public class CoreConstants {
     @Value("${userServer.url}")
     public  void setUserServerUrl(String userServerUrl) {
         USER_SERVER_URL = userServerUrl;
+    }
+
+    @Value("${bos.back.url}")
+    public void setBosBackUrl(String bosBackUrl) {
+        BOS_BACK_URL = bosBackUrl;
     }
 }

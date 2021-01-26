@@ -45,6 +45,9 @@ import java.util.Objects;
 public class ApiTestController extends ApiBaseController {
 
 
+    @Autowired
+    private BFileService fileService;
+
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/pay")
     @ApiMethod()
@@ -62,5 +65,14 @@ public class ApiTestController extends ApiBaseController {
     public Object anxinRegist(String idCard,String name,String phone) throws Exception{
         String s = AnXinSignService.personRegister(idCard, name, phone);
         return new Result<>(s);
+    }
+
+
+    @ApiOperation(value = "z", notes = "1")
+    @RequestMapping("/uploadFile")
+    @ApiMethod()
+    public Object uploadFile(MobileInfo mobileInfo,String startTime) throws Exception{
+        fileService.transferFile(startTime);
+        return new Result<>(DSPConsts.Keystore);
     }
 }

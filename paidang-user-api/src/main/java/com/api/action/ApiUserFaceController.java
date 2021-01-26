@@ -198,8 +198,14 @@ public class ApiUserFaceController extends ApiBaseController {
                 throw new ApiException(400,"请先进行实名认证");
             }
         }else if (type==2){
-            if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
-                throw new ApiException(400,"请先进行实名认证");
+            if (user.getIsBind()!=null && user.getIsBind()==1){
+                if ( StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                    throw new ApiException(400,"实名认证信息异常");
+                }
+            }else {
+                if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                    throw new ApiException(400,"请先进行实名认证");
+                }
             }
         }
 

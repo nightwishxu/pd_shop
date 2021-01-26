@@ -82,6 +82,11 @@ public class RedisCache
         redisTemplate.opsForValue().set(key,obj,timeout,TimeUnit.SECONDS);
     }
 
+
+    public String get(String key){
+        return (String)redisTemplate.opsForValue().get(key);
+    }
+
     /**
      * 获得缓存的基本对象。
      *

@@ -2,6 +2,7 @@ package com.action;
 
 import com.api.model.CertificateLogModel;
 import com.base.util.DateUtil;
+import com.demo.constant.DSPConsts;
 import com.item.dao.model.SinglePage;
 import com.item.service.SinglePageService;
 import com.paidang.dao.model.Certificate;
@@ -77,8 +78,14 @@ public class UserFaceController {
             throw new ApiException(400,"参数异常");
         }
 
-        if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
-            throw new ApiException(400,"请先进行实名认证");
+        if (user.getIsBind()!=null && user.getIsBind()==1){
+            if ( StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                throw new ApiException(400,"实名认证信息异常");
+            }
+        }else {
+            if (user.getAuthStatus()==null || user.getAuthStatus()==0 ||  StringUtils.isAnyBlank(user.getName(),user.getIdCard())){
+                throw new ApiException(400,"请先进行实名认证");
+            }
         }
 
         Tx2324Request tx2324Request = UnionApiService.userFace(user.getName(), user.getIdCard());
@@ -88,6 +95,7 @@ public class UserFaceController {
             tmp.setId(user.getId());
             userService.updateByPrimaryKeySelective(tmp);
         }
+        model.addAttribute("url", DSPConsts.LIVENESS_URL);
         model.addAttribute("message",tx2324Request.getRequestMessage());
         model.addAttribute("signature",tx2324Request.getRequestSignature());
         model.addAttribute("dgtlEnvlp",tx2324Request.getRequestDgtlEnvlp());
@@ -165,5 +173,12 @@ public class UserFaceController {
 
         map.put("certificateLog",ret);
         return "certificate-dt";
+    }
+
+    @RequestMapping(value = "/h5/reference")
+    public String reference(HttpServletRequest request, Model model)throws Exception {
+        String code = request.getParameter("code");
+        model.addAttribute("code",Integer.valueOf(code));
+        return "reference";
     }
 }

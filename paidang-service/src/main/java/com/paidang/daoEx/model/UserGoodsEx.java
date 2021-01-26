@@ -470,56 +470,56 @@ public class UserGoodsEx extends UserGoods {
         this.pawnName = pawnName;
     }
 
-    @Override
-    public String getImages() {
-        if (StringUtils.isNoneBlank(super.getImages())){
-            String[] paths = super.getImages().split(",");
-            for (int i=0;i<paths.length;i++){
-                paths[i] = processImg(paths[i]);
-            }
-            return String.join(",",paths);
-        }
-        return super.getImages();
-    }
+//    @Override
+//    public String getImages() {
+//        if (StringUtils.isNoneBlank(super.getImages())){
+//            String[] paths = super.getImages().split(",");
+//            for (int i=0;i<paths.length;i++){
+//                paths[i] = processImg(paths[i]);
+//            }
+//            return String.join(",",paths);
+//        }
+//        return super.getImages();
+//    }
+//
+//    @Override
+//    public String getGoVideo(){
+//        return processImg(super.getGoVideo());
+//    }
+//
+//    @Override
+//    public String getPlatGoodsAuthVideo(){
+//        return processImg(super.getPlatGoodsAuthVideo());
+//    }
+//
+//    @Override
+//    public String getOpenGoodsVideo(){
+//        return processImg(super.getOpenGoodsVideo());
+//    }
+//
+//    @Override
+//    public String getVideo() {
+//        return processImg(super.getVideo());
+//    }
 
-    @Override
-    public String getGoVideo(){
-        return processImg(super.getGoVideo());
-    }
-
-    @Override
-    public String getPlatGoodsAuthVideo(){
-        return processImg(super.getPlatGoodsAuthVideo());
-    }
-
-    @Override
-    public String getOpenGoodsVideo(){
-        return processImg(super.getOpenGoodsVideo());
-    }
-
-    @Override
-    public String getVideo() {
-        return processImg(super.getVideo());
-    }
-
-    @Override
-    public String getGoodsImgs() {
-        if (StringUtils.isNoneBlank(super.getGoodsImgs())){
-            String[] paths = super.getGoodsImgs().split(",");
-            for (int i=0;i<paths.length;i++){
-                paths[i] = processImg(paths[i]);
-            }
-            return String.join(",",paths);
-        }
-        return super.getGoodsImgs();
-    }
-
-    public String processImg(String path){
-        if (StringUtils.isNoneBlank(path) && !path.startsWith("http")){
-            return CoreConstants.SERVER_URL+"download?id="+path;
-        }
-        return path;
-    }
+//    @Override
+//    public String getGoodsImgs() {
+//        if (StringUtils.isNoneBlank(super.getGoodsImgs())){
+//            String[] paths = super.getGoodsImgs().split(",");
+//            for (int i=0;i<paths.length;i++){
+//                paths[i] = processImg(paths[i]);
+//            }
+//            return String.join(",",paths);
+//        }
+//        return super.getGoodsImgs();
+//    }
+//
+//    public String processImg(String path){
+//        if (StringUtils.isNoneBlank(path) && !path.startsWith("http")){
+//            return CoreConstants.SERVER_URL+"download?id="+path;
+//        }
+//        return path;
+//    }
 
 
     public String getCerName() {

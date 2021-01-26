@@ -10,6 +10,7 @@ import com.base.api.MobileInfo;
 
 import com.base.crypto.RSAUtils;
 
+import com.base.dao.model.Result;
 import com.base.util.Base64;
 import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
@@ -66,6 +67,14 @@ public class ApiCommonController extends ApiBaseController {
 			@ApiParam(hidden = true)HttpServletResponse resp,
 			@ApiParam(hidden = true)HttpServletRequest request)throws Exception{
 		fileService.getFile(id, w, h, null, resp, type,request);
+	}
+
+
+	@ApiOperation(value = "文件读取", notes = "")
+	@RequestMapping(value = "/downloadForBos",method = {RequestMethod.GET, RequestMethod.POST})
+	@ApiMethod
+	public Result downloadForBos(@RequestParam(value = "id", required = true) @ApiParam(value="文件id",required = true)String id)throws Exception{
+		return new Result(fileService.getFileForBos(id));
 	}
 	
     @ApiOperation(value = "文件上传", notes = "")

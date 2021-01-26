@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- saved from url=(0073)http://baidu.paidangwang.net/paidangAdmin/m/pawn/H5GetExperterInfo?id=394 -->
 <html class="am-touch js cssanimations" style="font-size: 64.2188px;">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head lang="en">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -75,12 +76,12 @@
     <title>专家鉴定</title>
     <meta name="description" content="专家鉴定">
     <meta name="keywords" content="专家鉴定">
-    <script src="./static/jquery-1.10.1.min.js.下载"></script>
+    <script th:src="@{/jquery-1.10.1.min.js}"></script>
     <link href="./static/common.css" rel="stylesheet" type="text/css">
     <link href="./static/base.css" rel="stylesheet" type="text/css">
     <link href="./static/slider.css" rel="stylesheet" type="text/css">
     <link href="./static/video-js.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="./static/common.js.下载"></script>
+    <script type="text/javascript" src="./static/common.js"></script>
     <script type="text/javascript" src="./static/regist.js.下载"></script>
     <script type="text/javascript" src="./static/fastclick.js.下载"></script>
     <script type="text/javascript" src="./static/amazeui.js.下载"></script>
@@ -94,7 +95,8 @@
 
 
 <body
-    style="background-image: url(&quot;http://baidu.paidangwang.net:80/paidangAdmin/static/m/images/certificate/a_bg.jpg&quot;); background-size: cover; height: 100%; background-attachment: fixed;">
+   th:background="@{/pawn_part/image/a_bg.jpg}"
+   style=" background-size: cover; height: 100%; background-attachment: fixed;">
     <div class="wrapper">
         <!--背景遮罩-->
         <div class="bg-black dis_none"></div>
@@ -177,7 +179,8 @@
             <div class="am-pureview-actions am-active"><a href="javascript: void(0)" class="am-icon-chevron-left"
                     data-am-close="pureview"></a></div> -->
         </div>
-</body>
+</body
+   t     >
 <script type="text/javascript">
     $(function () {
         var obj;

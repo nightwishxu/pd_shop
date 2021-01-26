@@ -31,15 +31,12 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <script src="../static/jquery-1.9.1.js"  th:src="@{/jquery-1.9.1.js}"></script>
-    <script src="../static/jquery.cookie.js"  th:src="@{/jquery.cookie.js}"></script>
-    <script src="../static/avalon.js"  th:src="@{/avalon.js}"></script>
-    <script src="../static/syJquery.js" type="text/javascript" charset="utf-8"  th:src="@{/syJquery.js}"></script>
-    <script src="../static/init.js" type="text/javascript" charset="utf-8"  th:src="@{/init.js}"></script>
-    <script src="../static/layer.js" type="text/javascript"  th:src="@{/layer.js}"></script>
-    <link href="../static/layer.css" type="text/css" rel="styleSheet" id="layermcss"  th:href="@{/layer.css}">
-    <script src="../static/layer.js(1)"  th:src="@{/layer.js(1)}"></script>
-    <link rel="stylesheet" href="../static/layer(1).css" id="layuicss-skinlayercss">
+    <script th:src="@{/jquery-1.10.1.min.js}"></script>
+    <link th:href="@{/common.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/layer.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/base.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/slider.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/video-js.css}" rel="stylesheet" type="text/css">
     <script type="text/javascript">
         if (window.top != window) {
             window.top.location = window.location;
@@ -75,16 +72,12 @@
     <title>专家鉴定</title>
     <meta name="description" content="专家鉴定">
     <meta name="keywords" content="专家鉴定">
-    <script src="../static/jquery-1.10.1.min.js" th:src="@{/jquery-1.10.1.min.js}"></script>
-    <link  href="../static/common.css" rel="stylesheet" type="text/css" th:href="@{/common.css}">
-    <link href="../static/base.css" rel="stylesheet" type="text/css" th:href="@{/base.css}">
-    <link href="../static/slider.css" rel="stylesheet" type="text/css" th:href="@{/slider.css}">
-    <link href="../static/video-js.css" rel="stylesheet" type="text/css" th:href="@{/video-js.css}">
-    <script type="text/javascript" src="../static/common.js"  th:src="@{/common.js}"></script>
-    <script type="text/javascript" src="../static/regist.js"  th:src="@{/regist.js}"></script>
-    <script type="text/javascript" src="../static/fastclick.js"  th:src="@{/fastclick.js}"></script>
-    <script type="text/javascript" src="../static/amazeui.js"  th:src="@{/amazeui.js}"></script>
-    <script type="text/javascript" src="../static/video.min.js"  th:src="@{/video.min.js}"></script>
+    <script type="text/javascript" th:src="@{/common.js}"></script>
+    <script type="text/javascript" th:src="@{/regist.js}"></script>
+    <script type="text/javascript" th:src="@{/fastclick.js}"></script>
+    <script type="text/javascript" th:src="@{/amazeui.js}"></script>
+    <script type="text/javascript" th:src="@{/layer.js}"></script>
+    <script type="text/javascript" th:src="@{/video.min.js}"></script>
     <script type="text/javascript">
         $(function () {
             var obj;
@@ -93,14 +86,14 @@
             var serverUrl = '[[${serverUrl}]]';
             $("#sub").click(function () {
                 if ($(".apprai").val() == null || $(".apprai").val() == '') {
-                    return alert("请输入您的评价");
+                    return  layer.alert("请输入您的评价");
                 }
                 if ($("#phone").val() == null || $("#phone").val() == '') {
                     // return alert("请输入手机号");
-                    return alert("请输入手机号");
+                    return  layer.alert("请输入手机号");
                 }
                 if ($("#code").val() == null || $("#code").val() == '') {
-                    return alert("请输入验证码");
+                    return  layer.alert("请输入验证码");
                 }
 
                 var res;
@@ -118,13 +111,13 @@
                         };
                         $.post(url, obj, function (result) {
                             if (result.code == 1) {
-                                return alert(result.msg);
+                                return  layer.alert(result.msg);
                             } else {
-                                return alert(result.msg)
+                                return  layer.alert(result.msg)
                             }
                         }, 'json');
                     } else {
-                        return alert(result.msg)
+                        return  layer.alert(result.msg)
                     }
                 }, 'json');
 
@@ -141,7 +134,7 @@
                 };
                 $.post(url, obj, function (result) {
                     if (result.code == 0) {
-                        alert("您不是被指定专家，无权鉴定");
+                        layer.alert("您不是被指定专家，无权鉴定");
                         return;
 
                     } else {
@@ -178,7 +171,7 @@
                     var imgArr = obj.images.split(",");
                     for (var i = 0; i < imgArr.length; i++) {
                         html += "<li>"
-                        html += '<div class="<div class="am-gallery-item"><img src="' + imgArr[i] + '" data-am-pureviewed="1"></div>'
+                        html += '<div class="am-gallery-item"><img src="' + imgArr[i] + '"></div>'
                         html += "</li>"
                     }
                     console.info(html)
@@ -247,7 +240,8 @@
 
 
 <body
-    style="background-image: url(&quot;http://baidu.paidangwang.net:80/paidangAdmin/static/m/images/certificate/a_bg.jpg&quot;); background-size: cover; height: 100%; background-attachment: fixed;">
+        th:background="@{/pawn_part/image/a_bg.jpg}"
+    style="background-size: cover; height: 100%; background-attachment: fixed;">
     <div class="wrapper">
         <!--背景遮罩-->
         <div class="bg-black dis_none"></div>
@@ -277,6 +271,7 @@
                     </dd>
                     <div class="btn-link"><a class="a-link a-regist" id="sub">提交</a></div>
                 </dl>
+            </dl>
         </div>
         <!-- <div class="am-pureview am-pureview-bar-active" id="am-pureview-iugav">
             <ul class="am-pureview-slider"
@@ -326,8 +321,8 @@
                         class="am-pureview-total">1</span></div>
             </div>
             <div class="am-pureview-actions am-active"><a href="javascript: void(0)" class="am-icon-chevron-left"
-                    data-am-close="pureview"></a></div>
-        </div> -->
+                    data-am-close="pureview"></a></div> -->
+        </div>
 </body>
 
 </html>

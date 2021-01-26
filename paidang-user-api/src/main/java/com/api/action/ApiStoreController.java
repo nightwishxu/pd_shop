@@ -558,12 +558,14 @@ public class ApiStoreController extends ApiBaseController {
         //机构上传
         if(ex.getOrgId()!=null){
             PawnOrg pawnOrg=pawnOrgService.selectByPrimaryKey(ex.getOrgId());
-            appStoreGoodsDetail.setOrgId(pawnOrg.getId());
-            appStoreGoodsDetail.setOrgName(pawnOrg.getName());
-            appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
-            appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
-            appStoreGoodsDetail.setImg(ex.getImg());
-            appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
+            if (pawnOrg!=null){
+                appStoreGoodsDetail.setOrgId(pawnOrg.getId());
+                appStoreGoodsDetail.setOrgName(pawnOrg.getName());
+                appStoreGoodsDetail.setOrgIntroduction(pawnOrg.getIntroduction());
+                appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
+                appStoreGoodsDetail.setImg(ex.getImg());
+                appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
+            }
         }
 //        //商家端(个人)
 //        if(ex.getSource()==6){

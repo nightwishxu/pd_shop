@@ -708,6 +708,9 @@ public class ApiUserPawnController extends ApiBaseController {
         if (userGoods.getGotoPawn()!=null && userGoods.getGotoPawn()==1){
             throw new ApiException(400,"已典当");
         }
+        if (userGoods.getSellStatus()!=null && userGoods.getSellStatus()==1){
+            throw new ApiException(400,"寄拍上架中，请先下架再典当");
+        }
         userGoods.setGotoPawn(1);
         //新增典当表
         UserPawn userPawn = new UserPawn();

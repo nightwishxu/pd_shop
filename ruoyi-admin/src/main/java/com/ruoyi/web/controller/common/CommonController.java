@@ -3,11 +3,14 @@ package com.ruoyi.web.controller.common;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.base.annotation.ApiMethod;
+import com.base.dao.model.Result;
 import com.base.util.CoreConstants;
 import com.paidang.service.BFileService;
 import com.ruoyi.common.core.domain.ApiFile;
 import com.ruoyi.common.core.domain.Ret;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -194,5 +197,10 @@ public class CommonController
                              @RequestParam(value = "q", required = false) String q
             ,String type,HttpServletRequest request) throws Exception{
         fileService.getFile(id, w, h, q, resp, type,request);
+    }
+
+    @RequestMapping(value = "/downloadForBos",method = {RequestMethod.GET, RequestMethod.POST})
+    public Result downloadForBos(@RequestParam(value = "id", required = true) @ApiParam(value="文件id",required = true)String id)throws Exception{
+        return new Result(fileService.getFileForBos(id));
     }
 }

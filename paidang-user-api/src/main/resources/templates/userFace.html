@@ -1,6 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
@@ -21,7 +23,7 @@
 </script>
 
 <body οnlοad="doSubmit();">
-  <form action="https://dsptest.cpcn.com.cn/DSPLivenessWeb/InterfaceVI" name="form1" method="POST" style="display: none">
+  <form th:action="${url}" name="form1" method="POST" style="display: none">
     <div>
       <input type="text" name="message" placeholder="message" th:value="${message}" />
     
