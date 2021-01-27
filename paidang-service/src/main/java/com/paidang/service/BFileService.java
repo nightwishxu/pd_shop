@@ -292,7 +292,7 @@ public class BFileService {
 			if (item==null){
 				return null;
 			}
-			url = CoreConstants.BOS_BACK_URL+item.getFilePath();
+			url = CoreConstants.BOS_URL+item.getFilePath();
 			redisCache.setCacheObject("file:" + id,url,30, TimeUnit.DAYS);
 			return url;
 		}else {

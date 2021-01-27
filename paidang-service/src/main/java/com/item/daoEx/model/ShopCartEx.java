@@ -14,6 +14,8 @@ public class ShopCartEx extends ShopCart {
     private BigDecimal goodsPrice;
     //商品图片
     private String goodsImg;
+
+    private String goodsImgs;
     //商品简介
     private String goodsInfo;
     //机构名称
@@ -124,5 +126,13 @@ public class ShopCartEx extends ShopCart {
 
     public void setCouponFlag(Integer couponFlag) {
         this.couponFlag = couponFlag;
+    }
+
+    public String getGoodsImgs() {
+        return goodsImgs;
+    }
+
+    public void setGoodsImgs(String goodsImgs) {
+        this.goodsImgs = goodsImgs;
     }
 }

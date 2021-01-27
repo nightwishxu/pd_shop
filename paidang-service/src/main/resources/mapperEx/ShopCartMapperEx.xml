@@ -15,6 +15,7 @@
 	g.NAME AS goodsName,
 	g.price AS goodsPrice,
 	g.img AS goodsImg,
+	g.imgs AS goodsImgs,
 	g.info AS goodsInfo,
 	g.total AS goodsTotal,
 	g.is_online AS isOnline,

@@ -32,5 +32,7 @@ public class OrgApiApplication
                 " |  | \\ `'   /|   `-'  /           \n" +
                 " |  |  \\    /  \\      /           \n" +
                 " ''-'   `'-'    `-..-'              ");
+        System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", "[]|{}^&#x5c;&#x60;&quot;&lt;&gt;%5C\\");
+
     }
 }

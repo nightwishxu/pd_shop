@@ -7,6 +7,7 @@ import com.api.view.orgRepawn.RepawnMini;
 import com.base.ConstantsCode;
 import com.base.annotation.ApiMethod;
 import com.base.dao.model.Result;
+import com.base.util.KuaidiApiUtil;
 import com.base.util.PropertySupport;
 import com.base.util.StringUtils;
 import com.demo.constant.HttpConnector;
@@ -580,6 +581,11 @@ public class ApiHomeController extends ApiBaseController{
 //		return codeService.getAppVersion(platForm,system);
 //	}
 
-
+	@ApiOperation(value = "物流公司获取",notes="")
+	@RequestMapping(value = "/expressName/get", method = RequestMethod.POST)
+	@ApiMethod(isLogin = false)
+	public String[] getExpressNamws(){
+		return KuaidiApiUtil.expressArr;
+	}
 
 }

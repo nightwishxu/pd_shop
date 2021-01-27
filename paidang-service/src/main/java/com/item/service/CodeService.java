@@ -2,6 +2,7 @@ package com.item.service;
 
 import java.util.List;
 
+import com.base.util.BaseUtils;
 import com.base.util.JSONUtils;
 import com.paidang.domain.pojo.AppVersion;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,7 @@ public class CodeService {
      * @return
      */
     public AppVersion getAppVersion(String  platForm,Integer system){
+        BaseUtils.checkBlankParam(system);
         Code byCode = getByCode(platForm + "@" + system);
         return JSONUtils.deserialize(byCode.getValue(),AppVersion.class);
     }

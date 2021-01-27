@@ -201,7 +201,7 @@
     <update id="sellAuctionGoods">
         update p_goods set is_online = #{isOnline},max_aution_id=#{maxAutionId},max_auction=#{maxAuction}
         <if test="onlineTime!=null">
-            online_time = #{onlineTime}
+            ,online_time = #{onlineTime}
         </if>
         where id = #{id}
     </update>

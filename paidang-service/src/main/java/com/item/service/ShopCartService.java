@@ -6,6 +6,7 @@ import com.item.dao.model.ShopCart;
 import com.item.dao.model.ShopCartExample;
 import com.item.daoEx.ShopCartMapperEx;
 import com.item.daoEx.model.ShopCartEx;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,9 @@ public class ShopCartService {
 		List<ShopCartVo> result=new ArrayList<>();
 		Map<Integer,ShopCartVo> map=new LinkedHashMap<>();
 		for (ShopCartEx ex:list){
+			if (StringUtils.isBlank(ex.getGoodsImg()) && StringUtils.isNotBlank(ex.getGoodsImgs())){
+				ex.setGoodsImg(ex.getGoodsImgs().split(",")[0]);
+			}
 			ShopCartVo cartVo= map.get(ex.getOrgId());
 			if (cartVo==null){
 				ShopCartVo shopCartVo=new ShopCartVo();

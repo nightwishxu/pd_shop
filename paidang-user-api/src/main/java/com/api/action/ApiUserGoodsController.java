@@ -799,6 +799,21 @@ public class ApiUserGoodsController extends ApiBaseController {
         List<PawnCate> list = pawnCateService.selectByExample(example);
         PawnCate pawnCate = list.get(0);
 
+        if (StringUtils.isNotBlank(content) && StringUtils.isBlank(images)){
+            List contentArr = JSONUtils.deserialize(content, List.class);
+            List<String> imgArr = Lists.newArrayList();
+            for (Object o : contentArr) {
+                Map map = (Map)o;
+                if ("3".equals(map.get("contentType"))){
+                    imgArr.add((String)map.get("content"));
+                }
+            }
+            if (CollectionUtils.isNotEmpty(imgArr)){
+                images = String.join(",",imgArr);
+            }
+
+        }
+
         UserGoods userGoods = new UserGoods();
         //如果是钻石或者贵金属，不形成订单--并且除去类别为其他
         if(!MGoodsCateList.zs.code.equals(pawnCate.getCode()) && !MGoodsCateList.gjs.code.equals(pawnCate.getCode()) && !MGoodsCateList.qt.code.equals(pawnCate.getCode())
@@ -937,20 +952,7 @@ public class ApiUserGoodsController extends ApiBaseController {
              *         sf("11","书法"),
              *         wwzx("12","文玩杂项"),
              */
-            if (StringUtils.isNotBlank(content) && StringUtils.isBlank(images)){
-                List contentArr = JSONUtils.deserialize(content, List.class);
-                List<String> imgArr = Lists.newArrayList();
-                for (Object o : contentArr) {
-                    Map map = (Map)o;
-                    if ("3".equals(map.get("contentType"))){
-                        imgArr.add((String)map.get("content"));
-                    }
-                }
-                if (CollectionUtils.isNotEmpty(imgArr)){
-                    images = String.join(",",imgArr);
-                }
 
-            }
             //其他
             userGoods.setImages(images);
             userGoods.setUserId(mobileInfo.getUserId());
@@ -1222,6 +1224,7 @@ public class ApiUserGoodsController extends ApiBaseController {
                         @ApiParam(value="鉴定code(不是必填--若直接邮寄必填，)",required = true)String pawnCateCode,
                         @ApiParam(value="图片(不是必填--若直接邮寄必填，)",required = true)String images,
                         @ApiParam(value="物流单号",required = true)String pid,
+                        @ApiParam(value="物流公司",required = false)String pName,
                         @ApiParam(value="邮寄打包视频",required = true)String video,
                         @ApiParam(value="顺风保价",required = true)BigDecimal sfProtectPrice){
 //       UserAddressExample userAddressExample = new UserAddressExample();
@@ -1249,7 +1252,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             }
             userGoods.setPostExpressCode(pid);
             userGoods.setPostState(2);
-            userGoods.setPostExpress(MPostExpressAddress.xfAddress);
+            userGoods.setPostExpress(StringUtil.isBlank(pName)?MPostExpressAddress.xfAddress:pName);
             userGoods.setPostExpressCode(pid);
             userGoods.setBackState(0);
             userGoods.setGoVideo(video);
@@ -1269,7 +1272,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             record.setPostExpressCode(pid);
             record.setGotoPawn(0);
             record.setPostState(2);
-            record.setPostExpress(MPostExpressAddress.xfAddress);
+            record.setPostExpress(StringUtil.isBlank(pName)?MPostExpressAddress.xfAddress:pName);
             record.setBackState(0);
             record.setGoVideo(video);
             record.setImages(images);
@@ -1299,7 +1302,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         express.setSourceId(mobileInfo.getUserId());
 
         express.setType(1);
-        express.setExpressName(MPostExpressAddress.xfAddress);
+        express.setExpressName(StringUtil.isBlank(pName)?MPostExpressAddress.xfAddress:pName);
         express.setExpressCode(pid);
         express.setExpressState(0);
         express.setExpressData("");
