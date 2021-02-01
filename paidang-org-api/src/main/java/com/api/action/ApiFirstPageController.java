@@ -466,7 +466,7 @@ public class ApiFirstPageController extends ApiBaseController {
         orgInfo.setName(record.getName());
         orgInfo.setAdress(record.getAdress());
         orgInfo.setLegalPerson(record.getLegalPerson());
-        orgInfo.setTel(record.getPhone());
+        orgInfo.setTel(record.getAnxinPhone());
         orgInfo.setBusinessLicense(record.getBusinessLicense());
         orgInfo.setBusinessLicenseCode(record.getBusinessLicenseCode());
         orgInfo.setOrgLogo(record.getOrgLogo());

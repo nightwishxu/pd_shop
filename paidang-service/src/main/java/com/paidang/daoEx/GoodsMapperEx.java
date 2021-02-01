@@ -46,4 +46,6 @@ public interface GoodsMapperEx {
     Integer getAuctionCount(@Param("orgId")Integer orgId,@Param("goodsOwner")Integer goodsOwner);
 
     Integer offlineAuctionGoods();
+
+    Integer updateGoodsNum(@Param("id")Integer id,@Param("num")Integer num);
 }

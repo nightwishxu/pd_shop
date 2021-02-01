@@ -46,6 +46,10 @@ public class CoreConstants {
 
     public static String FILE_MAXSIZE;
 
+    public static String hostUrl;
+
+    public static String ALI_NOTIFY_URL;
+
 
     @Value("${server.url}")
     public void setServerUrl(String serverUrl) {
@@ -106,5 +110,10 @@ public class CoreConstants {
     @Value("${bos.back.url}")
     public void setBosBackUrl(String bosBackUrl) {
         BOS_BACK_URL = bosBackUrl;
+    }
+
+    @Value("${ali.notifyUrl}")
+    public  void setAliNotifyUrl(String aliNotifyUrl) {
+        ALI_NOTIFY_URL = aliNotifyUrl;
     }
 }

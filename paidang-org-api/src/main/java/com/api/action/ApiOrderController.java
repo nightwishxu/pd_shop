@@ -5,6 +5,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.BaseUtils;
 import com.item.dao.model.User;
 import com.item.dao.model.UserNotify;
@@ -16,6 +17,8 @@ import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.daoEx.model.OrgAmountLogEx;
 import com.paidang.domain.qo.OrderQo;
+import com.paidang.domain.vo.OrderCollectInfoVo;
+import com.paidang.domain.vo.OrderCollectVo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
 import io.swagger.annotations.Api;
@@ -112,6 +115,60 @@ public class ApiOrderController extends ApiBaseController {
         qo.setRefStates(refStates);
         List<OrderEx> list = orderService.findList(qo);
         return list;
+    }
+
+    @PostMapping("/order/collectInfo/get")
+    @ApiMethod(isLogin = true)
+    @ApiOperation(value = "订单汇总状态数量"	)
+    public OrderCollectInfoVo getOrderCollectInfo(MobileInfo mobileInfo){
+        OrderCollectInfoVo  result = new OrderCollectInfoVo();
+        Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
+        OrderQo qo = new OrderQo();
+        qo.setOrgId(orgId);
+        List<Integer> states= new ArrayList<>();
+        List<Integer> refStates= new ArrayList<>();
+        for (int state=0;state<=4;state++){
+            states.clear();
+            refStates.clear();
+            if (state!=0 && state!=4){
+                refStates.add(0);
+                refStates.add(5);
+            }
+            if (state==0){
+
+            }else if (state==3){
+                //3已发货4确认收货5已评价
+                states.add(3);
+                states.add(4);
+                states.add(5);
+            }else if (state==4){
+                refStates.add(1);
+                refStates.add(2);
+                refStates.add(3);
+                refStates.add(4);
+
+            }else {
+                states.add(state);
+            }
+            qo.setStates(states);
+            qo.setRefStates(refStates);
+            Integer count = orderService.getCount(qo);
+            if (count!=null && count!=0){
+                if (state==0){
+                    result.setOrderTotal(count);
+                }else if (state==1){
+                    result.setState_1(count);
+                }else if (state==2){
+                    result.setState_2(count);
+                }else if (state==3){
+                    result.setState_3(count);
+                }else if (state==4){
+                    result.setOrderAfter(count);
+                }
+            }
+        }
+
+        return result;
     }
 
 
@@ -333,10 +390,10 @@ public class ApiOrderController extends ApiBaseController {
     @ApiMethod(isLogin = true)
     @ApiOperation(value = "填写物流信息")
     @Transactional
-    public void writeExperterInfo(@ApiParam(value = "物流公司") String shipFirm,
-                                 @ApiParam(value = "物流单号") String shipCode,
-                                 @ApiParam(value = "订单号") String orderCode,
-                                 MobileInfo mobileInfo){
+    public Result writeExperterInfo(@ApiParam(value = "物流公司") String shipFirm,
+                                    @ApiParam(value = "物流单号") String shipCode,
+                                    @ApiParam(value = "订单号") String orderCode,
+                                    MobileInfo mobileInfo){
         int userId = mobileInfo.getUserId();
         //先根据订单号查询订单信息
         OrderExample orderExample = new OrderExample();
@@ -359,7 +416,7 @@ public class ApiOrderController extends ApiBaseController {
 
         synchronized (order.getId()) {
             ExpressExample example = new ExpressExample();
-            example.createCriteria().andFidEqualTo(order.getId());
+            example.createCriteria().andFidEqualTo(order.getId()).andTypeEqualTo(3);
             List<Express> list = expressService.selectByExample(example);
             if (list != null && list.size() > 0) {
                 throw new ApiException(-1,"该订单已有物流信息!");
@@ -380,6 +437,7 @@ public class ApiOrderController extends ApiBaseController {
             express.setCreateTime(new Date());
             expressService.insert(express);
         }
+        return new Result();
     }
 
 

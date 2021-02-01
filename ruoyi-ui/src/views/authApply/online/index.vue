@@ -157,6 +157,7 @@
         <template slot-scope="scope">
           <el-button
             type="primary"
+            v-if="scope.row.video"
             @click="playVideo(scope.row)"
             ref="btn"
             size="mini"

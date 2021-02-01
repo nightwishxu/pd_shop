@@ -53,6 +53,7 @@ public class DSPConsts {
     public static String institutionID  =  CoreConstants.getProperty("institution.id") ;
 
     public static String hostUrl =  CoreConstants.getProperty("host.url") ;
+    public static String adminHostUrl =  CoreConstants.getProperty("admin.host.url") ;
 
 
     public static String contractPawnTemplateId = CoreConstants.getProperty("contract.pawn.template.id");

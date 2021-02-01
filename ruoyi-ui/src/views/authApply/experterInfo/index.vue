@@ -7,15 +7,21 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="专家姓名" prop="title">
+      <el-form-item
+        label="专家姓名"
+        prop="title"
+      >
         <el-input
           v-model="queryParams.experterName"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
-        </el-form-item>
-         <el-form-item label="商品名称" prop="title">
+      </el-form-item>
+      <el-form-item
+        label="商品名称"
+        prop="title"
+      >
         <el-input
           v-model="queryParams.goodsName"
           clearable
@@ -29,38 +35,43 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        >搜索</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          size="mini"
+          @click="resetQuery"
+        >重置</el-button>
       </el-form-item>
     </el-form>
 
-   
-      <div class="top-right-btn">
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-          <el-button
-            size="mini"
-            circle
-            icon="el-icon-refresh"
-            @click="handleQuery"
-          />
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          :content="showSearch ? '隐藏搜索' : '显示搜索'"
-          placement="top"
-        >
-          <el-button
-            size="mini"
-            circle
-            icon="el-icon-search"
-            @click="showSearch = !showSearch"
-          />
-        </el-tooltip>
-      </div>
+    <div class="top-right-btn">
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="刷新"
+        placement="top"
+      >
+        <el-button
+          size="mini"
+          circle
+          icon="el-icon-refresh"
+          @click="handleQuery"
+        />
+      </el-tooltip>
+      <el-tooltip
+        class="item"
+        effect="dark"
+        :content="showSearch ? '隐藏搜索' : '显示搜索'"
+        placement="top"
+      >
+        <el-button
+          size="mini"
+          circle
+          icon="el-icon-search"
+          @click="showSearch = !showSearch"
+        />
+      </el-tooltip>
+    </div>
     </el-row>
 
     <el-table
@@ -68,25 +79,48 @@
       :data="infoList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="专家姓名" align="center" prop="experterName" />
-      <el-table-column label="商品名称" align="center" prop="goodsName" />
-      <el-table-column label="宝贝图片" align="center" prop="images">
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+      />
+      <el-table-column
+        label="专家姓名"
+        align="center"
+        prop="experterName"
+      />
+      <el-table-column
+        label="商品名称"
+        align="center"
+        prop="goodsName"
+      />
+      <el-table-column
+        label="宝贝图片"
+        align="center"
+        prop="images"
+      >
         <template scope="scope">
-          <span
-            v-for="(item, index) in scope.row.images.split(',')"
-            :key="index"
-          >
-            <el-popover placement="left" trigger="click" width="300">
-              <el-image :src="item" />
-              <el-image
-                slot="reference"
-                :src="item"
-                :alt="item"
-                style="max-height: 50px; max-width: 50px; padding: 5px"
-              />
-            </el-popover>
-          </span>
+          <div v-if="scope.row.images">
+            <span
+              v-for="(item, index) in scope.row.images.split(',')"
+              :key="index"
+            >
+              <el-popover
+                placement="left"
+                trigger="click"
+                width="300"
+              >
+                <el-image :src="item" />
+                <el-image
+                  slot="reference"
+                  :src="item"
+                  :alt="item"
+                  style="max-height: 50px; max-width: 50px; padding: 5px"
+                />
+              </el-popover>
+            </span>
+          </div>
+
         </template>
       </el-table-column>
       <el-table-column
@@ -95,8 +129,16 @@
         prop="state"
         :formatter="handleState"
       />
-      <el-table-column label="专家意见" align="center" prop="info" />
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column
+        label="专家意见"
+        align="center"
+        prop="info"
+      />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+      >
         <template slot-scope="scope">{{
           scope.row.createTime | dateYMDHMSFormat
         }}</template>
@@ -112,75 +154,163 @@
     />
 
     <!-- 添加或修改专家意见日志记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入标题" />
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="500px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+      >
+        <el-form-item
+          label="标题"
+          prop="title"
+        >
+          <el-input
+            v-model="form.title"
+            placeholder="请输入标题"
+          />
         </el-form-item>
-        <el-form-item label="专家id" prop="experterId">
-          <el-input v-model="form.experterId" placeholder="请输入专家id" />
+        <el-form-item
+          label="专家id"
+          prop="experterId"
+        >
+          <el-input
+            v-model="form.experterId"
+            placeholder="请输入专家id"
+          />
         </el-form-item>
-        <el-form-item label="商品id" prop="goodsId">
-          <el-input v-model="form.goodsId" placeholder="请输入商品id" />
+        <el-form-item
+          label="商品id"
+          prop="goodsId"
+        >
+          <el-input
+            v-model="form.goodsId"
+            placeholder="请输入商品id"
+          />
         </el-form-item>
-        <el-form-item label="专家是否已经评定 0未评定 1已评定" prop="state">
+        <el-form-item
+          label="专家是否已经评定 0未评定 1已评定"
+          prop="state"
+        >
           <el-input
             v-model="form.state"
             placeholder="请输入专家是否已经评定 0未评定 1已评定"
           />
         </el-form-item>
-        <el-form-item label="专家意见" prop="info">
+        <el-form-item
+          label="专家意见"
+          prop="info"
+        >
           <el-input
             v-model="form.info"
             type="textarea"
             placeholder="请输入内容"
           />
         </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="请输入名称"
+          />
         </el-form-item>
-        <el-form-item label="尺寸" prop="cc">
-          <el-input v-model="form.cc" placeholder="请输入尺寸" />
+        <el-form-item
+          label="尺寸"
+          prop="cc"
+        >
+          <el-input
+            v-model="form.cc"
+            placeholder="请输入尺寸"
+          />
         </el-form-item>
-        <el-form-item label="重量" prop="weight">
-          <el-input v-model="form.weight" placeholder="请输入重量" />
+        <el-form-item
+          label="重量"
+          prop="weight"
+        >
+          <el-input
+            v-model="form.weight"
+            placeholder="请输入重量"
+          />
         </el-form-item>
-        <el-form-item label="主材质" prop="mainMaterial">
-          <el-input v-model="form.mainMaterial" placeholder="请输入主材质" />
+        <el-form-item
+          label="主材质"
+          prop="mainMaterial"
+        >
+          <el-input
+            v-model="form.mainMaterial"
+            placeholder="请输入主材质"
+          />
         </el-form-item>
-        <el-form-item label="副材质" prop="otherMaterial">
-          <el-input v-model="form.otherMaterial" placeholder="请输入副材质" />
+        <el-form-item
+          label="副材质"
+          prop="otherMaterial"
+        >
+          <el-input
+            v-model="form.otherMaterial"
+            placeholder="请输入副材质"
+          />
         </el-form-item>
-        <el-form-item label="年代" prop="createYear">
-          <el-input v-model="form.createYear" placeholder="请输入年代" />
+        <el-form-item
+          label="年代"
+          prop="createYear"
+        >
+          <el-input
+            v-model="form.createYear"
+            placeholder="请输入年代"
+          />
         </el-form-item>
-        <el-form-item label="市场流通性" prop="marketCirculation">
+        <el-form-item
+          label="市场流通性"
+          prop="marketCirculation"
+        >
           <el-input
             v-model="form.marketCirculation"
             placeholder="请输入市场流通性"
           />
         </el-form-item>
-        <el-form-item label="价值稳定性" prop="stabilityOfPrice">
+        <el-form-item
+          label="价值稳定性"
+          prop="stabilityOfPrice"
+        >
           <el-input
             v-model="form.stabilityOfPrice"
             placeholder="请输入价值稳定性"
           />
         </el-form-item>
-        <el-form-item label="材质易损性" prop="materialVulnerable">
+        <el-form-item
+          label="材质易损性"
+          prop="materialVulnerable"
+        >
           <el-input
             v-model="form.materialVulnerable"
             placeholder="请输入材质易损性"
           />
         </el-form-item>
-        <el-form-item label="鉴定托低价" prop="experterPrice">
+        <el-form-item
+          label="鉴定托低价"
+          prop="experterPrice"
+        >
           <el-input
             v-model="form.experterPrice"
             placeholder="请输入鉴定托低价"
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>

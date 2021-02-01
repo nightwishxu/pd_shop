@@ -233,7 +233,7 @@ public class ApiRepawnController extends ApiBaseController{
             }
             PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(rpId);
             preInterest = pawnContinue.getPawnInterest();
-            if (pawnContinue.getState()==3){
+            if (pawnContinue.getState()==0){
                 repawnDetail.setShowButton("1");
             }
             cost = pawnContinue.getPawnMoney();
@@ -348,6 +348,9 @@ public class ApiRepawnController extends ApiBaseController{
         if (repawnRecord == null){
             throw new ApiException(400,"续当不存在");
         }
+        if (repawnRecord.getState()!=1){
+            throw new ApiException(400,"续当状态异常");
+        }
         UserPawn pawnRecord = userPawnService.selectByPrimaryKey(pawnId);
         Integer goodsId = pawnRecord.getGoodsId();
         Integer userId = pawnRecord.getUserId();
@@ -356,7 +359,7 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
         }
         PawnContinue pawnContinue = new PawnContinue();
-        pawnContinue.setState(1);
+        pawnContinue.setState(2);
         pawnContinue.setId(repawnId);
         pawnContinue.setContinuePawnTicketCode(pawnTicketCode);
         pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
@@ -386,8 +389,8 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MEnumError.NUMINPUT_ILLEGAL_ERROR);
         }
         PawnContinue repawnRecord = pawnContinueService.selectByPrimaryKey(rpId);
-        if (repawnRecord.getState()!=3){
-            throw new ApiException(400,"尚未上传支付凭证");
+        if (repawnRecord.getState()!=0){
+            throw new ApiException(400,"续当状态异常");
         }
         UserPawn pawnRecord = userPawnService.selectByPrimaryKey(pid);
         Integer goodsId = pawnRecord.getGoodsId();
@@ -421,7 +424,7 @@ public class ApiRepawnController extends ApiBaseController{
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
         }
         //更新续当表 机构是否确认状态字段
-        repawnRecord.setState(4);//机构端确认用户上传的续当打款凭证
+        repawnRecord.setState(1);//机构端确认用户上传的续当打款凭证
         pawnContinueService.updateByPrimaryKey(repawnRecord);
 
 

@@ -4,6 +4,7 @@ import com.base.entity.QueryParams;
 import com.paidang.dao.model.Order;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.qo.OrderQo;
+import com.paidang.domain.vo.OrderCollectVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -26,6 +27,8 @@ public interface OrderMapperEx {
 
     //查询商场订单
     List<OrderEx> selectMyStoreOrderList(Map<String, Object> map);
+
+    List<OrderCollectVo> selectMyStoreOrderByState(Map<String, Object> map);
 
     //查询超过24小时未付款订单
     List<OrderEx> selectByTask(Map<String, Object> map);
@@ -50,6 +53,7 @@ public interface OrderMapperEx {
                                    @Param("goodsName") String goodsName);
 
     List<OrderEx> findList(OrderQo qo);
+    Integer getCount(OrderQo qo);
 
     /**
      *
@@ -58,4 +62,6 @@ public interface OrderMapperEx {
      * @return
      */
     BigDecimal getTotalOrderPrice(@Param("userId") Integer userId,@Param("queryType") Integer queryType);
+
+    List<OrderCollectVo> getOrderCountByState(@Param("userId") Integer userId);
 }

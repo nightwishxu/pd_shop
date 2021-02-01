@@ -157,4 +157,7 @@ public class PawnOrgService {
 		return pawnOrgMapperEx.reSumAmount(orgId);
 	}
 
+	public  int saveAmount(Integer orgId,BigDecimal amount){
+		return pawnOrgMapperEx.saveAmount(orgId,amount);
+	}
 }

@@ -237,6 +237,21 @@
       </el-table-column>
 
       <el-table-column
+        label="估价"
+        align="center"
+        prop="authPriceTest"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="info"
+            size="mini"
+            v-if="scope.row.authResult == 4 && scope.row.gotoPawn==0 && (scope.row.isSell==null || scope.row.isSell==0)"
+            @click="handleForm12(scope.row)"
+          >{{ scope.row.authPriceTest }}</el-button>
+          <div v-else>{{ scope.row.authPriceTest }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="鉴定价"
         align="center"
         prop="authPrice"
@@ -917,85 +932,6 @@
         >
           <el-input v-model="form8.rate" />
         </el-form-item>
-        <!-- <el-form-item
-          label="名称"
-          prop="cerName"
-          v-if="show4"
-        >
-          <el-input v-model="form8.cerName" />
-        </el-form-item>
-        <el-form-item
-          label="尺寸"
-          prop="size"
-          v-if="show4"
-        >
-          <el-input v-model="form8.size" />
-        </el-form-item>
-        <el-form-item
-          label="重量"
-          prop="weight"
-          v-if="show4"
-        >
-          <el-input v-model="form8.weight" />
-        </el-form-item>
-
-        <el-form-item
-          label="主材质"
-          prop="mainMaterial"
-          v-if="show4"
-        >
-          <el-input v-model="form8.mainMaterial" />
-        </el-form-item>
-
-        <el-form-item
-          label="副材质"
-          prop="material"
-          v-if="show4"
-        >
-          <el-input v-model="form8.material" />
-        </el-form-item>
-
-        <el-form-item
-          label="年代"
-          prop="createYear"
-          v-if="show4"
-        >
-          <el-input v-model="form8.createYear" />
-        </el-form-item>
-
-        <el-form-item
-          label="其他"
-          prop="other"
-          v-if="show4"
-        >
-          <el-input v-model="form8.other" />
-        </el-form-item>
-
-        </el-form-item>
-
-        <el-form-item
-          label="市场流通性"
-          prop="marketLiquidity"
-          v-if="show4"
-        >
-          <el-rate v-model="form8.marketLiquidity" />
-        </el-form-item>
-
-        <el-form-item
-          label="价值稳定性"
-          prop="valueStability"
-          v-if="show4"
-        >
-          <el-rate v-model="form8.valueStability" />
-        </el-form-item>
-
-        <el-form-item
-          label="材质易损性"
-          prop="materialVulnerability"
-          v-if="show4"
-        >
-          <el-rate v-model="form8.materialVulnerability" />
-        </el-form-item> -->
 
         <el-form-item
           label="无法鉴定理由："
@@ -1101,6 +1037,40 @@
           @click="from10Submit"
         >确 定</el-button>
         <el-button @click="cancel10">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      :title="title12"
+      :visible.sync="open12"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        ref="form12"
+        :model="form12"
+        label-width="100px"
+      >
+        <el-form-item
+          label="设置估价"
+          prop="authPriceTest"
+          id="authPriceTest"
+        >
+          <el-input
+            v-model="form12.authPriceTest"
+            placeholder="请输入价格"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from12Submit"
+        >确 定</el-button>
+        <el-button @click="cancel12">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -1364,6 +1334,7 @@ export default {
       open8: false,
       open10: false,
       open11: false,
+      open12: false,
       videoOpen: false,
       videoUrl: null,
       show2: true,
@@ -1378,6 +1349,7 @@ export default {
       title8: "",
       title10: "",
       title11: "",
+      title12: "",
 
       isRouterAlive: true,
       // 查询参数
@@ -1436,6 +1408,7 @@ export default {
       form8: {},
       form10: {},
       form11: {},
+      form12: {},
       uploadAction: process.env.BASE_API + "common/fileUplaod",
       // imgfileList:[],
       // 表单校验
@@ -1727,6 +1700,13 @@ export default {
       this.open11 = true;
       this.title11 = "物流单号";
     },
+     handleForm12(row) {
+      this.reset12();
+      const id = row.id;
+      this.form12 = { id: id, authPriceTest: row.authPriceTest };
+      this.open12 = true;
+      this.title12 = "估价";
+    },
     playVideo(row,type) {
       this.videoOpen = true;
       if(type==1){
@@ -1840,6 +1820,15 @@ export default {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open11 = false;
+          this.getList();
+        }
+      });
+    },
+    from12Submit() {
+      updateGoods(this.form12).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open12 = false;
           this.getList();
         }
       });
@@ -2000,6 +1989,10 @@ export default {
       this.open8 = false;
       this.reset5();
     },
+       cancel12() {
+      this.open12 = false;
+      this.reset12();
+    },
     closeDialog() {
       this.videoUrl = "";
     },
@@ -2079,6 +2072,13 @@ export default {
         postExpressCode: null,
       };
       this.resetForm("form11");
+    },
+      reset12() {
+      this.form12 = {
+        id: null,
+        authePriceTest: null,
+      };
+      this.resetForm("form12");
     },
     /** 搜索按钮操作 */
     handleQuery() {

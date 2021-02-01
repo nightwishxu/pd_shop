@@ -633,7 +633,7 @@ public class BFileService {
 	}
 
 
-	public void transferFile(String startTime) throws Exception{
+	public void transferFile(String startTime,String endTime) throws Exception{
 //		http://baidu.paidangwang.net/admin//download?id=9497c7de6bc24a8e93721a4f7d1ddde0
 //		http://baidu.paidangwang.net/admin//download?id=0768268a2d0b4ba9ad0ac0de4c82e9a6_normal
 		//0768268a2d0b4ba9ad0ac0de4c82e9a6_normal
@@ -641,9 +641,12 @@ public class BFileService {
 		//
 		BaseUtils.checkBlankParam(startTime);
 		String time = "2021-01-22 18:31:49";
+		if (StringUtils.isBlank(endTime)){
+			endTime = time;
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		BFileExample example = new BFileExample();
-		example.createCriteria().andFileCreatetimeLessThanOrEqualTo(sdf.parse(time)).andFileCreatetimeGreaterThanOrEqualTo(sdf.parse(startTime));
+		example.createCriteria().andFileCreatetimeLessThanOrEqualTo(sdf.parse(endTime)).andFileCreatetimeGreaterThanOrEqualTo(sdf.parse(startTime));
 		example.setOrderByClause("file_createtime asc");
 		List<BFile> bFiles = selectByExample(example);
 		int i = 1;

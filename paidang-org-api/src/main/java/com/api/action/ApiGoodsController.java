@@ -19,6 +19,7 @@ import com.ruoyi.common.utils.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,9 @@ public class ApiGoodsController extends ApiBaseController {
             BaseUtils.checkBlankParam(auctionEndTime,auctionStartTime,startPrice,raisePriceRange);
             price = startPrice;
             total = 1;
+            if (auctionStartTime.compareTo(auctionEndTime)>=0){
+                throw new ApiException(-1,"竞拍结束时间不能早于开始时间");
+            }
         }
         Date date = new Date();
         Goods goods = new Goods();
@@ -294,6 +298,22 @@ public class ApiGoodsController extends ApiBaseController {
 //            return ok(goodsList);
 //        }
     }
+
+
+    @PostMapping("/getGoodsDetail")
+    @ApiMethod(isLogin = true)
+    @ApiOperation(value = "获取商品详情")
+    public GoodsEx goodsDetail(@ApiParam(required = true,value = "商品编号") Integer id){
+
+        GoodsQo qo = new GoodsQo();
+        qo.setId(id);
+        List<GoodsEx> goodsList = goodsService.findListEx(qo);
+        if (CollectionUtils.isNotEmpty(goodsList)){
+            return goodsList.get(0);
+        }
+        return null;
+    }
+
 
     @PostMapping("/delete")
     @ApiMethod(isLogin = true)

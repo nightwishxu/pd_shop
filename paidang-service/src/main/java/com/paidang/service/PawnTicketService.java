@@ -122,7 +122,7 @@ public class PawnTicketService {
 		UserGoods userGoods = userGoodsMapper.selectByPrimaryKey(userPawn.getGoodsId());
 		PawnTicket entity = new PawnTicket();
 		entity.setOrgName(pawnOrg.getName()==null?"":pawnOrg.getName());
-		entity.setOrgTel(pawnOrg.getPhone()==null?"":pawnOrg.getPhone());
+		entity.setOrgTel(pawnOrg.getAnxinPhone()==null?"":pawnOrg.getAnxinPhone());
 		entity.setOrgAdress(pawnOrg.getAdress()==null?"":pawnOrg.getAdress());
 		entity.setBusinessLicense(pawnOrg.getBusinessLicenseCode()==null?"":pawnOrg.getBusinessLicenseCode());
 		entity.setPawnerCert("身份证");
@@ -148,8 +148,8 @@ public class PawnTicketService {
 		entity.setPawnBeginTime(DateFormatUtils.format(userPawn.getPawnBeginTime(),"yyyy-MM-dd"));
 		entity.setPawnEndTime(DateFormatUtils.format(userPawn.getPawnEndTime(),"yyyy-MM-dd"));
 		entity.setBeginPawnEndTime(DateFormatUtils.format(userPawn.getBeginPawnEndTime(),"yyyy-MM-dd"));
-		entity.setRate(userPawn.getRate()==null?"0":userPawn.getRate().toString() + "%");
-		entity.setMoneyRate(userPawn.getMoneyRate()==null?"0":userPawn.getMoneyRate().toString() + "%");
+		entity.setRate(userPawn.getRate()==null?"0":userPawn.getRate().toString() );
+		entity.setMoneyRate(userPawn.getMoneyRate()==null?"0":userPawn.getMoneyRate().toString());
 //		entity.setCost();
 //		entity.setCostCN();
 //		entity.setRepawnTotalCN();
@@ -179,11 +179,13 @@ public class PawnTicketService {
 
 	//先是用户续当，生成合同，然后签署，然后上传付款凭证，典当行确认
 
+	// 先是用户续当  典当行确认 完善当票  签署合同
+
 	public void adXDTicket(String projectCode,String userName, String userTel,  PawnOrg pawnOrg, RepawnTicketModel repawn,UserPawn userPawn){
 		PawnTicket ticket = new PawnTicket();
 		ticket.setPawnTicketCode(repawn.getPawnTicketCode());
 		ticket.setOrgName(pawnOrg.getName());
-		ticket.setOrgTel(pawnOrg.getPhone());
+		ticket.setOrgTel(pawnOrg.getAnxinPhone());
 		ticket.setOrgAdress(pawnOrg.getAdress());
 		ticket.setPawnerName(repawn.getPawnerName());
 		ticket.setBusinessLicense(pawnOrg.getBusinessLicenseCode());

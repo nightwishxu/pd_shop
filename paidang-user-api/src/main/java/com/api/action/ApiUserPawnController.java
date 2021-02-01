@@ -372,7 +372,7 @@ public class ApiUserPawnController extends ApiBaseController {
             }
             detail.setTime(betTime+"");
             //可以续当 到期前7天 逾期10天内
-            if (detail.getContinueState()==0 && detail.getRedeemState()==0 && (detail.getType()==1 && betTime<=10) || (detail.getType()==0 && betTime<=7)){
+            if (detail.getContinueState()==0 && detail.getRedeemState()==0 && ((detail.getType()==1 && betTime<=10) || (detail.getType()==0 && betTime<=7))){
                 detail.setIsContinue(1);
             }else {
                 detail.setIsContinue(0);
@@ -418,11 +418,11 @@ public class ApiUserPawnController extends ApiBaseController {
             if (pawnContinue==null){
                 throw new ApiException(400,"续当异常");
             }
-            if (pawnContinue.getState()==0){
-                throw new ServiceException("机构尚未完善当票");
-            }
-            if (pawnContinue.getState()!=1){
-                throw new ServiceException("续当状态异常");
+//            if (pawnContinue.getState()==0){
+//                throw new ServiceException("机构尚未完善当票");
+//            }
+            if (!pawnContinue.getState().equals(2)){
+                throw new ApiException(400,"续当状态异常");
             }
             projectCode = pawnContinue.getProjectCode();
         }else {
@@ -1335,13 +1335,13 @@ public class ApiUserPawnController extends ApiBaseController {
         record.setImages(ex.getImages());
         record.setMoney(ex.getMoney()+"");
 
-        if(ex.getUserMoney()!=null){
-            record.setMoney(ex.getUserMoney()+"");
-        }else if (ex.getPawnMoney()!=null && ex.getBeginMoney()!=null){
-            record.setMoney(ex.getBeginMoney().subtract(ex.getPawnMoney()).toString());
-        }else {
-            record.setMoney("0");
-        }
+//        if(ex.getUserMoney()!=null){
+//            record.setMoney(ex.getUserMoney()+"");
+//        }else if (ex.getPawnMoney()!=null && ex.getBeginMoney()!=null){
+//            record.setMoney(ex.getBeginMoney().subtract(ex.getPawnMoney()).toString());
+//        }else {
+//            record.setMoney("0");
+//        }
 
         record.setPawnTime(ex.getLastPawnMonth());
         record.setRate(ex.getRate()+"");
@@ -1362,16 +1362,26 @@ public class ApiUserPawnController extends ApiBaseController {
         long day=(outTime/(24*60*60*1000));
         if(day > 0){
             record.setOutTime((int) Math.ceil(day));
+            //逾期利息
+            BigDecimal overMoney = totalMoney.divide(new BigDecimal(ex.getLastPawnMonth()*15),4,BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(day));
+            totalMoney = totalMoney.add(overMoney).setScale(2,BigDecimal.ROUND_HALF_UP);
+            record.setTotalMoney(totalMoney+"");
             //逾期滞纳金
             //BigDecimal yqMoney = ex.getBeginMoney().multiply(PaidangConst.REDEEM_OVERRATE).divide(new BigDecimal(day)).divide(new BigDecimal(100)).multiply(new BigDecimal(15));
-            BigDecimal yqMoney = CostGenerator.getOverdue(ex.getBeginMoney(),ex.getPawnEndTime(),ex.getOverdueRate());
-            record.setRedeemOverdue(yqMoney+"");
+//            BigDecimal yqMoney = CostGenerator.getOverdue(ex.getBeginMoney(),ex.getPawnEndTime(),ex.getOverdueRate());
+//            record.setRedeemOverdue(yqMoney+"");
             //合计
-            record.setAllMoney(totalMoney.add(yqMoney).add(ex.getMoney())+"");
+//            record.setAllMoney(totalMoney.add(yqMoney).add(ex.getMoney())+"");
+            //赎当综合费
+            BigDecimal redeemMoney = ex.getBeginMoney().multiply(ex.getRate().divide(new BigDecimal("100"))).divide(new BigDecimal("30"), 2, BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(day));
+            record.setRedeemMoney(redeemMoney+"");
+            record.setAllMoney(totalMoney.add(ex.getMoney()).add(redeemMoney)+"");
+
         }else{
             //合计
             record.setAllMoney(totalMoney.add(ex.getMoney())+"");
             record.setRedeemOverdue("0");
+            record.setRedeemMoney("0");
         }
         //record.setTotalBackMoney("");
         record.setBeginMoney(ex.getBeginMoney()+"");

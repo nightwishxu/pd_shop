@@ -159,6 +159,9 @@
         <if test="state != null" >
             and a.state = #{state}
         </if>
+        <if test="id != null" >
+            and a.id = #{id}
+        </if>
         <if test="orgId != null" >
             and a.org_id = #{orgId}
         </if>
@@ -203,6 +206,12 @@
         <if test="onlineTime!=null">
             ,online_time = #{onlineTime}
         </if>
+        <if test="auctionOnlineLogId!=null">
+            ,auction_online_log_id = #{auctionOnlineLogId}
+        </if>
+        <if test="reasonOfDismounting!=null">
+            ,reason_of_dismounting = #{reasonOfDismounting}
+        </if>
         where id = #{id}
     </update>
 
@@ -219,5 +228,9 @@
             and goods_owner = #{goodsOwner}
         </if>
     </select>
+
+    <update id="updateGoodsNum">
+        update p_goods set total  = total +#{num} where id = ${id}
+    </update>
 
 </mapper>

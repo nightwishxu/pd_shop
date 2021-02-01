@@ -52,7 +52,7 @@ export function exportEnterprise(query) {
 }
 
 
-export function chargeState(data) {
+export function changeState(data) {
   return request({
     url: '/authEnterprise/changeState',
     params: data

@@ -16,6 +16,7 @@ import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.service.*;
+import com.paidang.utils.CostGenerator;
 import com.util.PaidangMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -167,13 +168,13 @@ public class ApiRedeemController extends ApiBaseController{
         }
         redeemDetail.setPawnerAddress(pawnerAddress);
         //已发放当金 = 贷款金额 - 首期综合费 若数据库已保存则取数据库，否则计算得到
-        if(userPawnEx.getUserMoney()!=null){
-            redeemDetail.setUserMoney(userPawnEx.getUserMoney().toString());
-        }else if (userPawnEx.getPawnMoney()!=null && userPawnEx.getBeginMoney()!=null){
-            redeemDetail.setUserMoney(userPawnEx.getBeginMoney().subtract(userPawnEx.getPawnMoney()).toString());
-        }else {
-            redeemDetail.setUserMoney("0");
-        }
+//        if(userPawnEx.getUserMoney()!=null){
+//            redeemDetail.setUserMoney(userPawnEx.getUserMoney().toString());
+//        }else if (userPawnEx.getPawnMoney()!=null && userPawnEx.getBeginMoney()!=null){
+//            redeemDetail.setUserMoney(userPawnEx.getBeginMoney().subtract(userPawnEx.getPawnMoney()).toString());
+//        }else {
+//            redeemDetail.setUserMoney("0");
+//        }
 
         BigDecimal loan_money = userPawnEx.getBeginMoney();//本金
         if(loan_money==null){
@@ -184,51 +185,79 @@ public class ApiRedeemController extends ApiBaseController{
         if(moneyRate==null){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
         }
+        redeemDetail.setRate(userPawnEx.getRate().toString());
         redeemDetail.setMoneyRate(moneyRate.toString());
 //      redeemDetail.setRedeemOverRate(PaidangConst.REDEEM_OVERRATE.toString());//逾期滞纳利率
         redeemDetail.setRedeemOverRate(redeem_overrate.toString());//逾期滞纳利率redeem_overrate
 
         //计算赎当利息
         Integer times = pawnContinueService.getRepawnTimes(userPawnEx.getId());//办理过多少次续当
-        BigDecimal redeem_interest ;
+        BigDecimal redeem_interest = BigDecimal.ZERO;
         BigDecimal payBack ;
-        if(times == null || times == 0){//用户并没有续当过,计算赎当利息的时长就是首次典当约定的当期长
-            if(userPawnEx.getBeginPawnMonth()==null){
-                throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
-            }
-            if(userPawnEx.getRedeemInterest()==null){
-                redeem_interest = getInterest(loan_money,moneyRate,userPawnEx.getBeginPawnMonth());
-            }else{
-                redeem_interest = userPawnEx.getRedeemInterest();
-            }
+//        if(times == null || times == 0){//用户并没有续当过,计算赎当利息的时长就是首次典当约定的当期长
+//            if(userPawnEx.getBeginPawnMonth()==null){
+//                throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);
+//            }
+//            if(userPawnEx.getRedeemInterest()==null){
+//                redeem_interest = getInterest(loan_money,moneyRate,userPawnEx.getBeginPawnMonth());
+//            }else{
+//                redeem_interest = userPawnEx.getRedeemInterest();
+//            }
+//        }else{
+//            //用户续当过至少一次,计算赎当利息的时长就是上一个续当的当期
+//            PawnContinueExample pawnContinueExample = new PawnContinueExample();
+//            pawnContinueExample.createCriteria().andPawnIdEqualTo(Integer.valueOf(pawnId)).andStateEqualTo(4);
+//            pawnContinueExample.setOrderByClause("create_time desc");
+//            List<PawnContinue> pawnContinueList = pawnContinueService.selectByExample(pawnContinueExample);
+//            PawnContinue pawnContinue = pawnContinueList.get(0);// 有此pawnId的续当记录，取第一个，最新的
+//            Integer pawnMonth = pawnContinue.getPawnMonth();//续当表保存的该续当周期长(当前时期所在续当周期)
+//            //计算赎当利息
+//            if(userPawnEx.getRedeemInterest()==null){
+//                redeem_interest = getInterest(loan_money,moneyRate,pawnMonth);
+//            }else{
+//                redeem_interest = userPawnEx.getRedeemInterest();
+//            }
+//        }
+        BigDecimal totalMoney = CostGenerator.getInterest(userPawnEx.getBeginMoney(),userPawnEx.getMoneyRate(),userPawnEx.getLastPawnMonth());
+
+        Date endDate = new Date();
+        long outTime = endDate.getTime() - userPawnEx.getPawnEndTime().getTime();
+
+//        redeemDetail.setre(totalMoney+"");
+
+        long day=(outTime/(24*60*60*1000));
+        if(day > 0){
+            //逾期利息
+            BigDecimal overMoney = totalMoney.divide(new BigDecimal(userPawnEx.getLastPawnMonth()*15),4,BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(day));
+            totalMoney = totalMoney.add(overMoney).setScale(2,BigDecimal.ROUND_HALF_UP);
+            redeemDetail.setMoneyCost(totalMoney+"");
+            //赎当综合费
+            BigDecimal redeemMoney = userPawnEx.getBeginMoney().multiply(userPawnEx.getRate().divide(new BigDecimal("100"))).divide(new BigDecimal("30"), 2, BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(day));
+            redeemDetail.setRedeemMoney(redeemMoney+"");
+            redeemDetail.setPayBack(totalMoney.add(userPawnEx.getMoney()).add(redeemMoney)+"");
+
         }else{
-            //用户续当过至少一次,计算赎当利息的时长就是上一个续当的当期
-            PawnContinueExample pawnContinueExample = new PawnContinueExample();
-            pawnContinueExample.createCriteria().andPawnIdEqualTo(Integer.valueOf(pawnId)).andStateEqualTo(4);
-            pawnContinueExample.setOrderByClause("create_time desc");
-            List<PawnContinue> pawnContinueList = pawnContinueService.selectByExample(pawnContinueExample);
-            PawnContinue pawnContinue = pawnContinueList.get(0);// 有此pawnId的续当记录，取第一个，最新的
-            Integer pawnMonth = pawnContinue.getPawnMonth();//续当表保存的该续当周期长(当前时期所在续当周期)
-            //计算赎当利息
-            if(userPawnEx.getRedeemInterest()==null){
-                redeem_interest = getInterest(loan_money,moneyRate,pawnMonth);
-            }else{
-                redeem_interest = userPawnEx.getRedeemInterest();
-            }
+            redeemDetail.setMoneyCost(totalMoney+"");
+            //合计
+            redeemDetail.setPayBack(totalMoney.add(userPawnEx.getMoney())+"");
+//            record.setRedeemOverdue("0");
+            redeemDetail.setRedeemMoney("0");
         }
+
+
         //计算逾期利息(若逾期)
-        BigDecimal redeemOverdue ;
-        Date pawnEndTime = userPawnEx.getPawnEndTime();//典当结束时间
-        if (userPawnEx.getRedeemOverdue() == null){
-            redeemOverdue = getOverdue(loan_money,pawnEndTime,redeem_overrate);
-        }else{
-            redeemOverdue = userPawnEx.getRedeemOverdue();
-        }
-        redeemDetail.setMoneyCost(redeem_interest.setScale(2,BigDecimal.ROUND_HALF_UP).toString());//赎当利息
-        redeemDetail.setRedeemOverdue(redeemOverdue.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
-        //到期应还款金额 = 本金 + 本期利息 + 逾期利息(可能产生)
-        payBack = loan_money.add(redeem_interest).add(redeemOverdue);
-        redeemDetail.setPayBack(payBack.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+//        BigDecimal redeemOverdue ;
+//        Date pawnEndTime = userPawnEx.getPawnEndTime();//典当结束时间
+//        if (userPawnEx.getRedeemOverdue() == null){
+//            redeemOverdue = getOverdue(loan_money,pawnEndTime,redeem_overrate);
+//        }else{
+//            redeemOverdue = userPawnEx.getRedeemOverdue();
+//        }
+//        redeemDetail.setMoneyCost(redeem_interest.setScale(2,BigDecimal.ROUND_HALF_UP).toString());//赎当利息
+//        redeemDetail.setRedeemOverdue(redeemOverdue.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+//        //到期应还款金额 = 本金 + 本期利息 + 逾期利息(可能产生)
+//        payBack = loan_money.add(redeem_interest).add(redeemOverdue);
+//        redeemDetail.setPayBack(payBack.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
 
         //赎当详情页面收款人姓名，收款银行名，收款卡号
         String bankCardName = userPawnEx.getPayBankName()!=null?userPawnEx.getPayBankName():"";

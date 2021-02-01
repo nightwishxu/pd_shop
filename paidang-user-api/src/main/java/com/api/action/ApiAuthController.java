@@ -20,6 +20,8 @@ import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.qo.GoodsQo;
 import com.paidang.domain.vo.AuthResultVo;
+import com.paidang.domain.vo.OrderCollectInfoVo;
+import com.paidang.domain.vo.OrderCollectVo;
 import com.paidang.domain.vo.OrderPriceCollectVo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
@@ -389,6 +391,9 @@ public class ApiAuthController extends CoreController {
 			BaseUtils.checkBlankParam(auctionEndTime,auctionStartTime,startPrice,raisePriceRange);
 			price = startPrice;
 			total = 1;
+			if (auctionStartTime.compareTo(auctionEndTime)>=0){
+				throw new ApiException(-1,"竞拍结束时间不能早于开始时间");
+			}
 		}
 		Date date = new Date();
 		Goods goods = new Goods();
@@ -540,6 +545,8 @@ public class ApiAuthController extends CoreController {
 			goods.setTotal(1);
 		}
 		goods.setIsOnline(1);
+		goods.setMaxAutionId(null);
+		goods.setMaxAuction(null);
 		goods.setOnlineTime(new Date());
 		goods.setReasonOfDismounting("");
 		if (goods.getDealType()==2){
@@ -552,7 +559,7 @@ public class ApiAuthController extends CoreController {
 			goodsAuctionOnlineLogService.insertSelective(log);
 			goods.setAuctionOnlineLogId(log.getId());
 		}
-		goodsService.updateByPrimaryKeySelective(goods);
+		goodsService.sellAuctionGoods(goods);
 		return 1;
 	}
 
@@ -662,6 +669,21 @@ public class ApiAuthController extends CoreController {
 		return goodsList;
 	}
 
+
+    @PostMapping("/goods/getGoodsDetail")
+    @ApiMethod(isLogin = true)
+    @ApiOperation(value = "获取商品详情")
+    public GoodsEx goodsDetail(@ApiParam(required = true,value = "商品编号") Integer id){
+
+        GoodsQo qo = new GoodsQo();
+        qo.setId(id);
+        List<GoodsEx> goodsList = goodsService.findListEx(qo);
+        if (CollectionUtils.isNotEmpty(goodsList)){
+            return goodsList.get(0);
+        }
+        return null;
+    }
+
 	@PostMapping("/goods/delete")
 	@ApiMethod(isLogin = true)
 	@ApiOperation(value = "删除发布的商品")
@@ -700,6 +722,33 @@ public class ApiAuthController extends CoreController {
 
 		List<OrderEx> orderExes = orderService.getOrderByState(userId,goodsName,state);
 		return orderExes;
+	}
+
+	@PostMapping("/order/collectInfo/get")
+	@ApiMethod(isLogin = true)
+	@ApiOperation(value = "订单汇总状态数量"	)
+	public OrderCollectInfoVo getOrderCollectInfo(MobileInfo mobileInfo){
+		List<OrderCollectVo> orderCountByState = orderService.getOrderCountByState(mobileInfo.getUserId());
+		OrderCollectInfoVo result = new OrderCollectInfoVo();
+		if (CollectionUtils.isNotEmpty(orderCountByState)){
+			for (OrderCollectVo vo : orderCountByState) {
+				if (vo.getState()==-1){
+					result.setStateRefund(vo.getNum());
+				}else if (vo.getState()==1){
+					result.setState_1(vo.getNum());
+				}else if (vo.getState()==2){
+					result.setState_2(vo.getNum());
+				}else if (vo.getState()==3){
+					result.setState_3(vo.getNum());
+				}else if (vo.getState()==4){
+					result.setState_4(vo.getNum());
+				}else if (vo.getState()==5){
+					result.setState_5(vo.getNum());
+				}
+			}
+
+		}
+		return result;
 	}
 
 	@PostMapping("/financeInfo/get")
@@ -768,7 +817,7 @@ public class ApiAuthController extends CoreController {
 
 		synchronized (order.getId()) {
 			ExpressExample example = new ExpressExample();
-			example.createCriteria().andFidEqualTo(order.getId());
+			example.createCriteria().andFidEqualTo(order.getId()).andTypeEqualTo(3);
 			List<Express> list = expressService.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				throw new ApiException(-1,"该订单已有物流信息!");

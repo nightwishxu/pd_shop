@@ -6,6 +6,8 @@ import com.base.util.KuaidiApiUtil;
 import com.constants.PaidangConstants;
 import com.paidang.domain.enums.UserIntegralEnum;
 import com.paidang.domain.pojo.AppVersion;
+import com.paidang.domain.vo.OrderCollectInfoVo;
+import com.paidang.domain.vo.OrderCollectVo;
 import com.paidang.service.UnionApiService;
 import com.api.util.PageLimit;
 import com.api.view.home.*;
@@ -37,10 +39,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -747,6 +746,44 @@ public class ApiHomeController extends ApiBaseController {
         return list;
     }
 
+    @PostMapping("/order/collectInfo/get")
+    @ApiMethod(isLogin = true)
+    @ApiOperation(value = "订单汇总状态数量"	)
+    public OrderCollectInfoVo getOrderCollectInfo(MobileInfo mobileInfo){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("user_id", mobileInfo.getUserId());
+        map.put("is_del", 0);
+        map.put("orderState", 1);
+        List<OrderCollectVo> orderCountByState = orderService.selectMyStoreOrderByState(map);
+        OrderCollectInfoVo result = new OrderCollectInfoVo();
+        if (CollectionUtils.isNotEmpty(orderCountByState)){
+            for (OrderCollectVo vo : orderCountByState) {
+                if (vo.getState()==-1){
+                    result.setStateCancel(vo.getNum());
+                }else if (vo.getState()==1){
+                    result.setState_1(vo.getNum());
+                }else if (vo.getState()==2){
+                    result.setState_2(vo.getNum());
+                }else if (vo.getState()==3){
+                    result.setState_3(vo.getNum());
+                }else if (vo.getState()==4){
+                    result.setState_4(vo.getNum());
+                }else if (vo.getState()==5){
+                    result.setState_5(vo.getNum());
+                }
+            }
+
+        }
+        map.put("orderState", 6);
+        List<OrderCollectVo> orderCollectVos = orderService.selectMyStoreOrderByState(map);
+        if (CollectionUtils.isNotEmpty(orderCollectVos)){
+            result.setStateRefund(orderCollectVos.get(0).getNum());
+        }
+        return result;
+    }
+
+
+
     @ApiOperation(value = "商场订单 -- 申请退款", notes = "登陆")
     @RequestMapping(value = "/refundOrder", method = RequestMethod.POST)
     @ApiMethod(isLogin = true)
@@ -875,6 +912,7 @@ public class ApiHomeController extends ApiBaseController {
         if (null == goods) {
             throw new ApiException(MErrorEnum.GOODS_NOTEXISTS_ERROR);
         }
+        goodsService.updateGoodsNum(order.getGoodsId(),order.getGoodsNum());
 
 
         return ok();
@@ -898,6 +936,9 @@ public class ApiHomeController extends ApiBaseController {
         if (ex.getGoodsCost()!=null){
             record.setAuthPrice(ex.getGoodsCost().toString());
         }
+        record.setGoodsId(goods.getId());
+        record.setDealType(goods.getDealType());
+        record.setOrgId(ex.getOrgId());
         record.setOrderCode(ex.getCode());
         record.setCouponPrice(ex.getCouponValue() + "");
         record.setGoodsPirce(ex.getGoodsPrice() + "");

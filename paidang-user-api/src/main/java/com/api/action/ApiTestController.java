@@ -7,8 +7,10 @@ import com.base.api.ApiBaseController;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
 import com.base.oauthLogin.api.OauthQQ;
+import com.base.util.BaseUtils;
 import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
+import com.base.util.StringUtil;
 import com.demo.constant.DSPConsts;
 import com.google.common.collect.Lists;
 import com.item.daoEx.model.AdEx;
@@ -16,21 +18,22 @@ import com.item.service.AdService;
 import com.paidang.dao.model.BFileExample;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.dao.model.VideoOnlineExample;
-import com.paidang.service.AnXinSignService;
-import com.paidang.service.BFileService;
-import com.paidang.service.PawnOrgService;
-import com.paidang.service.VideoOnlineService;
+import com.paidang.service.*;
+import com.ruoyi.common.core.redis.RedisCache;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author: xww
@@ -48,14 +51,27 @@ public class ApiTestController extends ApiBaseController {
     @Autowired
     private BFileService fileService;
 
+    @Autowired
+    private RedisCache redisCache;
+
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/pay")
     @ApiMethod()
-    public Object pay(MobileInfo mobileInfo){
+    public Object pay(MobileInfo mobileInfo,Integer type,String key) throws Exception{
 //        String get_user_info = OauthQQ.me().getAuthorizeUrl("get_user_info");
 //        JSONObject userInfoByCode = OauthQQ.me().getUserInfoByCode(get_user_info);
 //        System.out.println(JSONUtils.serialize(userInfoByCode));
 //        ApiUserPayService.payTest();
+        if (type!=null && type==1){
+            BaseUtils.checkBlankParam(key);
+            Collection<String> keys = redisCache.keys(key);
+            if (!keys.isEmpty()) {
+                redisCache.deleteObject(keys);
+            }
+        }else if (type==2){
+            UnionApiService.validBankCard("123","许","6227001260550180113","32021919870228002X","13771228227");
+
+        }
         return new Result<>(DSPConsts.Keystore);
     }
 
@@ -71,8 +87,8 @@ public class ApiTestController extends ApiBaseController {
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/uploadFile")
     @ApiMethod()
-    public Object uploadFile(MobileInfo mobileInfo,String startTime) throws Exception{
-        fileService.transferFile(startTime);
+    public Object uploadFile(MobileInfo mobileInfo,String startTime,String endTime) throws Exception{
+        fileService.transferFile(startTime,endTime);
         return new Result<>(DSPConsts.Keystore);
     }
 }

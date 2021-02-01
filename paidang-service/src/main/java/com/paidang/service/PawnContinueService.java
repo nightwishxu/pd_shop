@@ -186,13 +186,13 @@ public class PawnContinueService {
 						if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isNotBlank(newestOne.getContinuePawnTicketCode())){
 							repawnMini.setSignButton("1");
 						}
-						if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isBlank(newestOne.getContinuePawnTicketCode())){
-							repawnMini.setCompleteTicketButton("1");
-						}
+//						if (pawnTicket.getOrgStatus()!=null && pawnTicket.getOrgStatus()==1 && StringUtils.isBlank(newestOne.getContinuePawnTicketCode())){
+//							repawnMini.setCompleteTicketButton("1");
+//						}
 
 					}
 				}
-				if (newestOne.getState() == 3){ //续当申请中
+				if (newestOne.getState() == 0){ //续当申请中
 					//显示确认收款（续当手续费）按钮
 					repawnMini.setShowButton("1");
 					//最新续当id，set了repawnId后点击进入详情页面与未set的不同
@@ -202,6 +202,8 @@ public class PawnContinueService {
 				}else if (newestOne.getState() == 4){//本次续当已被机构端确认
 					repawnMini.setRepawnId(newestOne.getId().toString());
 					repawnMini.setDateRepawnTo(newestOne.getPawnEndTime()!=null?DateUtil.format(newestOne.getPawnEndTime(),"yyyy-MM-dd"):"");
+				}else if (newestOne.getState()==1){
+					repawnMini.setCompleteTicketButton("1");
 				}
 			}
 			if (type==1){

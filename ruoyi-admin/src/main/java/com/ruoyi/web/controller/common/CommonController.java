@@ -200,7 +200,7 @@ public class CommonController
     }
 
     @RequestMapping(value = "/downloadForBos",method = {RequestMethod.GET, RequestMethod.POST})
-    public Result downloadForBos(@RequestParam(value = "id", required = true) @ApiParam(value="文件id",required = true)String id)throws Exception{
-        return new Result(fileService.getFileForBos(id));
+    public String downloadForBos(@RequestParam(value = "id", required = true) @ApiParam(value="文件id",required = true)String id)throws Exception{
+        return fileService.getFileForBos(id);
     }
 }

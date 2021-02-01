@@ -171,12 +171,12 @@ public class AnXinSignService {
 
         JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         String req = jsonObjectMapper.writeValueAsString(tx3002ReqVO);
-        logger.info("personRegister req:{}",req);
+        logger.info("companyRegister req:{}",req);
 
         String txCode = "3002";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
         String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
-        logger.info("personRegister res:{}",res);
+        logger.info("companyRegister res:{}",res);
         Map map = JSONUtils.deserialize(res, Map.class);
         if (map.containsKey("errorMessage")){
             throw new ApiException(400,(String)map.get("errorMessage"));
@@ -219,12 +219,12 @@ public class AnXinSignService {
 
         JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         String req = jsonObjectMapper.writeValueAsString(tx3101ReqVO);
-        logger.info("personRegister req:{}",req);
+        logger.info("sendSmsCode req:{}",req);
 
         String txCode = "3101";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
         String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
-        logger.info("personRegister res:{}",res);
+        logger.info("sendSmsCode res:{}",res);
         Map map = JSONUtils.deserialize(res, Map.class);
         if (map.containsKey("errorCode")){
             throw new ApiException(400,(String)map.get("errorMessage"));
@@ -256,12 +256,12 @@ public class AnXinSignService {
 
         JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         String req = jsonObjectMapper.writeValueAsString(tx3102ReqVO);
-        logger.info("req:" + req);
+        logger.info("confirmSmsCode req:" + req);
 
         String txCode = "3102";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
         String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
-        logger.info("res:" + res);
+        logger.info("confirmSmsCode res:" + res);
         Map map = JSONUtils.deserialize(res, Map.class);
         if (map.containsKey("errorCode")){
             throw new ApiException(400,(String)map.get("errorMessage"));
@@ -392,12 +392,12 @@ public class AnXinSignService {
 
         JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         String req = jsonObjectMapper.writeValueAsString(tx3201ReqVO);
-        System.out.println("req:" + req);
+        System.out.println("createContract req:" + req);
 
         String txCode = "3201";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
         String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
-        logger.info("res {}",res);
+        logger.info("createContract res {}",res);
         Map map = JSONUtils.deserialize(res, Map.class);
         Map contractMap =(Map) map.get("contract");
         String contractNo = (String)contractMap.get("contractNo");
@@ -449,7 +449,7 @@ public class AnXinSignService {
         fieldMap.put("8", ticket.getCostCN());//典当综合费用大
         fieldMap.put("9", ticket.getCost());//典当综合费用
         fieldMap.put("10", ticket.getMoneyCostCN());//当户应付上期利息 大
-        fieldMap.put("11", ticket.getMoneyCostCN());//当户应付上期利息
+        fieldMap.put("11", ticket.getMoneyCost());//当户应付上期利息
         fieldMap.put("12", ticket.getRepawnTotalCN());//当户总计交付金额 大
         fieldMap.put("13", ticket.getRepawnTotal());//当户总计交付金额
         fieldMap.put("14", ticket.getRepawnBeginTime());//开始日期
@@ -502,12 +502,12 @@ public class AnXinSignService {
 
         JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         String req = jsonObjectMapper.writeValueAsString(tx3201ReqVO);
-        System.out.println("req:" + req);
+        logger.info("createXdContract req:" + req);
 
         String txCode = "3201";
         String signature = SecurityUtil.p7SignMessageDetach(HttpConnector.JKS_PATH, HttpConnector.JKS_PWD, HttpConnector.ALIAS, req);
         String res = httpConnector.post("platId/" + Request.PLAT_ID + "/txCode/" + txCode + "/transaction", req, signature);
-        logger.info("res {}",res);
+        logger.info("createXdContract res {}",res);
         Map map = JSONUtils.deserialize(res, Map.class);
         Map contractMap =(Map) map.get("contract");
         String contractNo = (String)contractMap.get("contractNo");

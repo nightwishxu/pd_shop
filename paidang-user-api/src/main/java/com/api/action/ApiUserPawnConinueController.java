@@ -126,6 +126,7 @@ public class ApiUserPawnConinueController extends ApiBaseController {
         record.setOrgName(ex.getOrgName());
         record.setRate(ex.getRate()+"");
         record.setMoneyRate(ex.getMoneyRate()+"");
+        record.setConinueTime(DateUtil.dateToStr(DateUtil.add(ex.getPawnEndTime(),pawnTime*15),"yyyy-MM-dd"));
         record.setBeginTime(DateUtil.dateToStr(ex.getPawnBeginTime(),"yyyy-MM-dd"));
         //当前还款日期
         String endTime = DateUtil.getAddDaysDate(ex.getPawnEndTime(),ex.getPawnTime()*15);
@@ -285,21 +286,21 @@ public class ApiUserPawnConinueController extends ApiBaseController {
     }
 
 
-    @ApiOperation(value="完善当票",notes = "登录")
-    @RequestMapping("/completeTicket")
-    @ApiMethod(isPage = false, isLogin =  true)
-    public Integer completeTicket(MobileInfo mobileInfo,
-                                  @ApiParam(value="id",required = true) Integer id, @ApiParam(value="打款凭证",required = true)String platformImage){
-        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(id);
-        if (pawnContinue.getState()!=2){
-            throw new ApiException(400,"合同尚未签署完成");
-        }
-        pawnContinue.setPayTicket(platformImage);
-        pawnContinue.setState(3);
-        pawnContinue.setModifyTime(new Date());
-        pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
-        return 1;
-    }
+//    @ApiOperation(value="完善当票",notes = "登录")
+//    @RequestMapping("/completeTicket")
+//    @ApiMethod(isPage = false, isLogin =  true)
+//    public Integer completeTicket(MobileInfo mobileInfo,
+//                                  @ApiParam(value="id",required = true) Integer id, @ApiParam(value="打款凭证",required = true)String platformImage){
+//        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(id);
+//        if (pawnContinue.getState()!=2){
+//            throw new ApiException(400,"合同尚未签署完成");
+//        }
+//        pawnContinue.setPayTicket(platformImage);
+//        pawnContinue.setState(3);
+//        pawnContinue.setModifyTime(new Date());
+//        pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
+//        return 1;
+//    }
 
 
     @ApiOperation(value="续当",notes = "登录")

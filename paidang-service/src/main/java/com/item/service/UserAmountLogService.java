@@ -2,6 +2,7 @@ package com.item.service;
 
 import com.base.mybatis.plus.EntityWrapper;
 import com.base.util.BaseUtils;
+import com.item.daoEx.UserMapperEx;
 import com.paidang.dao.UserAmountLogMapper;
 import com.paidang.dao.model.UserAmountLog;
 import com.paidang.dao.model.UserAmountLogExample;
@@ -20,6 +21,9 @@ public class UserAmountLogService {
 
 	@Autowired
 	private BaseService baseService;
+
+	@Autowired
+	private UserMapperEx userMapperEx;
 
 	public int countByExample(UserAmountLogExample example) {
 		return this.userAmountLogMapper.countByExample(example);
@@ -98,7 +102,8 @@ public class UserAmountLogService {
 		}
 		log.setCreateTime(new Date());
 		insertSelective(log);
-		baseService.updateNumById("b_user","balance",log.getAmountNew(),userId);
+//		baseService.updateNumById("b_user","balance",log.getAmountNew(),userId);
+		userMapperEx.saveBalance(userId,log.getAmountNew());
 		return log;
 	}
 

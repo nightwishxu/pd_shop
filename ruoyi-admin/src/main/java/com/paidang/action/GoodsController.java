@@ -232,6 +232,8 @@ public class GoodsController extends CoreController{
 			goods.setTotal(1);
 		}
 		goods.setIsOnline(1);
+		goods.setMaxAutionId(null);
+		goods.setMaxAuction(null);
 		goods.setOnlineTime(new Date());
 		goods.setReasonOfDismounting("");
 		if (goods.getDealType()==2){
@@ -244,7 +246,7 @@ public class GoodsController extends CoreController{
 			goodsAuctionOnlineLogService.insertSelective(log);
 			goods.setAuctionOnlineLogId(log.getId());
 		}
-		goodsService.updateByPrimaryKeySelective(goods);
+		goodsService.sellAuctionGoods(goods);
 		return 1;
 	}
 

@@ -30,4 +30,6 @@ public interface PawnOrgMapperEx {
     int addIntegral(@Param("orgId") Integer orgId, @Param("integral")BigDecimal integral);
 
     int reSumAmount(@Param("orgId")Integer orgId);
+
+    int saveAmount(@Param("orgId")Integer orgId,@Param("amount")BigDecimal amount);
 }

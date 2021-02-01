@@ -62,6 +62,9 @@ public class AppMyPawnGetBack {
     @ApiModelProperty(value="当户名称")
     private String pawnerName;
 
+    @ApiModelProperty(value="赎当综合费")
+    private String redeemMoney;
+
 
     public Integer getId() {
         return id;
@@ -254,5 +257,13 @@ public class AppMyPawnGetBack {
 
     public void setPawnerName(String pawnerName) {
         this.pawnerName = pawnerName;
+    }
+
+    public String getRedeemMoney() {
+        return redeemMoney;
+    }
+
+    public void setRedeemMoney(String redeemMoney) {
+        this.redeemMoney = redeemMoney;
     }
 }

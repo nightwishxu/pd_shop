@@ -104,6 +104,7 @@ public class ApiHomeController extends ApiBaseController{
 			,@ApiParam(value = "机构电话", required = true)String phone
 			,@ApiParam(value = "法人电话", required = true)String legalPersonPhone
 			,@ApiParam(value = "固定电话", required = true)String landLinePhone
+			,@ApiParam(value = "地址", required = true)String address
 
 	){
 		if (!redisCache.getLock("editOrg:"+mobileInfo.getUserId(),10)){
@@ -118,6 +119,7 @@ public class ApiHomeController extends ApiBaseController{
 		if (orgId==-1){
 			//没有认证企业
 			pawnOrg.setName(name);
+			pawnOrg.setAdress(address);
 			pawnOrg.setLegalPerson(legalPerson);
 			pawnOrg.setIdCard(idCard);
 			pawnOrg.setBusinessLicense(businessLicense);
@@ -150,6 +152,7 @@ public class ApiHomeController extends ApiBaseController{
 				pawnOrg.setBusinessLicenseCode(businessLicenseCode);
 				pawnOrg.setLegalPerson(legalPerson);
 				pawnOrg.setIdCard(idCard);
+				pawnOrg.setAdress(address);
 				pawnOrg.setBusinessLicense(businessLicense);
 				pawnOrg.setIdCardImg(idCardImg);
 				pawnOrg.setIdCardReverse(idCardReverse);

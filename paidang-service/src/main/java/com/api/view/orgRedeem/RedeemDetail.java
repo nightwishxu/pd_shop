@@ -3,6 +3,8 @@ package com.api.view.orgRedeem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Lee on 2017/9/26.
  */
@@ -21,8 +23,8 @@ public class RedeemDetail extends RedeemMini{
     @ApiModelProperty("当户地址 如果地址为空字符串，则不显示出来")
     private String pawnerAddress;
 
-/*    @ApiModelProperty("综合利率，费率")
-    private String rate;*/
+    @ApiModelProperty("综合利率，费率")
+    private String rate;
 
     @ApiModelProperty("赎当利率(利息利率)")
     private String moneyRate;
@@ -68,6 +70,9 @@ public class RedeemDetail extends RedeemMini{
 
     @ApiModelProperty("是否已经缴纳 0-否 1-已缴")
     private String isPay;
+
+    @ApiModelProperty("赎当综合费")
+    private String redeemMoney;
 
 
     public String getCollecterId() {
@@ -213,4 +218,22 @@ public class RedeemDetail extends RedeemMini{
     public void setIsPay(String isPay) {
         this.isPay = isPay;
     }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public String getRedeemMoney() {
+        return redeemMoney;
+    }
+
+    public void setRedeemMoney(String redeemMoney) {
+        this.redeemMoney = redeemMoney;
+    }
 }
+
+

@@ -11,13 +11,14 @@ import com.item.dao.model.User;
 import com.item.dao.model.UserExample;
 import com.item.service.UserService;
 import com.paidang.dao.model.UserFaceLog;
+import com.paidang.domain.vo.UserFaceVo;
 import cpcn.dsp.institution.api.notice.NoticeRequest;
 import cpcn.dsp.institution.api.notice.NoticeResponse;
 import cpcn.dsp.institution.api.security.EncryptAndDecrypt;
 import cpcn.dsp.institution.api.tx.file.Tx3201Request;
 import cpcn.dsp.institution.api.tx.file.Tx3201Response;
 import cpcn.dsp.institution.api.tx.personalinfo.*;
-import cpcn.dsp.institution.api.tx.personalinfo.Tx2118Request;
+import cpcn.dsp.institution.api.tx.personalinfo.Tx2117Request;
 import cpcn.dsp.institution.api.util.GUIDGenerator;
 import cpcn.dsp.institution.api.vo.ImageFile;
 import cpcn.dsp.institution.api.util.Base64;
@@ -234,36 +235,35 @@ public class UnionApiService {
         //1.初始化
         EncryptAndDecrypt.init(DSPConsts.Keystore, DSPConsts.myKeystorePassword, DSPConsts.publicKey);
         //2.生成请求明文
-        Tx2118Request Tx2118Request = new Tx2118Request();
-        Tx2118Request.setInstitutionID(DSPConsts.institutionID);// 机构号由中金分配
-        Tx2118Request.setTxSN(GUIDGenerator.genGUID());
+        Tx2117Request Tx2117Request = new Tx2117Request();
+        Tx2117Request.setInstitutionID(DSPConsts.institutionID);// 机构号由中金分配
+        Tx2117Request.setTxSN(GUIDGenerator.genGUID());
         //原始请求流水号
-        Tx2118Request.setName(name);
-        Tx2118Request.setScName("江苏誉道");
-        Tx2118Request.setScUsageScenarios("银行卡绑卡核验");
-        Tx2118Request.setScUsePurpose("交易使用");
-        Tx2118Request.setIdentificationNumber(idCard);
-        Tx2118Request.setProtocolVerNm("协议 v1.0.0");//授权协议版本号：客户签署授权机构方使用其个人信息的电子协议名称以及版本号
-        Tx2118Request.setIdentificationType("0");
-        Tx2118Request.setAccountNumber(cardNo);
-        Tx2118Request.setPhoneNumber(phone);
-        Tx2118Request.setTransCode("99");
-        Tx2118Request.setSerialNm(serialNm);
-        Tx2118Request.setRemark("12");//仅测试环境判断该字段1->不一致,2->未知，3->请求失败，其他->一致
+        Tx2117Request.setName(name);
+        Tx2117Request.setScName("江苏誉道");
+        Tx2117Request.setScUsageScenarios("银行卡绑卡核验");
+        Tx2117Request.setScUsePurpose("交易使用");
+        Tx2117Request.setIdentificationNumber(idCard);
+        Tx2117Request.setProtocolVerNm("协议 v1.0.0");//授权协议版本号：客户签署授权机构方使用其个人信息的电子协议名称以及版本号
+        Tx2117Request.setIdentificationType("0");
+        Tx2117Request.setAccountNumber(cardNo);
+        Tx2117Request.setTransCode("99");
+        Tx2117Request.setSerialNm(serialNm);
+        Tx2117Request.setRemark("12");//仅测试环境判断该字段1->不一致,2->未知，3->请求失败，其他->一致
         //响应明文：{"Code":"2000","InstitutionID":"100710","Message":"SUCCESS","ResponseCode":"0000","ResponseMessage":"匹配","TraceNo":"2012081002419523479908262","TxCode":"2316","TxSN":"202012081002374255841440780","Verification":"20"}
         //响应明文：{"Code":"3005","InstitutionID":"100710","Message":"未查询到结果","TxCode":"2316","TxSN":"202012081002111044089663543"}
         //响应明文：{"Code":"2000","InstitutionID":"100710","Message":"SUCCESS","ResponseCode":"0001","ResponseMessage":"不匹配","TraceNo":"2012081003063106472566078","TxCode":"2316","TxSN":"202012081003048968564720074","Verification":"30"}
         //响应明文：{"Message":"请求通道出错","Code":"2008"}
         //报文处理
-        Tx2118Request.process();
-        String plainText = Tx2118Request.getRequestPlainText();
+        Tx2117Request.process();
+        String plainText = Tx2117Request.getRequestPlainText();
         System.out.println("请求明文：" + plainText);
 
-        String reqMessage = Tx2118Request.getRequestMessage();
-        String reqSignature = Tx2118Request.getRequestSignature();
-        String requestDgtlEnvlp = Tx2118Request.getRequestDgtlEnvlp();
-        String requestSignSN = Tx2118Request.getRequestSignSN();
-        String requestEncryptSN = Tx2118Request.getRequestEncryptSN();
+        String reqMessage = Tx2117Request.getRequestMessage();
+        String reqSignature = Tx2117Request.getRequestSignature();
+        String requestDgtlEnvlp = Tx2117Request.getRequestDgtlEnvlp();
+        String requestSignSN = Tx2117Request.getRequestSignSN();
+        String requestEncryptSN = Tx2117Request.getRequestEncryptSN();
         //生成参数
         Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("message", reqMessage);
@@ -336,7 +336,7 @@ public class UnionApiService {
         tx2324Request.setFrontUrl(DSPConsts.hostUrl +"h5/userFaceResult");//需要更换为外网可以访问的ip
         tx2324Request.setFrontMethod("0");
         tx2324Request.setReturnImage("0");
-        tx2324Request.setBackUrl(DSPConsts.hostUrl + "notify/receiveNoticeBackground");//需要更换为外网可以访问的ip
+        tx2324Request.setBackUrl(DSPConsts.adminHostUrl + "notify/receiveNoticeBackground");//需要更换为外网可以访问的ip
         tx2324Request.setRemark("33");//仅测试环境判断该字段1->不一致,2->未知，3->请求失败，其他->一致
         //报文处理
         tx2324Request.process();
@@ -365,7 +365,7 @@ public class UnionApiService {
 
     }
 
-    public static String receiveNotifyBack(HttpServletRequest request){
+    public  UserFaceVo receiveNotifyBack(HttpServletRequest request){
         logger.info("receiveNotifyBack start");
         String message = request.getParameter("Message");
         String signature = request.getParameter("Signature");
@@ -378,14 +378,51 @@ public class UnionApiService {
         try {
             EncryptAndDecrypt.init(DSPConsts.Keystore, DSPConsts.myKeystorePassword, DSPConsts.publicKey);
             NoticeRequest noticeRequest = new NoticeRequest(message, signature, dgtlenvlp, signSN, encryptSN);
-
+            logger.info(JSONUtils.serialize(noticeRequest));
             String plainText = noticeRequest.getPlainText();
             String txCode = noticeRequest.getTxCode();
             String code = noticeRequest.getCode();
             String noticeMessage = noticeRequest.getMessage();
+
+            Map<String,String> map = JSONUtils.deserialize(plainText, Map.class);
+            String txsn = map.get("TxSN");
+            String Verification = map.get("Verification");
+            String ResponseMessage = map.get("ResponseMessage");
+            UserFaceVo vo = new UserFaceVo();
+            vo.setState(Verification);
+            vo.setMessage(ResponseMessage);
+            UserFaceLog log = userFaceLogService.getByTxsn(txsn);
+            if (log!=null){
+                log.setResult(noticeMessage);
+                log.setModifyTime(new Date());
+                User user = userService.selectByPrimaryKey(log.getUserId());
+                if ("20".equals(Verification)){
+                    //成功
+
+                    if (log.getType()==1){
+                        User temp = new User();
+                        temp.setId(user.getId());
+                        temp.setAuthStatus(4);
+                        temp.setIsBind(1);
+                        userService.updateByPrimaryKeySelective(temp);
+                    }else if (log.getType()==2){
+
+                    }
+                }else {
+                    if (log.getType()==1){
+                        User temp = new User();
+                        temp.setId(user.getId());
+                        temp.setAuthStatus(3);
+                        userService.updateByPrimaryKeySelective(temp);
+                    }else if (log.getType()==2){
+
+                    }
+                }
+                userFaceLogService.updateByPrimaryKeySelective(log);
+            }
             logger.info("receiveNotifyBack ： " + noticeMessage);
             logger.info("receiveNotifyBack end");
-            return noticeMessage;
+            return vo;
 
 //            //////////////////////////////////
 //            //////解析明文后商户自己实现逻辑/////
@@ -421,12 +458,16 @@ public class UnionApiService {
         try {
             EncryptAndDecrypt.init(DSPConsts.Keystore, DSPConsts.myKeystorePassword, DSPConsts.publicKey);
             NoticeRequest noticeRequest = new NoticeRequest(message, signature, dgtlenvlp, signSN, encryptSN);
+            logger.info("receiveNoticeBackground result:{}",JSONUtils.serialize(noticeRequest));
+
             String plainText = noticeRequest.getPlainText();
             String txCode = noticeRequest.getTxCode();
             String code = noticeRequest.getCode();
             String noticeMessage = noticeRequest.getMessage();
             System.out.println(plainText);
             Map<String,String> map = JSONUtils.deserialize(plainText, Map.class);
+            String Verification = map.get("Verification");
+            String ResponseMessage = map.get("ResponseMessage");
             String txsn = map.get("TxSN");
 //            UserExample example = new UserExample();
 //            example.createCriteria().andTxsnEqualTo(txsn);
@@ -436,25 +477,25 @@ public class UnionApiService {
                 log.setResult(noticeMessage);
                 log.setModifyTime(new Date());
                 User user = userService.selectByPrimaryKey(log.getUserId());
-                if ("SUCCESS".equals(noticeMessage)){
+                if ("20".equals(Verification)){
                     //成功
 
-                    if ("1".equals(log.getType())){
+                    if (log.getType()==1){
                         User temp = new User();
                         temp.setId(user.getId());
                         temp.setAuthStatus(4);
                         temp.setIsBind(1);
                         userService.updateByPrimaryKeySelective(temp);
-                    }else if ("2".equals(log.getType())){
+                    }else if (log.getType()==2){
 
                     }
                 }else {
-                    if ("1".equals(log.getType())){
+                    if (log.getType()==1){
                         User temp = new User();
                         temp.setId(user.getId());
                         temp.setAuthStatus(3);
                         userService.updateByPrimaryKeySelective(temp);
-                    }else if ("2".equals(log.getType())){
+                    }else if (log.getType()==2){
 
                     }
                 }
@@ -486,7 +527,7 @@ public class UnionApiService {
     public static void main(String[] args) throws Exception{
 //        String fileId = uploadFile("http://app-cdn.starcharge.com/5e3da272-7282-41c4-ac3e-7dad4026b881.PNG");
 
-//        validBankCard("123","许","6227001260550180113","32021919870228002X","13771228227");
+        validBankCard("123","许","6227001260550180113","32021919870228002X","13771228227");
 //        validIdCard("1","320483199112215013",fileId);
 //        List<Integer> list = new ArrayList<>();
 //        for (int i =1 ;i<=10;i++){

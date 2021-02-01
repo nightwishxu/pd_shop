@@ -54,7 +54,7 @@ public class PawnTicketCenterController extends CoreController{
 		PawnTicket pawnTicket = new PawnTicket();
 		BeanUtils.copyProperties(pawnTicketEx,pawnTicket);
 		pawnTicket.setOrgName(pawnOrg.getName()==null?"":pawnOrg.getName());
-		pawnTicket.setOrgTel(pawnOrg.getPhone()==null?"":pawnOrg.getPhone());
+		pawnTicket.setOrgTel(pawnOrg.getAnxinPhone()==null?"":pawnOrg.getAnxinPhone());
 		pawnTicket.setOrgAdress(pawnOrg.getAdress()==null?"":pawnOrg.getAdress());
 		pawnTicket.setBusinessLicense(pawnOrg.getBusinessLicenseCode()==null?"":pawnOrg.getBusinessLicenseCode());
 		pawnTicket.setPawnerCert("身份证");

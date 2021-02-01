@@ -32,6 +32,7 @@ import com.base.util.StringUtil;
 import com.base.util.http.HttpUtil;
 import com.demo.constant.DSPConsts;
 import com.item.dao.model.*;
+import com.item.daoEx.model.UserEx;
 import com.item.service.AdminService;
 import com.item.service.CodeService;
 import com.item.service.UserNotifyService;
@@ -556,9 +557,22 @@ public class ApiMyAppController extends ApiBaseController{
             projectCode = userPawn.getProjectCode();
         }
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
+
         if (StringUtils.isBlank(pawnOrg.getAnxinsignId())){
-            String userId = AnXinSignService.companyRegister(pawnOrg.getName(), pawnOrg.getBusinessLicenseCode(), pawnOrg.getLegalPersonPhone(), pawnOrg.getLandLinePhone(), pawnOrg.getLegalPerson(), pawnOrg.getIdCard());
+            boolean falg = false;
+            String anxinPhone = pawnOrg.getAnxinPhone();
+            if (StringUtils.isBlank(pawnOrg.getAnxinPhone())){
+                Map<String,Object> map = new HashMap<String,Object>();
+                map.put("orgId",userPawn.getOrgId());
+                List<UserEx> userExes = userService.selectOrgUsersList(map);
+                anxinPhone = userExes.get(0).getPhone();
+                falg = true;
+            }
+            String userId = AnXinSignService.companyRegister(pawnOrg.getName(), pawnOrg.getBusinessLicenseCode(),anxinPhone, pawnOrg.getLandLinePhone(), pawnOrg.getLegalPerson(), pawnOrg.getIdCard());
             pawnOrg.setAnxinsignId(userId);
+            if (falg){
+                pawnOrg.setAnxinPhone(anxinPhone);
+            }
             pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
         }
         AnXinSignService.sendSmsCode(pawnOrg.getAnxinsignId(),projectCode,null);

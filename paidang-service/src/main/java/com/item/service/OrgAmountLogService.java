@@ -5,6 +5,7 @@ import com.base.util.BaseUtils;
 import com.paidang.dao.OrgAmountLogMapper;
 import com.paidang.dao.model.OrgAmountLog;
 import com.paidang.dao.model.OrgAmountLogExample;
+import com.paidang.daoEx.PawnOrgMapperEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ public class OrgAmountLogService {
 
 	@Autowired
 	private BaseService baseService;
+
+	@Autowired
+	private PawnOrgMapperEx pawnOrgMapperEx;
 
 	public int countByExample(OrgAmountLogExample example) {
 		return this.orgAmountLogMapper.countByExample(example);
@@ -100,7 +104,8 @@ public class OrgAmountLogService {
 		}
 		log.setCreateTime(new Date());
 		insertSelective(log);
-		baseService.updateNumById("p_pawn_org","amount",log.getAmountNew(),orgId);
+//		baseService.updateNumById("p_pawn_org","amount",log.getAmountNew(),orgId);
+		pawnOrgMapperEx.saveAmount(orgId,log.getAmountNew());
 		return log;
 	}
 

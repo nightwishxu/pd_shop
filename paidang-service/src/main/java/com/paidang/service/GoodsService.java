@@ -133,4 +133,8 @@ public class GoodsService {
 		return goodsMapperEx.offlineAuctionGoods();
 	}
 
+	public Integer updateGoodsNum(Integer id,Integer num){
+		return goodsMapperEx.updateGoodsNum(id,num);
+	}
+
 }

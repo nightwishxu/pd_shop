@@ -497,6 +497,7 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setIsFollow(0);
         }
         PawnOrgEx pawnOrg=pawnOrgService.getInfo(ex.getOrgId());
+        appStoreGoodsDetail.setOrgLabelsInfo("优选好店,店铺保证金");
         if (pawnOrg!=null){
             appStoreGoodsDetail.setOrgId(pawnOrg.getId());
             appStoreGoodsDetail.setOrgName(pawnOrg.getName());
@@ -504,6 +505,14 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setOrgLogo(pawnOrg.getOrgLogo());
             appStoreGoodsDetail.setImg(ex.getImg());
             appStoreGoodsDetail.setOrgIntegral(pawnOrg.getIntegral());
+            String orgLabelsInfo = StringUtil.isBlank(appStoreGoodsDetail.getOrgLabelsInfo())?"":appStoreGoodsDetail.getOrgLabelsInfo();
+            if (pawnOrg.getIsPersonal()!=null && pawnOrg.getIsPersonal()>=1){
+                orgLabelsInfo = orgLabelsInfo+(StringUtil.isBlank(orgLabelsInfo)?"个人认证":",个人认证");
+            }else {
+                orgLabelsInfo =  orgLabelsInfo+(StringUtil.isBlank(orgLabelsInfo)?"企业认证":",企业认证");
+
+            }
+            appStoreGoodsDetail.setOrgLabelsInfo(orgLabelsInfo);
         }
 
 
@@ -876,11 +885,12 @@ public class ApiStoreController extends ApiBaseController {
 
         Date date = new Date();
 
+        BaseUtils.check(date.compareTo(goods.getAuctionStartTime())<0,"竞拍尚未开始");
         BaseUtils.check(date.compareTo(goods.getAuctionEndTime())>=0,"竞拍已结束");
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("goods_id",id);
-        BigDecimal maxPrice = goodsAuctionService.selectMaxPrice(map);
+        BigDecimal maxPrice = goods.getMaxAuction();
         BigDecimal raise = BigDecimal.ZERO;
         if (maxPrice == null){
             raise = price.subtract(goods.getStartPrice());

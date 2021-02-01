@@ -5,6 +5,7 @@ import com.paidang.dao.model.PawnOrg;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
 @author sun
@@ -32,6 +33,8 @@ public class PawnOrgEx extends PawnOrg {
     private Integer isEnterprise;
 
     private Integer auctionCount;
+
+    private List<String> labelList;
 
     public Integer getIsEnterprise() {
         return isEnterprise;
@@ -97,5 +100,13 @@ public class PawnOrgEx extends PawnOrg {
 
     public void setAuctionCount(Integer auctionCount) {
         this.auctionCount = auctionCount;
+    }
+
+    public List<String> getLabelList() {
+        return labelList;
+    }
+
+    public void setLabelList(List<String> labelList) {
+        this.labelList = labelList;
     }
 }

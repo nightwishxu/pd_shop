@@ -544,7 +544,7 @@ export default {
     changeStateBtn(id,v) {
       var param = {"id":id,"v":v};
       console.info(param);
-      changeState(param).then(response => {
+      changeState(param).then((response) => {
          this.msgSuccess("修改成功");
          this.getList();
       });

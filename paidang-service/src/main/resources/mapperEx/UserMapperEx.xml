@@ -19,6 +19,7 @@
 			<if test="key != null and key !=''">
 				and (nick_name like '%${key}%' or phone like '%${key}%')
 			</if>
+			order by create_time asc
 	</select>
 
 
@@ -203,5 +204,10 @@
 	<update id="reSumBalance">
         update b_user set balance = (select ifnull(sum(amount_new),0) from p_user_amount_log where user_id = #{userId}) where id = #{userId}
     </update>
+
+	<update id="saveBalance">
+         update b_user set balance = ifnull(balance,0) +#{amount} where id = #{userId}
+    </update>
+
 
 </mapper>

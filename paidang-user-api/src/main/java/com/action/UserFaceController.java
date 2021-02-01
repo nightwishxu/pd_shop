@@ -9,6 +9,7 @@ import com.paidang.dao.model.Certificate;
 import com.paidang.dao.model.CertificateLog;
 import com.paidang.dao.model.CertificateLogExample;
 import com.paidang.dao.model.UserFaceLog;
+import com.paidang.domain.vo.UserFaceVo;
 import com.paidang.service.CertificateLogService;
 import com.paidang.service.CertificateService;
 import com.paidang.service.UnionApiService;
@@ -114,9 +115,9 @@ public class UserFaceController {
     @RequestMapping(value = "/h5/userFaceResult")
     public String userFaceNotify(HttpServletRequest request, HttpServletResponse response, Model model)throws Exception {
 
-        String result = UnionApiService.receiveNotifyBack(request);
-        model.addAttribute("result",result);
-        model.addAttribute("code","SUCCESS".equals(result)?1:0);
+        UserFaceVo result = unionApiService.receiveNotifyBack(request);
+        model.addAttribute("result","20".equals(result.getState())?"认证成功":result.getMessage());
+        model.addAttribute("code","20".equals(result.getState())?1:0);
 
         return "userFaceResult";
     }

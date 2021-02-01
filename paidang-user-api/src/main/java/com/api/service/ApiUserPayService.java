@@ -14,6 +14,7 @@ import com.base.pay.ali.AliPayOpenSubmit;
 import com.base.pay.ali.AlipayConfig;
 import com.base.pay.wx.util.WxPayConfig;
 import com.base.util.*;
+import com.demo.constant.DSPConsts;
 import com.ijpay.alipay.AliPayApi;
 import com.ijpay.alipay.AliPayApiConfig;
 import com.ijpay.alipay.AliPayApiConfigKit;
@@ -80,14 +81,14 @@ public class ApiUserPayService {
         WxPayApiConfig apiConfig;
 
         try {
-            apiConfig = WxPayApiConfigKit.getApiConfig(PayPropertySupport.getProperty("wxpay.appId"));
+            apiConfig = WxPayApiConfigKit.getApiConfig(CoreConstants.getProperty("wxpay.appId"));
         } catch (Exception e) {
             apiConfig = WxPayApiConfig.builder()
-                    .appId(PayPropertySupport.getProperty("wxpay.appId"))
-                    .mchId(PayPropertySupport.getProperty("wxpay.mchId"))
-                    .partnerKey(PayPropertySupport.getProperty("wxpay.partnerKey"))
-                    .certPath(PayPropertySupport.getProperty("wxpay.certPath"))
-                    .domain(PayPropertySupport.getProperty("wxpay.domain"))
+                    .appId(CoreConstants.getProperty("wxpay.appId"))
+                    .mchId(CoreConstants.getProperty("wxpay.mchId"))
+                    .partnerKey(CoreConstants.getProperty("wxpay.partnerKey"))
+                    .certPath(CoreConstants.getProperty("wxpay.certPath"))
+                    .domain(CoreConstants.getProperty("wxpay.domain"))
                     .build();
             WxPayApiConfigKit.putApiConfig(apiConfig);
         }
@@ -291,7 +292,7 @@ public class ApiUserPayService {
                 //支付宝
                 //                result.setId(outOrder.getOutOrderId()+"_"+ MPaidangPayType.NORMAL_BUY.name());
 //                result.setMoney(price.toString());
-//                result.setBackUrl(PayMethod.urlToUrl(AlipayConfig.notify_url));
+//                result.setBackUrl(CoreConstants.ALI_NOTIFY_URL);
                 AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
                 //对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。
 //                model.setBody("我是测试数据-By Javen");
@@ -299,7 +300,7 @@ public class ApiUserPayService {
                 model.setOutTradeNo(outOrder.getOutOrderId() + "_" + MPaidangPayType.NORMAL_BUY.name());
                 model.setTimeoutExpress("30m");
                 model.setTotalAmount(price.toString());
-                String orderInfo = AliPayApi.appPayToResponse(model, PayMethod.urlToUrl(AlipayConfig.notify_url)).getBody();
+                String orderInfo = AliPayApi.appPayToResponse(model, CoreConstants.ALI_NOTIFY_URL).getBody();
 
                 result.setAliPay(orderInfo);
                 break;
@@ -373,7 +374,7 @@ public class ApiUserPayService {
 
 
     public static void payTest(){
-        String notifyUrl = PayMethod.urlToUrl(AlipayConfig.notify_url);
+        String notifyUrl = CoreConstants.ALI_NOTIFY_URL;
         Map<String, Object> pay =PayMethod.aliAppPay("1223",BigDecimal.ONE,"订单",notifyUrl,AlipayConfig.app_id,
                 AlipayConfig.seller_id,AlipayConfig.payKey,null);
         System.out.println(JSONUtils.serialize(pay));
@@ -553,8 +554,8 @@ public class ApiUserPayService {
                 //支付宝
 //                result.setId(log.getId().toString()+"_"+ MPaidangPayType.NORMAL_BUY.name());
 ////                result.setMoney(order.getPrice().toString());
-////                result.setBackUrl(PayMethod.urlToUrl(AlipayConfig.notify_url));
-//                Map<String, Object> payParam = PayMethod.aliAppPay(log.getId() + "_" + MPaidangPayType.NORMAL_BUY.name(), order.getPrice(), "订单支付", PayMethod.urlToUrl(AlipayConfig.notify_url), AlipayConfig.app_id,
+////                result.setBackUrl(CoreConstants.ALI_NOTIFY_URL);
+//                Map<String, Object> payParam = PayMethod.aliAppPay(log.getId() + "_" + MPaidangPayType.NORMAL_BUY.name(), order.getPrice(), "订单支付", CoreConstants.ALI_NOTIFY_URL, AlipayConfig.app_id,
 //                        AlipayConfig.seller_id, AlipayConfig.payKey, null);
                 AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
                 //对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。
@@ -563,7 +564,8 @@ public class ApiUserPayService {
                 model.setOutTradeNo(log.getId() + "_" + MPaidangPayType.NORMAL_BUY.name());
                 model.setTimeoutExpress("30m");
                 model.setTotalAmount(order.getPrice().toString());
-                String orderInfo = AliPayApi.appPayToResponse(model, PayMethod.urlToUrl(AlipayConfig.notify_url)).getBody();
+                logger.info( CoreConstants.ALI_NOTIFY_URL);
+                String orderInfo = AliPayApi.appPayToResponse(model, CoreConstants.ALI_NOTIFY_URL).getBody();
 
                 result.setAliPay(orderInfo);
                 break;

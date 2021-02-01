@@ -73,6 +73,12 @@ public class  AppMyStoreGoods {
     @ApiModelProperty(value = "订单创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "1 一口价 2 竞拍")
+    private Integer dealType;
+
+    @ApiModelProperty(value = "机构编号")
+    private Integer orgId;
+
     public Integer getCommentState() {
         return commentState;
     }
@@ -304,5 +310,21 @@ public class  AppMyStoreGoods {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(Integer dealType) {
+        this.dealType = dealType;
+    }
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 }

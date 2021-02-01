@@ -168,6 +168,28 @@
     order by A.create_time desc
   </select>
 
+
+  <select id="selectMyStoreOrderByState" resultType="com.paidang.domain.vo.OrderCollectVo">
+    select
+    A.state , count(1) num
+    from p_order A
+
+    where A.user_id = #{user_id}
+    <if test="is_del !=null">
+      and A.is_del = #{is_del}
+    </if>
+    <if test="orderState == 6">
+      and A.ref_state != 0
+    </if>
+    <if test="orderState != 0 and orderState != 6">
+       and A.ref_state = 0
+      group by A.state
+    </if>
+
+  </select>
+
+
+
   <select id="selectByKey" resultMap="BaseResultMap">
      SELECT o.*,
     (CASE o.state
@@ -283,6 +305,20 @@
     t.create_time desc
   </select>
 
+
+  <select id="getOrderCountByState" resultType="com.paidang.domain.vo.OrderCollectVo">
+     SELECT
+    t.state,count(1) num
+    FROM
+    p_order t
+    LEFT JOIN p_goods g ON t.goods_id = g.id
+    WHERE
+    t.goods_source IN ( 6, 7 )
+    and g.goods_owner=#{userId}
+    and t.ref_state in (0,5)
+    group by t.state
+  </select>
+
   <select id="getAfterSalesOrder" resultMap="BaseResultMap">
     SELECT
     t.*,
@@ -359,5 +395,37 @@
           </foreach>
         </if>
         order by a.create_time desc
+  </select>
+
+
+  <select id="getCount" parameterType="com.paidang.domain.qo.OrderQo" resultType="java.lang.Integer">
+    select  count(1) from p_order a
+    where 1=1
+    <if test="state!=null">
+      and a.state= #{state}
+    </if>
+
+    <if test="orgId!=null">
+      and a.org_id= #{orgId}
+    </if>
+    <if test="states!=null and states.size()>0">
+      and a.state in
+      <foreach collection="states" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    <if test="refState!=null">
+      and a.ref_state= #{refState}
+    </if>
+    <if test="unRefState!=null">
+      and a.ref_state!= #{unRefState}
+    </if>
+    <if test="refStates!=null and refStates.size()>0">
+      and a.ref_state in
+      <foreach collection="refStates" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+    order by a.create_time desc
   </select>
 </mapper>

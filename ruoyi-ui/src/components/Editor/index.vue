@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       content: this.value,
-      uploadImgUrl: "",
+      // uploadImgUrl: "",
       editorOption: {
         theme: "snow", // or 'bubble'
         placeholder: "请输入内容",

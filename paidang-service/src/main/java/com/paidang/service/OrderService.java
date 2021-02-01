@@ -12,6 +12,7 @@ import com.paidang.daoEx.OrderMapperEx;
 import com.paidang.daoEx.model.OrderEx;
 import com.paidang.domain.enums.OrgIntegralEnum;
 import com.paidang.domain.qo.OrderQo;
+import com.paidang.domain.vo.OrderCollectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -205,6 +206,11 @@ public class OrderService {
 		return this.orderMapperEx.selectMyStoreOrderList(map);
     }
 
+    public List<OrderCollectVo> selectMyStoreOrderByState(Map<String, Object> map){
+		return this.orderMapperEx.selectMyStoreOrderByState(map);
+	}
+
+
     public List<OrderEx> selectByTask(Map<String, Object> map) {
 		return this.orderMapperEx.selectByTask(map);
     }
@@ -240,6 +246,10 @@ public class OrderService {
 		return orderMapperEx.findList(qo);
 	}
 
+	public Integer getCount(OrderQo qo){
+		return orderMapperEx.getCount(qo);
+	}
+
 	/**
 	 *
 	 * @param userId
@@ -248,6 +258,10 @@ public class OrderService {
 	 */
 	public   BigDecimal getTotalOrderPrice(Integer userId, Integer queryType){
 		return orderMapperEx.getTotalOrderPrice(userId,queryType);
+	}
+
+	public List<OrderCollectVo> getOrderCountByState(Integer userId){
+		return orderMapperEx.getOrderCountByState(userId);
 	}
 
 }
