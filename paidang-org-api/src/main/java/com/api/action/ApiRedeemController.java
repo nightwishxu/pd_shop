@@ -240,9 +240,10 @@ public class ApiRedeemController extends ApiBaseController{
             redeemDetail.setMoneyCost(totalMoney+"");
             //合计
             redeemDetail.setPayBack(totalMoney.add(userPawnEx.getMoney())+"");
-//            record.setRedeemOverdue("0");
             redeemDetail.setRedeemMoney("0");
         }
+        redeemDetail.setRedeemOverdue("0");
+
 
 
         //计算逾期利息(若逾期)
@@ -308,6 +309,7 @@ public class ApiRedeemController extends ApiBaseController{
         userPawn.setRedeemTime(new Date());
         userPawn.setRedeemInterest(new BigDecimal(redeemDetail.getMoneyCost()));
         userPawn.setRedeemOverdue(new BigDecimal(redeemDetail.getRedeemOverdue()));
+        userPawn.setRedeemMoney(new BigDecimal(redeemDetail.getRedeemMoney()));
         userPawnService.updateByPrimaryKey(userPawn);
 
 

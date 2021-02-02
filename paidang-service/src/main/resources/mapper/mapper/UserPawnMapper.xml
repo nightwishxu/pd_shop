@@ -49,6 +49,7 @@
         <result column="redeem_overdue" property="redeemOverdue" jdbcType="DECIMAL" />
         <result column="redeem_interest" property="redeemInterest" jdbcType="DECIMAL" />
         <result column="redeem_pawn_ticket" property="redeemPawnTicket" jdbcType="VARCHAR" />
+        <result column="redeem_money" property="redeemMoney" jdbcType="DECIMAL" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
         <result column="org_name" property="orgName" jdbcType="VARCHAR" />
@@ -65,6 +66,7 @@
         <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
         <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
         <result column="pawn_status" property="pawnStatus" jdbcType="INTEGER" />
+        <result column="last_continue_project_code" property="lastContinueProjectCode" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -128,7 +130,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,goods_id,loans_price,loans_rate,is_verify,org_id,org_user_id,org_selected_time,payee_name,payee_phone,payee_bank_name,payee_bank_card_code,payee_ticket,payee_state,pay_name,pay_phone,pay_bank_name,pay_bacnk_card_code,pawn_ticket_code,pawn_ticket,state,user_state,pawn_begin_time,pawn_end_time,begin_money,begin_pawn_month,begin_pawn_end_time,money,pawn_time,last_money,last_pawn_month,last_pawn_time,rate,money_rate,overdue_rate,pawn_money,user_money,platform_rate,platform_money,platform_state,redeem_state,redeem_ticket,redeem_time,redeem_overdue,redeem_interest,redeem_pawn_ticket,create_time,modify_time,org_name,org_tel,org_address,org_license,org_seal,user_name,user_phone,user_address,user_id_card,goods_name,last_pawn_continue_id,contract_id,project_code,pawn_status
+        id,user_id,goods_id,loans_price,loans_rate,is_verify,org_id,org_user_id,org_selected_time,payee_name,payee_phone,payee_bank_name,payee_bank_card_code,payee_ticket,payee_state,pay_name,pay_phone,pay_bank_name,pay_bacnk_card_code,pawn_ticket_code,pawn_ticket,state,user_state,pawn_begin_time,pawn_end_time,begin_money,begin_pawn_month,begin_pawn_end_time,money,pawn_time,last_money,last_pawn_month,last_pawn_time,rate,money_rate,overdue_rate,pawn_money,user_money,platform_rate,platform_money,platform_state,redeem_state,redeem_ticket,redeem_time,redeem_overdue,redeem_interest,redeem_pawn_ticket,redeem_money,create_time,modify_time,org_name,org_tel,org_address,org_license,org_seal,user_name,user_phone,user_address,user_id_card,goods_name,last_pawn_continue_id,contract_id,project_code,pawn_status,last_continue_project_code
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -181,12 +183,13 @@
         pawn_money,user_money,platform_rate,
         platform_money,platform_state,redeem_state,
         redeem_ticket,redeem_time,redeem_overdue,
-        redeem_interest,redeem_pawn_ticket,create_time,
-        modify_time,org_name,org_tel,
-        org_address,org_license,org_seal,
-        user_name,user_phone,user_address,
-        user_id_card,goods_name,last_pawn_continue_id,
-        contract_id,project_code,pawn_status
+        redeem_interest,redeem_pawn_ticket,redeem_money,
+        create_time,modify_time,org_name,
+        org_tel,org_address,org_license,
+        org_seal,user_name,user_phone,
+        user_address,user_id_card,goods_name,
+        last_pawn_continue_id,contract_id,project_code,
+        pawn_status,last_continue_project_code
         )
         values (#{userId,jdbcType=INTEGER},#{goodsId,jdbcType=INTEGER},
         #{loansPrice,jdbcType=DECIMAL},#{loansRate,jdbcType=DECIMAL},#{isVerify,jdbcType=TINYINT},
@@ -203,12 +206,13 @@
         #{pawnMoney,jdbcType=DECIMAL},#{userMoney,jdbcType=DECIMAL},#{platformRate,jdbcType=DECIMAL},
         #{platformMoney,jdbcType=DECIMAL},#{platformState,jdbcType=TINYINT},#{redeemState,jdbcType=TINYINT},
         #{redeemTicket,jdbcType=VARCHAR},#{redeemTime,jdbcType=TIMESTAMP},#{redeemOverdue,jdbcType=DECIMAL},
-        #{redeemInterest,jdbcType=DECIMAL},#{redeemPawnTicket,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
-        #{modifyTime,jdbcType=TIMESTAMP},#{orgName,jdbcType=VARCHAR},#{orgTel,jdbcType=VARCHAR},
-        #{orgAddress,jdbcType=VARCHAR},#{orgLicense,jdbcType=VARCHAR},#{orgSeal,jdbcType=VARCHAR},
-        #{userName,jdbcType=VARCHAR},#{userPhone,jdbcType=VARCHAR},#{userAddress,jdbcType=VARCHAR},
-        #{userIdCard,jdbcType=VARCHAR},#{goodsName,jdbcType=VARCHAR},#{lastPawnContinueId,jdbcType=INTEGER},
-        #{contractId,jdbcType=VARCHAR},#{projectCode,jdbcType=VARCHAR},#{pawnStatus,jdbcType=INTEGER}
+        #{redeemInterest,jdbcType=DECIMAL},#{redeemPawnTicket,jdbcType=VARCHAR},#{redeemMoney,jdbcType=DECIMAL},
+        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{orgName,jdbcType=VARCHAR},
+        #{orgTel,jdbcType=VARCHAR},#{orgAddress,jdbcType=VARCHAR},#{orgLicense,jdbcType=VARCHAR},
+        #{orgSeal,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{userPhone,jdbcType=VARCHAR},
+        #{userAddress,jdbcType=VARCHAR},#{userIdCard,jdbcType=VARCHAR},#{goodsName,jdbcType=VARCHAR},
+        #{lastPawnContinueId,jdbcType=INTEGER},#{contractId,jdbcType=VARCHAR},#{projectCode,jdbcType=VARCHAR},
+        #{pawnStatus,jdbcType=INTEGER},#{lastContinueProjectCode,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -353,6 +357,9 @@
             <if test="redeemPawnTicket != null" >
                 redeem_pawn_ticket,
             </if>
+            <if test="redeemMoney != null" >
+                redeem_money,
+            </if>
             <if test="createTime != null" >
                 create_time,
             </if>
@@ -400,6 +407,9 @@
             </if>
             <if test="pawnStatus != null" >
                 pawn_status,
+            </if>
+            <if test="lastContinueProjectCode != null" >
+                last_continue_project_code,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -541,6 +551,9 @@
             <if test="redeemPawnTicket != null" >
                 #{redeemPawnTicket,jdbcType=VARCHAR},
             </if>
+            <if test="redeemMoney != null" >
+                #{redeemMoney,jdbcType=DECIMAL},
+            </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -588,6 +601,9 @@
             </if>
             <if test="pawnStatus != null" >
                 #{pawnStatus,jdbcType=INTEGER},
+            </if>
+            <if test="lastContinueProjectCode != null" >
+                #{lastContinueProjectCode,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -743,6 +759,9 @@
             <if test="record.redeemPawnTicket != null" >
                 redeem_pawn_ticket = #{record.redeemPawnTicket,jdbcType=VARCHAR},
             </if>
+            <if test="record.redeemMoney != null" >
+                redeem_money = #{record.redeemMoney,jdbcType=DECIMAL},
+            </if>
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
             </if>
@@ -790,6 +809,9 @@
             </if>
             <if test="record.pawnStatus != null" >
                 pawn_status = #{record.pawnStatus,jdbcType=INTEGER},
+            </if>
+            <if test="record.lastContinueProjectCode != null" >
+                last_continue_project_code = #{record.lastContinueProjectCode,jdbcType=VARCHAR},
             </if>
         </set>
         <if test="_parameter != null" >
@@ -846,6 +868,7 @@
         redeem_overdue = #{redeemOverdue,jdbcType=DECIMAL},
         redeem_interest = #{redeemInterest,jdbcType=DECIMAL},
         redeem_pawn_ticket = #{redeemPawnTicket,jdbcType=VARCHAR},
+        redeem_money = #{redeemMoney,jdbcType=DECIMAL},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         org_name = #{orgName,jdbcType=VARCHAR},
@@ -861,7 +884,8 @@
         last_pawn_continue_id = #{lastPawnContinueId,jdbcType=INTEGER},
         contract_id = #{contractId,jdbcType=VARCHAR},
         project_code = #{projectCode,jdbcType=VARCHAR},
-        pawn_status = #{pawnStatus,jdbcType=INTEGER}
+        pawn_status = #{pawnStatus,jdbcType=INTEGER},
+        last_continue_project_code = #{lastContinueProjectCode,jdbcType=VARCHAR}
         <if test="_parameter != null" >
             <include refid="Update_By_Example_Where_Clause" />
         </if>
@@ -1008,6 +1032,9 @@
             <if test="redeemPawnTicket != null" >
                 redeem_pawn_ticket = #{redeemPawnTicket,jdbcType=VARCHAR},
             </if>
+            <if test="redeemMoney != null" >
+                redeem_money = #{redeemMoney,jdbcType=DECIMAL},
+            </if>
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -1055,6 +1082,9 @@
             </if>
             <if test="pawnStatus != null" >
                 pawn_status = #{pawnStatus,jdbcType=INTEGER},
+            </if>
+            <if test="lastContinueProjectCode != null" >
+                last_continue_project_code = #{lastContinueProjectCode,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id}
@@ -1108,6 +1138,7 @@
         redeem_overdue = #{redeemOverdue,jdbcType=DECIMAL},
         redeem_interest = #{redeemInterest,jdbcType=DECIMAL},
         redeem_pawn_ticket = #{redeemPawnTicket,jdbcType=VARCHAR},
+        redeem_money = #{redeemMoney,jdbcType=DECIMAL},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         org_name = #{orgName,jdbcType=VARCHAR},
@@ -1123,7 +1154,8 @@
         last_pawn_continue_id = #{lastPawnContinueId,jdbcType=INTEGER},
         contract_id = #{contractId,jdbcType=VARCHAR},
         project_code = #{projectCode,jdbcType=VARCHAR},
-        pawn_status = #{pawnStatus,jdbcType=INTEGER}
+        pawn_status = #{pawnStatus,jdbcType=INTEGER},
+        last_continue_project_code = #{lastContinueProjectCode,jdbcType=VARCHAR}
         where id = #{id}
     </update>
 

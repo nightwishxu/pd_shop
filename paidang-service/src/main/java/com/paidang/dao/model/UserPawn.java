@@ -392,6 +392,14 @@ public class UserPawn implements Serializable {
 	private String redeemPawnTicket;
 
 	/**
+	 *赎当综合费
+	 */
+	@ApiModelProperty(value="赎当综合费")
+	@ApiParam(value="赎当综合费")
+	@Column(name = "redeem_money")
+	private java.math.BigDecimal redeemMoney;
+
+	/**
 	 *
 	 */
 	@ApiModelProperty(value="")
@@ -518,6 +526,14 @@ public class UserPawn implements Serializable {
 	@ApiParam(value=" 0 无 1 待完善信息 2待签署 3 待上传凭证 4已完成")
 	@Column(name = "pawn_status")
 	private Integer pawnStatus;
+
+	/**
+	 *最新续当项目号
+	 */
+	@ApiModelProperty(value="最新续当项目号")
+	@ApiParam(value="最新续当项目号")
+	@Column(name = "last_continue_project_code")
+	private String lastContinueProjectCode;
 
 	public void setId(Integer id) {
 		this.id=id;
@@ -895,6 +911,14 @@ public class UserPawn implements Serializable {
 		return redeemPawnTicket;
 	}
 
+	public void setRedeemMoney(java.math.BigDecimal redeemMoney) {
+		this.redeemMoney=redeemMoney;
+	}
+
+	public java.math.BigDecimal getRedeemMoney() {
+		return redeemMoney;
+	}
+
 	public void setCreateTime(java.util.Date createTime) {
 		this.createTime=createTime;
 	}
@@ -1021,6 +1045,14 @@ public class UserPawn implements Serializable {
 
 	public Integer getPawnStatus() {
 		return pawnStatus;
+	}
+
+	public void setLastContinueProjectCode(String lastContinueProjectCode) {
+		this.lastContinueProjectCode=lastContinueProjectCode == null ? lastContinueProjectCode : lastContinueProjectCode.trim();
+	}
+
+	public String getLastContinueProjectCode() {
+		return lastContinueProjectCode;
 	}
 
 }

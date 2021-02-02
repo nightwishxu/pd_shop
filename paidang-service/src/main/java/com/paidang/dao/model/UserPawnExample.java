@@ -3054,6 +3054,66 @@ public class UserPawnExample {
 			return (Criteria) this;
 		}
 
+		public Criteria andRedeemMoneyIsNull() {
+			addCriterion("redeem_money is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyIsNotNull() {
+			addCriterion("redeem_money is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyEqualTo(java.math.BigDecimal value) {
+			addCriterion("redeem_money =", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyNotEqualTo(java.math.BigDecimal value) {
+			addCriterion("redeem_money <>", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyGreaterThan(java.math.BigDecimal value) {
+			addCriterion("redeem_money >", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyGreaterThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("redeem_money >=", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyLessThan(java.math.BigDecimal value) {
+			addCriterion("redeem_money <", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyLessThanOrEqualTo(java.math.BigDecimal value) {
+			addCriterion("redeem_money <=", value, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyIn(List<java.math.BigDecimal> values) {
+			addCriterion("redeem_money in", values, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyNotIn(List<java.math.BigDecimal> values) {
+			addCriterion("redeem_money not in", values, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("redeem_money between", value1, value2, "redeemMoney");
+			return (Criteria) this;
+		}
+
+		public Criteria andRedeemMoneyNotBetween(java.math.BigDecimal value1, java.math.BigDecimal value2) {
+			addCriterion("redeem_money not between", value1, value2, "redeemMoney");
+			return (Criteria) this;
+		}
+
 		public Criteria andCreateTimeIsNull() {
 			addCriterion("create_time is null");
 			return (Criteria) this;
@@ -4131,6 +4191,76 @@ public class UserPawnExample {
 
 		public Criteria andPawnStatusNotBetween(Integer value1, Integer value2) {
 			addCriterion("pawn_status not between", value1, value2, "pawnStatus");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeIsNull() {
+			addCriterion("last_continue_project_code is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeIsNotNull() {
+			addCriterion("last_continue_project_code is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeEqualTo(String value) {
+			addCriterion("last_continue_project_code =", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeNotEqualTo(String value) {
+			addCriterion("last_continue_project_code <>", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeGreaterThan(String value) {
+			addCriterion("last_continue_project_code >", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeGreaterThanOrEqualTo(String value) {
+			addCriterion("last_continue_project_code >=", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeLessThan(String value) {
+			addCriterion("last_continue_project_code <", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeLessThanOrEqualTo(String value) {
+			addCriterion("last_continue_project_code <=", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeLike(String value) {
+			addCriterion("last_continue_project_code like", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeNotLike(String value) {
+			addCriterion("last_continue_project_code not like", value, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeIn(List<String> values) {
+			addCriterion("last_continue_project_code in", values, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeNotIn(List<String> values) {
+			addCriterion("last_continue_project_code not in", values, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeBetween(String value1, String value2) {
+			addCriterion("last_continue_project_code between", value1, value2, "lastContinueProjectCode");
+			return (Criteria) this;
+		}
+
+		public Criteria andLastContinueProjectCodeNotBetween(String value1, String value2) {
+			addCriterion("last_continue_project_code not between", value1, value2, "lastContinueProjectCode");
 			return (Criteria) this;
 		}
 
