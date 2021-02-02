@@ -172,6 +172,12 @@
       />
       <!-- <el-table-column label="广告" align="center" prop="id" /> -->
       <el-table-column
+        label="文字简介"
+        align="center"
+        prop="discription"
+      />
+      <el-table-column
+        <el-table-column
         label="图片"
         align="center"
         prop="img"
@@ -258,9 +264,15 @@
             style="width: 300px;display: inline-block;margin-left: 10px"
           ></single-upload>
         </el-form-item>
-        <!-- <el-form-item label="文字简介" prop="discription">
-          <el-input v-model="form.discription" placeholder="请输入文字简介" />
-        </el-form-item>-->
+        <el-form-item
+          label="文字简介"
+          prop="discription"
+        >
+          <el-input
+            v-model="form.discription"
+            placeholder="请输入文字简介"
+          />
+        </el-form-item>
         <el-form-item label="位置">
           <el-select
             v-model="form.location"
@@ -481,6 +493,7 @@ export default {
       content3: false,
       content4: false,
       content6: false,
+      content7: true,
       locationOptions:[
         {
           label: "首页轮播图",

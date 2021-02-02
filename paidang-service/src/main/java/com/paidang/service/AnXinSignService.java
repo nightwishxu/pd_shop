@@ -322,8 +322,8 @@ public class AnXinSignService {
         fieldMap.put("17",ticket.getLoanMoney());//典当金额
         fieldMap.put("18", ticket.getLoanMoneyCN());//典当金额大写
         fieldMap.put("19", ticket.getLoanMoney());//合计
-        fieldMap.put("20", ticket.getRate());//月费率
-        fieldMap.put("21", ticket.getMoneyRate());//月利率
+        fieldMap.put("20", ticket.getRate()+"%");//月费率
+        fieldMap.put("21", ticket.getMoneyRate()+"%");//月利率
         fieldMap.put("22", ticket.getCostCN());//综合费用大写
         fieldMap.put("23", ticket.getCost());//综合费用小写
         fieldMap.put("24", ticket.getUserMoneyCN());//实付金额大写

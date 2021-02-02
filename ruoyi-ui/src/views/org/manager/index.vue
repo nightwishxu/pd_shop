@@ -298,7 +298,7 @@
 
         <el-form-item
           label="身份证号码"
-          prop="adresidCards"
+          prop="idCard"
         >
           <el-input
             v-model="form.idCard"

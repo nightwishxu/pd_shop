@@ -914,7 +914,7 @@ public class ApiUserPawnController extends ApiBaseController {
         c.setLoansPrice(userPawn.getLoansPrice()+"");
         c.setLoansRate(userPawn.getLoansRate()+"");
         c.setPawnTime(userPawn.getPawnTime()+"");
-        c.setBxOrgId(0+"");
+        c.setBxOrgId(MPawnMsg.orgId+"");
         //若期望当金小于等于鉴定价--选期望当金
         //若期望当金大于鉴定价--选鉴定价
         if(1 == userPawn.getLoansPrice().compareTo(userGoods.getAuthPrice())){
@@ -925,11 +925,12 @@ public class ApiUserPawnController extends ApiBaseController {
         c.setBxRate(userGoods.getRate()+"");
         c.setBxMoneyRate(userGoods.getMoneyRate()+"");
         //平台信息
-        c.setComName(MPawnMsg.comName);
-        c.setComaddress(MPawnMsg.comAddress);
-        c.setRegMoney(MPawnMsg.regMoney);
-        c.setManager(MPawnMsg.manager);
-        c.setComPhone(MPawnMsg.comPhone);
+        PawnOrg org = pawnOrgService.selectByPrimaryKey(MPawnMsg.orgId);
+        c.setComName(org.getName());
+        c.setComaddress(org.getAdress());
+        c.setRegMoney(org.getRegisteredCapital());
+        c.setManager(org.getLegalPerson());
+        c.setComPhone(org.getPhone());
 
         //法律条文链接
         CodeExample example = new CodeExample();
@@ -938,15 +939,15 @@ public class ApiUserPawnController extends ApiBaseController {
         if (codes!=null && codes.size()!=0){
             for (Code code:codes){
                 //典当管理法
-                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"ddgl")){
+                if (StringUtils.contains(code.getCode(),"ddgl")){
                     c.setDiandangguanlifa(code.getValue());
                 }
                 //合同法
-                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"htf")){
+                if (StringUtils.contains(code.getCode(),"htf")){
                     c.setHetongfa(code.getValue());
                 }
                 //民法总则
-                if (org.apache.commons.lang.StringUtils.contains(code.getCode(),"mfzz")){
+                if (StringUtils.contains(code.getCode(),"mfzz")){
                     c.setMinshifa(code.getValue());
                 }
             }

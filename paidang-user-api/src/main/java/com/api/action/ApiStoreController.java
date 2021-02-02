@@ -487,7 +487,7 @@ public class ApiStoreController extends ApiBaseController {
         appStoreGoodsDetail.setMaxAuction(ex.getMaxAuction());
         appStoreGoodsDetail.setCateCode(ex.getCateCode());
         appStoreGoodsDetail.setBannerVideo(ex.getBannerVideo());
-
+        appStoreGoodsDetail.setDealType(BaseUtils.getDefaultDealType(ex.getDealType()));
         if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
             appStoreGoodsDetail.setPrice(ex.getMaxAuction() + "");
         }
@@ -524,6 +524,22 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setGoodsAuctionList(goodsAuctionExes);
             appStoreGoodsDetail.setHotScore(goodsAuctionExes.size()*15);
         }
+
+        appStoreGoodsDetail.setCateCode(ex.getCateCode());
+        appStoreGoodsDetail.setCateCodeSon(ex.getCateCodeSon());
+        appStoreGoodsDetail.setWeight(ex.getWeight());
+        appStoreGoodsDetail.setMaterial(ex.getMaterial());
+        appStoreGoodsDetail.setMainMaterial(ex.getMainMaterial());
+        appStoreGoodsDetail.setOtherMaterial(ex.getOtherMaterial());
+        appStoreGoodsDetail.setCcAll(ex.getCcAll());
+        appStoreGoodsDetail.setCreateYear(ex.getCreateYear());
+        appStoreGoodsDetail.setBrand(ex.getBrand());
+        appStoreGoodsDetail.setNewPercent(ex.getNewPercent());
+        appStoreGoodsDetail.setTheme(ex.getTheme());
+        appStoreGoodsDetail.setStyle(ex.getStyle());
+        appStoreGoodsDetail.setMaterialName(ex.getMaterialName());
+        appStoreGoodsDetail.setWordDescript(ex.getWordDescript());
+        appStoreGoodsDetail.setReasonOfDismounting(ex.getReasonOfDismounting());
 
         return  appStoreGoodsDetail;
     }

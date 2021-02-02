@@ -8,6 +8,7 @@ import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
+import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.item.service.UserNotifyService;
 import com.item.service.UserService;
@@ -149,7 +150,7 @@ public class ApiAuctionPawnController extends ApiBaseController {
                          @ApiParam(value = "利息利率",required=true)String moneyRate
                             ){
 //        @ApiParam(value = "当号",required=true)String pawnTicketCode,
-
+        BaseUtils.checkBlankParam(pawnId,money,rate,moneyRate);
         Integer orgId = userService.getOrgIdByUserId(mobileInfo.getUserId());
         if(orgId==-1){
             throw new ApiException(MErrorEnum.APPID_FAIL_ERROR);

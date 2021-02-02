@@ -147,7 +147,7 @@ public class LoadDataController {
         repawnTicketModel.setMoneyRate(pawnContinueEx.getMoneyRate()!=null?pawnContinueEx.getMoneyRate().toString():"");
         repawnTicketModel.setRate(pawnContinueEx.getRate()!=null?pawnContinueEx.getRate().toString():"");
         repawnTicketModel.setLoanMoney(pawnContinueEx.getLoanMoney()!=null?pawnContinueEx.getLoanMoney().toString():"");
-        repawnTicketModel.setCost(pawnContinueEx.getPawnMoney()!=null?pawnContinueEx.getPawnMoney().toString():"");
+        repawnTicketModel.setCost(pawnContinueEx.getPawnMoney()!=null?pawnContinueEx.getPawnMoney().setScale(2,BigDecimal.ROUND_HALF_DOWN).toString():"");
         repawnTicketModel.setMoneyCost(pawnContinueEx.getPawnInterest()!=null?pawnContinueEx.getPawnInterest().toString():"");
         repawnTicketModel.setOrgName(pawnContinueEx.getOrgName()!=null?pawnContinueEx.getOrgName():"");
 //              repawnTicketModel.setOrgSeal(pawnContinueEx.getOrgSeal()!=null?pawnContinueEx.getOrgSeal():"");

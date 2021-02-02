@@ -890,6 +890,8 @@
       <el-form
         :model="form8"
         label-width="100px"
+        :rules="rules8"
+        ref="form8"
       >
         <el-form-item
           label="鉴定结果"
@@ -1442,6 +1444,17 @@ export default {
           { required: true, message: "创建时间不能为空", trigger: "blur" },
         ],
       },
+      rules8:{
+        authPrice:[
+         { required: true, message: "鉴定价不能为空", trigger: "blur" },
+        ],
+         rate:[
+         { required: true, message: "月费率不能为空", trigger: "blur" },
+        ],
+         moneyRate:[
+         { required: true, message: "月利率不能为空", trigger: "blur" },
+        ],
+      },
       domainOptions: [],
       experterOptions: [],
       authResultOptions: [
@@ -1794,13 +1807,28 @@ export default {
 
     from8Submit() {
       this.form8.isVerify=1;
-      beginToOper(this.form8).then((response) => {
-        if (response.code === 200) {
-          this.msgSuccess("修改成功");
-          this.open8 = false;
-          this.getList();
-        }
-      });
+      if(this.form8.authResult==4){
+          this.$refs["form8"].validate((valid) => {
+            if (valid) {
+              beginToOper(this.form8).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                this.open8 = false;
+                this.getList();
+              }
+            });
+          }
+        });
+      }else{
+              beginToOper(this.form8).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                this.open8 = false;
+                this.getList();
+              }
+            });
+      }
+   
     },
 
      from10Submit() {

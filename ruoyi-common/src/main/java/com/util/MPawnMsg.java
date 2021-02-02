@@ -17,4 +17,6 @@ public interface MPawnMsg {
     String manager = "陈耀庭";
 
     String comPhone = "13771228227";
+
+    Integer orgId = 0;
 }
