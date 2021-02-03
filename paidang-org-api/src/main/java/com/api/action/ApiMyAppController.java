@@ -44,6 +44,7 @@ import com.paidang.daoEx.model.UserPawnEx;
 import com.paidang.domain.qo.PawnTicketQo;
 import com.paidang.service.*;
 import com.paidang.utils.CostGenerator;
+import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.utils.ip.IpUtils;
@@ -62,6 +63,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -123,6 +125,9 @@ public class ApiMyAppController extends ApiBaseController{
 
     @Autowired
     private BFileService fileService;
+
+    @Autowired
+    private QysService qysService;
 
 
     @ApiOperation(value = "我参与的竞拍(竞拍标签页)",notes="我参与的竞拍(竞拍中)")
@@ -1833,6 +1838,10 @@ public class ApiMyAppController extends ApiBaseController{
         PawnTicket pawnTicket = null;
         if (pawnId!=null){
             UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+//            if(StringUtils.isNotBlank(userPawn.getContractId()) && StringUtils.isBlank(userPawn.getProjectCode())){
+//                String pageUrl = qysService.getPageUrl(Long.valueOf(userPawn.getContractId()));
+//                return new Result(pageUrl);
+//            }
             pawnTicket = pawnTicketService.getByProjectCode(userPawn.getProjectCode());
         }else if (repawnId!=null){
             PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);

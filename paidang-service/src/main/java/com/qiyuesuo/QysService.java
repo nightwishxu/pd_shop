@@ -22,7 +22,9 @@ import com.util.Res;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,14 @@ public class QysService {
     UserPawnService userPawnService;
     @Autowired
     PawnContinueService pawnContinueService;
+
+    @Value("${electronic_signature_url}")
+    private String serverUrl;
+    @Value("${electronic_signature_app_token}")
+    private String accessKey;
+    @Value("${electronic_signature_app_secret}")
+    private String accessSecret;
+
 
     // 初始化sdkClient
 //    public static String serverUrl = CoreConstants.getProperty("electronic_signature_url");
@@ -142,19 +152,18 @@ public class QysService {
      * @return
      */
     public String getPageUrl(Long contractId){
-        return "";
-//        SdkClient sdkClient = new SdkClient(serverUrl, accessKey, accessSecret);
-//        ContractViewPageRequest request=new ContractViewPageRequest(contractId);
-//        String response = sdkClient.service(request);
-//        SdkResponse<ContractPageResult> responseObj = JSONUtils.toQysResponse(response, ContractPageResult.class);
-//        if(responseObj.getCode() == 0) {
-//            ContractPageResult result = responseObj.getResult();
-//            logger.info("合同页面地址为:{}", result.getPageUrl());
-//            return result.getPageUrl();
-//        } else {
-//            logger.info("请求失败，错误码:{}，错误信息:{}", responseObj.getCode(), responseObj.getMessage());
-//            throw new ApiException(9999,responseObj.getMessage());
-//        }
+        SdkClient sdkClient = new SdkClient(serverUrl, accessKey, accessSecret);
+        ContractViewPageRequest request=new ContractViewPageRequest(contractId);
+        String response = sdkClient.service(request);
+        SdkResponse<ContractPageResult> responseObj = JSONUtils.toQysResponse(response, ContractPageResult.class);
+        if(responseObj.getCode() == 0) {
+            ContractPageResult result = responseObj.getResult();
+            logger.info("合同页面地址为:{}", result.getPageUrl());
+            return result.getPageUrl();
+        } else {
+            logger.info("请求失败，错误码:{}，错误信息:{}", responseObj.getCode(), responseObj.getMessage());
+            throw new ApiException(9999,responseObj.getMessage());
+        }
 
     }
 

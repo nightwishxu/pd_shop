@@ -7,7 +7,6 @@ import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
-import com.base.util.StringUtil;
 import com.item.dao.model.User;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
@@ -20,11 +19,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -133,9 +132,14 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
             pawnTicket = pawnTicketService.getByProjectCode(userPawn.getProjectCode());
         }else if (repawnId!=null){
             PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(repawnId);
-            pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+            if (StringUtils.isNotBlank(pawnContinue.getProjectCode())){
+                pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+            }
         }else if (pawnTicketId!=null){
             pawnTicket = pawnTicketService.selectByPrimaryKey(pawnTicketId);
+        }
+        if (pawnTicket==null){
+            return null;
         }
 
         if (StringUtils.isEmpty(pawnTicket.getContractUrl())){

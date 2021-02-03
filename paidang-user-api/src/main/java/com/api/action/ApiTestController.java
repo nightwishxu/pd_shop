@@ -19,6 +19,7 @@ import com.paidang.dao.model.BFileExample;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.dao.model.VideoOnlineExample;
 import com.paidang.service.*;
+import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.redis.RedisCache;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +54,9 @@ public class ApiTestController extends ApiBaseController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private QysService qysService;
 
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/pay")
@@ -90,5 +94,15 @@ public class ApiTestController extends ApiBaseController {
     public Object uploadFile(MobileInfo mobileInfo,String startTime,String endTime) throws Exception{
         fileService.transferFile(startTime,endTime);
         return new Result<>(DSPConsts.Keystore);
+    }
+
+    //String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
+
+    @ApiOperation(value = "z", notes = "1")
+    @RequestMapping("/contractUrl/get")
+    @ApiMethod()
+    public Object contractUrlGet(Long contractId) throws Exception{
+        String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
+        return new Result<>(pageUrl);
     }
 }

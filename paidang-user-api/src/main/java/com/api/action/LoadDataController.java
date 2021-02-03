@@ -140,7 +140,10 @@ public class LoadDataController {
         UserPawnEx userPawnEx = userPawnService.getUserPawnExById(pawnContinueEx.getPawnId().toString());
         PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawnEx.getOrgId());
         User pawner = userService.selectByPrimaryKey(userPawnEx.getUserId());
-        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(userPawnEx.getProjectCode());
+        PawnTicket pawnTicket = null;
+        if (StringUtils.isNotBlank(userPawnEx.getProjectCode())){
+            pawnTicket = pawnTicketService.getByProjectCode(userPawnEx.getProjectCode());
+        }
         //所有续当票
         RepawnTicketModel repawnTicketModel = new RepawnTicketModel();
         repawnTicketModel.setContactor(pawnContinueEx.getUserName()!=null?pawnContinueEx.getUserName():"");

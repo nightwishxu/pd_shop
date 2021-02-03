@@ -328,6 +328,8 @@ public class ApiRepawnController extends ApiBaseController{
     public Integer completePawnTicketCode(@ApiParam(value = "典当id",required = true) Integer pawnId,
                                         @ApiParam(value = "续当id ",required = true) Integer repawnId,
                                         @ApiParam(value = "当票号",required = true) String pawnTicketCode,
+                                        @ApiParam(value = "经办",required = false) String handler,
+                                        @ApiParam(value = "复核",required = true) String checker,
                                         MobileInfo mobileInfo){
 
         //已经使用过的当号排除
@@ -364,6 +366,12 @@ public class ApiRepawnController extends ApiBaseController{
         pawnContinue.setContinuePawnTicketCode(pawnTicketCode);
         pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
         PawnTicket ticket = pawnTicketService.getByProjectCode(repawnRecord.getProjectCode());
+        if (StringUtils.isNotBlank(checker)){
+            ticket.setChecker(checker);
+        }
+        if (StringUtils.isNotBlank(handler)){
+            ticket.setHandler(handler);
+        }
         ticket.setPawnTicketCode(pawnTicketCode);
         pawnTicketService.updateByPrimaryKeySelective(ticket);
         return 1;
