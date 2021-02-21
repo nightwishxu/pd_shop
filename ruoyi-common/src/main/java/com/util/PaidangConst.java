@@ -37,7 +37,7 @@ public interface PaidangConst {
     /*
     * 到期典当变绝当，缓冲天数
     * */
-    int BUFFER_DAYS = 5;
+    int BUFFER_DAYS = 15;
 
     String INIT_PASSWORD = "123456";
 

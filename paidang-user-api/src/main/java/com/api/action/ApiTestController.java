@@ -1,5 +1,6 @@
 package com.api.action;
 
+import cn.hutool.core.date.DateTime;
 import com.alibaba.fastjson.JSONObject;
 import com.api.service.ApiUserPayService;
 import com.base.annotation.ApiMethod;
@@ -7,20 +8,16 @@ import com.base.api.ApiBaseController;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
 import com.base.oauthLogin.api.OauthQQ;
-import com.base.util.BaseUtils;
-import com.base.util.CoreConstants;
-import com.base.util.JSONUtils;
-import com.base.util.StringUtil;
+import com.base.util.*;
 import com.demo.constant.DSPConsts;
 import com.google.common.collect.Lists;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
-import com.paidang.dao.model.BFileExample;
-import com.paidang.dao.model.PawnOrg;
-import com.paidang.dao.model.VideoOnlineExample;
+import com.paidang.dao.model.*;
 import com.paidang.service.*;
 import com.qiyuesuo.QysService;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.util.PaidangConst;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -57,6 +54,9 @@ public class ApiTestController extends ApiBaseController {
 
     @Autowired
     private QysService qysService;
+
+    @Autowired
+    private UserPawnService userPawnService;
 
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/pay")
@@ -104,5 +104,16 @@ public class ApiTestController extends ApiBaseController {
     public Object contractUrlGet(Long contractId) throws Exception{
         String pageUrl = qysService.getPageUrl(Long.valueOf(contractId));
         return new Result<>(pageUrl);
+    }
+
+    @ApiOperation(value = "z", notes = "1")
+    @RequestMapping("/userPawn/list")
+    @ApiMethod()
+    public void test(){
+        UserPawnExample example = new UserPawnExample();
+        example.or().andStateEqualTo(2).andPawnEndTimeLessThan(DateUtil.add(new DateTime(DateUtil.getCurrentTime(DateUtil.YYMMDD),DateUtil.YYMMDD),-PaidangConst.BUFFER_DAYS));
+        example.or().andStateEqualTo(5).andPawnEndTimeLessThan(DateUtil.add(new DateTime(DateUtil.getCurrentTime(DateUtil.YYMMDD),DateUtil.YYMMDD),-PaidangConst.BUFFER_DAYS));
+        List<UserPawn> list = userPawnService.selectByExample(example);
+        System.out.println(list.size());
     }
 }
