@@ -497,7 +497,7 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setIsFollow(0);
         }
         PawnOrgEx pawnOrg=pawnOrgService.getInfo(ex.getOrgId());
-        appStoreGoodsDetail.setOrgLabelsInfo("优选好店,店铺保证金");
+//        appStoreGoodsDetail.setOrgLabelsInfo("优选好店,店铺保证金");
         if (pawnOrg!=null){
             appStoreGoodsDetail.setOrgId(pawnOrg.getId());
             appStoreGoodsDetail.setOrgName(pawnOrg.getName());

@@ -1702,9 +1702,14 @@ export default {
      handleForm10(row) {
       this.reset10();
       const id = row.id;
-      this.form10 = { id: id };
-      this.open10 = true;
-      this.title10 = "回寄给用户";
+      getGoods(id).then((response) => {
+        if(response.code === 200){
+          this.form10 = { id: id,backUserName: response.data.backUserName,backUserPhone:response.data.backUserPhone,backUserExpress:response.data.backUserExpress};
+          this.open10 = true;
+          this.title10 = "回寄给用户";
+        }
+      })
+    
     },
      handleForm11(row) {
       this.reset11();

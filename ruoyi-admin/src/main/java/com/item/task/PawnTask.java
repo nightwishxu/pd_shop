@@ -535,5 +535,9 @@ public class PawnTask {
 	}*/
 
 
+	public static void main(String[] args) {
+		Date add = DateUtil.add(new DateTime(DateUtil.getCurrentTime(DateUtil.YYMMDD), DateUtil.YYMMDD), -PaidangConst.BUFFER_DAYS);
+		System.out.println(DateUtil.format(add,"yyyy-MM-dd HH:mm:ss"));
+	}
 
 }

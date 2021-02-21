@@ -285,7 +285,7 @@ public class ApiRepawnController extends ApiBaseController{
             repawnDetail.setIsPayRepawnMoney(pawnContinue.getState()==4?"1":"0");//是否已经缴纳续当费 0-否 1-已缴
             repawnDetail.setIsPayPlatMoney(pawnContinue.getPlatformState()==null?"0":pawnContinue.getPlatformState()==1?"1":"0");//是否已经缴纳平台利息 0-否 1-已缴
 
-            if (StringUtils.isNotBlank(pawnContinue.getPawnTicketCode())){
+            if (StringUtils.isNotBlank(pawnContinue.getProjectCode())){
                 PawnTicket pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
                 if (pawnTicket!=null){
                     repawnDetail.setUserStatus(pawnTicket.getUserStatus());

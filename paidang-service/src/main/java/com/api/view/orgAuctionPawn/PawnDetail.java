@@ -120,6 +120,9 @@ public class PawnDetail {
     @ApiModelProperty("月利率")
     private BigDecimal moneyRate;
 
+    @ApiModelProperty("机构付款凭证")
+    private String payeeTicket;
+
     public String getId() {
         return id;
     }
@@ -359,5 +362,13 @@ public class PawnDetail {
 
     public void setMoneyRate(BigDecimal moneyRate) {
         this.moneyRate = moneyRate;
+    }
+
+    public String getPayeeTicket() {
+        return payeeTicket;
+    }
+
+    public void setPayeeTicket(String payeeTicket) {
+        this.payeeTicket = payeeTicket;
     }
 }

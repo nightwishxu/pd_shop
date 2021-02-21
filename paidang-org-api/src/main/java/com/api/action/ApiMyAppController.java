@@ -223,6 +223,7 @@ public class ApiMyAppController extends ApiBaseController{
             pawnDetail.setUserStatus(userPawnEx.getUserStatus());
             pawnDetail.setOrgStatus(userPawnEx.getOrgStatus());
             pawnDetail.setId(userPawnEx.getId().toString());
+            pawnDetail.setPayeeTicket(userPawnEx.getPayeeTicket());
             pawnDetail.setTitle(userPawnEx.getGoodsName1());
             pawnDetail.setCollecterId(userPawnEx.getUserId()!=null?userPawnEx.getUserId().toString():"");
             pawnDetail.setCollecterBankName(userPawnEx.getPayeeBankName());

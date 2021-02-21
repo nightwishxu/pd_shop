@@ -69,13 +69,13 @@ public class ApiAdController  extends ApiBaseController {
         List<AdEx> adExes = adService.findList(list);
         for (AdEx ex : adExes) {
             if(5 == ex.getType()){
-                VideoOnlineExample example = new VideoOnlineExample();
-                example.createCriteria().andIdEqualTo(Integer.parseInt(ex.getContent()));
-                String video= videoOnlineService.selectByExample(example).get(0).getVideo();
-                BFileExample example1 = new BFileExample();
-                example1.createCriteria().andFileIdEqualTo(video);
-                String file_path = fileService.selectByExample(example1).get(0).getFilePath();
-                ex.setContent(CoreConstants.getProperty("video.path")+file_path);
+//                VideoOnlineExample example = new VideoOnlineExample();
+//                example.createCriteria().andIdEqualTo(Integer.parseInt(ex.getContent()));
+//                String video= videoOnlineService.selectByExample(example).get(0).getVideo();
+//                BFileExample example1 = new BFileExample();
+//                example1.createCriteria().andFileIdEqualTo(video);
+//                String file_path = fileService.selectByExample(example1).get(0).getFilePath();
+//                ex.setContent(CoreConstants.getProperty("video.path")+file_path);
             }else if(6 == ex.getType()){
                 PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(Integer.parseInt(ex.getContent()));
                 ex.setContent(JSONUtils.serialize(pawnOrg));

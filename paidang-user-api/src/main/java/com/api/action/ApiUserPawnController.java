@@ -314,13 +314,19 @@ public class ApiUserPawnController extends ApiBaseController {
             detail.setRedeemTicket(ex.getRedeemTicket());
             detail.setLastPawnContinueId(ex.getLastPawnContinueId());
             detail.setContinuePawnStatus(ex.getContinuePawnStatus());
-            detail.setPawnStatus(ex.getPawnStatus());
+            if (ex.getPawnStatus()==null){
+                if (ex.getState()!=null &&  (ex.getState()==2 || ex.getState()==3)){
+                    detail.setPawnStatus(4);
+                }
+            }else {
+                detail.setPawnStatus(ex.getPawnStatus());
+            }
             detail.setTitle(ex.getGoodsName());
             detail.setImage(ex.getImages());
             detail.setMoney(ex.getMoney()+"");
             detail.setAuthPrice(ex.getAuthPrice()+"");
-            //detail.setPayeeTicket(ex.getPayeeTicket());
-            detail.setPawnTicket(ConstantsCode.SERVER_URL+"/m/pawn/toPawnTicket/"+ex.getId());
+            detail.setPayeeTicket(ex.getPayeeTicket());
+//            detail.setPawnTicket(ex.getPawnTicket());
             detail.setIsVerify(ex.getPayeeState());
             detail.setUserStatus(ex.getUserStatus());
             detail.setOrgStatus(ex.getOrgStatus());
@@ -445,6 +451,23 @@ public class ApiUserPawnController extends ApiBaseController {
         if (userPawn==null){
             throw new ApiException(400,"典当异常");
         }
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+
+        //注册安心签账户
+        if (StringUtils.isBlank(user.getAnxinsignId())){
+            if (user.getIsBind()!=1){
+                throw new ApiException(400,"请先进行实名认证");
+            }
+            String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
+            User temp = new User();
+            temp.setId(user.getId());
+            temp.setAnxinsignId(anxinUserId);
+            temp.setModifyTime(new Date());
+            userService.updateByPrimaryKeySelective(temp);
+        }
+
+
+
         String projectCode = null;
         PawnContinue pawnContinue =null;
         if (lastPawnContinueId!=null){
@@ -462,7 +485,7 @@ public class ApiUserPawnController extends ApiBaseController {
         PawnTicket pawnTicket = pawnTicketService.getByProjectCode(projectCode);
         HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = IpUtils.getIpAddr(request);
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        user = userService.selectByPrimaryKey(mobileInfo.getUserId());
         Date signTime = AnXinSignService.confirmSmsCode(user.getAnxinsignId(), projectCode, checkCode);
         PawnTicket temp = new PawnTicket();
         temp.setId(pawnTicket.getId());
