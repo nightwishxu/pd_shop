@@ -412,6 +412,20 @@ public class ApiUserPawnController extends ApiBaseController {
     public Integer signSendSmsCode(MobileInfo mobileInfo,@ApiParam(value = "典当id",required = true) Integer pawnId
     ,@ApiParam(value = "续当id,续当时传",required = false) Integer lastPawnContinueId) throws Exception{
         UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+
+        //注册安心签账户
+        if (StringUtils.isBlank(user.getAnxinsignId())){
+            if (user.getIsBind()!=1){
+                throw new ApiException(400,"请先进行实名认证");
+            }
+            String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
+            User temp = new User();
+            temp.setId(user.getId());
+            temp.setAnxinsignId(anxinUserId);
+            temp.setModifyTime(new Date());
+            userService.updateByPrimaryKeySelective(temp);
+        }
         if (userPawn==null){
             throw new ApiException(400,"典当异常");
         }
@@ -434,7 +448,7 @@ public class ApiUserPawnController extends ApiBaseController {
         }else {
             projectCode = userPawn.getProjectCode();
         }
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        user = userService.selectByPrimaryKey(mobileInfo.getUserId());
         AnXinSignService.sendSmsCode(user.getAnxinsignId(),projectCode,null);
 
         return 1;
@@ -451,20 +465,7 @@ public class ApiUserPawnController extends ApiBaseController {
         if (userPawn==null){
             throw new ApiException(400,"典当异常");
         }
-        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
 
-        //注册安心签账户
-        if (StringUtils.isBlank(user.getAnxinsignId())){
-            if (user.getIsBind()!=1){
-                throw new ApiException(400,"请先进行实名认证");
-            }
-            String anxinUserId = AnXinSignService.personRegister(user.getIdCard(), user.getName(), user.getPhone());
-            User temp = new User();
-            temp.setId(user.getId());
-            temp.setAnxinsignId(anxinUserId);
-            temp.setModifyTime(new Date());
-            userService.updateByPrimaryKeySelective(temp);
-        }
 
 
 
@@ -485,7 +486,7 @@ public class ApiUserPawnController extends ApiBaseController {
         PawnTicket pawnTicket = pawnTicketService.getByProjectCode(projectCode);
         HttpServletRequest request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = IpUtils.getIpAddr(request);
-        user = userService.selectByPrimaryKey(mobileInfo.getUserId());
+        User user = userService.selectByPrimaryKey(mobileInfo.getUserId());
         Date signTime = AnXinSignService.confirmSmsCode(user.getAnxinsignId(), projectCode, checkCode);
         PawnTicket temp = new PawnTicket();
         temp.setId(pawnTicket.getId());
