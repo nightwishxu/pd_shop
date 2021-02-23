@@ -5,6 +5,7 @@ import com.paidang.dao.model.ExperterInfo;
 import com.paidang.dao.model.ExperterInfoExample;
 import com.paidang.dao.model.UserGoods;
 import com.paidang.daoEx.model.ExperterInfoEx;
+import com.paidang.service.BFileService;
 import com.paidang.service.ExperterInfoService;
 import com.paidang.service.UserGoodsService;
 import com.ruoyi.common.core.domain.Ret;
@@ -30,6 +31,9 @@ public class ExperterInfoController extends CoreController{
     private ExperterInfoService experterInfoService;
 	@Autowired
 	private UserGoodsService userGoodsService;
+
+	@Autowired
+	private BFileService fileService;
     
     @RequestMapping("/list")
 	@ResponseBody
@@ -41,7 +45,11 @@ public class ExperterInfoController extends CoreController{
 		map.put("goodsName",goodsName);
     	//List<ExperterInfo> list = experterInfoService.selectByExample(example);
 		List<ExperterInfoEx> list = experterInfoService.selectList(map);
-      	return page(list);
+		for (ExperterInfoEx ex : list) {
+			ex.setImages(fileService.getFiles(ex.getImages()));
+		}
+
+		return page(list);
     }
     
     @RequestMapping("/save")

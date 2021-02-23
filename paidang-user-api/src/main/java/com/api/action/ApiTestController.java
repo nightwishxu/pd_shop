@@ -11,8 +11,10 @@ import com.base.oauthLogin.api.OauthQQ;
 import com.base.util.*;
 import com.demo.constant.DSPConsts;
 import com.google.common.collect.Lists;
+import com.item.dao.model.User;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
+import com.item.service.UserService;
 import com.paidang.dao.model.*;
 import com.paidang.service.*;
 import com.qiyuesuo.QysService;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -57,6 +60,18 @@ public class ApiTestController extends ApiBaseController {
 
     @Autowired
     private UserPawnService userPawnService;
+
+    @Autowired
+    private PawnOrgService pawnOrgService;
+
+    @Autowired
+    private PawnContinueService pawnContinueService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PawnTicketService pawnTicketService;
 
     @ApiOperation(value = "z", notes = "1")
     @RequestMapping("/pay")
@@ -107,13 +122,28 @@ public class ApiTestController extends ApiBaseController {
     }
 
     @ApiOperation(value = "z", notes = "1")
-    @RequestMapping("/userPawn/list")
+    @RequestMapping("/userPawn/sign")
     @ApiMethod()
-    public void test(){
-        UserPawnExample example = new UserPawnExample();
-        example.or().andStateEqualTo(2).andPawnEndTimeLessThan(DateUtil.add(new DateTime(DateUtil.getCurrentTime(DateUtil.YYMMDD),DateUtil.YYMMDD),-PaidangConst.BUFFER_DAYS));
-        example.or().andStateEqualTo(5).andPawnEndTimeLessThan(DateUtil.add(new DateTime(DateUtil.getCurrentTime(DateUtil.YYMMDD),DateUtil.YYMMDD),-PaidangConst.BUFFER_DAYS));
-        List<UserPawn> list = userPawnService.selectByExample(example);
-        System.out.println(list.size());
+    public void test(Integer pawnId,Integer continuePawnId,String ip,String time) throws Exception{
+        UserPawn userPawn = userPawnService.selectByPrimaryKey(pawnId);
+        User user = userService.selectByPrimaryKey(userPawn.getUserId());
+        PawnContinue pawnContinue = pawnContinueService.selectByPrimaryKey(continuePawnId);
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
+        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(pawnContinue.getProjectCode());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        //2021 02 22 15 15 49
+        String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
+                user.getAnxinsignId(),ip,pawnContinue.getProjectCode(),sdf.parse(time),pawnOrg.getAnxinsignId(),
+                pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket,userPawn);
+        pawnContinue.setState(4);
+        pawnContinue.setContractId(contractNo);
+        PawnTicket temp = new PawnTicket();
+        temp.setId(pawnTicket.getId());
+        temp.setSignTime(sdf.parse(time));
+        temp.setUserLocation(ip);
+        temp.setUserStatus(2);
+        temp.setStatus("2");
+        temp.setContractId(contractNo);
+        pawnContinueService.updateByPrimaryKeySelective(pawnContinue);
     }
 }

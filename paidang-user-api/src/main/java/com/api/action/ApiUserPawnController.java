@@ -503,7 +503,7 @@ public class ApiUserPawnController extends ApiBaseController {
                 Integer orgId = userPawn.getOrgId();
                 PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
                 String contractNo = AnXinSignService.createContract(DSPConsts.contractPawnTemplateId,"互联网电子典当凭证",
-                        user.getAnxinsignId(),ip,userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        user.getAnxinsignId(),ip,projectCode,signTime,pawnOrg.getAnxinsignId(),
                         pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket);
                 userPawn.setPawnStatus(3);
                 userPawn.setContractId(contractNo);
@@ -512,7 +512,7 @@ public class ApiUserPawnController extends ApiBaseController {
             }else {
                 PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(userPawn.getOrgId());
                 String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
-                        user.getAnxinsignId(),ip,userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        user.getAnxinsignId(),ip,projectCode,signTime,pawnOrg.getAnxinsignId(),
                         pawnTicket.getOrgLocation(),pawnTicket.getOrgSignTime(),pawnTicket,userPawn);
                 pawnContinue.setState(4);
                 pawnContinue.setContractId(contractNo);

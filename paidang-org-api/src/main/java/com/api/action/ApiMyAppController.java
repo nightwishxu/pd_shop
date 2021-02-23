@@ -630,7 +630,7 @@ public class ApiMyAppController extends ApiBaseController{
         if (flag){
             if (lastPawnContinueId ==null){
                 String contractNo = AnXinSignService.createContract(DSPConsts.contractPawnTemplateId,"互联网电子典当凭证",
-                        user.getAnxinsignId(),pawnTicket.getUserLocation(),userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        user.getAnxinsignId(),pawnTicket.getUserLocation(),projectCode,signTime,pawnOrg.getAnxinsignId(),
                         ip,signTime,pawnTicket);
                 userPawn.setPawnStatus(3);
                 userPawn.setContractId(contractNo);
@@ -638,7 +638,7 @@ public class ApiMyAppController extends ApiBaseController{
                 userPawnService.updateByPrimaryKeySelective(userPawn);
             }else {
                 String contractNo = AnXinSignService.createXdContract(DSPConsts.contractRePawnTemplateId,"互联网典当续当凭证",
-                        user.getAnxinsignId(),pawnTicket.getUserLocation(),userPawn.getProjectCode(),signTime,pawnOrg.getAnxinsignId(),
+                        user.getAnxinsignId(),pawnTicket.getUserLocation(),projectCode,signTime,pawnOrg.getAnxinsignId(),
                         ip,signTime,pawnTicket,userPawn);
                 pawnContinue.setState(4);
                 pawnContinue.setContractId(contractNo);

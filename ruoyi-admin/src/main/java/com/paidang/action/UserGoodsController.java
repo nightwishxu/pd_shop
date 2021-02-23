@@ -65,6 +65,10 @@ public class UserGoodsController extends CoreController{
 	@Autowired
 	private CertificateService certificateService;
 
+	@Autowired
+	private BFileService fileService;
+
+
 
 	@RequestMapping("/list")
 	@ResponseBody
@@ -85,6 +89,16 @@ public class UserGoodsController extends CoreController{
 			}else{
 				ex.setPower(0);
 			}
+			ex.setImages(fileService.getFiles(ex.getImages()));
+			ex.setGoodsImgs(fileService.getFiles(ex.getGoodsImgs()));
+			ex.setVideo(fileService.getFiles(ex.getVideo()));
+			ex.setGoVideo(fileService.getFiles(ex.getGoVideo()));
+			ex.setSellVideo(fileService.getFiles(ex.getSellVideo()));
+			ex.setBackVideo(fileService.getFiles(ex.getBackVideo()));
+			ex.setOpenGoodsVideo(fileService.getFiles(ex.getOpenGoodsVideo()));
+			ex.setPlatOrgVideo(fileService.getFiles(ex.getPlatOrgVideo()));
+			ex.setPlatGoodsAuthVideo(fileService.getFiles(ex.getPlatGoodsAuthVideo()));
+			ex.setPlatGoodsReceiveVideo(fileService.getFiles(ex.getPlatGoodsReceiveVideo()));
 		}
 		return page(list);
     }
@@ -196,8 +210,18 @@ public class UserGoodsController extends CoreController{
     @RequestMapping("/findById")
 	@ResponseBody
     public Ret find(Integer id){
-    	UserGoods userGoods = userGoodsService.selectByPrimaryKey(id);
-       	return ok(userGoods);
+    	UserGoods ex = userGoodsService.selectByPrimaryKey(id);
+		ex.setImages(fileService.getFiles(ex.getImages()));
+		ex.setGoodsImgs(fileService.getFiles(ex.getGoodsImgs()));
+		ex.setVideo(fileService.getFiles(ex.getVideo()));
+		ex.setGoVideo(fileService.getFiles(ex.getGoVideo()));
+		ex.setSellVideo(fileService.getFiles(ex.getSellVideo()));
+		ex.setBackVideo(fileService.getFiles(ex.getBackVideo()));
+		ex.setOpenGoodsVideo(fileService.getFiles(ex.getOpenGoodsVideo()));
+		ex.setPlatOrgVideo(fileService.getFiles(ex.getPlatOrgVideo()));
+		ex.setPlatGoodsAuthVideo(fileService.getFiles(ex.getPlatGoodsAuthVideo()));
+		ex.setPlatGoodsReceiveVideo(fileService.getFiles(ex.getPlatGoodsReceiveVideo()));
+       	return ok(ex);
     }
     
     @RequestMapping("/del")
@@ -392,8 +416,18 @@ public class UserGoodsController extends CoreController{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id",id);
 		List<UserGoodsEx> list = userGoodsService.checkDetail(map);
-        UserGoodsEx userGoodsEx = list.get(0);
-        return ok(userGoodsEx);
+        UserGoodsEx ex = list.get(0);
+		ex.setImages(fileService.getFiles(ex.getImages()));
+		ex.setGoodsImgs(fileService.getFiles(ex.getGoodsImgs()));
+		ex.setVideo(fileService.getFiles(ex.getVideo()));
+		ex.setGoVideo(fileService.getFiles(ex.getGoVideo()));
+		ex.setSellVideo(fileService.getFiles(ex.getSellVideo()));
+		ex.setBackVideo(fileService.getFiles(ex.getBackVideo()));
+		ex.setOpenGoodsVideo(fileService.getFiles(ex.getOpenGoodsVideo()));
+		ex.setPlatOrgVideo(fileService.getFiles(ex.getPlatOrgVideo()));
+		ex.setPlatGoodsAuthVideo(fileService.getFiles(ex.getPlatGoodsAuthVideo()));
+		ex.setPlatGoodsReceiveVideo(fileService.getFiles(ex.getPlatGoodsReceiveVideo()));
+        return ok(ex);
 	}
 
 	@RequestMapping("/detail")
@@ -415,6 +449,19 @@ public class UserGoodsController extends CoreController{
 		map.put("belongType",belongType);
 		map.put("code",code);
 		List<UserGoodsEx> list = userGoodsService.selectGoodsByOrgList(map);
+		for (UserGoodsEx ex : list) {
+			ex.setImages(fileService.getFiles(ex.getImages()));
+			ex.setGoodsImgs(fileService.getFiles(ex.getGoodsImgs()));
+			ex.setVideo(fileService.getFiles(ex.getVideo()));
+			ex.setGoVideo(fileService.getFiles(ex.getGoVideo()));
+			ex.setSellVideo(fileService.getFiles(ex.getSellVideo()));
+			ex.setBackVideo(fileService.getFiles(ex.getBackVideo()));
+			ex.setOpenGoodsVideo(fileService.getFiles(ex.getOpenGoodsVideo()));
+			ex.setPlatOrgVideo(fileService.getFiles(ex.getPlatOrgVideo()));
+			ex.setPlatGoodsAuthVideo(fileService.getFiles(ex.getPlatGoodsAuthVideo()));
+			ex.setPlatGoodsReceiveVideo(fileService.getFiles(ex.getPlatGoodsReceiveVideo()));
+		}
+
 		return page(list);
 	}
 
@@ -456,6 +503,18 @@ public class UserGoodsController extends CoreController{
 		UserGoodsEx entity=new UserGoodsEx();
 		entity.setName(name);
 		List<UserGoodsEx> list=userGoodsService.findList(entity);
+		for (UserGoodsEx ex : list) {
+			ex.setImages(fileService.getFiles(ex.getImages()));
+			ex.setGoodsImgs(fileService.getFiles(ex.getGoodsImgs()));
+			ex.setVideo(fileService.getFiles(ex.getVideo()));
+			ex.setGoVideo(fileService.getFiles(ex.getGoVideo()));
+			ex.setSellVideo(fileService.getFiles(ex.getSellVideo()));
+			ex.setBackVideo(fileService.getFiles(ex.getBackVideo()));
+			ex.setOpenGoodsVideo(fileService.getFiles(ex.getOpenGoodsVideo()));
+			ex.setPlatOrgVideo(fileService.getFiles(ex.getPlatOrgVideo()));
+			ex.setPlatGoodsAuthVideo(fileService.getFiles(ex.getPlatGoodsAuthVideo()));
+			ex.setPlatGoodsReceiveVideo(fileService.getFiles(ex.getPlatGoodsReceiveVideo()));
+		}
 		return page(list);
 	}
 

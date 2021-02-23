@@ -6,6 +6,7 @@ import com.baidubce.services.bos.BosClient;
 import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.PutObjectResponse;
 import com.base.util.*;
+import com.beust.jcommander.internal.Lists;
 import com.demo.constant.HttpConnector;
 import com.paidang.dao.BFileMapper;
 import com.paidang.dao.model.BFile;
@@ -299,6 +300,24 @@ public class BFileService {
 			return url;
 		}
 
+	}
+
+	public String getFiles(String ids){
+		if (com.ruoyi.common.utils.StringUtils.isNotBlank(ids)){
+			if (ids.startsWith("http")){
+				return ids;
+			}
+			String[] split = ids.split(",");
+			List<String> urls = Lists.newArrayList();
+			for (String s : split) {
+				String url = getFileForBos(s);
+				if (StringUtil.isNotBlank(url)){
+					urls.add(url);
+				}
+			}
+			return String.join(",",urls);
+		}
+		return null;
 	}
 
 

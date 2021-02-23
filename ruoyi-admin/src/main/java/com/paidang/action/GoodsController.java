@@ -11,6 +11,7 @@ import com.paidang.dao.model.Goods;
 import com.paidang.dao.model.GoodsAuctionOnlineLog;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.service.BFileService;
 import com.paidang.service.GoodsAuctionOnlineLogService;
 import com.paidang.service.GoodsService;
 import com.ruoyi.common.core.domain.Ret;
@@ -36,6 +37,9 @@ public class GoodsController extends CoreController{
     private GoodsService goodsService;
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private BFileService fileService;
 
 
 	@Autowired
@@ -66,6 +70,11 @@ public class GoodsController extends CoreController{
 
 		startPage();
 		List<GoodsEx> list = goodsService.selectGoodsList(builder);
+		for (GoodsEx ex : list) {
+			ex.setImgs(fileService.getFiles(ex.getImgs()));
+			ex.setImg(fileService.getFiles(ex.getImg()));
+		}
+
 		return page(list);
 	}
 
@@ -391,6 +400,8 @@ public class GoodsController extends CoreController{
 	@ResponseBody 
     public Ret find(@PathVariable Integer id){
     	GoodsEx goods = goodsService.selectByPrimaryId(id);
+		goods.setImgs(fileService.getFiles(goods.getImgs()));
+		goods.setImg(fileService.getFiles(goods.getImg()));
        	return ok(goods);
     }
     

@@ -12,6 +12,7 @@ import com.paidang.dao.model.PawnOrgExample;
 import com.paidang.dao.model.VideoOnline;
 import com.paidang.dao.model.VideoOnlineExample;
 import com.paidang.daoEx.model.GoodsEx;
+import com.paidang.service.BFileService;
 import com.paidang.service.GoodsService;
 import com.paidang.service.PawnOrgService;
 import com.paidang.service.VideoOnlineService;
@@ -41,6 +42,8 @@ public class AdController extends CoreController{
 	private VideoOnlineService videoOnlineService;
 	@Autowired
 	private PawnOrgService pawnOrgService;
+	@Autowired
+	private BFileService fileService;
 
 
 
@@ -94,7 +97,7 @@ public class AdController extends CoreController{
 		example.setOrderByClause("create_time desc");
 
     	List<Ad> list = adService.selectByExampleWithBLOBs(example);
-    	list.stream().forEach(ad->ad.setImg(BaseUtils.processImg(ad.getImg())));
+    	list.stream().forEach(ad->ad.setImg(fileService.getFiles(ad.getImg())));
       	return page(list);
     }
 
@@ -139,7 +142,7 @@ public class AdController extends CoreController{
     public Ret find(Integer id){
     	Ad ad = adService.selectByPrimaryKey(id);
         if (StringUtils.isNotBlank(ad.getImg())){
-            ad.setImg(BaseUtils.processImg(ad.getImg()));
+            ad.setImg(fileService.getFiles(ad.getImg()));
         }
        	return ok(ad);
     }
@@ -169,6 +172,8 @@ public class AdController extends CoreController{
 			map.put("id",item.getId().toString());
 			map.put("name","【" + MStoreGoodsCateList.getName(item.getCateCode().toString()) + "】" + item.getName());
             res.add(map);
+            item.setImg(fileService.getFiles(item.getImg()));
+			item.setImgs(fileService.getFiles(item.getImgs()));
 		}
 		return ok(res);
 	}
