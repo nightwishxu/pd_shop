@@ -220,7 +220,7 @@ public class ApiStoreController extends ApiBaseController {
 
         GoodsQo qo = new GoodsQo();
         qo.setStartTotal(1);
-        qo.setType(type);
+        qo.setCateCode(type);
         qo.setState(1);
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
@@ -291,7 +291,7 @@ public class ApiStoreController extends ApiBaseController {
 //        goodsExample.or().andCateCodeEqualTo(type).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2).andSourceEqualTo(2).andTypeEqualTo(2);
 //        List<Goods> list = goodsService.selectByExample(goodsExample);
         GoodsQo qo = new GoodsQo();
-        qo.setType(type);
+        qo.setCateCode(type);
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
         qo.setType(2);
@@ -311,6 +311,7 @@ public class ApiStoreController extends ApiBaseController {
             record.setWidth(ex.getWidth());
             record.setHeight(ex.getHeight());
             record.setAuthPrice(ex.getPrice()+"");
+            record.setDealType(ex.getDealType());
             if (ex.getDealType()!=null && ex.getDealType()==2 && ex.getMaxAuction()!=null){
                 if (ex.getMaxAuction()!=null){
                     record.setPrice(ex.getMaxAuction() + "");
@@ -1091,6 +1092,7 @@ public class ApiStoreController extends ApiBaseController {
         for(Goods ex : goodsList){
             ApiIndexMenu c = new ApiIndexMenu();
             c.setOrgId(ex.getOrgId());
+            c.setDealType(ex.getDealType());
             if(3 == ex.getSource()||4 == ex.getSource()){
                 if(cnt <= 6){
                     //如果是认证商场商品

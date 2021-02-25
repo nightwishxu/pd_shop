@@ -39,6 +39,9 @@
     <if test="orgId!= null">
       and a.org_id = #{orgId}
     </if>
+    <if test="userId!= null">
+      and a.user_id = #{userId}
+    </if>
     order by a.create_time desc
   </select>
   

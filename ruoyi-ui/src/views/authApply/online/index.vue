@@ -96,6 +96,7 @@
       <el-table-column
         label="宝贝图片"
         align="center"
+        width="200"
         prop="images"
       >
         <template slot-scope="scope">
@@ -107,14 +108,17 @@
               <el-popover
                 placement="left"
                 trigger="click"
-                width="300"
+                width="100%"
               >
-                <el-image :src="item" />
+                <el-image
+                  :src="item"
+                  width="800"
+                />
                 <el-image
                   slot="reference"
                   :src="item"
                   :alt="item"
-                  style="max-height: 50px; max-width: 50px; padding: 5px"
+                  style="max-height: 40px; max-width: 40px; padding: 3px"
                 />
               </el-popover>
             </span>
@@ -124,6 +128,7 @@
       <el-table-column
         label="宝贝附件"
         align="center"
+        width="150"
         prop="goodsImgs"
       >
         <template slot-scope="scope">
@@ -135,14 +140,17 @@
               <el-popover
                 placement="left"
                 trigger="click"
-                width="300"
+                width="800"
               >
-                <el-image :src="item" />
+                <el-image
+                  :src="item"
+                  width="100%"
+                />
                 <el-image
                   slot="reference"
                   :src="item"
                   :alt="item"
-                  style="max-height: 50px; max-width: 50px; padding: 5px"
+                  style="max-height: 40px; max-width: 40px; padding: 3px"
                 />
               </el-popover>
             </span>
@@ -630,9 +638,12 @@
               <el-popover
                 placement="left"
                 trigger="click"
-                width="300"
+                width="100%"
               >
-                <el-image :src="item" />
+                <el-image
+                  :src="item"
+                  width="100%"
+                />
                 <el-image
                   slot="reference"
                   :src="item"

@@ -157,7 +157,10 @@ public class ApiUserPawnConinueController extends ApiBaseController {
             lxMoeny = CostGenerator.getInterest(principal,ex.getMoneyRate(),lastPawnContinue.getPawnMonth());
         }
 
-
+        //滞纳金
+        record.setRedeemOverdue("0");
+        //费用总计
+        record.setTotalMoney(totalMoney.add(lxMoeny)+"");
         //查找典当商品还有多久到期
         int betTime = Integer.parseInt(DateUtil.between(DateUtil.parse(DateUtil.format(new Date(), DateUtil.YYMMDD)),ex.getPawnEndTime(), DateUnit.DAY)+"");
 
@@ -166,10 +169,8 @@ public class ApiUserPawnConinueController extends ApiBaseController {
             //没有逾期
             //record.setOverdueRate(PaidangConst.REDEEM_OVERRATE + "");
             record.setOverdueRate(ex.getOverdueRate()+"");
-            //滞纳金
-            record.setRedeemOverdue("0");
-            //费用总计
-            record.setTotalMoney(totalMoney.add(lxMoeny)+"");
+
+
         }else if(DateUtil.parse(DateUtil.format(new Date(), DateUtil.YYMMDD)).getTime()>ex.getPawnEndTime().getTime()&&(betTime < (PaidangConst.BUFFER_DAYS))){
             //逾期了，并且还在典当中
             //record.setOverdueRate(PaidangConst.REDEEM_OVERRATE + "");

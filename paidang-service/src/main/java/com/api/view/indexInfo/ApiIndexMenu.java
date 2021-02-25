@@ -37,6 +37,9 @@ public class ApiIndexMenu {
     @ApiModelProperty(value="商品来源2机构3服务商4供应商 ")
     private Integer source;
 
+    @ApiModelProperty(value="1一口价 2竞拍价 ")
+    private Integer dealType;
+
     public Integer getOrgId() {
         return orgId;
     }
@@ -147,5 +150,13 @@ public class ApiIndexMenu {
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public Integer getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(Integer dealType) {
+        this.dealType = dealType;
     }
 }

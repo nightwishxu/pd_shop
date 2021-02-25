@@ -77,8 +77,8 @@ public class ApiPawnTicketCenterController  extends ApiBaseController{
         startPage();
         PawnTicketQo qo = new PawnTicketQo();
         qo.setStatusList(statusList);
-        qo.setPawnerName(user.getName());
-        qo.setPawnerTel(user.getPhone());
+        qo.setUserId(mobileInfo.getUserId());
+//        qo.setPawnerTel(user.getPhone());
         List<PawnTicketEx> pawnTickets = pawnTicketService.findList(qo);
         return pawnTickets;
     }
