@@ -76,6 +76,15 @@ public class ApiCommonController extends ApiBaseController {
 	public Result downloadForBos(@RequestParam(value = "id", required = true) @ApiParam(value="文件id",required = true)String id)throws Exception{
 		return new Result(fileService.getFileForBos(id));
 	}
+
+
+	@ApiOperation(value = "删除", notes = "")
+	@RequestMapping(value = "/clear",method = {RequestMethod.GET, RequestMethod.POST})
+	@ApiMethod
+	public Result clearKey(@RequestParam(value = "key", required = true) String key)throws Exception{
+		return new Result(fileService.clearKeys(key));
+	}
+
 	
     @ApiOperation(value = "文件上传", notes = "")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)

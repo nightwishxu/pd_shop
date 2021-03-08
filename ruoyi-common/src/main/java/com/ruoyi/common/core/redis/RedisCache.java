@@ -109,6 +109,13 @@ public class RedisCache
         redisTemplate.delete(key);
     }
 
+    public void clear(String key){
+        Set<String> keys = redisTemplate.keys(key);
+        if (!keys.isEmpty()) {
+            redisTemplate.delete(keys);
+        }
+    }
+
     /**
      * 删除集合对象
      *

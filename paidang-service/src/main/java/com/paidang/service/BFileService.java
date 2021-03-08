@@ -283,6 +283,11 @@ public class BFileService {
 		}
 	}
 
+	public String clearKeys(String key){
+		redisCache.clear(key);
+		return "1";
+	}
+
 	public String getFileForBos(String id){
 		if(StringUtils.isBlank(id)){
 			return null;

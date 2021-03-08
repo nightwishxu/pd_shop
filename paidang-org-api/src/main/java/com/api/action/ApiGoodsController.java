@@ -272,6 +272,7 @@ public class ApiGoodsController extends ApiBaseController {
     @ApiOperation(value = "根据(状态)获取发布商品")
     public  List<GoodsEx> getGoodsByOnline(@ApiParam(required = false,value = "0下架1上架2新增待上架") Integer state,
                                    MobileInfo mobileInfo, @ApiParam(value = "1 一口价(产品库) 2 竞拍（拍品库）")Integer dealType,
+                                   @ApiParam(value = "排序 1时间降序 2时间升序") Integer orderType,
                                    @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
                                    @ApiParam(value = "分页(不传则不分页)") String pageSize,
                                    @ApiParam(value = "商品名称")String goodsName){
@@ -290,6 +291,7 @@ public class ApiGoodsController extends ApiBaseController {
         qo.setIsOnline(state);
         qo.setDealType(dealType);
         qo.setIsOnlineCnt(1);
+        qo.setOrderType(orderType);
         List<GoodsEx> goodsList = goodsService.findListEx(qo);
         return  goodsList;
 //        if(pageNum!=null && pageSize!=null){

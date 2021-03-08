@@ -135,6 +135,9 @@ public class ApiAuthController extends CoreController {
 			throw new ApiException(-1,"当前人员已经提交过验证，不能重复提交");
 		}
 		if (authEnterprise.getId() == null){
+			if (StringUtils.isBlank(authEnterprise.getStoreName())){
+				authEnterprise.setStoreName(authEnterprise.getEnterpriseName());
+			}
 			authEnterprise.setCreateTime(new Date());
 			authEnterpriseService.insert(authEnterprise);
 		}else{
@@ -649,7 +652,8 @@ public class ApiAuthController extends CoreController {
 	@ApiOperation(value = "根据(状态)获取发布商品")
 	public List<GoodsEx> getGoodsByOnline(@ApiParam(required = true,value = "0下架1上架2新增待上架") Integer state,
 								 	MobileInfo mobileInfo, @ApiParam(value = "1 一口价(产品库) 2 竞拍（拍品库）")Integer dealType,
-								   @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
+										  @ApiParam(value = "排序 1时间降序 2时间升序") Integer orderType,
+										  @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
 								   @ApiParam(value = "分页(不传则不分页)") String pageSize,
 								   @ApiParam(value = "商品名称")String goodsName){
 		int userId = mobileInfo.getUserId();
@@ -665,6 +669,7 @@ public class ApiAuthController extends CoreController {
 		qo.setIsOnline(state);
 		qo.setDealType(dealType);
 		qo.setIsOnlineCnt(1);
+		qo.setOrderType(orderType);
 		List<GoodsEx> goodsList = goodsService.findListEx(qo);
 		return goodsList;
 	}

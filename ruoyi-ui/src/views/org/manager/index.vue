@@ -789,7 +789,6 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
-        this.form.type = 1;
         if (valid) {
           if (this.form.id != null) {
             updateOrg(this.form).then((response) => {

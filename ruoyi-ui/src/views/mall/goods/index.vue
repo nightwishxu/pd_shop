@@ -154,7 +154,7 @@
             <el-popover
               placement="left"
               trigger="click"
-              width="800"
+              width="600"
             >
               <el-image
                 :src="item"

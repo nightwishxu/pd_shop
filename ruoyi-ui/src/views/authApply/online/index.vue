@@ -108,11 +108,11 @@
               <el-popover
                 placement="left"
                 trigger="click"
-                width="100%"
+                width="600"
               >
                 <el-image
                   :src="item"
-                  width="800"
+                  width="100%"
                 />
                 <el-image
                   slot="reference"
@@ -140,7 +140,7 @@
               <el-popover
                 placement="left"
                 trigger="click"
-                width="800"
+                width="600"
               >
                 <el-image
                   :src="item"

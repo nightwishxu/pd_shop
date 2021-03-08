@@ -21,6 +21,8 @@ public class GoodsQo extends Goods {
 
     private Integer limit;
 
+    private Integer orderType;
+
     public List<Integer> getSources() {
         return sources;
     }
@@ -52,5 +54,13 @@ public class GoodsQo extends Goods {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
     }
 }

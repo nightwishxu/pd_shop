@@ -195,7 +195,13 @@
         <if test="startTotal!=null">
             and a.total >=#{startTotal}
         </if>
-        order by a.sort_order desc,a.is_suggest desc,a.create_time desc
+        order by
+        <if test="orderType==null or orderType==1">
+            a.create_time desc
+        </if>
+        <if test="orderType!=null and orderType==2">
+            a.create_time asc
+        </if>
         <if test="limit!=null">
             limit #{limit}
         </if>
