@@ -8,17 +8,20 @@ import com.base.util.StringUtil;
 import com.base.util.StringUtils;
 import com.github.sd4324530.fastweixin.util.CollectionUtil;
 import com.item.dao.model.Code;
+import com.item.dao.model.User;
 import com.item.daoEx.model.UserEx;
 import com.item.service.CodeService;
 import com.item.service.UserService;
-import com.paidang.dao.model.PawnOrg;
-import com.paidang.dao.model.PawnOrgExample;
+import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.service.AnXinSignService;
+import com.paidang.service.AuthEnterpriseService;
+import com.paidang.service.AuthPersonalService;
 import com.paidang.service.PawnOrgService;
 import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.util.PaidangConst;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +47,12 @@ public class PawnOrgController extends CoreController{
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AuthPersonalService authPersonalService;
+
+	@Autowired
+	private AuthEnterpriseService authEnterpriseService;
     
     @RequestMapping("/list")
 	@ResponseBody 
@@ -175,10 +184,30 @@ public class PawnOrgController extends CoreController{
 				String anxinPhone = entity.getAnxinPhone();
 				boolean flag =false;
 				if (StringUtils.isBlank(anxinPhone)){
-					Map<String,Object> map = new HashMap<String,Object>();
-					map.put("orgId",id);
-					List<UserEx> userExes = userService.selectOrgUsersList(map);
-					anxinPhone = userExes.get(0).getPhone();
+					if(entity.getType()!=6){
+						Map<String,Object> map = new HashMap<String,Object>();
+						map.put("orgId",id);
+						List<UserEx> userExes = userService.selectOrgUsersList(map);
+						anxinPhone = userExes.get(0).getPhone();
+					}else {
+						AuthPersonalExample example = new AuthPersonalExample();
+						example.createCriteria().andOrgIdEqualTo(id);
+						List<AuthPersonal> authPersonals = authPersonalService.selectByExample(example);
+						if (CollectionUtils.isNotEmpty(authPersonals)){
+							User user = userService.selectByPrimaryKey(authPersonals.get(0).getCreateUser());
+							anxinPhone = user.getAccount();
+						}else {
+							AuthEnterpriseExample example1 = new AuthEnterpriseExample();
+							example1.createCriteria().andOrgIdEqualTo(id);
+							List<AuthEnterprise> authEnterprises = authEnterpriseService.selectByExample(example1);
+							if (CollectionUtils.isNotEmpty(authEnterprises)){
+								User user = userService.selectByPrimaryKey(authEnterprises.get(0).getCreateUser());
+								anxinPhone = user.getAccount();
+							}
+						}
+
+					}
+
 					flag = true;
 				}
 				//13771228227

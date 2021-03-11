@@ -22,7 +22,7 @@ export function addPage(data) {
   return request({
     url: '/sp/save',
     method: 'post',
-    params: data
+    data: data
   })
 }
 
@@ -31,7 +31,7 @@ export function updatePage(data) {
   return request({
     url: '/sp/save',
     method: 'post',
-    params: data
+    data: data
   })
 }
 

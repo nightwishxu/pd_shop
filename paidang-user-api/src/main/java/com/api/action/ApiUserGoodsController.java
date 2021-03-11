@@ -878,9 +878,8 @@ public class ApiUserGoodsController extends ApiBaseController {
             //最终重量
             Double weigthEnd = (Double.parseDouble(weigth))*100;
             if(weigthEnd <= 30){
-                ret.setCode(-1);
-                ret.setMsg(" 0.3克拉以下的不予鉴定");
-                return ret;
+                throw new ApiException(400," 0.3克拉以下的不予鉴定");
+
             }
             if(light.equals("SI1") || light.equals("SI2") || light.equals("SI3") || light.equals("I1") || light.equals("I2") || light.equals("I3")){
                 ret.setData("参考价格，以邮件审核价格为准");
@@ -889,9 +888,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             example1.createCriteria().andWeightBeginLessThanOrEqualTo(weigthEnd.floatValue()).andWeigthEndGreaterThanOrEqualTo(weigthEnd.floatValue()).andColorEqualTo(color).andLightEqualTo(light);
             List<Diamond> list1 = diamondService.selectByExample(example1);
             if(null == list1 || list1.size() ==0){
-                ret.setCode(-1);
-                ret.setMsg("找不到该商品的价格，请到店或者邮寄");
-                return ret;
+                throw new ApiException(400,"找不到该商品的价格，请到店或者邮寄");
             }
             Diamond diamond = list1.get(0);
             if(null == diamond){

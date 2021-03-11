@@ -197,7 +197,7 @@
         </if>
         order by
         <if test="orderType==null or orderType==1">
-            a.create_time desc
+            a.is_suggest desc,a.create_time desc
         </if>
         <if test="orderType!=null and orderType==2">
             a.create_time asc

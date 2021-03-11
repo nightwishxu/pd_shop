@@ -60,9 +60,15 @@ public class ApiUserSms
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
         if (StringUtils.isNotBlank(wxOpenid)) {
+            if ("undefined".equals(qqOpenid)){
+                throw new ApiException(400,"openId获取异常");
+            }
             criteria.andWxOpenidEqualTo(wxOpenid);
         }
         if (StringUtils.isNotBlank(qqOpenid)) {
+            if ("undefined".equals(qqOpenid)){
+                throw new ApiException(400,"openId获取异常");
+            }
             criteria.andQqOpenidEqualTo(qqOpenid);
         }
         List<User> users = this.userService.selectByExample(userExample);
@@ -170,9 +176,15 @@ public class ApiUserSms
                 user = regist(phone);
             }
             if (StringUtils.isNotBlank(wxOpenid)) {
+                if ("undefined".equals(wxOpenid)){
+                    throw new ApiException(400,"openId获取异常");
+                }
                 user.setWxOpenid(wxOpenid);
             }
             if (StringUtils.isNotBlank(qqOpenid)) {
+                if ("undefined".equals(qqOpenid)){
+                    throw new ApiException(400,"openId获取异常");
+                }
                 user.setQqOpenid(qqOpenid);
             }
             this.userService.updateByPrimaryKeySelective(user);

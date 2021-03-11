@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.Ret;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,7 @@ public class SinglePageController extends CoreController{
 	
 	@RequestMapping(value="/save",method= RequestMethod.POST)
 	@ResponseBody
-	public Ret save(SinglePage news)throws Exception{
+	public Ret save(@RequestBody SinglePage news)throws Exception{
 		int i = singlePageService.updateByPrimaryKeySelective(news);
 		if(i == 0){
 			singlePageService.insertSelective(news);

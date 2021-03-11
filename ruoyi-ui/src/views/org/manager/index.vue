@@ -199,7 +199,7 @@
             size="mini"
             type="text"
             v-else-if="scope.row.state == 0"
-            @click="handleState(scope.row,0)"
+            @click="handleState(scope.row,1)"
           >禁用</el-button>
         </template>
       </el-table-column>

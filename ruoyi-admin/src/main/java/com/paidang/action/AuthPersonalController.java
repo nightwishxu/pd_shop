@@ -1,6 +1,8 @@
 package com.paidang.action;
 
 import com.base.action.CoreController;
+import com.item.dao.model.User;
+import com.item.service.UserService;
 import com.paidang.dao.model.AuthPersonal;
 import com.paidang.dao.model.AuthPersonalExample;
 import com.paidang.dao.model.BusinessUserInfo;
@@ -33,6 +35,9 @@ public class AuthPersonalController extends CoreController{
 	private BusinessUserInfoService businessUserInfoService;
     @Autowired
 	private PawnOrgService pawnOrgService;
+
+    @Autowired
+	private UserService userService;
 
     @RequestMapping("/list")
 	@ResponseBody
@@ -87,6 +92,7 @@ public class AuthPersonalController extends CoreController{
 			AuthPersonal personal = authPersonalService.selectByPrimaryKey(id);
 			BusinessUserInfo businessUserInfo = new BusinessUserInfo();
 			businessUserInfo.setUserId(personal.getCreateUser());
+			User user = userService.selectByPrimaryKey(personal.getCreateUser());
 			businessUserInfo.setTotal(BigDecimal.ZERO);
 			businessUserInfoService.insert(businessUserInfo);
 			PawnOrg pawnOrg = new PawnOrg();
@@ -98,6 +104,7 @@ public class AuthPersonalController extends CoreController{
 			pawnOrg.setPhone(authPersonal1.getPhone());
 			pawnOrg.setCreateTime(new Date());
 			pawnOrg.setState(1);
+			pawnOrg.setAnxinPhone(user.getAccount());
 			pawnOrg.setIntroduction(authPersonal1.getStoreIntroduce());
 			pawnOrg.setOrgLogo(authPersonal1.getLogo());
 			pawnOrgService.insert(pawnOrg);
