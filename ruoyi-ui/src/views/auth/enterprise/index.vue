@@ -150,6 +150,11 @@
         prop="enterpriseName"
       />
       <el-table-column
+        label="申请账号"
+        align="center"
+        prop="account"
+      />
+      <el-table-column
         label="法人姓名"
         align="center"
         prop="legalPersonName"

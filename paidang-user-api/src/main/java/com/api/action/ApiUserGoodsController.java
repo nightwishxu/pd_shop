@@ -1420,6 +1420,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         for (String n:names){
             GoodsEx goodsEx=new GoodsEx();
             goodsEx.setName(n);
+            goodsEx.setOrgState(1);
             List<GoodsEx> gLists= goodsService.findList(goodsEx);
             for (GoodsEx g:gLists) {
                 if(goodsMap.get(g.getId())==null){

@@ -155,6 +155,11 @@
         prop="storeIntroduce"
       />
       <el-table-column
+        label="申请账号"
+        align="center"
+        prop="account"
+      />
+      <el-table-column
         label="姓名"
         align="center"
         prop="name"
@@ -210,6 +215,28 @@
               style="max-height: 50px; max-width: 50px"
             ></el-image>
             <el-image :src="scope.row.idCardBack"></el-image>
+          </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        prop="handIdCardFront"
+        align="center"
+        label="手持身份证正面"
+      >
+        <template scope="scope">
+          <el-popover
+            placement="right"
+            title
+            trigger="click"
+          >
+            <el-image
+              slot="reference"
+              :src="scope.row.handIdCardFront"
+              :alt="scope.row.handIdCardFront"
+              style="max-height: 50px; max-width: 50px"
+            ></el-image>
+            <el-image :src="scope.row.handIdCardFront"></el-image>
           </el-popover>
         </template>
       </el-table-column>

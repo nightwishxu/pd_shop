@@ -50,6 +50,8 @@ public class GoodsEx extends Goods {
 
     private List<Integer> ids;
 
+    private Integer orgState;
+
 //    @Override
 //    public String getImg() {
 //        return processImg(super.getImg());
@@ -221,5 +223,13 @@ public class GoodsEx extends Goods {
 
     public void setIds(List<Integer> ids) {
         this.ids = ids;
+    }
+
+    public Integer getOrgState() {
+        return orgState;
+    }
+
+    public void setOrgState(Integer orgState) {
+        this.orgState = orgState;
     }
 }

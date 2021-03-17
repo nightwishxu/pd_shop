@@ -118,6 +118,9 @@
         <if test="id!=null ">
             and g.id=#{id}
         </if>
+        <if test="orgState != null" >
+            and po.state = #{orgState}
+        </if>
         and g.is_online = 1 and g.is_verfiy = 2
         order by g.create_time desc
     </select>
@@ -159,6 +162,9 @@
         <if test="state != null" >
             and a.state = #{state}
         </if>
+        <if test="orgState != null" >
+            and b.state = #{orgState}
+        </if>
         <if test="id != null" >
             and a.id = #{id}
         </if>
@@ -168,7 +174,7 @@
         <if test="type != null" >
             and a.type = #{type}
         </if>
-        <if test="name != null and name!=''" >
+        <if test="name!= null and name!=''" >
             and a.name like CONCAT('%',#{name},'%')
         </if>
         <if test="source != null" >
@@ -202,8 +208,11 @@
         <if test="orderType!=null and orderType==2">
             a.create_time asc
         </if>
-        <if test="limit!=null">
-            limit #{limit}
+        <if test="limitNum!=null">
+            limit #{limitNum}
+        </if>
+        <if test="pageNum!=null">
+            limit #{pageNum},#{pageSize}
         </if>
     </select>
 

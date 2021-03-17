@@ -5,6 +5,8 @@ import com.paidang.dao.AuthEnterpriseMapper;
 import com.paidang.dao.model.AuthEnterprise;
 import com.paidang.dao.model.AuthEnterpriseExample;
 import com.paidang.daoEx.AuthEnterpriseMapperEx;
+import com.paidang.daoEx.model.AuthEnterpriseEx;
+import com.paidang.domain.qo.AuthEnterpriseQo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +77,9 @@ public class AuthEnterpriseService {
 	 */
 	public void setAuthInvalid(int userId){
 		this.authEnterpriseMapperEx.setAuthInvalid(userId);
+	}
+
+	public List<AuthEnterpriseEx> findList(AuthEnterpriseQo qo){
+		return authEnterpriseMapperEx.findList(qo);
 	}
 }

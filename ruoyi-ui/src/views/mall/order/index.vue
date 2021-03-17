@@ -807,7 +807,7 @@ export default {
     getList() {
       this.loading = true;
       // this.queryParams = 1;
-      this.queryParams.goodsSource = 1;
+      // this.queryParams.goodsSource = 1;
       if(this.createTimeRange!=undefined && this.createTimeRange!=null){
         this.queryParams.createTimeStart = this.createTimeRange[0]
       this.queryParams.createTimeEnd = this.createTimeRange[1]

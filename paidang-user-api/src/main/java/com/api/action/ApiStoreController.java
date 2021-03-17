@@ -2,6 +2,7 @@ package com.api.action;
 
 import com.api.MEnumError;
 import com.api.util.PageLimit;
+import com.api.util.PageUtil;
 import com.api.view.indexInfo.ApiIndexMenu;
 import com.api.view.store.AppJdGoods;
 import com.api.view.store.AppOrgName;
@@ -16,6 +17,7 @@ import com.base.api.MobileInfo;
 import com.base.util.BaseUtils;
 import com.base.util.DateUtil;
 import com.base.util.StringUtil;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
@@ -28,8 +30,8 @@ import com.paidang.daoEx.model.VideoOnlineEx;
 import com.paidang.domain.qo.GoodsQo;
 import com.paidang.domain.vo.PawnOrgVo;
 import com.paidang.service.*;
-import com.ruoyi.common.core.domain.Ret;
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.util.PaidangConst;
 import io.swagger.annotations.Api;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/storeGoods", produces = { "application/json;charset=UTF-8" }, method = RequestMethod.POST)
@@ -233,7 +236,7 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(6);
         sources.add(7);
         qo.setSources(sources);
-
+        qo.setOrgState(1);
         List<GoodsEx> list = goodsService.findListEx(qo);
 
 //
@@ -300,7 +303,7 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(2);
         sources.add(3);
         qo.setSources(sources);
-
+        qo.setOrgState(1);
         List<GoodsEx> list = goodsService.findListEx(qo);
         for(GoodsEx ex : list){
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();
@@ -350,12 +353,13 @@ public class ApiStoreController extends ApiBaseController {
         qo.setOrgId(goods.getOrgId());
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
-        qo.setLimit(6);
+        qo.setLimitNum(6);
         qo.setStartTotal(1);
+        qo.setOrgState(1);
         List<GoodsEx> listEx = goodsService.findListEx(qo);
         if (listEx.size()<6){
             qo.setDealType(dealType==1?2:1);
-            qo.setLimit(6-listEx.size());
+            qo.setLimitNum(6-listEx.size());
             List<GoodsEx> ex = goodsService.findListEx(qo);
             if (CollectionUtils.isNotEmpty(ex)){
                 listEx.addAll(ex);
@@ -423,7 +427,7 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(7);
         qo.setStartTotal(1);
         qo.setSources(sources);
-
+        qo.setOrgState(1);
         List<GoodsEx> list = goodsService.findListEx(qo);
         for(GoodsEx ex : list) {
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();
@@ -1173,7 +1177,12 @@ public class ApiStoreController extends ApiBaseController {
     public List<AppStoreGoodsDetail> goodsList(MobileInfo mobileInfo,
                                                     @ApiParam(value="商品名称",required = true) String name,
                                                     PageLimit pageLimit){
-        startPage();
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        if (StringUtils.isNotBlank(name)){
+            PageHelper.clearPage();
+        }
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
 
         GoodsQo qo = new GoodsQo();
@@ -1190,10 +1199,11 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(6);
         sources.add(7);
         qo.setSources(sources);
-        qo.setName(name);
-
-        List<GoodsEx> list = goodsService.findListEx(qo);
-
+        List<GoodsEx> list  = goodsService.findListEx(qo);
+        if (StringUtil.isNotBlank(name)){
+            list = list.stream().filter(i->i.getName().contains(name)).collect(Collectors.toList());
+            list = PageUtil.limitList(list,pageNum,pageSize);
+        }
 //        List<Goods> list = goodsService.selectByExample(goodsExample);
         for(GoodsEx ex : list){
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();

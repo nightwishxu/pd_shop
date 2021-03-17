@@ -292,6 +292,7 @@ public class ApiGoodsController extends ApiBaseController {
         qo.setDealType(dealType);
         qo.setIsOnlineCnt(1);
         qo.setOrderType(orderType);
+        qo.setOrgState(1);
         List<GoodsEx> goodsList = goodsService.findListEx(qo);
         return  goodsList;
 //        if(pageNum!=null && pageSize!=null){
@@ -309,6 +310,7 @@ public class ApiGoodsController extends ApiBaseController {
 
         GoodsQo qo = new GoodsQo();
         qo.setId(id);
+        qo.setOrgState(1);
         List<GoodsEx> goodsList = goodsService.findListEx(qo);
         if (CollectionUtils.isNotEmpty(goodsList)){
             return goodsList.get(0);

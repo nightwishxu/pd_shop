@@ -7,6 +7,8 @@ import com.paidang.dao.model.AuthPersonal;
 import com.paidang.dao.model.AuthPersonalExample;
 import com.paidang.dao.model.BusinessUserInfo;
 import com.paidang.dao.model.PawnOrg;
+import com.paidang.daoEx.model.AuthPersonalEx;
+import com.paidang.domain.qo.AuthPersonalQo;
 import com.paidang.service.AuthPersonalService;
 import com.paidang.service.BusinessUserInfoService;
 import com.paidang.service.PawnOrgService;
@@ -43,14 +45,16 @@ public class AuthPersonalController extends CoreController{
 	@ResponseBody
     public TableDataInfo list(Integer page, Integer rows, String storeName){
     	startPage();
-    	AuthPersonalExample example = new AuthPersonalExample();
-		AuthPersonalExample.Criteria criteria =example.createCriteria();
-		if(StringUtils.isNotBlank(storeName)){
-			criteria.andStoreNameLike("%"+storeName+"%");
-		}
-		criteria.andStateNotEqualTo("3");
-		example.setOrderByClause("id desc");
-    	List<AuthPersonal> list = authPersonalService.selectByExample(example);
+//    	AuthPersonalExample example = new AuthPersonalExample();
+//		AuthPersonalExample.Criteria criteria =example.createCriteria();
+//		if(StringUtils.isNotBlank(storeName)){
+//			criteria.andStoreNameLike("%"+storeName+"%");
+//		}
+//		criteria.andStateNotEqualTo("3");
+//		example.setOrderByClause("id desc");
+		AuthPersonalQo qo = new AuthPersonalQo();
+		qo.setStoreName(storeName);
+    	List<AuthPersonalEx> list = authPersonalService.findList(qo);
       	return page(list);
     }
 

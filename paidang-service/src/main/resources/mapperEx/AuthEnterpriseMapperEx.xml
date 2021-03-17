@@ -12,4 +12,15 @@
     <update id="setAuthInvalid" parameterType="int">
         update b_auth_personal set state = '3' where create_user = #{userId}
     </update>
+
+    <select id="findList" parameterType="com.paidang.domain.qo.AuthEnterpriseQo"
+            resultType="com.paidang.daoEx.model.AuthEnterpriseEx">
+        select  a.*,b.account from b_auth_personal a left join b_user b on a.create_user = b.id
+        where 1=1 and a.state!=3
+        <if test="storeName!=null and storeName!=''">
+            and a.store_name like CONCAT('%',#{storeName},'')
+        </if>
+        order by a.id desc
+
+    </select>
 </mapper>

@@ -426,6 +426,7 @@ public class ApiFirstPageController extends ApiBaseController {
         qo.setSources(sources);
         qo.setOrgId(orgId);
         qo.setName(keyword);
+        qo.setOrgState(1);
         List<GoodsEx> goodsList = goodsService.findListEx(qo);
         if (CollectionUtils.isNotEmpty(goodsList)){
             for (GoodsEx ex : goodsList) {

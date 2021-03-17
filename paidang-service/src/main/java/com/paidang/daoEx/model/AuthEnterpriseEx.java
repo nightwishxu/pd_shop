@@ -7,4 +7,14 @@ import com.paidang.dao.model.AuthEnterprise;
 */
 public class AuthEnterpriseEx extends AuthEnterprise {
 
+    private String account;
+
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 }

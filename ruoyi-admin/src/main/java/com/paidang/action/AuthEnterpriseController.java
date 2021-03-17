@@ -7,6 +7,8 @@ import com.paidang.dao.model.AuthEnterprise;
 import com.paidang.dao.model.AuthEnterpriseExample;
 import com.paidang.dao.model.BusinessUserInfo;
 import com.paidang.dao.model.PawnOrg;
+import com.paidang.daoEx.model.AuthEnterpriseEx;
+import com.paidang.domain.qo.AuthEnterpriseQo;
 import com.paidang.service.AuthEnterpriseService;
 import com.paidang.service.BusinessUserInfoService;
 import com.paidang.service.PawnOrgService;
@@ -43,14 +45,16 @@ public class AuthEnterpriseController extends CoreController{
 	@ResponseBody
     public TableDataInfo list(Integer page, Integer rows, String enterpriseName){
 		startPage();
-		AuthEnterpriseExample example = new AuthEnterpriseExample();
-		AuthEnterpriseExample.Criteria criteria=example.createCriteria();
-		if(StringUtils.isNotBlank(enterpriseName)){
-			criteria.andEnterpriseNameLike("%"+enterpriseName+"%");
-		}
-		criteria.andStateNotEqualTo("3");
-		example.setOrderByClause("id desc");
-    	List<AuthEnterprise> list = authEnterpriseService.selectByExample(example);
+//		AuthEnterpriseExample example = new AuthEnterpriseExample();
+//		AuthEnterpriseExample.Criteria criteria=example.createCriteria();
+//		if(StringUtils.isNotBlank(enterpriseName)){
+//			criteria.andEnterpriseNameLike("%"+enterpriseName+"%");
+//		}
+//		criteria.andStateNotEqualTo("3");
+//		example.setOrderByClause("id desc");
+		AuthEnterpriseQo qo = new AuthEnterpriseQo();
+		qo.setStoreName(enterpriseName);
+    	List<AuthEnterpriseEx> list = authEnterpriseService.findList(qo);
       	return page(list);
     }
 

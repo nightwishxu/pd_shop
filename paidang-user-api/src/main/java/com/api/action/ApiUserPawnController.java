@@ -1374,8 +1374,12 @@ public class ApiUserPawnController extends ApiBaseController {
         record.setRedeemRate(ex.getOverdueRate()+"");
         record.setBeginDate(DateUtil.dateToStr(ex.getPawnBeginTime()).substring(0,10));
         record.setEndDate(DateUtil.dateToStr(ex.getPawnEndTime()).substring(0,10));
-        PawnTicket pawnTicket = pawnTicketService.getByProjectCode(ex.getProjectCode());
-        record.setPawnerName(pawnTicket.getPawnerName());
+        if (StringUtils.isNotBlank(ex.getProjectCode())){
+            PawnTicket pawnTicket = pawnTicketService.getByProjectCode(ex.getProjectCode());
+            record.setPawnerName(pawnTicket.getPawnerName());
+        }else {
+            record.setPawnerName(user.getName());
+        }
 //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date endDate= new Date();
         long outTime = endDate.getTime() - ex.getPawnEndTime().getTime();

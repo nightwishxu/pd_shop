@@ -5,6 +5,8 @@ import com.paidang.dao.AuthPersonalMapper;
 import com.paidang.dao.model.AuthPersonal;
 import com.paidang.dao.model.AuthPersonalExample;
 import com.paidang.daoEx.AuthPersonalMapperEx;
+import com.paidang.daoEx.model.AuthPersonalEx;
+import com.paidang.domain.qo.AuthPersonalQo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +77,10 @@ public class AuthPersonalService {
 	 */
 	public void setAuthInvalid(int userId){
 		this.authPersonalMapperEx.setAuthInvalid(userId);
+	}
+
+	public List<AuthPersonalEx> findList(AuthPersonalQo qo){
+		return authPersonalMapperEx.findList(qo);
 	}
 
 }

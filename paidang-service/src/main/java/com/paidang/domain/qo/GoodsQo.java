@@ -19,9 +19,15 @@ public class GoodsQo extends Goods {
 
     private Integer isOnlineCnt;
 
-    private Integer limit;
+    private Integer limitNum;
 
     private Integer orderType;
+
+    private Integer orgState;
+
+    private Integer pageSize;
+
+    private Integer pageNum;
 
     public List<Integer> getSources() {
         return sources;
@@ -48,12 +54,12 @@ public class GoodsQo extends Goods {
         this.isOnlineCnt = isOnlineCnt;
     }
 
-    public Integer getLimit() {
-        return limit;
+    public Integer getLimitNum() {
+        return limitNum;
     }
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
+    public void setLimitNum(Integer limitNum) {
+        this.limitNum = limitNum;
     }
 
     public Integer getOrderType() {
@@ -62,5 +68,29 @@ public class GoodsQo extends Goods {
 
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
+    }
+
+    public Integer getOrgState() {
+        return orgState;
+    }
+
+    public void setOrgState(Integer orgState) {
+        this.orgState = orgState;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
     }
 }
