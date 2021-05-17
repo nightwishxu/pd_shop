@@ -550,4 +550,17 @@ public class UserGoodsController extends CoreController{
 		return ok(CoreConstants.SERVER_URL);
 	}
 
+
+	@RequestMapping("/saveNew")
+	@ResponseBody
+	public Ret saveNew(UserGoods goods){
+		if (goods.getId() == null){
+			goods.setCreateTime(new Date());
+			userGoodsService.insert(goods);
+		}else{
+			goods.setModifyTime(new Date());
+			userGoodsService.updateByPrimaryKeySelective(goods);
+		}
+		return ok();
+	}
 }

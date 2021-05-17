@@ -56,24 +56,24 @@ public class NephritePojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
-    public NephritePojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public NephritePojo(List<ContentDetail> list,String images,String video,String info,Integer userGoodsId){
+        this.photos = images;
+        this.video = video;
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
-                case "外观照片":
-                    this.photos = detail.getContent();
-                    break;
-                case "视频":
-                    this.video = detail.getContent();
-                    break;
                 case "和田玉颜色":
                     this.color = detail.getContent();
                     break;
-                case "尺寸":
+                case "和田玉尺寸":
                     this.size = detail.getContent();
                     break;
-                case "备注":
-                    this.remark = detail.getContent();
-                    break;
+
             }
         }
 

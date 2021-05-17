@@ -1,7 +1,7 @@
 package com.paidang.dao.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserGoodsExample {
 	protected String orderByClause;
@@ -2891,6 +2891,66 @@ public class UserGoodsExample {
 
 		public Criteria andBackStateNotBetween(Integer value1, Integer value2) {
 			addCriterion("back_state not between", value1, value2, "backState");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeIsNull() {
+			addCriterion("post_time is null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeIsNotNull() {
+			addCriterion("post_time is not null");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeEqualTo(java.util.Date value) {
+			addCriterion("post_time =", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeNotEqualTo(java.util.Date value) {
+			addCriterion("post_time <>", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeGreaterThan(java.util.Date value) {
+			addCriterion("post_time >", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeGreaterThanOrEqualTo(java.util.Date value) {
+			addCriterion("post_time >=", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeLessThan(java.util.Date value) {
+			addCriterion("post_time <", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeLessThanOrEqualTo(java.util.Date value) {
+			addCriterion("post_time <=", value, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeIn(List<java.util.Date> values) {
+			addCriterion("post_time in", values, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeNotIn(List<java.util.Date> values) {
+			addCriterion("post_time not in", values, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeBetween(java.util.Date value1, java.util.Date value2) {
+			addCriterion("post_time between", value1, value2, "postTime");
+			return (Criteria) this;
+		}
+
+		public Criteria andPostTimeNotBetween(java.util.Date value1, java.util.Date value2) {
+			addCriterion("post_time not between", value1, value2, "postTime");
 			return (Criteria) this;
 		}
 

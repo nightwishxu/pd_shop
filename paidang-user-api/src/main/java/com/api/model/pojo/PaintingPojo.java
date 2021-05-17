@@ -61,7 +61,13 @@ public class PaintingPojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
-    public PaintingPojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public PaintingPojo(List<ContentDetail> list,String info,Integer userGoodsId){
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "正视图":
@@ -76,11 +82,8 @@ public class PaintingPojo implements Serializable {
                 case "局部图":
                     this.localImg = detail.getContent();
                     break;
-                case "印鉴或签名图":
+                case "签名图":
                     this.autographImg = detail.getContent();
-                    break;
-                case "备注":
-                    this.remark = detail.getContent();
                     break;
             }
         }

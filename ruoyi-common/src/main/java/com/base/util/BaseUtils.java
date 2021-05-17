@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.base.api.ApiException;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class BaseUtils {
@@ -125,7 +126,7 @@ public class BaseUtils {
             if (o ==null){
                 return true;
             }
-            if (o instanceof String && "".equals(o)){
+            if (o instanceof String && ("".equals(o) || "undefined".equals(o))){
                 return true;
             }
         }
@@ -232,4 +233,6 @@ public class BaseUtils {
             return "";
         return i[0];
     }
+
+
 }

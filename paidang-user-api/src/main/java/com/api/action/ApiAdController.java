@@ -3,6 +3,7 @@ package com.api.action;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.MobileInfo;
+import com.base.dao.model.Result;
 import com.base.util.BaseUtils;
 import com.base.util.CoreConstants;
 import com.base.util.JSONUtils;
@@ -16,6 +17,7 @@ import com.paidang.dao.model.VideoOnline;
 import com.paidang.dao.model.VideoOnlineExample;
 import com.paidang.service.BFileService;
 import com.paidang.service.PawnOrgService;
+import com.paidang.service.PawnWechatService;
 import com.paidang.service.VideoOnlineService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +55,9 @@ public class ApiAdController  extends ApiBaseController {
     @Autowired
     private PawnOrgService pawnOrgService;
 
+    @Autowired
+    private PawnWechatService pawnWechatService;
+
     @ApiOperation(value = "广告列表", notes = "广告列表")
     @RequestMapping("/list")
     @ApiMethod()
@@ -77,8 +82,8 @@ public class ApiAdController  extends ApiBaseController {
 //                String file_path = fileService.selectByExample(example1).get(0).getFilePath();
 //                ex.setContent(CoreConstants.getProperty("video.path")+file_path);
             }else if(6 == ex.getType()){
-                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(Integer.parseInt(ex.getContent()));
-                ex.setContent(JSONUtils.serialize(pawnOrg));
+//                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(Integer.parseInt(ex.getContent()));
+//                ex.setContent(JSONUtils.serialize(pawnOrg));
             }else if (4 == ex.getType()){
                 //如果是绝当商品的商品
                 if(null == ex.getGoodsId()){
@@ -97,5 +102,12 @@ public class ApiAdController  extends ApiBaseController {
         }
 
         return adExes;
+    }
+
+
+    @RequestMapping("/token")
+    @ApiMethod()
+    public Object getToken(MobileInfo mobileInfo){
+        return new Result<>(pawnWechatService.getToken());
     }
 }

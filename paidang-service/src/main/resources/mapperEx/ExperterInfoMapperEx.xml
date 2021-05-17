@@ -5,7 +5,8 @@
   </resultMap>
 
   <select id="selectH5List" resultMap="BaseResultMap">
-   select A.*,B.images from p_experter_info A
+   select A.*,B.images,
+    B.goods_imgs goodsImgs from p_experter_info A
   left join p_user_goods B
   on A.goods_id = B.id
   where A.id = #{id}
@@ -16,7 +17,8 @@
     A.*,
     B.expert_name as experterName,
     C.name as goodsName,
-    C.images
+    C.images,
+    C.goods_imgs goodsImgs
     from p_experter_info A
     left join p_experter B
     on A.experter_id = B.id

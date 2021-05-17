@@ -382,6 +382,18 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item
+          label="视频"
+          prop="content"
+          v-if="content5"
+        >
+          <video-upload
+            v-model="form.content"
+            style="width: 300px; display: inline-block; margin-left: 10px"
+          ></video-upload>
+        </el-form-item>
+
         <el-form-item
           label="店铺详情"
           v-if="content6"
@@ -399,6 +411,7 @@
               :value="item.id"
             ></el-option>
           </el-select>
+
         </el-form-item>
         <!-- <el-form-item label="网址" prop="content" id="content6">
           <el-input v-model="form.content" placeholder="请输入内容" />
@@ -432,10 +445,12 @@ import {
 } from "@/api/admin/ad";
 import SingleUpload from "@/components/Upload/singleUpload";
 import Editor from "@/components/Editor";
+import VideoUpload from "@/components/Upload/videoUpload";
+
 
 export default {
   name: "Ad",
-  components: { SingleUpload, Editor },
+  components: { SingleUpload, Editor,VideoUpload },
   data() {
     return {
       // 遮罩层
@@ -492,6 +507,7 @@ export default {
       content2: false,
       content3: false,
       content4: false,
+      content5: false,
       content6: false,
       content7: true,
       locationOptions:[
@@ -611,7 +627,9 @@ export default {
         return "认证商城商品";
       } else if (row.type === 4) {
         return "绝当商城商品";
-      } else if (row.type === 6) {
+      }  else if (row.type === 5) {
+        return "视频";
+      }else if (row.type === 6) {
         return "店铺详情";
       } else {
         return "--";
@@ -661,36 +679,49 @@ export default {
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 2) {
         this.content1 = false;
         this.content2 = true;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 3) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = true;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 4) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = true;
+        this.content5 = false;
+        this.content6 = false;
+      } else if (value === 5) {
+        this.content1 = false;
+        this.content2 = false;
+        this.content3 = false;
+        this.content4 = false;
+        this.content5 = true;
         this.content6 = false;
       } else if (value === 6) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = true;
       } else {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       }
       });
@@ -702,36 +733,49 @@ export default {
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 2) {
         this.content1 = false;
         this.content2 = true;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 3) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = true;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       } else if (value === 4) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = true;
+        this.content5 = false;
         this.content6 = false;
-      } else if (value === 6) {
+      } else if (value === 5) {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = true;
+        this.content6 = false;
+      }else if (value === 6) {
+        this.content1 = false;
+        this.content2 = false;
+        this.content3 = false;
+        this.content4 = false;
+        this.content5 = false;
         this.content6 = true;
-      } else {
+      }  else {
         this.content1 = false;
         this.content2 = false;
         this.content3 = false;
         this.content4 = false;
+        this.content5 = false;
         this.content6 = false;
       }
       this.form.content = null;

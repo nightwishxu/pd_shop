@@ -53,6 +53,9 @@ public interface OrderMapperEx {
                                    @Param("goodsName") String goodsName);
 
     List<OrderEx> findList(OrderQo qo);
+
+    List<OrderEx> findSellGoodsOrder(OrderQo qo);
+
     Integer getCount(OrderQo qo);
 
     /**

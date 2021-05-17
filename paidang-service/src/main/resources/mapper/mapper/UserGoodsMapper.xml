@@ -44,6 +44,7 @@
         <result column="back_express" property="backExpress" jdbcType="VARCHAR" />
         <result column="back_express_code" property="backExpressCode" jdbcType="VARCHAR" />
         <result column="back_state" property="backState" jdbcType="TINYINT" />
+        <result column="post_time" property="postTime" jdbcType="TIMESTAMP" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
         <result column="is_online" property="isOnline" jdbcType="TINYINT" />
@@ -146,7 +147,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,user_id,belong_id,belong_type,name,images,goods_imgs,video,buy_time,buy_price,info,content,city,user_name,user_phone,authenticate_require,cate_id,cate_code,auth_result,auth_price_test,auth_price,back_images,back_video,open_goods_video,plat_goods_receive_video,plat_goods_auth_video,not_verify_reason,go_video,goto_pawn,go_sell,location,post_state,post_user_name,post_user_phone,post_express,post_express_code,back_user_name,back_user_phone,back_user_express,back_express,back_express_code,back_state,create_time,modify_time,is_online,rate,money_rate,plat_user_name,plat_user_phone,plat_user_address,org_user_name,org_user_address,org_user_phone,plat_org_state,plat_org_video,plat_org_verify,plat_org_express_code,plat_org_time,is_verify,experter_info_id,sf_protect_price,is_sell,sell_status,sell_check,sell_price,sell_info,sell_imgs,sell_video,sell_start_time,sell_end_time,sell_pawn_code,comment_count,collect_count,praise_count,click_count,report_count,is_redeem,settle_status,settle_money,sell_remark,appraisal_dsc
+        id,user_id,belong_id,belong_type,name,images,goods_imgs,video,buy_time,buy_price,info,content,city,user_name,user_phone,authenticate_require,cate_id,cate_code,auth_result,auth_price_test,auth_price,back_images,back_video,open_goods_video,plat_goods_receive_video,plat_goods_auth_video,not_verify_reason,go_video,goto_pawn,go_sell,location,post_state,post_user_name,post_user_phone,post_express,post_express_code,back_user_name,back_user_phone,back_user_express,back_express,back_express_code,back_state,post_time,create_time,modify_time,is_online,rate,money_rate,plat_user_name,plat_user_phone,plat_user_address,org_user_name,org_user_address,org_user_phone,plat_org_state,plat_org_video,plat_org_verify,plat_org_express_code,plat_org_time,is_verify,experter_info_id,sf_protect_price,is_sell,sell_status,sell_check,sell_price,sell_info,sell_imgs,sell_video,sell_start_time,sell_end_time,sell_pawn_code,comment_count,collect_count,praise_count,click_count,report_count,is_redeem,settle_status,settle_money,sell_remark,appraisal_dsc
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -198,19 +199,20 @@
         post_user_phone,post_express,post_express_code,
         back_user_name,back_user_phone,back_user_express,
         back_express,back_express_code,back_state,
-        create_time,modify_time,is_online,
-        rate,money_rate,plat_user_name,
-        plat_user_phone,plat_user_address,org_user_name,
-        org_user_address,org_user_phone,plat_org_state,
-        plat_org_video,plat_org_verify,plat_org_express_code,
-        plat_org_time,is_verify,experter_info_id,
-        sf_protect_price,is_sell,sell_status,
-        sell_check,sell_price,sell_info,
-        sell_imgs,sell_video,sell_start_time,
-        sell_end_time,sell_pawn_code,comment_count,
-        collect_count,praise_count,click_count,
-        report_count,is_redeem,settle_status,
-        settle_money,sell_remark,appraisal_dsc
+        post_time,create_time,modify_time,
+        is_online,rate,money_rate,
+        plat_user_name,plat_user_phone,plat_user_address,
+        org_user_name,org_user_address,org_user_phone,
+        plat_org_state,plat_org_video,plat_org_verify,
+        plat_org_express_code,plat_org_time,is_verify,
+        experter_info_id,sf_protect_price,is_sell,
+        sell_status,sell_check,sell_price,
+        sell_info,sell_imgs,sell_video,
+        sell_start_time,sell_end_time,sell_pawn_code,
+        comment_count,collect_count,praise_count,
+        click_count,report_count,is_redeem,
+        settle_status,settle_money,sell_remark,
+        appraisal_dsc
         )
         values (#{userId,jdbcType=INTEGER},#{belongId,jdbcType=INTEGER},
         #{belongType,jdbcType=TINYINT},#{name,jdbcType=VARCHAR},#{images,jdbcType=VARCHAR},
@@ -226,19 +228,20 @@
         #{postUserPhone,jdbcType=VARCHAR},#{postExpress,jdbcType=VARCHAR},#{postExpressCode,jdbcType=VARCHAR},
         #{backUserName,jdbcType=VARCHAR},#{backUserPhone,jdbcType=VARCHAR},#{backUserExpress,jdbcType=VARCHAR},
         #{backExpress,jdbcType=VARCHAR},#{backExpressCode,jdbcType=VARCHAR},#{backState,jdbcType=TINYINT},
-        #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{isOnline,jdbcType=TINYINT},
-        #{rate,jdbcType=DECIMAL},#{moneyRate,jdbcType=DECIMAL},#{platUserName,jdbcType=VARCHAR},
-        #{platUserPhone,jdbcType=VARCHAR},#{platUserAddress,jdbcType=VARCHAR},#{orgUserName,jdbcType=VARCHAR},
-        #{orgUserAddress,jdbcType=VARCHAR},#{orgUserPhone,jdbcType=VARCHAR},#{platOrgState,jdbcType=TINYINT},
-        #{platOrgVideo,jdbcType=VARCHAR},#{platOrgVerify,jdbcType=TINYINT},#{platOrgExpressCode,jdbcType=VARCHAR},
-        #{platOrgTime,jdbcType=TIMESTAMP},#{isVerify,jdbcType=TINYINT},#{experterInfoId,jdbcType=INTEGER},
-        #{sfProtectPrice,jdbcType=DECIMAL},#{isSell,jdbcType=INTEGER},#{sellStatus,jdbcType=INTEGER},
-        #{sellCheck,jdbcType=INTEGER},#{sellPrice,jdbcType=DECIMAL},#{sellInfo,jdbcType=VARCHAR},
-        #{sellImgs,jdbcType=VARCHAR},#{sellVideo,jdbcType=VARCHAR},#{sellStartTime,jdbcType=TIMESTAMP},
-        #{sellEndTime,jdbcType=TIMESTAMP},#{sellPawnCode,jdbcType=VARCHAR},#{commentCount,jdbcType=INTEGER},
-        #{collectCount,jdbcType=INTEGER},#{praiseCount,jdbcType=INTEGER},#{clickCount,jdbcType=INTEGER},
-        #{reportCount,jdbcType=INTEGER},#{isRedeem,jdbcType=TINYINT},#{settleStatus,jdbcType=INTEGER},
-        #{settleMoney,jdbcType=DECIMAL},#{sellRemark,jdbcType=VARCHAR},#{appraisalDsc,jdbcType=VARCHAR}
+        #{postTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},
+        #{isOnline,jdbcType=TINYINT},#{rate,jdbcType=DECIMAL},#{moneyRate,jdbcType=DECIMAL},
+        #{platUserName,jdbcType=VARCHAR},#{platUserPhone,jdbcType=VARCHAR},#{platUserAddress,jdbcType=VARCHAR},
+        #{orgUserName,jdbcType=VARCHAR},#{orgUserAddress,jdbcType=VARCHAR},#{orgUserPhone,jdbcType=VARCHAR},
+        #{platOrgState,jdbcType=TINYINT},#{platOrgVideo,jdbcType=VARCHAR},#{platOrgVerify,jdbcType=TINYINT},
+        #{platOrgExpressCode,jdbcType=VARCHAR},#{platOrgTime,jdbcType=TIMESTAMP},#{isVerify,jdbcType=TINYINT},
+        #{experterInfoId,jdbcType=INTEGER},#{sfProtectPrice,jdbcType=DECIMAL},#{isSell,jdbcType=INTEGER},
+        #{sellStatus,jdbcType=INTEGER},#{sellCheck,jdbcType=INTEGER},#{sellPrice,jdbcType=DECIMAL},
+        #{sellInfo,jdbcType=VARCHAR},#{sellImgs,jdbcType=VARCHAR},#{sellVideo,jdbcType=VARCHAR},
+        #{sellStartTime,jdbcType=TIMESTAMP},#{sellEndTime,jdbcType=TIMESTAMP},#{sellPawnCode,jdbcType=VARCHAR},
+        #{commentCount,jdbcType=INTEGER},#{collectCount,jdbcType=INTEGER},#{praiseCount,jdbcType=INTEGER},
+        #{clickCount,jdbcType=INTEGER},#{reportCount,jdbcType=INTEGER},#{isRedeem,jdbcType=TINYINT},
+        #{settleStatus,jdbcType=INTEGER},#{settleMoney,jdbcType=DECIMAL},#{sellRemark,jdbcType=VARCHAR},
+        #{appraisalDsc,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -367,6 +370,9 @@
             </if>
             <if test="backState != null" >
                 back_state,
+            </if>
+            <if test="postTime != null" >
+                post_time,
             </if>
             <if test="createTime != null" >
                 create_time,
@@ -609,6 +615,9 @@
             </if>
             <if test="backState != null" >
                 #{backState,jdbcType=TINYINT},
+            </if>
+            <if test="postTime != null" >
+                #{postTime,jdbcType=TIMESTAMP},
             </if>
             <if test="createTime != null" >
                 #{createTime,jdbcType=TIMESTAMP},
@@ -866,6 +875,9 @@
             <if test="record.backState != null" >
                 back_state = #{record.backState,jdbcType=TINYINT},
             </if>
+            <if test="record.postTime != null" >
+                post_time = #{record.postTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="record.createTime != null" >
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
             </if>
@@ -1033,6 +1045,7 @@
         back_express = #{backExpress,jdbcType=VARCHAR},
         back_express_code = #{backExpressCode,jdbcType=VARCHAR},
         back_state = #{backState,jdbcType=TINYINT},
+        post_time = #{postTime,jdbcType=TIMESTAMP},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         is_online = #{isOnline,jdbcType=TINYINT},
@@ -1203,6 +1216,9 @@
             <if test="backState != null" >
                 back_state = #{backState,jdbcType=TINYINT},
             </if>
+            <if test="postTime != null" >
+                post_time = #{postTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="createTime != null" >
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -1367,6 +1383,7 @@
         back_express = #{backExpress,jdbcType=VARCHAR},
         back_express_code = #{backExpressCode,jdbcType=VARCHAR},
         back_state = #{backState,jdbcType=TINYINT},
+        post_time = #{postTime,jdbcType=TIMESTAMP},
         create_time = #{createTime,jdbcType=TIMESTAMP},
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
         is_online = #{isOnline,jdbcType=TINYINT},

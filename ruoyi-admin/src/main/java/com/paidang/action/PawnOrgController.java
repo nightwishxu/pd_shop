@@ -211,12 +211,17 @@ public class PawnOrgController extends CoreController{
 					flag = true;
 				}
 				//13771228227
-				String userId = AnXinSignService.companyRegister(entity.getName(), entity.getBusinessLicenseCode(),anxinPhone , entity.getLandLinePhone(), entity.getLegalPerson(), entity.getIdCard());
-				pawnOrg.setAnxinsignId(userId);
-				if (flag){
-					pawnOrg.setAnxinPhone(anxinPhone);
+				if (entity.getType()!=6){
+					//个人企业认证无需安心签注册
+					String userId = AnXinSignService.companyRegister(entity.getName(), entity.getBusinessLicenseCode(),anxinPhone , entity.getLandLinePhone(), entity.getLegalPerson(), entity.getIdCard());
+					pawnOrg.setAnxinsignId(userId);
+					if (flag){
+						pawnOrg.setAnxinPhone(anxinPhone);
+					}
+					pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
 				}
-				pawnOrgService.updateByPrimaryKeySelective(pawnOrg);
+
+
 			}
 		}
 		pawnOrg.setState(state);

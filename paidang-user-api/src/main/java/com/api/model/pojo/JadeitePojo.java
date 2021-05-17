@@ -61,27 +61,26 @@ public class JadeitePojo implements Serializable {
     @ApiParam(value="描述补充")
     private String remark;
 
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
 
-    public JadeitePojo(List<ContentDetail> list){
+
+    public JadeitePojo(List<ContentDetail> list,String images,String video,String info,Integer userGoodsId){
+        this.photos=images;
+        this.video = video;
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
-                case "外观照片":
-                    this.photos = detail.getContent();
-                    break;
-                case "视频":
-                    this.video = detail.getContent();
-                    break;
                 case "翡翠颜色":
                     this.color = detail.getContent();
                     break;
-                case "翡翠种水地":
+                case "种水地":
                     this.type = detail.getContent();
                     break;
                 case "尺寸":
                     this.size = detail.getContent();
-                    break;
-                case "描述补充":
-                    this.remark = detail.getContent();
                     break;
             }
         }

@@ -3,6 +3,7 @@ package com.paidang.action;
 import com.base.action.CoreController;
 import com.base.util.BaseUtils;
 import com.base.util.StringUtil;
+import com.base.util.StringUtils;
 import com.paidang.dao.model.*;
 import com.paidang.daoEx.model.CertificateEx;
 import com.paidang.service.CertificateLogService;
@@ -62,7 +63,7 @@ public class CertificateController extends CoreController{
     
     @RequestMapping("/save")
 	@ResponseBody
-    public Ret save(Certificate certificate){
+    public Ret save(Certificate certificate,Integer from){
     	certificate.setImgs(BaseUtils.removeUrl(certificate.getImgs()));
     	if (certificate.getId() == null){
     		certificate.setCreateTime(new Date());
@@ -72,7 +73,7 @@ public class CertificateController extends CoreController{
     		certificateService.updateByPrimaryKeySelective(certificate);
     	}
     	Integer userGoodsId = certificate.getUserGoodsId();
-    	if (userGoodsId!=null){
+    	if (from==null && userGoodsId!=null){
     		UserGoods tmp = new UserGoods();
     		tmp.setId(userGoodsId);
     		tmp.setAppraisalDsc(certificate.getAppraisalDsc());

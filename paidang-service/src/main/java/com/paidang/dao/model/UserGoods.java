@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.io.Serializable;
+
 /**
  *
  */
@@ -351,6 +352,14 @@ public class UserGoods implements Serializable {
 	private Integer backState;
 
 	/**
+	 *邮寄鉴定时间
+	 */
+	@ApiModelProperty(value="邮寄鉴定时间")
+	@ApiParam(value="邮寄鉴定时间")
+	@Column(name = "post_time")
+	private java.util.Date postTime;
+
+	/**
 	 *
 	 */
 	@ApiModelProperty(value="")
@@ -519,10 +528,10 @@ public class UserGoods implements Serializable {
 	private Integer sellStatus;
 
 	/**
-	 *寄卖审核 0不通过1通过
+	 *寄卖审核 0不通过1通过2审核中
 	 */
-	@ApiModelProperty(value="寄卖审核 0不通过1通过")
-	@ApiParam(value="寄卖审核 0不通过1通过")
+	@ApiModelProperty(value="寄卖审核 0不通过1通过2审核中")
+	@ApiParam(value="寄卖审核 0不通过1通过2审核中")
 	@Column(name = "sell_check")
 	private Integer sellCheck;
 
@@ -996,6 +1005,14 @@ public class UserGoods implements Serializable {
 
 	public Integer getBackState() {
 		return backState;
+	}
+
+	public void setPostTime(java.util.Date postTime) {
+		this.postTime=postTime;
+	}
+
+	public java.util.Date getPostTime() {
+		return postTime;
 	}
 
 	public void setCreateTime(java.util.Date createTime) {

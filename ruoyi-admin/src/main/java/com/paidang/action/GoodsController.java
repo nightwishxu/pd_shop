@@ -136,12 +136,12 @@ public class GoodsController extends CoreController{
 			Date date = new Date();
 
 			Goods goods1 = goodsService.selectByPrimaryKey(goods.getId());
-			if (goods1.getIsOnline()==1 ){
-				throw new ApiException(400,"请先下架再修改商品信息");
-			}
-//			if (goods1.getDealType()==2  && date.compareTo(goods1.getAuctionStartTime())>=0 && date.compareTo(goods1.getAuctionEndTime())<=0){
-//				throw new ApiException(400,"竞拍中禁止修改商品信息");
+//			if (goods1.getIsOnline()==1 ){
+//				throw new ApiException(400,"请先下架再修改商品信息");
 //			}
+			if (goods1.getDealType()!=null && goods1.getDealType()==2 && goods1.getIsOnline()==1 ){
+				throw new ApiException(400,"请先下架竞拍商品再修改信息");
+			}
 //			if (goods.getDealType()!=null && goods.getDealType()==2){
 //				if(date.compareTo(goods.getAuctionStartTime())<0){
 //					boolean flag = false;

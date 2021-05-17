@@ -101,27 +101,14 @@
       >
         <template slot-scope="scope">
           <div v-if="scope.row.images != null">
-            <span
-              v-for="(item, index) in scope.row.images.split(',')"
+            <el-image
+              style="width: 50px; height: 50px; margin-right: 10px;"
+              v-for="(src, index) in scope.row.images.split(',')"
               :key="index"
-            >
-              <el-popover
-                placement="left"
-                trigger="click"
-                width="600"
-              >
-                <el-image
-                  :src="item"
-                  width="100%"
-                />
-                <el-image
-                  slot="reference"
-                  :src="item"
-                  :alt="item"
-                  style="max-height: 40px; max-width: 40px; padding: 3px"
-                />
-              </el-popover>
-            </span>
+              :src="src"
+              :preview-src-list="getPrivewImages(index,scope.row.images)"
+            ></el-image>
+
           </div>
         </template>
       </el-table-column>
@@ -133,27 +120,14 @@
       >
         <template slot-scope="scope">
           <div v-if="scope.row.goodsImgs != null">
-            <span
-              v-for="(item, index) in scope.row.goodsImgs.split(',')"
+            <el-image
+              style="width: 50px; height: 50px; margin-right: 10px;"
+              v-for="(src, index) in scope.row.goodsImgs.split(',')"
               :key="index"
-            >
-              <el-popover
-                placement="left"
-                trigger="click"
-                width="600"
-              >
-                <el-image
-                  :src="item"
-                  width="100%"
-                />
-                <el-image
-                  slot="reference"
-                  :src="item"
-                  :alt="item"
-                  style="max-height: 40px; max-width: 40px; padding: 3px"
-                />
-              </el-popover>
-            </span>
+              :src="src"
+              :preview-src-list="getPrivewImages(index,scope.row.goodsImgs)"
+            ></el-image>
+
           </div>
         </template>
       </el-table-column>
@@ -194,6 +168,12 @@
           >{{ scope.row.authPriceTest }}</el-button>
         </template>
       </el-table-column>
+      <el-table-column
+        label="备注"
+        align="center"
+        prop="info"
+        show-overflow-tooltip
+      />
       <el-table-column
         label="鉴定说明"
         align="center"
@@ -1002,6 +982,15 @@ export default {
     this.getDomainList();
   },
   methods: {
+      getPrivewImages(index,imgs) {
+      var imgList = imgs.split(",");
+      var tempImgList = [...imgList];//所有图片地址
+      if (index == 0) return tempImgList;
+      // 调整图片顺序，把当前图片放在第一位
+      var start = tempImgList.splice(index);
+      var remain = tempImgList.splice(0, index);
+      return start.concat(remain);//将当前图片调整成点击缩略图的那张图片
+    },
     reload() {
       console.info("reload");
       this.isRouterAlive = false;

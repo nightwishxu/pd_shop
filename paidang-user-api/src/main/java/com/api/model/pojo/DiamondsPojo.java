@@ -61,14 +61,20 @@ public class DiamondsPojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
 
-    public DiamondsPojo(List<ContentDetail> list){
+
+    public DiamondsPojo(List<ContentDetail> list,String info,Integer userGoodsId){
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "形状":
                     this.shape = detail.getContent();
                     break;
-                case "克拉":
+                case "克拉重量":
                     this.carat = detail.getContent();
                     break;
                 case "颜色":

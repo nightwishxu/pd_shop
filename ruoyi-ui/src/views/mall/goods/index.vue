@@ -147,27 +147,16 @@
         prop="imgs"
       >
         <template scope="scope">
-          <span
-            v-for="(item, index) in scope.row.imgs.split(',')"
-            :key="index"
-          >
-            <el-popover
-              placement="left"
-              trigger="click"
-              width="600"
-            >
-              <el-image
-                :src="item"
-                width="100%"
-              />
-              <el-image
-                slot="reference"
-                :src="item"
-                :alt="item"
-                style="max-height: 40px; max-width: 40px; padding: 3px"
-              />
-            </el-popover>
-          </span>
+          <div v-if="scope.row.imgs!=undefined && scope.row.imgs!=null">
+            <el-image
+              style="width: 50px; height: 50px; margin-right: 10px;"
+              v-for="(src, index) in scope.row.imgs.split(',')"
+              :key="index"
+              :src="src"
+              :preview-src-list="getPrivewImages(index,scope.row)"
+            ></el-image>
+          </div>
+
         </template>
       </el-table-column>
       <el-table-column
@@ -207,6 +196,26 @@
             v-if="scope.row.isOnline === 0"
             @click="handleIsOnline(scope.row)"
           >下架</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="是否设置为推荐"
+        align="center"
+        prop="isSuggest"
+      >
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.isSuggest === 1"
+            @click="handleIsSuggest(scope.row)"
+          >取消首页推荐</el-button>
+          <el-button
+            type="text"
+            size="mini"
+            v-else
+            @click="handleIsSuggest(scope.row)"
+          >设置为首页推荐</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -786,6 +795,7 @@ export default {
       total: 0,
       // 商品表格数据
       goodsList: [],
+      itemKey: '',
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -1051,6 +1061,15 @@ export default {
     this.getList();
   },
   methods: {
+  getPrivewImages(index,row) {
+      var imgList = row.imgs.split(",");
+      var tempImgList = [...imgList];//所有图片地址
+      if (index == 0) return tempImgList;
+      // 调整图片顺序，把当前图片放在第一位
+      var start = tempImgList.splice(index);
+      var remain = tempImgList.splice(0, index);
+      return start.concat(remain);//将当前图片调整成点击缩略图的那张图片
+    },
     reload() {
       console.info("reload");
       this.isRouterAlive = false;
@@ -1234,6 +1253,7 @@ export default {
       this.loading = true;
       // this.queryParams.type = 1;
       listGoods(this.queryParams).then((response) => {
+        this.itemKey = Math.random();
         this.goodsList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -1339,6 +1359,20 @@ export default {
       //   // console.info("ref "+ JSON.stringify(this.$refs.upload))
       //   this.$refs.upload.clearFiles()
       // }, 10);
+    },
+     handleIsSuggest(row) {
+      var data = {};
+      if (row.isSuggest == 1) {
+        data = { id: row.id, isSuggest: 0 };
+      } else {
+        data = { id: row.id, isSuggest: 1 };
+      }
+      updateGoods(data).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.getList();
+        }
+      });
     },
     handleOperate(row) {},
     /** 修改按钮操作 */

@@ -3,6 +3,7 @@ package com.api.model.pojo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.base.util.DateUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -81,13 +83,23 @@ public class WatchPojo implements Serializable {
 
     @ApiModelProperty(value="购买时间")
     @ApiParam(value="购买时间")
-    private Date buyTime;
+    private String buyTime;
 
     @ApiModelProperty(value="备注")
     @ApiParam(value="备注")
     private String remark;
 
-    public WatchPojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public WatchPojo(List<ContentDetail> list,String images,String video,BigDecimal price,String enclosureFile,String info,Integer userGoodsId){
+        this.photos = images;
+        this.video = video;
+        this.buyPrice = price;
+        this.enclosureFile = enclosureFile;
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "品牌":
@@ -99,33 +111,25 @@ public class WatchPojo implements Serializable {
                 case "视频":
                     this.video = detail.getContent();
                     break;
-                case "主体材质":
+                case "表体材质":
                     this.subjectMaterial = detail.getContent();
                     break;
-                case "款式（男/女）":
+                case "机芯材质":
+                    this.movementType = detail.getContent();
+                    break;
+                case "男女款":
                     this.style = detail.getContent();
                     break;
                 case "使用情况":
                     this.useCase = detail.getContent();
                     break;
-                case "配件":
+                case "附件":
                     this.enclosure = detail.getContent();
-                    break;
-                case "配件照":
-                    this.enclosureFile = detail.getContent();
-                    break;
-                case "购买价格":
-                    if (StringUtils.isNotBlank(detail.getContent())){
-                        this.buyPrice = new BigDecimal(detail.getContent());
-                    }
                     break;
                 case "购买时间":
                     if (StringUtils.isNotBlank(detail.getContent())){
-                        this.buyTime = DateUtil.parse(detail.getContent());
+                        this.buyTime = DateUtil.format(DateUtil.parse(detail.getContent()),"yyyy-MM-dd HH:mm:ss");
                     }
-                    break;
-                case "备注":
-                    this.remark = detail.getContent();
                     break;
             }
         }

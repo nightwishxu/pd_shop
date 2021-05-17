@@ -50,6 +50,8 @@ public class CoreConstants {
 
     public static String ALI_NOTIFY_URL;
 
+    public static String PAWN_WECHAT_URL;
+
 
     @Value("${server.url}")
     public void setServerUrl(String serverUrl) {
@@ -115,5 +117,10 @@ public class CoreConstants {
     @Value("${ali.notifyUrl}")
     public  void setAliNotifyUrl(String aliNotifyUrl) {
         ALI_NOTIFY_URL = aliNotifyUrl;
+    }
+
+    @Value("${pawn.wechatUrl}")
+    public  void setPawnWechatUrl(String pawnWechatUrl) {
+        PAWN_WECHAT_URL = pawnWechatUrl;
     }
 }

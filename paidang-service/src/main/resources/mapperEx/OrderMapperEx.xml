@@ -428,4 +428,11 @@
     </if>
     order by a.create_time desc
   </select>
+
+
+  <select id="findSellGoodsOrder" parameterType="com.paidang.domain.qo.OrderQo" resultMap="BaseResultMap">
+    select  a.* from p_order a  where a.goods_id in (select id from p_goods where source=5 and  goods_id in (select id from p_user_goods where user_id =#{userId}))
+    order by a.create_time desc
+  </select>
+
 </mapper>

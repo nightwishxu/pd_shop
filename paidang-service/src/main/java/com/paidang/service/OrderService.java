@@ -264,4 +264,7 @@ public class OrderService {
 		return orderMapperEx.getOrderCountByState(userId);
 	}
 
+	public  List<OrderEx> findSellGoodsOrder(OrderQo qo){
+		return orderMapperEx.findSellGoodsOrder(qo);
+	}
 }

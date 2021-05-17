@@ -1,6 +1,10 @@
 package com.api.action;
 
+import cn.hutool.Hutool;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.http.HttpException;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,8 +12,10 @@ import com.api.MEnumError;
 import com.api.MErrorEnum;
 import com.api.MPawnMsg;
 import com.api.MPostExpressAddress;
+import com.api.model.pojo.*;
 import com.api.service.ApiUserGoodsService;
 import com.api.util.PageLimit;
+import com.api.util.PageUtil;
 import com.api.view.indexInfo.ApiIndexHotMenu;
 import com.api.view.indexInfo.ApiIndexMenu;
 import com.api.view.indexInfo.IndexInfo;
@@ -23,11 +29,9 @@ import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
 import com.base.service.SensitivWordsService;
-import com.base.util.CoreConstants;
-import com.base.util.DateUtil;
-import com.base.util.JSONUtils;
-import com.base.util.StringUtil;
+import com.base.util.*;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.item.dao.model.*;
 import com.item.daoEx.model.AdEx;
 import com.item.service.AdService;
@@ -39,8 +43,11 @@ import com.paidang.daoEx.model.CommentEx;
 import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.daoEx.model.UserGoodsEx;
+import com.paidang.domain.qo.OrderQo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableSupport;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.util.PaidangConst;
 import io.swagger.annotations.Api;
@@ -50,9 +57,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -118,6 +123,12 @@ public class ApiUserGoodsController extends ApiBaseController {
     @Autowired
     private CertificateService certificateService;
 
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private PawnWechatService pawnWechatService;
+
     public enum MGoodsCateList {
 
 
@@ -149,26 +160,28 @@ public class ApiUserGoodsController extends ApiBaseController {
          *         hnwy("107","花鸟文娱","0"),
          *         qt("108","其他","0"),
          */
-        SCPZB("1","奢侈品珠宝"),
-        sb("2","手表"),
-        zs("3","钻石"),
-        gjs("4","贵金属"),
-        fcys("5","翡翠玉石"),
-        hty("6","和田玉"),
-        qt("7","其他"),
-        csbs("8","彩色宝石"),
+        SCPZB("1","奢侈品珠宝","/luxuries/save"),
+        sb("2","手表","/watch/save"),
+        zs("3","钻石","/diamonds/save"),
+        gjs("4","贵金属","/metal/save"),
+        fcys("5","翡翠玉石","/jadeite/save"),
+        hty("6","和田玉","/nephrite/save"),
+        qt("7","其他","/other/save"),
+        csbs("8","彩色宝石","/gemstone/save"),
 
-        tc("9","陶瓷"),
-        hh("10","绘画"),
-        sf("11","书法"),
-        wwzx("12","文玩杂项"),
+        tc("9","陶瓷","/porcelain/save"),
+        hh("10","绘画","/painting/save"),
+        sf("11","书法","/calligraphy/save"),
+        wwzx("12","文玩杂项","/wenwan/save"),
 
         ;
         private String code;
         private String name;
-        private MGoodsCateList(String code,String name) {
+        private String pawnUri;
+        private MGoodsCateList(String code,String name,String pawnUri) {
             this.code = code;
             this.name = name;
+            this.pawnUri = pawnUri;
         }
 
 
@@ -181,6 +194,19 @@ public class ApiUserGoodsController extends ApiBaseController {
             for (MGoodsCateList tmp : MGoodsCateList.values()) {
                 if (Objects.equals(code,tmp.code)){
                     return tmp.name;
+                }
+            }
+            return null;
+
+        }
+
+        public static MGoodsCateList getByCode(String code){
+            if (StringUtil.isBlank(code)){
+                return null;
+            }
+            for (MGoodsCateList tmp : MGoodsCateList.values()) {
+                if (Objects.equals(code,tmp.code)){
+                    return tmp;
                 }
             }
             return null;
@@ -209,7 +235,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     @RequestMapping("/updateSell")
     @ApiMethod(isPage = false, isLogin = true)
     public Object updateSell(MobileInfo mobileInfo, @ApiParam(value="id",required = true)Integer id
-            , @ApiParam(value="寄拍图片以,分割",required = true)String  sellImgs
+            , @ApiParam(value="寄拍图片以,分割",required = false)String  sellImgs
             , @ApiParam(value="寄拍视频以,分隔",required = false)String  sellVideo
             , @ApiParam(value="寄拍信息",required = true)String sellInfo
             , @ApiParam(value="一口价",required = true)BigDecimal sellPrice
@@ -335,11 +361,29 @@ public class ApiUserGoodsController extends ApiBaseController {
         }
     }
 
+
+    @ApiOperation(value="删除寄拍商品 ", notes = "登录")
+    @RequestMapping("/delete")
+    @ApiMethod(isPage = false, isLogin = true)
+    public Object delete(MobileInfo mobileInfo, @ApiParam(value="id",required = true)Integer id){
+        UserGoods userGoods=userGoodsService.selectByPrimaryKey(id);
+        if (userGoods==null){
+            throw new ApiException(1100,"该商品不存在");
+        }
+        if (userGoods.getIsSell()!=null && userGoods.getIsSell()==0){
+            throw new ApiException(1100,"该商品已删除");
+        }
+        UserGoods entity=new UserGoods();
+        entity.setId(id);
+        entity.setIsSell(0);
+        return userGoodsService.updateByPrimaryKeySelective(entity);
+    }
+
     @ApiOperation(value="寄拍首页 ", notes = "不登录")
     @RequestMapping("/sellIndex")
     @ApiMethod(isPage = true, isLogin = false)
     public Object sellIndex(MobileInfo mobileInfo, @ApiParam(value="name",required = false)String name, PageLimit pageLimit){
-        startPage();
+//        startPage();
 //        UserGoodsExample example=new UserGoodsExample();
 ////        UserGoodsExample.Criteria criteria=example.createCriteria();
 ////        if (StringUtil.isNotBlank(name)){
@@ -349,6 +393,9 @@ public class ApiUserGoodsController extends ApiBaseController {
 ////        criteria.andIsSellEqualTo(1).andSellStatusEqualTo(1).andSellEndTimeGreaterThan(date).andSellStartTimeLessThan(date);
 ////        example.setOrderByClause("sell_start_time desc");
 ////        List<UserGoods> list= userGoodsService.selectByExample(example);
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
         UserGoodsEx ex=new UserGoodsEx();
         ex.setName(name);
         ex.setUseDate(new Date());
@@ -357,13 +404,16 @@ public class ApiUserGoodsController extends ApiBaseController {
         ex.setPraiseCount(0);
         ex.setSellCheck(1);
         List<UserGoodsEx> list=userGoodsService.findList(ex);
+        if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
+            list = PageUtil.limitList(list,pageNum,pageSize);
+        }
         return list;
     }
 
     @ApiOperation(value="寄拍详情 ", notes = "不登录")
     @RequestMapping("/sellDetail")
     @ApiMethod(isPage = false, isLogin = false)
-    public UserGoods getSellDetail(MobileInfo mobileInfo, @ApiParam(value="id",required = true)Integer id){
+    public UserGoodsEx getSellDetail(MobileInfo mobileInfo, @ApiParam(value="id",required = true)Integer id){
 
         UserGoodsEx entity=userGoodsService.getById(id);
         if (entity!=null){
@@ -541,6 +591,19 @@ public class ApiUserGoodsController extends ApiBaseController {
             ex.setName(name);
         }
         return userGoodsService.findList(ex);
+    }
+
+    @ApiOperation(value="寄拍我的订单列表", notes = "登录")
+    @RequestMapping("/orderList")
+    @ApiMethod(isPage = true, isLogin = true)
+    public Object orderList(MobileInfo mobileInfo, PageLimit pageLimit){
+        startPage();
+        OrderQo qo = new OrderQo();
+        qo.setUserId(mobileInfo.getUserId());
+//        if (StringUtil.isNotBlank(name)){
+//            qo.setName(name);
+//        }
+        return orderService.findSellGoodsOrder(qo);
     }
 
     @ApiOperation(value = "寄拍商品购买", notes = "登陆")
@@ -852,6 +915,12 @@ public class ApiUserGoodsController extends ApiBaseController {
                 if(result == 0){
                     throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
                 }else{
+                    //TODO
+//                    if (MGoodsCateList.SCPZB.code.equals(pawnCate.getCode())){
+//                        LuxuriesPojo pojo = new LuxuriesPojo(JSONUtils.deserialize(content,List.class),images,video,goodsImgs,StringUtils.isNotBlank(price)?new BigDecimal(price):null,info);
+//                    }else if (MGoodsCateList.csbs.code.equals(pawnCate.getCode())){
+//                        GemstonePojo pojo = new GemstonePojo(JSONUtils.deserialize(content,List.class),images,video,goodsImgs,StringUtils.isNotBlank(price)?new BigDecimal(price):null,info);
+//                    }
                     //新增成功
                     ret.setCode(1);
                 }
@@ -977,9 +1046,69 @@ public class ApiUserGoodsController extends ApiBaseController {
                 //新增成功
                 ret.setCode(1);
             }
+
         }
+        Map map = Maps.newHashMap();
+        try {
 
+            List<ContentDetail> contentList = JSONUtils.deserializeList(content,ContentDetail.class);
+            //TODO
 
+            if (MGoodsCateList.qt.code.equals(pawnCate.getCode())){
+                OtherPojo pojo = new OtherPojo(null,null,images,video,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.tc.code.equals(pawnCate.getCode())){
+                PorcelainPojo pojo = new PorcelainPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.SCPZB.code.equals(pawnCate.getCode())){
+                LuxuriesPojo pojo = new LuxuriesPojo(contentList,images,video,goodsImgs,
+                        StringUtils.isNotBlank(price)?new BigDecimal(price):null,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.sb.code.equals(pawnCate.getCode())){
+                WatchPojo pojo = new WatchPojo(contentList,images,video,
+                        StringUtils.isNotBlank(price)?new BigDecimal(price):null,goodsImgs,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.zs.code.equals(pawnCate.getCode())){
+                DiamondsPojo pojo = new DiamondsPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.gjs.code.equals(pawnCate.getCode())){
+                MetalPojo pojo = new MetalPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.fcys.code.equals(pawnCate.getCode())){
+                JadeitePojo pojo = new JadeitePojo(contentList,images,video,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.hty.code.equals(pawnCate.getCode())){
+                NephritePojo pojo = new NephritePojo(contentList,images,video,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.csbs.code.equals(pawnCate.getCode())){
+                GemstonePojo pojo = new GemstonePojo(contentList,images,video,goodsImgs,StringUtils.isBlank(price)?null:new BigDecimal(price),
+                        info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.hh.code.equals(pawnCate.getCode())){
+                PaintingPojo pojo = new PaintingPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.sf.code.equals(pawnCate.getCode())){
+                CalligraphyPojo pojo = new CalligraphyPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }else if (MGoodsCateList.wwzx.code.equals(pawnCate.getCode())){
+                WenwanPojo pojo = new WenwanPojo(contentList,info,userGoods.getId());
+                map = BeanUtil.beanToMap(pojo);
+            }
+            map.put("source","06");
+            String url = CoreConstants.PAWN_WECHAT_URL + "/pawn/app/mini/project" + MGoodsCateList.getByCode(pawnCate.getCode()).pawnUri;
+
+            String response = HttpUtil.createPost(url)
+                    .header("token", pawnWechatService.getToken())
+                    .form(map)
+                    .execute().body();
+            logger.info("pawnWechat 在线鉴定 userId:{},param:{},result:{}",mobileInfo.getUserId(),JSONUtils.serialize(map),response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("pawnWechat 在线鉴定 userId:{},param:{},error:{}",mobileInfo.getUserId(),JSONUtils.serialize(map),e);
+
+        }
+        //{"msg":"提交失败","code":500}
+        //{"msg":"success","code":0}
 
         return ret;
     }
@@ -1247,6 +1376,9 @@ public class ApiUserGoodsController extends ApiBaseController {
             if (userGoods.getPostState()>=2){
                 throw new ApiException(400,"已邮寄");
             }
+
+            KdPojo pojo = new KdPojo(null,null,images,video,pName,pid,sfProtectPrice==null?null:sfProtectPrice.toPlainString(),userGoods.getId());
+
             userGoods.setPostExpressCode(pid);
             userGoods.setPostState(2);
             userGoods.setPostExpress(StringUtil.isBlank(pName)?MPostExpressAddress.xfAddress:pName);
@@ -1255,12 +1387,15 @@ public class ApiUserGoodsController extends ApiBaseController {
             userGoods.setGoVideo(video);
             userGoods.setGoSell(0);
             userGoods.setIsVerify(0);
+            userGoods.setPostTime(new Date());
             userGoods.setSfProtectPrice(sfProtectPrice);
             int result = userGoodsService.updateByPrimaryKeySelective(userGoods);
             if(result == 0){
                 throw new ApiException(1000, "请求失败");
             }
             express.setFid(userGoods.getId());
+            Map<String,Object> map =BeanUtil.beanToMap(pojo);
+            pawnWechatService.kdSave(map);
         }else{
             //直接邮寄
             record.setUserId(mobileInfo.getUserId());
@@ -1285,6 +1420,7 @@ public class ApiUserGoodsController extends ApiBaseController {
             record.setCateId(pawnCate.getId());
             record.setIsRedeem(0);
             record.setCreateTime(new Date());
+            record.setPostTime(new Date());
             int result = userGoodsService.insert(record);
             if(result == 0){
                 throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
@@ -1608,5 +1744,71 @@ public class ApiUserGoodsController extends ApiBaseController {
             return new Result(CoreConstants.SERVER_URL+"h5/certificate?id="+certificate.getId());
         }
         return null;
+    }
+
+    @PostMapping("/video/save")
+    @ApiMethod( isLogin = false)
+    public Result saveVideo(@ApiParam(value="userGoodsId",required = true)Integer userGoodsId
+                            ,@ApiParam(value="bzVideo",required = false)String bzVideo
+            ,@ApiParam(value="cxVideo",required = false)String cxVideo
+            ,@ApiParam(value="jdVideo",required = false)String jdVideo
+    ){
+
+        if (userGoodsId!=null){
+            UserGoods goods = new UserGoods();
+            goods.setId(userGoodsId);
+            goods.setBackVideo(bzVideo);
+            goods.setOpenGoodsVideo(cxVideo);
+            goods.setPlatGoodsAuthVideo(jdVideo);
+            goods.setModifyTime(new Date());
+            userGoodsService.updateByPrimaryKeySelective(goods);
+        }
+
+
+        return null;
+    }
+
+    @PostMapping("/certificate/save")
+    @ApiMethod( isLogin = false)
+    public Ret save(Certificate certificate){
+        CertificateExample example = new CertificateExample();
+        example.createCriteria().andUserGoodsIdEqualTo(certificate.getUserGoodsId());
+        List<Certificate> certificates = certificateService.selectByExample(example);
+        if (CollectionUtils.isEmpty(certificates)){
+            certificate.setCreateTime(new Date());
+            certificateService.insert(certificate);
+        }else {
+            Certificate certificate1 = certificates.get(0);
+            Integer id = certificate1.getId();
+            Date createTime = certificate1.getCreateTime();
+            BeanUtils.copyProperties(certificate,certificate1);
+            certificate1.setId(id);
+            certificate1.setCreateTime(createTime);
+            certificate1.setModifyTime(new Date());
+            certificateService.updateByPrimaryKeySelective(certificate1);
+        }
+        UserGoods temp = new UserGoods();
+        boolean flag =false;
+        if (certificate.getUserGoodsId()!=null && certificate.getAuthPriceTest()!=null){
+            flag = true;
+            temp.setId(certificate.getUserGoodsId());
+            temp.setAuthPriceTest(certificate.getAuthPriceTest());
+        }
+        if (certificate.getUserGoodsId()!=null && certificate.getAuthPrice()!=null) {
+            flag = true;
+            temp.setId(certificate.getUserGoodsId());
+            temp.setAuthPrice(certificate.getAuthPrice());
+
+        }
+        if(StringUtils.isNotBlank(certificate.getAppraisalDsc()) || certificate.getAuthResult()!=null){
+            flag = true;
+        }
+        temp.setAppraisalDsc(certificate.getAppraisalDsc());
+        temp.setAuthResult(certificate.getAuthResult());
+        if ( flag){
+            userGoodsService.updateByPrimaryKeySelective(temp);
+        }
+
+        return ok();
     }
 }

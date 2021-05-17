@@ -42,7 +42,14 @@
       <if test="type == 'mail'.toString()">
          and (A.post_state = 2 or A.post_state = 3 or A.post_state = 4)
       </if>
-      order by A.create_time desc
+      <if test="type == 'mail'.toString()">
+          order by A.post_time desc,A.create_time desc
+      </if>
+
+      <if test="type==null or type=='' or  type != 'mail'.toString()">
+          order by A.create_time desc
+      </if>
+
   </select>
 
     <select id="checkDetail" resultMap="BaseResultMap" parameterType="java.util.HashMap">
@@ -408,7 +415,7 @@ ORDER BY
             and ug.sell_check=#{sellCheck}
         </if>
             and (ug.goto_pawn=0 or ug.goto_pawn is null)
-        order by sell_check desc, ug.sell_start_time desc
+        order by sell_check desc, ug.sell_start_time desc,ug.id desc
     </select>
     <select id="getById" resultMap="BaseResultMap">
         SELECT  ug.*,o.state as orderState,u.nick_name as nickName,u.head_img as headImg,o.code as orderCode,e.express_name as expressName,e.express_code as expressCode , e.express_state as expressState,o.create_time,o.pay_time as orderPayTime,o.price as orderPrice from p_user_goods ug LEFT JOIN p_goods g on ug.id=g.goods_id

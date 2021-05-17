@@ -9,6 +9,8 @@ public class ExperterInfoEx extends ExperterInfo {
 
     private String images;
 
+    private String goodsImgs;
+
     private String experterName;
 
     private String goodsName;
@@ -35,5 +37,13 @@ public class ExperterInfoEx extends ExperterInfo {
 
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
+    }
+
+    public String getGoodsImgs() {
+        return goodsImgs;
+    }
+
+    public void setGoodsImgs(String goodsImgs) {
+        this.goodsImgs = goodsImgs;
     }
 }

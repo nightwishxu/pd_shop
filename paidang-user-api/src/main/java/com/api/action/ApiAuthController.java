@@ -4,6 +4,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.api.MEnumError;
 import com.api.service.AuthService;
+import com.api.util.PageUtil;
 import com.base.action.CoreController;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiException;
@@ -110,6 +111,7 @@ public class ApiAuthController extends CoreController {
 		authPersonal.setCreateTime(new Date());
 		authPersonal.setState("0");
 		AuthResultVo result = authService.passOrNot(userId);
+		BaseUtils.checkBlankParam(authPersonal.getStoreName(),authPersonal.getStoreIntroduce());
 		if(result.getStatus()!=-1 && authPersonal.getId() == null){
 			throw new ApiException(-1,"当前人员已经提交过验证，不能重复提交");
 		}
@@ -134,6 +136,8 @@ public class ApiAuthController extends CoreController {
 		if(result.getStatus()!=-1 && authEnterprise.getId() == null){
 			throw new ApiException(-1,"当前人员已经提交过验证，不能重复提交");
 		}
+		BaseUtils.checkBlankParam(authEnterprise.getStoreName(),authEnterprise.getStoreIntroduce(),authEnterprise.getEnterpriseName());
+
 		if (authEnterprise.getId() == null){
 			if (StringUtils.isBlank(authEnterprise.getStoreName())){
 				authEnterprise.setStoreName(authEnterprise.getEnterpriseName());
@@ -648,18 +652,18 @@ public class ApiAuthController extends CoreController {
 //	}
 
 	@PostMapping("/goods/getGoods")
-	@ApiMethod(isLogin = true)
+	@ApiMethod(isLogin = false)
 	@ApiOperation(value = "根据(状态)获取发布商品")
 	public List<GoodsEx> getGoodsByOnline(@ApiParam(required = true,value = "0下架1上架2新增待上架") Integer state,
 								 	MobileInfo mobileInfo, @ApiParam(value = "1 一口价(产品库) 2 竞拍（拍品库）")Integer dealType,
 										  @ApiParam(value = "排序 1时间降序 2时间升序") Integer orderType,
 										  @ApiParam(value = "分页(不传则不分页)") Integer pageNum,
-								   @ApiParam(value = "分页(不传则不分页)") String pageSize,
+								   @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
 								   @ApiParam(value = "商品名称")String goodsName){
 		int userId = mobileInfo.getUserId();
-		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
-			startPage();
-		}
+//		if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
+//			startPage();
+//		}
 		List<Integer> sources = new ArrayList<>();
 		sources.add(6);sources.add(7);
 		GoodsQo qo = new GoodsQo();
@@ -671,6 +675,10 @@ public class ApiAuthController extends CoreController {
 		qo.setIsOnlineCnt(1);
 		qo.setOrderType(orderType);
 		List<GoodsEx> goodsList = goodsService.findListEx(qo);
+		if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
+			goodsList = PageUtil.limitList(goodsList,pageNum,pageSize);
+		}
+
 		return goodsList;
 	}
 
@@ -720,7 +728,7 @@ public class ApiAuthController extends CoreController {
 							   @ApiParam(value = "分页(不传则不分页)") String pageNum,
 							   @ApiParam(value = "商品名称")String goodsName){
 		int userId = mobileInfo.getUserId();
-		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
+		if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
 			startPage();
 		}
 
@@ -785,7 +793,7 @@ public class ApiAuthController extends CoreController {
                              @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
                              @ApiParam(value = "商品名称")String goodsName){
 		int userId = mobileInfo.getUserId();
-		if (BaseUtils.isAnyBlank(pageNum,pageSize)){
+		if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
 			startPage();
 		}
 		List<OrderEx> orderExes = orderService.getAfterSalesOrder(String.valueOf(userId),goodsName);

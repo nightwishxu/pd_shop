@@ -53,20 +53,23 @@ public class MetalPojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
-    public MetalPojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public MetalPojo(List<ContentDetail> list,String info,Integer userGoodsId){
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "金属种类":
                     this.metalType = detail.getContent();
                     break;
-                case "重量":
+                case "克重":
                     this.weight = detail.getContent();
                     break;
                 case "纯度":
                     this.purity = detail.getContent();
-                    break;
-                case "备注":
-                    this.remark = detail.getContent();
                     break;
             }
         }

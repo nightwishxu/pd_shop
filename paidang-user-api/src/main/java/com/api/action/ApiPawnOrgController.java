@@ -1,14 +1,21 @@
 package com.api.action;
 
 import com.api.util.PageLimit;
+import com.api.util.PageUtil;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
+import com.github.pagehelper.PageHelper;
+import com.paidang.dao.model.Goods;
 import com.paidang.dao.model.GoodsExample;
 import com.paidang.dao.model.PawnOrg;
 import com.paidang.daoEx.model.GoodsEx;
 import com.paidang.daoEx.model.PawnOrgEx;
 import com.paidang.service.GoodsService;
 import com.paidang.service.PawnOrgService;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableSupport;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.sql.SqlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -60,8 +67,16 @@ public class ApiPawnOrgController extends ApiBaseController {
     @RequestMapping(value = "/goods/inex", method = RequestMethod.POST)
     @ApiMethod(isLogin = false)
     public List<GoodsEx> getOrgGoodsBySoldOut(@ApiParam(value = "机构id", required = true) Integer orgId) {
-        startPage();
-        return goodsService.getOrgGoodsBySoldOut(orgId);
+        List<GoodsEx> goods = goodsService.getOrgGoodsBySoldOut(orgId);
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
+        {
+            goods = PageUtil.limitList(goods,pageNum,pageSize);
+
+        }
+        return goods;
     }
 
 
@@ -75,7 +90,6 @@ public class ApiPawnOrgController extends ApiBaseController {
         if (type==null){
             type=0;
         }
-        startPage();
         GoodsExample goodsExample=new GoodsExample();
         goodsExample.createCriteria().andOrgIdEqualTo(orgId).andIsOnlineEqualTo(1).andIsVerfiyEqualTo(2);
         if (type==1){
@@ -83,7 +97,16 @@ public class ApiPawnOrgController extends ApiBaseController {
         } else {
             goodsExample.setOrderByClause("sold_out desc");
         }
-        return goodsService.selectByExample(goodsExample);
+        List<Goods> goods = goodsService.selectByExample(goodsExample);
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
+        {
+            goods = PageUtil.limitList(goods,pageNum,pageSize);
+
+        }
+        return goods;
 
     }
 

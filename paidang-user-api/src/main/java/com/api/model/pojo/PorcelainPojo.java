@@ -61,7 +61,11 @@ public class PorcelainPojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
-    public PorcelainPojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public PorcelainPojo(List<ContentDetail> list,String info,Integer userGoodsId){
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "正面图":
@@ -79,11 +83,10 @@ public class PorcelainPojo implements Serializable {
                 case "底面图":
                     this.bottomImg = detail.getContent();
                     break;
-                case "备注":
-                    this.remark = detail.getContent();
-                    break;
             }
         }
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
 
     }
 

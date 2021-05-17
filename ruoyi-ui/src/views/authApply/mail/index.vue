@@ -103,27 +103,14 @@
       >
         <template slot-scope="scope">
           <div v-if="scope.row.images != null">
-            <span
-              v-for="(item, index) in scope.row.images.split(',')"
+            <el-image
+              style="width: 50px; height: 50px; margin-right: 10px;"
+              v-for="(src, index) in scope.row.images.split(',')"
               :key="index"
-            >
-              <el-popover
-                placement="left"
-                trigger="click"
-                width="600"
-              >
-                <el-image
-                  :src="item"
-                  width="100%"
-                />
-                <el-image
-                  slot="reference"
-                  :src="item"
-                  :alt="item"
-                  style="max-height: 40px; max-width: 40px; padding: 3px"
-                />
-              </el-popover>
-            </span>
+              :src="src"
+              :preview-src-list="getPrivewImages(index,scope.row.images)"
+            ></el-image>
+
           </div>
         </template>
       </el-table-column>
@@ -136,27 +123,13 @@
       >
         <template slot-scope="scope">
           <div v-if="scope.row.goodsImgs != null">
-            <span
-              v-for="(item, index) in scope.row.goodsImgs.split(',')"
+            <el-image
+              style="width: 50px; height: 50px; margin-right: 10px;"
+              v-for="(src, index) in scope.row.goodsImgs.split(',')"
               :key="index"
-            >
-              <el-popover
-                placement="left"
-                trigger="click"
-                width="600"
-              >
-                <el-image
-                  :src="item"
-                  width="100%"
-                />
-                <el-image
-                  slot="reference"
-                  :src="item"
-                  :alt="item"
-                  style="max-height: 40px; max-width: 40px; padding: 3px"
-                />
-              </el-popover>
-            </span>
+              :src="src"
+              :preview-src-list="getPrivewImages(index,scope.row.goodsImgs)"
+            ></el-image>
           </div>
         </template>
       </el-table-column>
@@ -489,6 +462,12 @@
             v-if="scope.row.postState==2"
             @click="confirmPost(scope.row)"
           >确认收货</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="scope.row.authResult===4 && (scope.row.rate===null || scope.row.moneyRate===null)"
+            @click="handleForm13(scope.row)"
+          >设置费率</el-button>
           <el-button
             size="mini"
             type="text"
@@ -1085,6 +1064,43 @@
     </el-dialog>
 
     <el-dialog
+      :title="title13"
+      :visible.sync="open13"
+      width="400px"
+      append-to-body
+    >
+      <el-form
+        :model="form13"
+        label-width="100px"
+        ref="form13"
+      >
+        <el-form-item
+          label="月利率(%)"
+          prop="moneyRate"
+        >
+          <el-input v-model="form13.moneyRate" />
+        </el-form-item>
+        <el-form-item
+          label="月费率(%)"
+          prop="rate"
+        >
+          <el-input v-model="form13.rate" />
+        </el-form-item>
+
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="from13Submit"
+        >确 定</el-button>
+        <el-button @click="cancel13">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
       title
       :visible.sync="videoOpen"
       width="40%"
@@ -1293,6 +1309,7 @@ import {
   checkDetail,
   settle,
   saveByBackToUser,
+  saveNew,
   changeCheck,
   exportGoods,
 } from "@/api/postStore/goods";
@@ -1345,6 +1362,7 @@ export default {
       open10: false,
       open11: false,
       open12: false,
+      open13: false,
       videoOpen: false,
       videoUrl: null,
       show2: true,
@@ -1360,6 +1378,7 @@ export default {
       title10: "",
       title11: "",
       title12: "",
+      title13: "",
 
       isRouterAlive: true,
       // 查询参数
@@ -1419,6 +1438,7 @@ export default {
       form10: {},
       form11: {},
       form12: {},
+      form13: {},
       uploadAction: process.env.BASE_API + "common/fileUplaod",
       // imgfileList:[],
       // 表单校验
@@ -1566,6 +1586,16 @@ export default {
     this.getDomainList();
   },
   methods: {
+      getPrivewImages(index,imgs) {
+      var imgList = imgs.split(",");
+      var tempImgList = [...imgList];//所有图片地址
+      if (index == 0) return tempImgList;
+      // 调整图片顺序，把当前图片放在第一位
+      var start = tempImgList.splice(index);
+      var remain = tempImgList.splice(0, index);
+      return start.concat(remain);//将当前图片调整成点击缩略图的那张图片
+    },
+      
     reload() {
       console.info("reload");
       this.isRouterAlive = false;
@@ -1733,6 +1763,14 @@ export default {
       this.open12 = true;
       this.title12 = "估价";
     },
+
+     handleForm13(row) {
+      this.reset13();
+      const id = row.id;
+      this.form13 = { id: id, rate: row.rate,moneyRate:row.moneyRate };
+      this.open13 = true;
+      this.title13 = "设置费率";
+    },
     playVideo(row,type) {
       this.videoOpen = true;
       if(type==1){
@@ -1870,6 +1908,15 @@ export default {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
           this.open12 = false;
+          this.getList();
+        }
+      });
+    },
+    from13Submit() {
+      saveNew(this.form13).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("修改成功");
+          this.open13 = false;
           this.getList();
         }
       });
@@ -2120,6 +2167,14 @@ export default {
         authePriceTest: null,
       };
       this.resetForm("form12");
+    },
+      reset13() {
+      this.form13 = {
+        id: null,
+        rate: null,
+        moneyRate: null,
+      };
+      this.resetForm("form13");
     },
     /** 搜索按钮操作 */
     handleQuery() {

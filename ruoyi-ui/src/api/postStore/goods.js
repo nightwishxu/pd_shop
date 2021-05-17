@@ -34,8 +34,14 @@ export function updateGoods(data) {
     params: data
   })
 }
-
-
+saveNew
+export function saveNew(data) {
+  return request({
+    url: '/userGoods/saveNew',
+    method: 'post',
+    params: data
+  })
+}
 // 删除商品
 export function delGoods(id) {
   return request({

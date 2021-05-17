@@ -1097,12 +1097,15 @@ public class ApiStoreController extends ApiBaseController {
             ApiIndexMenu c = new ApiIndexMenu();
             c.setOrgId(ex.getOrgId());
             c.setDealType(ex.getDealType());
-            if(3 == ex.getSource()||4 == ex.getSource()){
+            c.setImg(ex.getImg());
+            if (StringUtils.isBlank(ex.getImg()) && StringUtils.isNotBlank(ex.getImgs())){
+                c.setImg(ex.getImgs().split(",")[0]);
+            }
+            if(Arrays.asList(2,3,4,6,7).contains(ex.getSource()) && ex.getType()==1 ){
                 if(cnt <= 6){
                     //如果是认证商场商品
                     c.setId(ex.getId());
                     c.setPrice(ex.getPrice()+"");
-                    c.setImg(ex.getImg());
                     c.setTitle(ex.getName());
                     c.setState(1);
                     c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
@@ -1111,14 +1114,13 @@ public class ApiStoreController extends ApiBaseController {
                     continue;
                 }
 
-            }else if(2 == ex.getSource()){
+            }else if(Arrays.asList(2,3).contains(ex.getSource()) && ex.getType()==2){
                 //如果是绝当商场商品
-                if(ex.getPrice().compareTo(new BigDecimal(30000)) == -1){
+//                if(ex.getPrice().compareTo(new BigDecimal(30000)) == -1){
 
                     if(cnt2 <= 4){
                         //如果他的价格不满三万则是最新绝当商品
                         c.setId(ex.getId());
-                        c.setImg(ex.getImg());
                         c.setPrice(ex.getPrice()+"");
                         c.setTitle(ex.getName());
                         c.setState(2);
@@ -1127,36 +1129,35 @@ public class ApiStoreController extends ApiBaseController {
                     }else{
                         continue;
                     }
-                }else{
-                    if(cnt2 <= 4){
-                        //价格超过三万则是最新绝当竞拍
-                        long second = com.base.util.DateUtil.secondsAfter(com.base.util.DateUtil.addMinute(ex.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
-                        if(second > 0){
-                            c.setId(ex.getId());
-                            c.setEndTime(com.base.util.DateUtil.dateToStr(com.base.util.DateUtil.addHour(ex.getCreateTime(),24)));
-                            c.setEndTime2(second+"");
-                            c.setImg(ex.getImg());
-                            c.setTitle(ex.getName());
-                            c.setPrice(ex.getPrice()+"");
-                            //查找该物品的竞拍次数
-                            GoodsAuctionExample goodsAuctionExample = new GoodsAuctionExample();
-                            goodsAuctionExample.createCriteria().andGoodsIdEqualTo(ex.getId());
-                            int count = goodsAuctionService.countByExample(goodsAuctionExample);
-                            c.setAucCount(count);
-                            c.setState(3);
-                            c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
-                            cnt2++;
-                        }else{
-                            //超过时间不显示，并且修改他为竞拍失效
-                            ex.setState(0);
-                            goodsService.updateByPrimaryKeySelective(ex);
-                            continue;
-                        }
-                    }else{
-                        continue;
-                    }
-
-                }
+//                }else{
+//                    if(cnt2 <= 4){
+//                        //价格超过三万则是最新绝当竞拍
+//                        long second = com.base.util.DateUtil.secondsAfter(com.base.util.DateUtil.addMinute(ex.getCreateTime(),(PaidangConst.JD_GOODS_TIME)/60),new Date());
+//                        if(second > 0){
+//                            c.setId(ex.getId());
+//                            c.setEndTime(com.base.util.DateUtil.dateToStr(com.base.util.DateUtil.addHour(ex.getCreateTime(),24)));
+//                            c.setEndTime2(second+"");
+//                            c.setTitle(ex.getName());
+//                            c.setPrice(ex.getPrice()+"");
+//                            //查找该物品的竞拍次数
+//                            GoodsAuctionExample goodsAuctionExample = new GoodsAuctionExample();
+//                            goodsAuctionExample.createCriteria().andGoodsIdEqualTo(ex.getId());
+//                            int count = goodsAuctionService.countByExample(goodsAuctionExample);
+//                            c.setAucCount(count);
+//                            c.setState(3);
+//                            c.setGoodsType(MStoreGoodsCateList.getByCode(ex.getCateCode().toString()).getName());
+//                            cnt2++;
+//                        }else{
+//                            //超过时间不显示，并且修改他为竞拍失效
+//                            ex.setState(0);
+//                            goodsService.updateByPrimaryKeySelective(ex);
+//                            continue;
+//                        }
+//                    }else{
+//                        continue;
+//                    }
+//
+//                }
             }
             ret.add(c);
         }
@@ -1180,9 +1181,10 @@ public class ApiStoreController extends ApiBaseController {
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Integer pageNum = pageDomain.getPageNum();
         Integer pageSize = pageDomain.getPageSize();
-        if (StringUtils.isNotBlank(name)){
-            PageHelper.clearPage();
-        }
+//        if (StringUtils.isNotBlank(name)){
+//            PageHelper.clearPage();
+//        }
+        startPage();
         List<AppStoreGoodsDetail> list2 = new ArrayList<AppStoreGoodsDetail>();
 
         GoodsQo qo = new GoodsQo();
@@ -1191,6 +1193,7 @@ public class ApiStoreController extends ApiBaseController {
         qo.setIsOnline(1);
         qo.setIsVerfiy(2);
         qo.setType(1);
+        qo.setName(name);
         List<Integer> sources = Lists.newArrayList();
         sources.add(2);
         sources.add(3);
@@ -1199,11 +1202,12 @@ public class ApiStoreController extends ApiBaseController {
         sources.add(6);
         sources.add(7);
         qo.setSources(sources);
+        qo.setOrgState(1);
         List<GoodsEx> list  = goodsService.findListEx(qo);
-        if (StringUtil.isNotBlank(name)){
-            list = list.stream().filter(i->i.getName().contains(name)).collect(Collectors.toList());
-            list = PageUtil.limitList(list,pageNum,pageSize);
-        }
+//        if (StringUtil.isNotBlank(name)){
+//            list = list.stream().filter(i->i.getName().contains(name)).collect(Collectors.toList());
+//            list = PageUtil.limitList(list,pageNum,pageSize);
+//        }
 //        List<Goods> list = goodsService.selectByExample(goodsExample);
         for(GoodsEx ex : list){
             AppStoreGoodsDetail record = new AppStoreGoodsDetail();

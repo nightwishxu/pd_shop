@@ -1,8 +1,15 @@
 package com.base.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.base.exception.SystemException;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class JSONUtils {
     private static final SerializerFeature[] serializerFeatures;
@@ -34,20 +41,20 @@ public class JSONUtils {
     }
 
 
-//    public static <T> List<T> deserializeList(String jsonStr, Class<T> clazz) {
-//        List<T> result = new ArrayList();
-//        List<Map> resultList = (List)deserialize(jsonStr, List.class);
-//        if (CollectionUtils.isNotEmpty(resultList)) {
-//            Iterator var4 = resultList.iterator();
-//
-//            while(var4.hasNext()) {
-//                Map map = (Map)var4.next();
-//                result.add(BeanUtilsEx.convert(map, clazz));
-//            }
-//        }
-//
-//        return result;
-//    }
+    public static <T> List<T> deserializeList(String jsonStr, Class<T> clazz) {
+        List<T> result = new ArrayList();
+        List<Map> resultList = (List)deserialize(jsonStr, List.class);
+        if (CollectionUtils.isNotEmpty(resultList)) {
+            Iterator var4 = resultList.iterator();
+
+            while(var4.hasNext()) {
+                Map map = (Map)var4.next();
+                result.add(BeanUtil.mapToBean(map, clazz,true));
+            }
+        }
+
+        return result;
+    }
 
     static {
         serializerFeatures = new SerializerFeature[]{SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.QuoteFieldNames, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullListAsEmpty, SerializerFeature.WriteNullStringAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.WriteNullBooleanAsFalse};

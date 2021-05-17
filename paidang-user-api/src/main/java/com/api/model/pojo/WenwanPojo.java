@@ -65,7 +65,13 @@ public class WenwanPojo implements Serializable {
     @ApiParam(value="备注")
     private String remark;
 
-    public WenwanPojo(List<ContentDetail> list){
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
+
+    public WenwanPojo(List<ContentDetail> list,String info,Integer userGoodsId){
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "整体图":
@@ -85,9 +91,6 @@ public class WenwanPojo implements Serializable {
                     break;
                 case "底面图":
                     this.bottomImg = detail.getContent();
-                    break;
-                case "备注":
-                    this.remark = detail.getContent();
                     break;
             }
         }

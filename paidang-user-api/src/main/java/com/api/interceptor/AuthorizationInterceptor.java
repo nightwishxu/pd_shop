@@ -132,11 +132,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             	if (StringUtils.isBlank(p) || StringUtils.isBlank(l)){
             		throw new ApiException(MErrorEnum.PAGE_LIMIT_NONG);
             	}
-                PageDomain pageDomain = TableSupport.buildPageRequest();
-                Integer pageNum = pageDomain.getPageNum();
-                Integer pageSize = pageDomain.getPageSize();
-                String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
-                PageHelper.startPage(pageNum, pageSize, orderBy);
+//                PageDomain pageDomain = TableSupport.buildPageRequest();
+//                Integer pageNum = pageDomain.getPageNum();
+//                Integer pageSize = pageDomain.getPageSize();
+//                String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
+//                PageHelper.startPage(pageNum, pageSize, orderBy);
             }
             
             MobileVerify mobileVerify = null;

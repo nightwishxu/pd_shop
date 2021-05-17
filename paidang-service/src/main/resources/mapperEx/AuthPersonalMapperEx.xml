@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.paidang.daoEx.AuthPersonalMapperEx" >
   <resultMap id="BaseResultMap" type="com.paidang.daoEx.model.AuthPersonalEx" extends="com.paidang.dao.AuthPersonalMapper.BaseResultMap">
+      <result column="account" property="account" jdbcType="VARCHAR" />
   </resultMap>
 
   <update id="changeStateByPrimaryKey" >
@@ -15,7 +16,7 @@
     </update>
 
     <select id="findList" parameterType="com.paidang.domain.qo.AuthPersonalQo"
-            resultType="com.paidang.daoEx.model.AuthPersonalEx">
+            resultMap="BaseResultMap">
         select  a.*,b.account from b_auth_personal a left join b_user b on a.create_user = b.id
         where 1=1 and a.state!=3
         <if test="storeName!=null and storeName!=''">

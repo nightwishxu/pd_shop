@@ -3,6 +3,7 @@ package com.api.model.pojo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.base.util.DateUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.utils.StringUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -77,24 +79,29 @@ public class GemstonePojo implements Serializable {
 
     @ApiModelProperty(value="购买时间")
     @ApiParam(value="购买时间")
-    private Date buyTime;
+    private String buyTime;
 
     @ApiModelProperty(value="描述补充")
     @ApiParam(value="描述补充")
     private String remark;
 
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
 
-    public GemstonePojo(List<ContentDetail> list){
+
+    public GemstonePojo(List<ContentDetail> list,String photos,String video,String enclosureFile,
+                        BigDecimal buyPrice,String info,Integer userGoodsId){
+        this.photos=photos;
+        this.video = video;
+        this.enclosureFile =enclosureFile;
+        this.buyPrice = buyPrice;
+        this.remark = info;
+        this.userGoodsId = userGoodsId;
         for (ContentDetail detail : list) {
             switch (detail.getName()){
                 case "品牌":
                     this.brand = detail.getContent();
-                    break;
-                case "外观照片":
-                    this.photos = detail.getContent();
-                    break;
-                case "视频":
-                    this.video = detail.getContent();
                     break;
                 case "主体材质":
                     this.subjectMaterial = detail.getContent();
@@ -108,24 +115,14 @@ public class GemstonePojo implements Serializable {
                 case "附件":
                     this.enclosure = detail.getContent();
                     break;
-                case "附件照":
-                    this.enclosureFile = detail.getContent();
-                    break;
-                case "购买价格":
-                    if (StringUtils.isNotBlank(detail.getContent())){
-                        this.buyPrice = new BigDecimal(detail.getContent());
-                    }
-                    break;
                 case "购买时间":
                     if (StringUtils.isNotBlank(detail.getContent())){
-                        this.buyTime = DateUtil.parse(detail.getContent());
+                        this.buyTime = DateUtil.format(DateUtil.parse(detail.getContent()),"yyyy-MM-dd HH:mm:ss");
                     }
-                    break;
-                case "描述补充":
-                    this.remark = detail.getContent();
                     break;
             }
         }
+
 
     }
 }

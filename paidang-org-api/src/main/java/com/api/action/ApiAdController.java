@@ -74,8 +74,8 @@ public class ApiAdController extends ApiBaseController {
 //                String file_path = fileService.selectByExample(example1).get(0).getFilePath();
 //                ex.setContent(CoreConstants.getProperty("video.path")+file_path);
             }else if(6 == ex.getType()){
-                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(Integer.parseInt(ex.getContent()));
-                ex.setContent(JSONUtils.serialize(pawnOrg));
+//                PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(Integer.parseInt(ex.getContent()));
+//                ex.setContent(JSONUtils.serialize(pawnOrg));
             }else if (4 == ex.getType()){
                 //如果是绝当商品的商品
                 if(null == ex.getGoodsId()){

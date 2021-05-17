@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -223,6 +224,16 @@ public class Certificate implements Serializable {
 	@Column(name = "size")
 	private String size;
 
+
+	private BigDecimal authPriceTest;
+
+	private BigDecimal authPrice;
+
+
+	@ApiModelProperty(value="鉴定结果")
+	@ApiParam(value="鉴定结果")
+	private Integer authResult;
+
 	public void setId(Integer id) {
 		this.id=id;
 	}
@@ -431,4 +442,28 @@ public class Certificate implements Serializable {
 		return size;
 	}
 
+
+	public BigDecimal getAuthPriceTest() {
+		return authPriceTest;
+	}
+
+	public void setAuthPriceTest(BigDecimal authPriceTest) {
+		this.authPriceTest = authPriceTest;
+	}
+
+	public BigDecimal getAuthPrice() {
+		return authPrice;
+	}
+
+	public void setAuthPrice(BigDecimal authPrice) {
+		this.authPrice = authPrice;
+	}
+
+	public Integer getAuthResult() {
+		return authResult;
+	}
+
+	public void setAuthResult(Integer authResult) {
+		this.authResult = authResult;
+	}
 }

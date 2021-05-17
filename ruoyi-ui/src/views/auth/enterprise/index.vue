@@ -182,6 +182,8 @@
               :alt="scope.row.businessLicensePhoto"
               style="max-height: 50px; max-width: 50px"
             ></el-image>
+            <el-image :src="scope.row.businessLicensePhoto"></el-image>
+
           </el-popover>
         </template>
       </el-table-column>

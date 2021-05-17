@@ -365,7 +365,7 @@ public class ApiOrderController extends ApiBaseController {
 
 
         List<OrderEx> orderExes = orderService.getOrderByState(userId,goodsName,state);
-        if(BaseUtils.isAnyBlank(pageNum,pageSize)){
+        if(!BaseUtils.isAnyBlank(pageNum,pageSize)){
             return orderExes;
         }else{
             return orderExes;
@@ -379,7 +379,7 @@ public class ApiOrderController extends ApiBaseController {
                              @ApiParam(value = "分页(不传则不分页)") Integer pageSize,
                              @ApiParam(value = "商品名称")String goodsName){
         int userId = mobileInfo.getUserId();
-        if (BaseUtils.isAnyBlank(pageNum,pageSize)){
+        if (!BaseUtils.isAnyBlank(pageNum,pageSize)){
             startPage();
         }
         List<OrderEx> orderExes = orderService.getAfterSalesOrder(String.valueOf(userId),goodsName);

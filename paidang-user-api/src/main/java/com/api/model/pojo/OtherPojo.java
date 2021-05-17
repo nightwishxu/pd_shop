@@ -50,21 +50,25 @@ public class OtherPojo implements Serializable {
     @ApiParam(value="描述补充")
     private String remark;
 
-    public OtherPojo(List<ContentDetail> list){
-        for (ContentDetail detail : list) {
-            switch (detail.getName()){
-                case "外观照片":
-                    this.photos = detail.getContent();
-                    break;
-                case "视频":
-                    this.video = detail.getContent();
-                    break;
-                case "描述补充":
-                    this.remark = detail.getContent();
-                    break;
-            }
-        }
+    @ApiModelProperty(value="")
+    @ApiParam(value="")
+    private Integer userGoodsId;
 
-    }
+//    public OtherPojo(List<ContentDetail> list){
+//        for (ContentDetail detail : list) {
+//            switch (detail.getName()){
+//                case "外观照片":
+//                    this.photos = detail.getContent();
+//                    break;
+//                case "视频":
+//                    this.video = detail.getContent();
+//                    break;
+//                case "描述补充":
+//                    this.remark = detail.getContent();
+//                    break;
+//            }
+//        }
+//
+//    }
 
 }
