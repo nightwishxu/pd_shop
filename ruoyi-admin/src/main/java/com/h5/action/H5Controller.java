@@ -13,11 +13,17 @@ public class H5Controller {
 
 
     @RequestMapping(value = "/h5/appraisal")
-    public String appraisal(HttpServletRequest request, Model model)throws Exception {
+    public String appraisal(HttpServletRequest request, Model model) {
         //id
         String id = request.getParameter("id");
         model.addAttribute("id",id);
         model.addAttribute("serverUrl", CoreConstants.SERVER_URL);
         return "appraisal";
+    }
+
+
+    @RequestMapping(value = "/h5/getRegistrations")
+    public String getRegistrations(HttpServletRequest request, Model model) {
+        return "registration";
     }
 }

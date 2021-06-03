@@ -617,7 +617,7 @@
               prop="size"
             >
               <el-input
-                v-model="form3.length"
+                v-model="form3.size"
                 placeholder="请输入尺寸"
               />
             </el-form-item>
@@ -1913,6 +1913,7 @@ export default {
       });
     },
     from13Submit() {
+      this.form13.isVerify=1;
       saveNew(this.form13).then((response) => {
         if (response.code === 200) {
           this.msgSuccess("修改成功");
@@ -2173,6 +2174,7 @@ export default {
         id: null,
         rate: null,
         moneyRate: null,
+        isVerfiy: null,
       };
       this.resetForm("form13");
     },
