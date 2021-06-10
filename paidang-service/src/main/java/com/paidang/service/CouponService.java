@@ -1,69 +1,102 @@
 package com.paidang.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.paidang.dao.CouponMapper;
+import com.paidang.dao.model.Coupon;
 import com.paidang.daoEx.CouponMapperEx;
 import com.paidang.daoEx.model.CouponEx;
+import com.paidang.daoEx.model.CouponExList;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.paidang.dao.CouponMapper;
-import com.paidang.dao.model.Coupon;
-import com.paidang.dao.model.CouponExample;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * 优惠券Service业务层处理
+ *
+ * @author WBC
+ * @date 2021-06-10
+ */
 @Service
 public class CouponService {
-	@Autowired
-	private CouponMapper couponMapper;
-	@Autowired
-	private CouponMapperEx couponMapperEx;
+    @Autowired
+    private CouponMapper couponMapper;
+    @Autowired
+    private CouponMapperEx couponMapperEx;
 
-	public int countByExample(CouponExample example) {
-		return this.couponMapper.countByExample(example);
-	}
+    /**
+     * 查询优惠券
+     *
+     * @param id 优惠券ID
+     * @return 优惠券
+     */
 
-	public Coupon selectByPrimaryKey(Integer id) {
-		return this.couponMapper.selectByPrimaryKey(id);
-	}
+    public Coupon selectCouponById(Integer id) {
+        return couponMapper.selectCouponById(id);
+    }
 
-	public List<Coupon> selectByExample(CouponExample example) {
-		return this.couponMapper.selectByExample(example);
-	}
+    /**
+     * 查询优惠券列表
+     *
+     * @param coupon 优惠券
+     * @return 优惠券
+     */
 
-	public int deleteByPrimaryKey(Integer id) {
-		return this.couponMapper.deleteByPrimaryKey(id);
-	}
+    public List<Coupon> selectCouponList(Coupon coupon) {
+        return couponMapper.selectCouponList(coupon);
+    }
 
-	public int updateByPrimaryKeySelective(Coupon record) {
-		return this.couponMapper.updateByPrimaryKeySelective(record);
-	}
+    /**
+     * 新增优惠券
+     *
+     * @param coupon 优惠券
+     * @return 结果
+     */
 
-	public int updateByPrimaryKey(Coupon record) {
-		return this.couponMapper.updateByPrimaryKey(record);
-	}
+    public int insertCoupon(Coupon coupon) {
+        coupon.setCreateTime(DateUtils.getNowDate());
+        return couponMapper.insertCoupon(coupon);
+    }
 
-	public int deleteByExample(CouponExample example) {
-		return this.couponMapper.deleteByExample(example);
-	}
+    /**
+     * 修改优惠券
+     *
+     * @param coupon 优惠券
+     * @return 结果
+     */
 
-	public int updateByExampleSelective(Coupon record, CouponExample example) {
-		return this.couponMapper.updateByExampleSelective(record, example);
-	}
+    public int updateCoupon(Coupon coupon) {
+        return couponMapper.updateCoupon(coupon);
+    }
 
-	public int updateByExample(Coupon record, CouponExample example) {
-		return this.couponMapper.updateByExample(record, example);
-	}
+    /**
+     * 批量删除优惠券
+     *
+     * @param ids 需要删除的优惠券ID
+     * @return 结果
+     */
 
-	public int insert(Coupon record) {
-		return this.couponMapper.insert(record);
-	}
+    public int deleteCouponByIds(Integer[] ids) {
+        return couponMapper.deleteCouponByIds(ids);
+    }
 
-	public int insertSelective(Coupon record) {
-		return this.couponMapper.insertSelective(record);
-	}
+    /**
+     * 删除优惠券信息
+     *
+     * @param id 优惠券ID
+     * @return 结果
+     */
 
-    public List<CouponEx> selectGoods(Map<String ,Object> map) {
-		return this.couponMapperEx.selectGoods(map);
+    public int deleteCouponById(Integer id) {
+        return couponMapper.deleteCouponById(id);
+    }
+
+    public List<CouponExList> selectByType(Map<String ,Object> map) {
+        return couponMapperEx.selectByType(map);
+    }
+
+    public List<CouponEx> selectGoods(Map<String ,Object> map){
+        return couponMapperEx.selectGoods(map);
     }
 }

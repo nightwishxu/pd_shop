@@ -30,4 +30,7 @@ public interface UserCouponMapper {
 
 	int updateByPrimaryKey(UserCoupon record);
 
+	int countByParam(@Param("state") Integer state, @Param("coupon_id") Integer couponId);
+
+	List<UserCoupon> selectByCouponIdAndUserId(@Param("userId") Integer userId, @Param("coupon_id") Integer couponId);
 }

@@ -155,28 +155,28 @@ public class ApiWatchVideo extends ApiBaseController {
             throw new ApiException(-1,"领取失败...");
         }
 
-        CouponExample example2 = new CouponExample();
-        example2.createCriteria();
-        List<Coupon> list2 = couponService.selectByExample(example2);
-        if(list2.size()>1){
-            throw new ApiException(MErrorEnum.COUPON_FAILURE_ERROR);
-        }
-        Coupon coupon = list2.get(0);
-
-
-
-        UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setUserId(mobileInfo.getUserId());
-        userCoupon.setCouponId(coupon.getId());
-        userCoupon.setFull(coupon.getFull());
-        userCoupon.setValue(coupon.getValue());
-        userCoupon.setEndTime(DateUtil.add(new Date(),coupon.getDays()));
-        userCoupon.setState(1);
-        userCoupon.setSource(2);
-        int result = userCouponService.insert(userCoupon);
-        if(result == 0){
-            throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
-        }
+//        CouponExample example2 = new CouponExample();
+//        example2.createCriteria();
+//        List<Coupon> list2 = couponService.selectByExample(example2);
+//        if(list2.size()>1){
+//            throw new ApiException(MErrorEnum.COUPON_FAILURE_ERROR);
+//        }
+//        Coupon coupon = list2.get(0);
+//
+//
+//
+//        UserCoupon userCoupon = new UserCoupon();
+//        userCoupon.setUserId(mobileInfo.getUserId());
+//        userCoupon.setCouponId(coupon.getId());
+//        userCoupon.setFull(coupon.getFull());
+//        userCoupon.setValue(coupon.getValue());
+//        userCoupon.setEndTime(DateUtil.add(new Date(),coupon.getDays()));
+//        userCoupon.setState(1);
+//        userCoupon.setSource(2);
+//        int result = userCouponService.insert(userCoupon);
+//        if(result == 0){
+//            throw new ApiException(MErrorEnum.OPERATION_FAILURE_ERROR);
+//        }
 
         return 1;
     }

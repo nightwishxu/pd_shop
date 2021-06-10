@@ -203,7 +203,7 @@ public class ApiWatchVideo extends ApiBaseController {
             return ret;
         }
 
-        Coupon coupon = couponService.selectByPrimaryKey(id);
+        Coupon coupon = couponService.selectCouponById(id);
         if(null == coupon){
             throw new ApiException(MErrorEnum.GOODS_NOTEXISTS_ERROR);
         }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.paidang.daoEx.UserCouponMapperEx;
 import com.paidang.daoEx.model.UserCouponEx;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,4 +67,12 @@ public class UserCouponService {
     public List<UserCouponEx> selectByGoods(Map<String, Object> map) {
 		return this.userCouponMapperEx.selectByGoods(map);
     }
+
+    public int countByParam(Integer state, Integer couponId) {
+		return this.userCouponMapper.countByParam(state, couponId);
+	}
+
+	public List<UserCoupon> selectByCouponIdAndUserId(Integer userId, Integer couponId) {
+		return this.userCouponMapper.selectByCouponIdAndUserId(userId, couponId);
+	}
 }

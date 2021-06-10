@@ -1,33 +1,63 @@
 package com.paidang.dao;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.paidang.dao.model.Coupon;
-import com.paidang.dao.model.CouponExample;
+import com.paidang.daoEx.model.CouponExList;
 
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 优惠券Mapper接口
+ *
+ * @author WBC
+ * @date 2021-06-10
+ */
 public interface CouponMapper {
-	int countByExample(CouponExample example);
+	/**
+	 * 查询优惠券
+	 *
+	 * @param id 优惠券ID
+	 * @return 优惠券
+	 */
+	Coupon selectCouponById(Integer id);
 
-	int deleteByExample(CouponExample example);
+	/**
+	 * 查询优惠券列表
+	 *
+	 * @param coupon 优惠券
+	 * @return 优惠券集合
+	 */
+	List<Coupon> selectCouponList(Coupon coupon);
 
-	int deleteByPrimaryKey(Integer id);
+	/**
+	 * 新增优惠券
+	 *
+	 * @param coupon 优惠券
+	 * @return 结果
+	 */
+	int insertCoupon(Coupon coupon);
 
-	int insert(Coupon record);
+	/**
+	 * 修改优惠券
+	 *
+	 * @param coupon 优惠券
+	 * @return 结果
+	 */
+	int updateCoupon(Coupon coupon);
 
-	int insertSelective(Coupon record);
+	/**
+	 * 删除优惠券
+	 *
+	 * @param id 优惠券ID
+	 * @return 结果
+	 */
+	int deleteCouponById(Integer id);
 
-	List<Coupon> selectByExample(CouponExample example);
-
-	Coupon selectByPrimaryKey(Integer id);
-
-	int updateByExampleSelective(@Param("record") Coupon record,@Param("example") CouponExample example);
-
-	int updateByExample(@Param("record") Coupon record,@Param("example") CouponExample example);
-
-	int updateByPrimaryKeySelective(Coupon record);
-
-	int updateByPrimaryKey(Coupon record);
-
+	/**
+	 * 批量删除优惠券
+	 *
+	 * @param ids 需要删除的数据ID
+	 * @return 结果
+	 */
+	int deleteCouponByIds(Integer[] ids);
 }
