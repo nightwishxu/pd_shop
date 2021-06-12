@@ -1,6 +1,9 @@
 package com.paidang.service;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.base.util.DateUtil;
 import com.base.util.LogKit;
 import com.base.util.StringUtil;
@@ -8,6 +11,7 @@ import com.paidang.dao.ExpressMapper;
 import com.paidang.dao.OrderMapper;
 import com.paidang.dao.UserGoodsMapper;
 import com.paidang.dao.model.Express;
+import com.paidang.dao.model.ExpressData;
 import com.paidang.dao.model.ExpressExample;
 import com.paidang.dao.model.UserGoods;
 import com.paidang.daoEx.ExpressMapperEx;
@@ -19,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ExpressService {
@@ -182,7 +183,23 @@ public class ExpressService {
 				break;
 			case 3:
 				//商城
-				orderService.confirmOrder(express.getFid());
+				// 增加判断 签收后7天自动确认收货
+				JSONObject data = JSONObject.parseObject(express.getExpressData());
+				if (data.containsKey("data")) {
+					List<ExpressData> dataList = JSONArray.parseArray(data.getJSONArray("data").toJSONString(), ExpressData.class);
+					dataList.sort(new Comparator<ExpressData>() {
+						@Override
+						public int compare(ExpressData expressData, ExpressData t1) {
+							return (int) (DateUtil.strToDate(t1.getTime()).getTime() - DateUtil.strToDate(expressData.getTime()).getTime());
+						}
+					});
+					Date confirmTime = DateUtil.strToDate(dataList.get(0).getTime());
+					Date now = new Date();
+					if (now.getTime() - confirmTime.getTime() > 24 * 60 * 60 * 7) {
+						// 送达后7天
+						orderService.confirmOrder(express.getFid());
+					}
+				}
 				break;
 //			case 6:
 //				Order record = new Order();
