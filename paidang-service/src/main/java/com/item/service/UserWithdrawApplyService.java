@@ -100,6 +100,7 @@ public class UserWithdrawApplyService {
 		apply.setStatus(0);
 		apply.setCreateAccount(userId.toString());
 		apply.setCreateTime(new Date());
+		userWithdrawApplyMapper.insert(apply);
 		return apply;
 	}
 

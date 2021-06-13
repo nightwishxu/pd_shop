@@ -105,6 +105,7 @@ public class OrgWithdrawApplyService {
 		apply.setStatus(0);
 		apply.setCreateAccount(userId.toString());
 		apply.setCreateTime(new Date());
+		orgWithdrawApplyMapper.insert(apply);
 		return apply;
 	}
 
