@@ -416,6 +416,32 @@ public class ApiHomeController extends ApiBaseController {
     }
 
     /**
+     * 我的默认地址
+     */
+    @ApiOperation(value = "我的默认地址*", notes = "登陆")
+    @RequestMapping(value = "/myDefaultAddress", method = RequestMethod.POST)
+    @ApiMethod(isLogin = true)
+    public AppUserAddress myDefaultAddress(MobileInfo mobileInfo) {
+        UserAddressExample example = new UserAddressExample();
+        example.createCriteria().andUserIdEqualTo(mobileInfo.getUserId());
+        example.setOrderByClause("is_default desc, create_time desc");
+        List<UserAddress> list = userAddressService.selectByExample(example);
+        AppUserAddress record = new AppUserAddress();
+        for (UserAddress ex : list) {
+            if (ex.getIsDefault().intValue() == 1) {
+                record.setId(ex.getId());
+                record.setAddress(ex.getAddress());
+                record.setArea(ex.getArea());
+                record.setIs_default(ex.getIsDefault());
+                record.setName(ex.getUserName());
+                record.setPhone(ex.getPhone());
+            }
+        }
+
+        return record;
+    }
+
+    /**
      * 修改或删除我的地址
      *
      * @param mobileInfo

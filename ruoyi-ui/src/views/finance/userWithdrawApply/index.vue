@@ -146,7 +146,7 @@
       />
 
       <el-table-column
-        label="账户"
+        label="提现账户"
         align="center"
         prop="account"
       />
@@ -155,6 +155,19 @@
         label="金额"
         align="center"
         prop="amount"
+      />
+
+      <el-table-column
+        label="账户余额"
+        align="center"
+        prop="balance"
+      />
+
+      <el-table-column
+        label="收款账户"
+        align="center"
+        prop="tradeType"
+        :formatter="handleTradeType"
       />
       <el-table-column
         label="状态"
@@ -376,6 +389,17 @@ export default {
       }
       return row.hasBack == 1 ? "是" : "否";
     },
+    handleTradeType(row, column) {
+      if (row.tradeType === 1) {
+        return "支付宝";
+      } else if (row.tradeType === 2) {
+        return "微信";
+      } else if (row.tradeType === 2) {
+        return row.bankCardNo + "(" + row.bankCardName + ")"
+      } else {
+        return "--";
+      }
+    },
     chargeStatusBtn(id,status){
        changeState({'id':id,'status':status}).then(response => {
               if (response.code === 200) {
@@ -383,7 +407,7 @@ export default {
                 this.getList();
               }
             });
-    }, 
+    },
     /** 查询机构提现申请列表 */
     getList() {
       this.loading = true;

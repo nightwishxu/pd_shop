@@ -2,6 +2,7 @@ package com.item.service;
 
 import com.base.api.ApiException;
 import com.base.mybatis.plus.EntityWrapper;
+import com.base.util.StringUtil;
 import com.item.dao.model.User;
 import com.paidang.dao.UserWithdrawApplyMapper;
 import com.paidang.dao.model.UserAmountLog;
@@ -84,7 +85,7 @@ public class UserWithdrawApplyService {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public UserWithdrawApply withdrawApply(Integer userId,  BigDecimal amount){
+	public UserWithdrawApply withdrawApply(Integer userId,  BigDecimal amount, Integer type, String bankCardNo, String bankCardName){
 		userService.reSumBalance(userId);
 		User user = userService.selectByPrimaryKey(userId);
 		if (user.getBalance()==null){
@@ -93,13 +94,19 @@ public class UserWithdrawApplyService {
 		if (amount.compareTo(user.getBalance())>0){
 			throw new ApiException(400,"提现金额大于可提现金额");
 		}
+		if (type.intValue() == 10 && (StringUtil.isEmpty(bankCardName) || StringUtil.isEmpty(bankCardNo))) {
+			throw new ApiException(400,"银行卡提现，卡号和银行不能为空");
+		}
 		UserWithdrawApply apply = new UserWithdrawApply();
 		apply.setAmount(amount);
-		apply.setTradeType(10);
+		apply.setTradeType(type);
 		apply.setUserId(userId);
 		apply.setStatus(0);
+		apply.setBankCardName(bankCardName);
+		apply.setBankCardNo(bankCardNo);
 		apply.setCreateAccount(userId.toString());
 		apply.setCreateTime(new Date());
+		userWithdrawApplyMapper.insert(apply);
 		return apply;
 	}
 

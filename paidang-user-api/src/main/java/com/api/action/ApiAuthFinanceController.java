@@ -54,14 +54,18 @@ public class ApiAuthFinanceController {
     @ApiOperation(value = "提现申请",notes="")
     @RequestMapping(value = "/withdraw/apply", method = RequestMethod.POST)
     @ApiMethod(isLogin = true,isPage = false)
-    public Integer withdrawApply(MobileInfo mobileInfo, @ApiParam(value = "提现金额",required = true) BigDecimal amount){
+    public Integer withdrawApply(MobileInfo mobileInfo,
+                                 @ApiParam(value = "提现金额",required = true) BigDecimal amount,
+                                 @ApiParam(value = "提现方式, 1支付宝2微信10银行卡",required = true) Integer type,
+                                 @ApiParam(value = "提现银行账号",required = false) String bankCardNo,
+                                 @ApiParam(value = "提现银行名称",required = false) String bankCardName){
         if (amount==null && amount.compareTo(BigDecimal.ZERO)<=0){
             throw new ApiException(400,"提现金额异常");
         }
         JSONObject ret = authService.isPersonal(mobileInfo.getUserId());
         int code = ret.getInteger("code");
         int orgId = ret.getInteger("org_id");
-        OrgWithdrawApply i = orgWithdrawApplyService.withdrawApply(mobileInfo.getUserId(), orgId, amount);
+        OrgWithdrawApply i = orgWithdrawApplyService.withdrawApply(mobileInfo.getUserId(), orgId, amount, type, bankCardNo, bankCardName);
         orgAmountLogService.saveLog(orgId,mobileInfo.getUserId(),amount,"2","提现申请",i.getId(),null);
         return 1;
     }
