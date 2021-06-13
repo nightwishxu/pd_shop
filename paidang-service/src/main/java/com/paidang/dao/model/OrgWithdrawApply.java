@@ -84,6 +84,22 @@ public class OrgWithdrawApply implements Serializable {
 	 */
 	@ApiModelProperty(value="")
 	@ApiParam(value="")
+	@Column(name = "bank_card_name")
+	private String bankCardName;
+
+	/**
+	 *
+	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
+	@Column(name = "bank_card_no")
+	private String bankCardNo;
+
+	/**
+	 *
+	 */
+	@ApiModelProperty(value="")
+	@ApiParam(value="")
 	@Column(name = "modify_time")
 	private java.util.Date modifyTime;
 
@@ -175,4 +191,19 @@ public class OrgWithdrawApply implements Serializable {
 		return modifyAccount;
 	}
 
+	public String getBankCardName() {
+		return bankCardName;
+	}
+
+	public void setBankCardName(String bankCardName) {
+		this.bankCardName = bankCardName;
+	}
+
+	public String getBankCardNo() {
+		return bankCardNo;
+	}
+
+	public void setBankCardNo(String bankCardNo) {
+		this.bankCardNo = bankCardNo;
+	}
 }

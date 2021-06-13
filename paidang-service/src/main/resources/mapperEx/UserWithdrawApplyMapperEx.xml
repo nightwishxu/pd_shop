@@ -5,10 +5,11 @@
     <result column="userName" property="userName" jdbcType="VARCHAR"></result>
     <result column="nickName" property="nickName" jdbcType="VARCHAR"></result>
     <result column="account" property="account" jdbcType="VARCHAR"></result>
+    <result column="balance" property="balance" jdbcType="DECIMAL"></result>
   </resultMap>
 
   <select id="findList" parameterType="com.paidang.domain.qo.UserWithdrawApplyQo" resultMap="BaseResultMap">
-    select a.*,b.name userName,b.nick_name nickName,b.account from p_org_withdraw_apply a left join b_user b on a.user_id = b.id where 1=1
+    select a.*,b.name userName,b.nick_name nickName,b.balance,b.account from p_org_withdraw_apply a left join b_user b on a.user_id = b.id where 1=1
     <if test="status!=null">
       and a.status = #{status}
     </if>

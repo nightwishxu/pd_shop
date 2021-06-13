@@ -12,6 +12,8 @@
         <result column="create_account" property="createAccount" jdbcType="VARCHAR" />
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
         <result column="modify_account" property="modifyAccount" jdbcType="VARCHAR" />
+        <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR" />
+        <result column="bank_card_name" property="bankCardName" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -75,7 +77,7 @@
     </sql>
 
     <sql id="Base_Column_List" >
-        id,org_id,user_id,amount,status,trade_type,create_time,create_account,modify_time,modify_account
+        id,org_id,user_id,amount,status,trade_type,create_time,create_account,modify_time,modify_account,bank_card_no,bank_card_name
     </sql>
 
     <select id="selectByExample" resultMap="BaseResultMap" >
@@ -116,12 +118,12 @@
         insert into p_org_withdraw_apply (org_id,user_id,
         amount,status,trade_type,
         create_time,create_account,modify_time,
-        modify_account
+        modify_account,bank_card_no,bank_card_name
         )
         values (#{orgId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
         #{amount,jdbcType=DECIMAL},#{status,jdbcType=INTEGER},#{tradeType,jdbcType=INTEGER},
         #{createTime,jdbcType=TIMESTAMP},#{createAccount,jdbcType=VARCHAR},#{modifyTime,jdbcType=TIMESTAMP},
-        #{modifyAccount,jdbcType=VARCHAR}
+        #{modifyAccount,jdbcType=VARCHAR},#{bank_card_no,jdbcType=VARCHAR},#{bank_card_name,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -155,6 +157,12 @@
             <if test="modifyAccount != null" >
                 modify_account,
             </if>
+            <if test="bankCardNo != null" >
+                bank_card_no,
+            </if>
+            <if test="bankCardName != null" >
+                bank_card_name,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="orgId != null" >
@@ -183,6 +191,12 @@
             </if>
             <if test="modifyAccount != null" >
                 #{modifyAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCardName != null" >
+                #{bank_card_name,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCardNo != null" >
+                #{bank_card_no,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

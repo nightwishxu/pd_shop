@@ -3,10 +3,12 @@ package com.paidang.dao;
 import com.base.mybatis.plus.EntityWrapper;
 import com.paidang.dao.model.OrgWithdrawApply;
 import com.paidang.dao.model.OrgWithdrawApplyExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface OrgWithdrawApplyMapper {
 	int countByExample(OrgWithdrawApplyExample example);
 

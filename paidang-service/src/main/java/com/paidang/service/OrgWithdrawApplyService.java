@@ -2,6 +2,7 @@ package com.paidang.service;
 
 import com.base.api.ApiException;
 import com.base.mybatis.plus.EntityWrapper;
+import com.base.util.StringUtil;
 import com.item.service.OrgAmountLogService;
 import com.paidang.dao.OrgWithdrawApplyMapper;
 import com.paidang.dao.model.OrgWithdrawApply;
@@ -88,7 +89,7 @@ public class OrgWithdrawApplyService {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public OrgWithdrawApply withdrawApply(Integer userId,Integer orgId, BigDecimal amount){
+	public OrgWithdrawApply withdrawApply(Integer userId,Integer orgId, BigDecimal amount, Integer type, String bankCardNo, String bankCardName){
 		pawnOrgService.reSumAmount(orgId);
 		PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
 		if (pawnOrg.getAmount()==null){
@@ -97,12 +98,19 @@ public class OrgWithdrawApplyService {
 		if (amount.compareTo(pawnOrg.getAmount())>0){
 			throw new ApiException(400,"提现金额大于可提现金额");
 		}
+
+		if (type.intValue() == 10 && (StringUtil.isEmpty(bankCardName) || StringUtil.isEmpty(bankCardNo))) {
+			throw new ApiException(400,"银行卡提现，卡号和银行不能为空");
+		}
+
 		OrgWithdrawApply apply = new OrgWithdrawApply();
 		apply.setOrgId(orgId);
 		apply.setAmount(amount);
-		apply.setTradeType(10);
+		apply.setTradeType(type);
 		apply.setUserId(userId);
 		apply.setStatus(0);
+		apply.setBankCardName(bankCardName);
+		apply.setBankCardNo(bankCardNo);
 		apply.setCreateAccount(userId.toString());
 		apply.setCreateTime(new Date());
 		orgWithdrawApplyMapper.insert(apply);

@@ -2,6 +2,8 @@ package com.paidang.daoEx.model;
 
 import com.paidang.dao.model.UserWithdrawApply;
 
+import java.math.BigDecimal;
+
 /**
 @author sun
 */
@@ -11,6 +13,8 @@ public class UserWithdrawApplyEx extends UserWithdrawApply {
 	private String nickName;
 
 	private String account;
+
+	private BigDecimal balance;
 
     public String getUserName() {
         return userName;
@@ -34,5 +38,13 @@ public class UserWithdrawApplyEx extends UserWithdrawApply {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }
