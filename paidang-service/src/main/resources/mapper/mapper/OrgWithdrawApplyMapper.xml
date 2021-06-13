@@ -123,7 +123,7 @@
         values (#{orgId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
         #{amount,jdbcType=DECIMAL},#{status,jdbcType=INTEGER},#{tradeType,jdbcType=INTEGER},
         #{createTime,jdbcType=TIMESTAMP},#{createAccount,jdbcType=VARCHAR},#{modifyTime,jdbcType=TIMESTAMP},
-        #{modifyAccount,jdbcType=VARCHAR},#{bank_card_no,jdbcType=VARCHAR},#{bank_card_name,jdbcType=VARCHAR}
+        #{modifyAccount,jdbcType=VARCHAR},#{bankCardNo,jdbcType=VARCHAR},#{bankCardName,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -193,10 +193,10 @@
                 #{modifyAccount,jdbcType=VARCHAR},
             </if>
             <if test="bankCardName != null" >
-                #{bank_card_name,jdbcType=VARCHAR},
+                #{bankCardName,jdbcType=VARCHAR},
             </if>
             <if test="bankCardNo != null" >
-                #{bank_card_no,jdbcType=VARCHAR},
+                #{bankCardNo,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
