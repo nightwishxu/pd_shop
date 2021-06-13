@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -71,5 +72,46 @@ public class PawnWechatService
             logger.error("pawnWechat kdSave param:{},error:{}",JSONUtils.serialize(map),e);
             return null;
         }
+    }
+
+
+    public  List<Map> findPawnList(String userGoodsIds){
+        Map<String,Object> map = Maps.newHashMap();
+        try {
+            String response = HttpUtil.createPost(CoreConstants.PAWN_WECHAT_URL + "/pawn/app/mini/project/pawnList/find?userGoodsIds="+userGoodsIds)
+                    .execute().body();
+            logger.info("pawnWechat  findPawnList param:{},result:{}",userGoodsIds,response);
+            if (StringUtils.isBlank(response)){
+                return null;
+            }
+
+            Map result = JSONUtils.deserialize(response, Map.class);
+            if (result.get("code").equals(0)){
+                List<Map> mapList  = (List<Map>)result.get("data");
+                return mapList;
+
+            }else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("pawnWechat findPawnList param:{},error:{}",JSONUtils.serialize(map),e);
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        Map<String,Object> map = Maps.newHashMap();
+            String userGoodsIds = "3688,3689";
+            String response = HttpUtil.createPost("http://180.76.186.228:8080" + "/pawn/app/mini/project/pawnList/find?userGoodsIds="+userGoodsIds)
+                    .execute().body();
+            if (StringUtils.isBlank(response)){
+
+            }
+
+
+
+
     }
 }

@@ -426,4 +426,9 @@ ORDER BY
 
     </select>
 
+
+    <select id="findUserGoodsIds" resultType="java.lang.String">
+        select id from p_user_goods where user_id =#{userId} and is_verify=1 and post_state>1
+    </select>
+
 </mapper>

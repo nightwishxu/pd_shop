@@ -52,5 +52,6 @@ public interface UserGoodsMapperEx {
 
     UserGoodsEx getById(Integer id);
 
+    List<String> findUserGoodsIds(@Param("userId")Integer userId);
 
 }

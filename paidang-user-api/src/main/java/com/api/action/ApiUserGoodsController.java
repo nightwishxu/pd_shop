@@ -39,10 +39,7 @@ import com.item.service.CodeService;
 import com.item.service.FocusService;
 import com.item.service.UserService;
 import com.paidang.dao.model.*;
-import com.paidang.daoEx.model.CommentEx;
-import com.paidang.daoEx.model.GoodsEx;
-import com.paidang.daoEx.model.PawnOrgEx;
-import com.paidang.daoEx.model.UserGoodsEx;
+import com.paidang.daoEx.model.*;
 import com.paidang.domain.qo.OrderQo;
 import com.paidang.service.*;
 import com.ruoyi.common.core.domain.Ret;
@@ -971,6 +968,27 @@ public class ApiUserGoodsController extends ApiBaseController {
             DecimalFormat testPrice = new DecimalFormat("#.00");
             ret.setMsg(testPrice.format(price1));
 
+            userGoods.setImages(images);
+            userGoods.setUserId(mobileInfo.getUserId());
+            userGoods.setBelongId(mobileInfo.getUserId());
+            userGoods.setBelongType(1);
+            userGoods.setLocation(0);
+            //userGoods.setPostState(-1);
+            userGoods.setPostState(1);
+            userGoods.setGotoPawn(0);
+            userGoods.setContent(content);
+            userGoods.setBackState(0);
+            userGoods.setAuthResult(0);
+            userGoods.setGoSell(0);
+            userGoods.setCateCode(pawnCate.getCode());
+            userGoods.setCateId(pawnCate.getId());
+            userGoods.setAuthenticateRequire(authenticateRequire);
+            userGoods.setVideo(video);
+            userGoods.setIsVerify(0);
+            userGoods.setIsRedeem(0);
+            userGoods.setCreateTime(new Date());
+            int result = userGoodsService.insert(userGoods);
+
 
         }else if(MGoodsCateList.gjs.code.equals(pawnCate.getCode())){
             //在线鉴定出价格--黄金
@@ -1005,6 +1023,27 @@ public class ApiUserGoodsController extends ApiBaseController {
             Double price1 = Double.parseDouble(code2.getValue())*Double.parseDouble(weigth)*Double.parseDouble(cd);
             DecimalFormat testPrice = new DecimalFormat("#.00");
             ret.setMsg(testPrice.format(price1));
+
+            userGoods.setImages(images);
+            userGoods.setUserId(mobileInfo.getUserId());
+            userGoods.setBelongId(mobileInfo.getUserId());
+            userGoods.setBelongType(1);
+            userGoods.setLocation(0);
+            //userGoods.setPostState(-1);
+            userGoods.setPostState(1);
+            userGoods.setGotoPawn(0);
+            userGoods.setContent(content);
+            userGoods.setBackState(0);
+            userGoods.setAuthResult(0);
+            userGoods.setGoSell(0);
+            userGoods.setCateCode(pawnCate.getCode());
+            userGoods.setCateId(pawnCate.getId());
+            userGoods.setAuthenticateRequire(authenticateRequire);
+            userGoods.setVideo(video);
+            userGoods.setIsVerify(0);
+            userGoods.setIsRedeem(0);
+            userGoods.setCreateTime(new Date());
+            int result = userGoodsService.insert(userGoods);
 
 
         }else if(MGoodsCateList.qt.code.equals(pawnCate.getCode()) ||
@@ -1717,7 +1756,18 @@ public class ApiUserGoodsController extends ApiBaseController {
             }else if (userGoods.getPostState()!=null && (userGoods.getPostState()==2 || userGoods.getPostState()==3 || userGoods.getPostState()==4)){
                 certificate.setPrice(userGoods.getAuthPrice());
             }
-            return certificate;
+            List<Map> pawnList = pawnWechatService.findPawnList(String.valueOf(id));
+
+            CertificateEx result = new CertificateEx();
+            BeanUtils.copyProperties(certificate,result);
+            if (CollectionUtils.isNotEmpty(pawnList)){
+                Map map = pawnList.get(0);
+                result.setTwoFFile((String)map.getOrDefault("twoFFile",""));
+                result.setTwoZFile((String)map.getOrDefault("twoZFile",""));
+                result.setThreeFFile((String)map.getOrDefault("threeFFile",""));
+                result.setThreeZFile((String)map.getOrDefault("threeZFile",""));
+            }
+            return result;
         }
         return null;
     }
@@ -1798,7 +1848,6 @@ public class ApiUserGoodsController extends ApiBaseController {
             flag = true;
             temp.setId(certificate.getUserGoodsId());
             temp.setAuthPrice(certificate.getAuthPrice());
-
         }
         if(StringUtils.isNotBlank(certificate.getAppraisalDsc()) || certificate.getAuthResult()!=null){
             flag = true;
@@ -1810,5 +1859,24 @@ public class ApiUserGoodsController extends ApiBaseController {
         }
 
         return ok();
+    }
+
+    @PostMapping("/pawn/list")
+    @ApiMethod( isLogin = false)
+    public Object pawnList(MobileInfo mobileInfo){
+        List<String> userGoodsIds = userGoodsService.findUserGoodsIds(mobileInfo.getUserId());
+        if (CollectionUtils.isEmpty(userGoodsIds)){
+            return ok();
+        }
+        List<Map> pawnList = pawnWechatService.findPawnList(String.join(",", userGoodsIds));
+        return pawnList;
+    }
+
+    @RequestMapping("/pdfUrl/get")
+    public Result viewPdf(MobileInfo mobileInfo,String fileId){
+        if (StringUtils.isBlank(fileId)){
+            return null;
+        }
+        return new Result(CoreConstants.PAWN_WECHAT_URL+ "pawn/sys/file/viewPDF/"+ fileId);
     }
 }

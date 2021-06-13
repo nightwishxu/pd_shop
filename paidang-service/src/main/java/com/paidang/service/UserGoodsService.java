@@ -6,6 +6,7 @@ import java.util.Map;
 import com.paidang.daoEx.UserGoodsMapperEx;
 import com.paidang.daoEx.model.UserGoodsEx;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -149,6 +150,10 @@ public class UserGoodsService {
 	}
 	public UserGoodsEx getById(Integer id){
 		return userGoodsMapperEx.getById(id);
+	}
+
+	public List<String> findUserGoodsIds(Integer userId){
+		return userGoodsMapperEx.findUserGoodsIds(userId);
 	}
 
 }
