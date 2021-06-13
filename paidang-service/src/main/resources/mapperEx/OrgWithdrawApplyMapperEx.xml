@@ -9,7 +9,11 @@
   </resultMap>
 
   <select id="findList" parameterType="com.paidang.domain.qo.OrgWithdrawApplyQo" resultMap="BaseResultMap">
-    select a.*,b.name orgName,b.account,b.amount from p_org_withdraw_apply a left join p_pawn_org b on a.org_id = b.id where 1=1
+    select a.*,b.name orgName,u.account,b.amount
+    from p_org_withdraw_apply a
+        left join p_pawn_org b on a.org_id = b.id
+        left join b_user u on u.id=a.user_id
+    where 1=1
     <if test="status!=null">
       and a.status = #{status}
     </if>
