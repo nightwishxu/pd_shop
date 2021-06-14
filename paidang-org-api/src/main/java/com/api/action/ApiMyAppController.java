@@ -1955,7 +1955,7 @@ public class ApiMyAppController extends ApiBaseController{
         }
         List<Express> expresses = expressService.selectByExampleWithBLOBs(example);
         if (CollectionUtils.isNotEmpty(expresses)){
-            return expresses.get(0);
+            return expressService.checkUp(expresses.get(0));
         }else{
             throw new ApiException(400,"物流信息不存在");
         }

@@ -17,10 +17,11 @@ public class ExpressTask {
     private ExpressService expressService;
 
     /**
-     * 定时查询快递(每10分钟执行一次)
+     * 定时查询快递(每1小时执行一次)
      */
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "0 0 */1 * * ?")
     public void query(){
+        // 2021年6月14日 改为每1小时执行一次
         logger.debug("查询快递");
         logger.info("定时任务-ExpressCancle开始" );
         expressService.queryAuto();

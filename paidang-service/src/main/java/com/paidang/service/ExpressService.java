@@ -19,6 +19,7 @@ import com.paidang.daoEx.model.ExpressEx;
 import com.util.PaidangConst;
 import com.util.express.KuaidiApiUtil;
 import com.util.express.core.KuaidiResult;
+import org.apache.commons.math3.analysis.function.Exp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -111,16 +112,52 @@ public class ExpressService {
 		return this.expressMapper.selectByExample(example);
 	}
 
+	public Express checkUp(Express express) {
+		// 实时点击查询，根据上次 查询时间，10分钟以上才需要去查询kuaidi100接口
+		Date now = new Date();
+		Date modifyTime = express.getModifyTime();
+		long times = modifyTime == null ? 0 : modifyTime.getTime() - now.getTime();
+		if(StringUtil.isNotBlank(express.getExpressCode()) && (times == 0 || times > 10 * 1000 * 60)) {
+			LogKit.info("checkUp：物流单号--" + express.getExpressCode());
+			KuaidiResult result = KuaidiApiUtil.query(express.getExpressCode());
+			LogKit.info("checkUp：物流单号--" + express.getExpressCode() + ",物流查询结果：" + result);
+			express.setModifyTime(new Date());
+			if (result != null) {
+				express.setExpressState(result.getState());
+				express.setExpressData(result.toString());
+				if (result.getState() == 3) {
+					//已签收
+					expressOk(express);
+				}
+			}
+			//更新快递状态
+			expressMapper.updateByPrimaryKeySelective(express);
+		}
+		return express;
+	}
+
 	/**
 	 * 定时查询
 	 */
 	public void queryAuto(){
+		// 2021年6月14日 增加临时存储，防止同一个单号反复查询
+		Map<String, KuaidiResult> map = new HashMap<>();
 		List<Express> expresses = this.selectUnReceive();
 		for (Express express : expresses){
 			//以下一句add by laria at 20190927
-			if(StringUtil.isNotBlank(express.getExpressCode())){
+			Date now = new Date();
+			Date modifyTime = express.getModifyTime();
+			long times = modifyTime == null ? 0 : modifyTime.getTime() - now.getTime();
+			// 2021年6月14日 增加10分钟更新判断，避免10分钟内重复查询超限
+			if(StringUtil.isNotBlank(express.getExpressCode()) && (times == 0 || times > 10 * 1000 * 60)){
 				LogKit.info("定时任务-ExpressCancle：物流单号--"+express.getExpressCode() );
-				KuaidiResult result = KuaidiApiUtil.query(express.getExpressCode());
+				KuaidiResult result;
+				if (map.containsKey(express.getExpressCode())) {
+					result = map.get(express.getExpressCode());
+				} else {
+					result = KuaidiApiUtil.query(express.getExpressCode());
+					map.put(express.getExpressCode(), result);
+				}
 				LogKit.info("定时任务-ExpressCancle：物流单号--"+express.getExpressCode() + ",物流查询结果："+ result);
 				express.setModifyTime(new Date());
 				if (result != null){
