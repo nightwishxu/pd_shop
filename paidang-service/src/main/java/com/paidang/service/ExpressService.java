@@ -195,7 +195,7 @@ public class ExpressService {
 					});
 					Date confirmTime = DateUtil.strToDate(dataList.get(0).getTime());
 					Date now = new Date();
-					if (now.getTime() - confirmTime.getTime() > 24 * 60 * 60 * 7) {
+					if (now.getTime() - confirmTime.getTime() > 24 * 60 * 60 * 7 * 1000) {
 						// 送达后7天
 						orderService.confirmOrder(express.getFid());
 					}
