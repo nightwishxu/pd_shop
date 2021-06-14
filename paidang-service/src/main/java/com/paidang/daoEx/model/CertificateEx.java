@@ -17,6 +17,14 @@ public class CertificateEx extends Certificate {
 
     private List<CertificateLog> list;
 
+    private String twoFFile;
+
+    private String twoZFile;
+
+    private String threeFFile;
+
+    private String threeZFile;
+
     public String getRecordTime() {
         return recordTime;
     }
@@ -39,5 +47,38 @@ public class CertificateEx extends Certificate {
 
     public void setList(List<CertificateLog> list) {
         this.list = list;
+    }
+
+
+    public String getTwoFFile() {
+        return twoFFile;
+    }
+
+    public void setTwoFFile(String twoFFile) {
+        this.twoFFile = twoFFile;
+    }
+
+    public String getTwoZFile() {
+        return twoZFile;
+    }
+
+    public void setTwoZFile(String twoZFile) {
+        this.twoZFile = twoZFile;
+    }
+
+    public String getThreeFFile() {
+        return threeFFile;
+    }
+
+    public void setThreeFFile(String threeFFile) {
+        this.threeFFile = threeFFile;
+    }
+
+    public String getThreeZFile() {
+        return threeZFile;
+    }
+
+    public void setThreeZFile(String threeZFile) {
+        this.threeZFile = threeZFile;
     }
 }
