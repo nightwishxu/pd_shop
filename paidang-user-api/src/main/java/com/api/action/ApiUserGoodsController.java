@@ -1684,7 +1684,7 @@ public class ApiUserGoodsController extends ApiBaseController {
     @ApiOperation(value="生成分享文字", notes = "不登录")
     @RequestMapping("/getShareText")
     @ApiMethod(isPage = false, isLogin = false)
-    public String getShareText(@ApiParam(value="id",required = true)Integer id,
+    public Result getShareText(@ApiParam(value="id",required = true)Integer id,
                                @ApiParam(value="type 1新品2绝当",required = true)Integer type){
         String name;
         Goods goods=goodsService.selectByPrimaryKey(id);
@@ -1697,13 +1697,13 @@ public class ApiUserGoodsController extends ApiBaseController {
         }
         String strFromNum= new String(chars);
         String text="【"+name+"】复制这段描述￥"+strFromNum+"￥后打开蚌蚌拍当";
-        return JSONUtils.serialize(text);
+        return new Result(text);
     }
 
     @ApiOperation(value="获取分享详情", notes = "不登录")
     @RequestMapping("/getShareInfo")
     @ApiMethod(isPage = false, isLogin = false)
-    public String getShareInfo(@ApiParam(value="id",required = true)String id){
+    public Goods getShareInfo(@ApiParam(value="id",required = true)String id){
         if(StringUtil.isBlank(id)){
             throw new ApiException(1001,"参数错误");
         }
@@ -1723,7 +1723,7 @@ public class ApiUserGoodsController extends ApiBaseController {
         }
         Integer goodsId=Integer.parseInt(StringUtils.join(realId));
         Goods goods=goodsService.selectByPrimaryKey(goodsId);
-        return JSONUtils.serialize(goods);
+        return goods;
 
 
     }
