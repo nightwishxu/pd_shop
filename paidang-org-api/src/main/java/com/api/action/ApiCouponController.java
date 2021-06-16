@@ -83,11 +83,17 @@ public class ApiCouponController {
                 }
 
             }
-            int id = couponService.insertCoupon(coupon);
             if (coupon.getForm().intValue() == 1) {
                 User user = userService.selectByAccount(coupon.getPhone());
-                coupon.setId(id);
-                bindByUser(user.getId(), coupon);
+                if (user != null) {
+                    int id = couponService.insertCoupon(coupon);
+                    coupon.setId(id);
+                    bindByUser(user.getId(), coupon);
+                } else {
+                    throw new ApiException("手机号不存在");
+                }
+            } else {
+                couponService.insertCoupon(coupon);
             }
         } else {
             throw new ApiException("不允许修改");

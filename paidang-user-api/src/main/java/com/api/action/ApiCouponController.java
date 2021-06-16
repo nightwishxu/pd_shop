@@ -47,6 +47,114 @@ public class ApiCouponController {
     @Autowired
     private UserService userService;
 
+
+
+    // 商户优惠券相关接口
+
+    @ApiOperation(value = "店铺查看优惠券")
+    @ApiMethod(isLogin = true)
+    @GetMapping("/list")
+    @ResponseBody
+    public List<CouponExList> list(@ApiParam(required = true, name = "type", value = "0发放中，1停用") Integer type, MobileInfo mobileInfo) {
+        PawnOrg pawnOrg = findByMobileInfo(mobileInfo);
+        Map<String ,Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("org_id", pawnOrg.getId());
+        List<CouponExList> list = couponService.selectByType(map);
+        list.forEach(item -> {
+            item.setBindNum(userCouponService.countByParam(1, item.getId()));
+            item.setUsedNum(userCouponService.countByParam(0, item.getId()));
+        });
+        return list;
+    }
+
+
+    @ApiOperation(value = "创建优惠券")
+    @ApiMethod(isLogin = true)
+    @PostMapping("/save")
+    @ResponseBody
+    public int save(MobileInfo mobileInfo, Coupon coupon) {
+        if (coupon.getId() == null) {
+            PawnOrg pawnOrg = findByMobileInfo(mobileInfo);
+            coupon.setStatus(0);
+            coupon.setOrgId(pawnOrg.getId());
+            coupon.setOrgName(pawnOrg.getName());
+            coupon.setCreateTime(new Date());
+            if (coupon.getForm().intValue() == 1) {
+                // 私密券
+                if (StringUtil.isEmpty(coupon.getPhone())) {
+                    throw new ApiException("私密券，输入手机号");
+                }
+
+            }
+            if (coupon.getForm().intValue() == 1) {
+                User user = userService.selectByAccount(coupon.getPhone());
+                if (user != null) {
+                    int id = couponService.insertCoupon(coupon);
+                    coupon.setId(id);
+                    bindByUser(user.getId(), coupon);
+                } else {
+                    throw new ApiException("手机号不存在");
+                }
+            } else {
+                couponService.insertCoupon(coupon);
+            }
+        } else {
+            throw new ApiException("不允许修改");
+        }
+        return 1;
+    }
+
+    @ApiOperation(value = "追加张数")
+    @ApiMethod(isLogin = true)
+    @PutMapping("/addMore")
+    @ResponseBody
+    public int addMore(MobileInfo mobileInfo,
+                       @ApiParam(name = "id", value = "优惠券id", required = true) Integer id,
+                       @ApiParam(name = "num", value = "追加的数量", required = true) Integer num) {
+        Coupon coupon = couponService.selectCouponById(id);
+        checkOrg(findByMobileInfo(mobileInfo), coupon);
+        coupon.setNum(coupon.getNum() + num);
+        couponService.updateCoupon(coupon);
+        return 1;
+    }
+
+    @ApiOperation(value = "停用")
+    @PutMapping("/stop")
+    @ApiMethod(isLogin = true)
+    @ResponseBody
+    public int stop(@ApiParam(name = "id", value = "优惠券id", required = true) Integer id,
+                    MobileInfo mobileInfo) {
+        Coupon coupon = couponService.selectCouponById(id);
+        checkOrg(findByMobileInfo(mobileInfo), coupon);
+        coupon.setStatus(1);
+        couponService.updateCoupon(coupon);
+        return 1;
+    }
+
+    // 商户优惠券相关接口 end
+
+    private void checkOrg(PawnOrg org, Coupon coupon) {
+        if (coupon.getOrgId().intValue() != org.getId().intValue()) {
+            throw new ApiException("与此优惠券商户不符，不允许修改");
+        }
+    }
+
+    private PawnOrg findByMobileInfo(MobileInfo info) {
+        User user = userService.selectByPrimaryKey(info.getUserId());
+        if (user == null) {
+            throw new ApiException("账号不存在");
+        } else if (user.getOrgId() == null){
+            throw new ApiException("非商户账户");
+        } else {
+            PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(user.getOrgId());
+            if (pawnOrg == null) {
+                throw new ApiException("商户不存在");
+            }
+            return pawnOrg;
+        }
+    }
+
     /**
      * 我的优惠券相关接口
      */
