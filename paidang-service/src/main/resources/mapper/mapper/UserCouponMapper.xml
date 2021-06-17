@@ -112,6 +112,10 @@
             <include refid="Example_Where_Clause" />
         </if>
     </delete>
+    <delete id="deleteByCouponId">
+        delete from p_user_coupon
+        where coupon_id = #{couponId}
+    </delete>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
         insert into p_user_coupon (user_id,coupon_id,

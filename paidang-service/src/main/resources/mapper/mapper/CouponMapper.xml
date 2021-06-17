@@ -59,7 +59,7 @@
         </where>
     </select>
 
-    <select id="selectCouponById" parameterType="Long" resultMap="CouponResult">
+    <select id="selectCouponById" parameterType="Integer" resultMap="CouponResult">
         <include refid="selectCouponVo"/>
         where id = #{id}
     </select>
@@ -127,7 +127,7 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteCouponById" parameterType="Long">
+    <delete id="deleteCouponById" parameterType="Integer">
         delete from p_coupon where id = #{id}
     </delete>
 

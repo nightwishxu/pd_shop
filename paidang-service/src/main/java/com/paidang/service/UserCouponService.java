@@ -75,4 +75,8 @@ public class UserCouponService {
 	public List<UserCoupon> selectByCouponIdAndUserId(Integer userId, Integer couponId) {
 		return this.userCouponMapper.selectByCouponIdAndUserId(userId, couponId);
 	}
+
+	public void deleteByCouponId(Integer couponId) {
+		this.userCouponMapper.deleteByCouponId(couponId);
+	}
 }

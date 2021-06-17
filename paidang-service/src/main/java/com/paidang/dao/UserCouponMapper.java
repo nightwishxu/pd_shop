@@ -32,5 +32,7 @@ public interface UserCouponMapper {
 
 	int countByParam(@Param("state") Integer state, @Param("coupon_id") Integer couponId);
 
-	List<UserCoupon> selectByCouponIdAndUserId(@Param("userId") Integer userId, @Param("coupon_id") Integer couponId);
+	List<UserCoupon> selectByCouponIdAndUserId(@Param("userId") Integer userId, @Param("couponId") Integer couponId);
+
+	void deleteByCouponId(@Param("couponId") Integer couponId);
 }

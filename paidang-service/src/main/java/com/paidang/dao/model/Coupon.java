@@ -10,6 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 /**
@@ -107,11 +108,20 @@ public class Coupon extends BaseEntity {
 	@ApiParam(value="私密券用户手机号")
 	private String phone;
 
+	@Transient
 	private String today;
 
+	@Transient
 	private Integer userId;
 
+	@Transient
 	private Integer userState;
+
+	@Transient
+	private String startDayStr;
+
+	@Transient
+	private String endDayStr;
 
 	public void setId(Integer id)
 	{
@@ -302,5 +312,21 @@ public class Coupon extends BaseEntity {
 
 	public void setUserState(Integer userState) {
 		this.userState = userState;
+	}
+
+	public String getStartDayStr() {
+		return startDayStr;
+	}
+
+	public void setStartDayStr(String startDayStr) {
+		this.startDayStr = startDayStr;
+	}
+
+	public String getEndDayStr() {
+		return endDayStr;
+	}
+
+	public void setEndDayStr(String endDayStr) {
+		this.endDayStr = endDayStr;
 	}
 }
