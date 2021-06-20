@@ -83,6 +83,9 @@ public class ApiStoreController extends ApiBaseController {
     @Autowired
     private UserReportService userReportService;
 
+    @Autowired
+    private CouponService couponService;
+
 
     public enum MStoreGoodsCateList {
         zb("1","钟表","0"),
@@ -465,6 +468,31 @@ public class ApiStoreController extends ApiBaseController {
         return list2;
     }
 
+
+
+    @ApiOperation(value = "根据商品查询我已有的满足条件的优惠券")
+    @RequestMapping("/goodsCoupon")
+    @ApiMethod(isLogin = true)
+    public List<Coupon> goodsCoupon(@ApiParam(value="id",required = true) Integer id,MobileInfo mobileInfo){
+        Goods ex = goodsService.selectByPrimaryKey(id);
+        Coupon coupon = new Coupon();
+        coupon.setStatus(0);
+        coupon.setOrgId(ex.getOrgId());
+        coupon.setToday(DateUtil.dateToStr(new Date(), "yyyy-MM-dd"));
+        coupon.setUserId(mobileInfo.getUserId());
+        coupon.setUserState(0);
+        List<Coupon> list = couponService.selectCouponList(coupon);
+        List<Coupon> result = new ArrayList<>();
+        for (Coupon coup : list) {
+            if (coup.getFull().doubleValue() <= ex.getPrice().doubleValue()) {
+                // 价格大于满减额加入结果集
+                result.add(coup);
+            }
+        }
+        return result;
+    }
+
+
     @ApiOperation(value = "物品详情", notes = "不需要登录")
     @RequestMapping("/goodsDetail")
     @ApiMethod(isLogin = false)
@@ -520,6 +548,27 @@ public class ApiStoreController extends ApiBaseController {
             appStoreGoodsDetail.setOrgLabelsInfo(orgLabelsInfo);
         }
 
+        /**
+         * 查询当前商品满足的优惠券，最高满减
+         */
+        Coupon coupon = new Coupon();
+        coupon.setOrgId(ex.getOrgId());
+        coupon.setStatus(0);
+        coupon.setToday(DateUtil.dateToStr(new Date(), "yyyy-MM-dd"));
+        List<Coupon> couponList = couponService.selectCouponList(coupon);
+
+        if (couponList != null && couponList.size() > 0) {
+            BigDecimal value = BigDecimal.ZERO;
+            for (Coupon coup : couponList) {
+                if (ex.getPrice().doubleValue() >= coup.getFull().doubleValue()) {
+                    value = coup.getValue().doubleValue() > value.doubleValue() ? coup.getValue() : value;
+                }
+            }
+            appStoreGoodsDetail.setMostDiscount(value);
+        }
+        /**
+         * 查询当前商品满足的优惠券，最高满减 end
+         */
 
         if (ex.getDealType()!=null &&  ex.getDealType()==2 && ex.getAuctionOnlineLogId()!=null){
             Map<String, Object> map = new HashMap<String, Object>();

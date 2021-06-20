@@ -43,12 +43,12 @@
             <if test="fid != null "> and fid = #{fid}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="today != null">
-                <![CDATA[ and start_day <= #{today} and endDay >= #{today} ]]>
+                <![CDATA[ and start_day <= #{today} and end_day >= #{today} ]]>
             </if>
             <if test="userId != null">
                 <if test="userState == null or userState == 0 or userState == 2">
                     and exists(select p.coupon_id from p_user_coupon p where p.user_id=#{userId} and p.coupon_id=pc.id and p.`state`=1)
-                    <if test="serState != null and userState == 2">
+                    <if test="userState != null and userState == 2">
                         <![CDATA[ and endDay < now() ]]>
                     </if>
                 </if>

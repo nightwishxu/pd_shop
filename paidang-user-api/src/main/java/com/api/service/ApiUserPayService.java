@@ -450,7 +450,7 @@ public class ApiUserPayService {
             //没有优惠券
             finalPrice = goodsPridce;
         }else{
-            finalPrice = goodsPridce.subtract(userCoupon.getFull());
+            finalPrice = goodsPridce.subtract(userCoupon.getValue());
         }
         order.setPrice(finalPrice);
         order.setState(1);
@@ -464,7 +464,8 @@ public class ApiUserPayService {
         order.setRefState(0);
         order.setCommentState(0);
         if(null != userCoupon){
-            order.setCouponValue(userCoupon.getFull());
+            order.setCouponValue(userCoupon.getValue());
+            order.setCouponInfo("满" + userCoupon.getFull() + "减" + userCoupon.getValue());
         }
         order.setCouponId(couponId);
         order.setIsDel(0);
@@ -487,6 +488,7 @@ public class ApiUserPayService {
         //优惠券不可用
         if(null != userCoupon){
             userCoupon.setState(0);
+            userCoupon.setUseTime(new Date());
             int result3 = userCouponService.updateByPrimaryKeySelective(userCoupon);
             if(0 == result3){
                 throw new ApiException(MEnumError.SERVER_BUSY_ERROR);

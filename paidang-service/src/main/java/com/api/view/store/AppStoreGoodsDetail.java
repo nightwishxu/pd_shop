@@ -8,6 +8,7 @@ import com.paidang.daoEx.model.GoodsAuctionEx;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -195,6 +196,10 @@ public class AppStoreGoodsDetail {
 
 	@ApiModelProperty(value = "用户是否关注 1关注 0未关注")
 	private Integer isFollow;
+
+
+	@Transient
+	private BigDecimal mostDiscount;
 
 	public String getBannerVideo() {
 		return bannerVideo;
@@ -697,6 +702,14 @@ public class AppStoreGoodsDetail {
 
 	public void setIsFollow(Integer isFollow) {
 		this.isFollow = isFollow;
+	}
+
+	public BigDecimal getMostDiscount() {
+		return mostDiscount;
+	}
+
+	public void setMostDiscount(BigDecimal mostDiscount) {
+		this.mostDiscount = mostDiscount;
 	}
 }
 
