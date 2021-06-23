@@ -47,9 +47,9 @@
     a.*,
     u.nick_name as nickName,
     u.head_img headImg,
-    (select count(1) from t_user_report where article_id = a.id and status!=0) userReportStatus
+    (select count(1) from t_user_report where target_id = a.id and type =1 and status!=0) userReportStatus
     from t_article a LEFT JOIN  b_user u on a.user_id = u.id
-    LEFT JOIN  t_user_report c on a.id =c.article_id
+    LEFT JOIN  t_user_report c on a.id =c.target_id
     where a.status!=0
     <if test="id!=null">
       and a.id=#{id}
@@ -226,7 +226,7 @@
     <if test="endTime!=null">
       and a.create_time &lt;=#{endTime}
     </if>
-    ORDER  by a.sort desc,a.create_time desc limit 4
+    ORDER  by a.sort desc,a.create_time desc limit 3
   </select>
 
   <select id="recommendList" resultType="com.paidang.daoEx.model.ArticleEx">
