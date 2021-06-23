@@ -104,9 +104,9 @@ public class ExpressService {
 	public List<Express> selectUnReceive(){
 		ExpressExample example = new ExpressExample();
 		//example.or().andExpressStateNotBetween(3,4).andModifyTimeLessThanOrEqualTo(DateUtil.addMinute(new Date(),-PaidangConst.EXPRESS_QUERY_TIME));
-		example.or().andExpressStateNotBetween(3,4)
-				.andModifyTimeGreaterThanOrEqualTo(DateUtil.addMinute(new Date(),-PaidangConst.EXPRESS_QUERY_TIME))
-				.andModifyTimeLessThanOrEqualTo(new Date());
+		example.or().andExpressStateNotBetween(3,4);
+//				.andModifyTimeGreaterThanOrEqualTo(DateUtil.addMinute(new Date(),-PaidangConst.EXPRESS_QUERY_TIME))
+//				.andModifyTimeLessThanOrEqualTo(new Date());
 		example.or().andExpressStateNotBetween(3,4).andModifyTimeIsNull();
 		example.setOrderByClause("create_time desc");
 		return this.expressMapper.selectByExample(example);
@@ -116,7 +116,7 @@ public class ExpressService {
 		// 实时点击查询，根据上次 查询时间，10分钟以上才需要去查询kuaidi100接口
 		Date now = new Date();
 		Date modifyTime = express.getModifyTime();
-		long times = modifyTime == null ? 0 : modifyTime.getTime() - now.getTime();
+		long times = modifyTime == null ? 0 : now.getTime() - modifyTime.getTime();
 		if(StringUtil.isNotBlank(express.getExpressCode()) && (times == 0 || times > 10 * 1000 * 60)) {
 			LogKit.info("checkUp：物流单号--" + express.getExpressCode());
 			KuaidiResult result = KuaidiApiUtil.query(express.getExpressCode());
@@ -147,7 +147,7 @@ public class ExpressService {
 			//以下一句add by laria at 20190927
 			Date now = new Date();
 			Date modifyTime = express.getModifyTime();
-			long times = modifyTime == null ? 0 : modifyTime.getTime() - now.getTime();
+			long times = modifyTime == null ? 0 : now.getTime() - modifyTime.getTime();
 			// 2021年6月14日 增加10分钟更新判断，避免10分钟内重复查询超限
 			if(StringUtil.isNotBlank(express.getExpressCode()) && (times == 0 || times > 10 * 1000 * 60)){
 				LogKit.info("定时任务-ExpressCancle：物流单号--"+express.getExpressCode() );

@@ -19,7 +19,7 @@ public class ExpressTask {
     /**
      * 定时查询快递(每1小时执行一次)
      */
-    @Scheduled(cron = "0 0 */1 * * ?")
+    @Scheduled(cron = "0 30 * * * ?")
     public void query(){
         // 2021年6月14日 改为每1小时执行一次
         logger.debug("查询快递");
