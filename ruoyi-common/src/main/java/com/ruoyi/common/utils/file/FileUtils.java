@@ -138,7 +138,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
     }
 
 
-    public static File getFile(String url) throws Exception {
+    public static File getFile(String url) {
         //对本地文件命名
         String fileName = url.substring(url.lastIndexOf("."),url.length());
         File file = null;
@@ -188,7 +188,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
             URL httpUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection)httpUrl.openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5 * 1000);
+            conn.setConnectTimeout(30 * 1000);
             InputStream inStream = conn.getInputStream();//通过输入流获取图片数据
             byte[] btImg = readInputStream(inStream);//得到图片的二进制数据
             return btImg;

@@ -2,11 +2,13 @@ package com.api.action;
 
 
 import com.api.util.PageLimit;
+import com.api.util.VideoUtil;
 import com.base.annotation.ApiMethod;
 import com.base.api.ApiBaseController;
 import com.base.api.ApiException;
 import com.base.api.MobileInfo;
 import com.base.dao.model.Result;
+import com.base.util.StringUtil;
 import com.base.util.StringUtils;
 import com.demo.constant.HttpConnector;
 import com.item.daoEx.model.UserEx;
@@ -19,6 +21,7 @@ import com.ruoyi.common.core.page.PageDomain;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.bytedeco.javacv.FrameFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +66,9 @@ public class ApiArticleController extends ApiBaseController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private VideoUtil videoUtil;
+
     @ApiOperation(value = "新增动态", notes = "")
     @RequestMapping(value = "/add",method = {RequestMethod.POST})
     @ApiMethod(isLogin = true)
@@ -79,11 +86,19 @@ public class ApiArticleController extends ApiBaseController {
         if (content.length()>500){
             throw new ApiException(400,"动态内容长度不能超过500");
         }
-
+        String cover = null;
+        try {
+            if (type==3 && StringUtils.isNotBlank(video)){
+                cover = videoUtil.cutImage(video, 1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Date date = new Date();
         Article article=new Article();
         article.setUserId(mobileInfo.getUserId());
         article.setStatus(status);
+        article.setCover(cover);
         article.setCollectCount(0);
         article.setCommentCount(0);
         article.setClickCount(0);
@@ -579,6 +594,16 @@ public class ApiArticleController extends ApiBaseController {
         result.put("followArticleList",followArticleList);
         result.put("recommendArticleList",recommendArticleList);
         return result;
+    }
+
+
+    @ApiOperation(value = "video", notes = "")
+    @RequestMapping(value = "/video/img",method = {RequestMethod.POST})
+    @ApiMethod(isLogin = false)
+    public Result  videoImg(String url) throws Exception {
+
+        return new Result(videoUtil.cutImage(url,1));
+
     }
 
 
