@@ -157,26 +157,7 @@ public class ApiCouponController {
     }
 
     private PawnOrg findByMobileInfo(MobileInfo info) {
-        Integer userId = info.getUserId();
-        //查询当前人有没有申请个人认证
-        AuthPersonalExample authPersonalExample = new AuthPersonalExample();
-        authPersonalExample.createCriteria().andCreateUserEqualTo(userId).andStateNotEqualTo("3");
-        List<AuthPersonal> authPersonals = authPersonalService.selectByExample(authPersonalExample);
-        //查询当前人有没有申请企业认证
-        AuthEnterpriseExample authEnterpriseExample = new AuthEnterpriseExample();
-        authEnterpriseExample.createCriteria().andCreateUserEqualTo(userId).andStateNotEqualTo("3");
-        List<AuthEnterprise> authEnterprises = authEnterpriseService.selectByExample(authEnterpriseExample);
-        Integer orgId = null;
-        if(authPersonals.size()==1 && authEnterprises.size()==0){
-            orgId = authPersonals.get(0).getOrgId();
-        }
-        if(authPersonals.size()==0 && authEnterprises.size()==1){
-            orgId = authEnterprises.get(0).getOrgId();
-        }
-        if (orgId == null) {
-            throw new ApiException(500, "商户不存在");
-        }
-        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(orgId);
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(info.getUserId());
         if (pawnOrg == null) {
             throw new ApiException(500, "商户不存在");
         }
