@@ -157,7 +157,14 @@ public class ApiCouponController {
     }
 
     private PawnOrg findByMobileInfo(MobileInfo info) {
-        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(info.getUserId());
+        User user = userService.selectByPrimaryKey(info.getUserId());
+        if (user == null) {
+            throw new ApiException(500, "用户不存在");
+        }
+        if (user.getOrgId() == null) {
+            throw  new ApiException(500, "商户不存在");
+        }
+        PawnOrg pawnOrg = pawnOrgService.selectByPrimaryKey(user.getOrgId());
         if (pawnOrg == null) {
             throw new ApiException(500, "商户不存在");
         }
