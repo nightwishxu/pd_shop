@@ -153,11 +153,11 @@
       <el-table-column
         label="封面图片"
         align="center"
-        prop="img"
+        prop="cover"
       >
         <template scope="scope">
           <img
-            :src="scope.row.img"
+            :src="scope.row.cover"
             width="40"
             height="40"
           />
@@ -276,7 +276,7 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="800px"
       append-to-body
     >
       <el-form
@@ -315,6 +315,13 @@
           />
         </el-form-item>
 
+        <el-form-item label="图片">
+          <multi-upload
+            ref="upload"
+            v-model="imgfileList"
+          ></multi-upload>
+        </el-form-item>
+
         <el-form-item
           label="排序"
           prop="sort"
@@ -345,7 +352,7 @@
             />
           </el-select>
         </el-form-item> -->
-        <el-form-item
+        <!-- <el-form-item
           label="链接地址"
           prop="refUrl"
         >
@@ -353,7 +360,7 @@
             v-model="form.refUrl"
             placeholder="请输入链接地址"
           />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div
         slot="footer"
@@ -372,10 +379,11 @@
 <script>
 import { listArticle, getArticle, delArticle, addArticle, updateArticle, exportArticle } from "@/api/community/article";
 import SingleUpload from "@/components/Upload/singleUpload";
+import MultiUpload from "@/components/Upload/multiUpload";
 
 export default {
   name: "Article",
-  components: { SingleUpload },
+  components: { SingleUpload,MultiUpload },
   data() {
     return {
       // 遮罩层
@@ -451,6 +459,57 @@ export default {
        ],
 
     };
+  },
+    computed: {
+    imgfileList: {
+      get: function () {
+        let pics = [];
+        // if(this.form.img===undefined||this.form.img==null||this.form.img===''){
+        //   return pics;
+        // }
+        // pics.push(this.value.img);
+        if (
+          this.form.imgs === undefined ||
+          this.form.imgs == null ||
+          this.form.imgs === ""
+        ) {
+          return pics;
+        }
+        let albumPics = this.form.imgs.split(",");
+        for (let i = 0; i < albumPics.length; i++) {
+          pics.push(albumPics[i]);
+        }
+        return pics;
+      },
+      set: function (newValue) {
+        if (newValue == null || newValue.length === 0) {
+          // this.form.img = null;
+          this.form.imgs = null;
+        } else {
+          // this.form.img = newValue[0];
+          console.info("type = " + Object.prototype.toString.call(newValue));
+          //  var values = newValue.split(",");
+          //  if(values==null || values.length===0){
+          //     this.form.imgs = null;
+          //  }
+          console.info("imgs start " + this.form.imgs);
+          console.info("imgs newValue " + newValue);
+
+          this.form.imgs = "";
+          if (newValue.length > 1) {
+            for (let i = 0; i < newValue.length; i++) {
+              this.form.imgs += newValue[i];
+              if (i !== newValue.length - 1) {
+                this.form.imgs += ",";
+              }
+            }
+          } else {
+            this.form.imgs = newValue[0];
+          }
+          console.info("imgs " + this.form.imgs);
+        }
+      },
+    },
   },
   created() {
     this.getList();
