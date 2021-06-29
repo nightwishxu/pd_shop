@@ -167,8 +167,20 @@
         label="收款账户"
         align="center"
         prop="tradeType"
-        :formatter="handleTradeType"
-      />
+      >
+        <template scope="scope">
+          <div v-if="scope.row.tradeType === 1">支付宝</div>
+          <div v-if="scope.row.tradeType === 2">微信</div>
+          <div v-if="scope.row.tradeType === 10">
+            <div v-if="scope.row.bankCardNo">
+              <p>{{ scope.row.bankCardNo }}</p>
+              <p>{{ scope.row.bankCardName }}</p>
+            </div>
+            <div v-else>--</div>
+          </div>
+          <div v-else>--</div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="状态"
         align="center"
@@ -394,8 +406,8 @@ export default {
         return "支付宝";
       } else if (row.tradeType === 2) {
         return "微信";
-      } else if (row.tradeType === 2) {
-        return row.bankCardNo + "(" + row.bankCardName + ")"
+      } else if (row.tradeType === 10) {
+        return row.bankCardNo ? row.bankCardNo + "</br>" + row.bankCardName : "--";
       } else {
         return "--";
       }
