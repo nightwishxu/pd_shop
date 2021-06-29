@@ -135,7 +135,7 @@
 
 	<select id="findFollowList" resultType="com.item.daoEx.model.UserEx">
              SELECT
-        u.id, u.nick_name, u.phone, u.head_img
+        u.id, u.nick_name nickName, u.phone, u.head_img headImg
         FROM
             t_user_follow t left join b_user u on t.follow_id = u.id and t.type=1
         where t.status=1 and u.state=1 and t.user_id=#{userId} order by t.create_time desc
@@ -144,7 +144,7 @@
 
 	<select id="findFansList" resultType="com.item.daoEx.model.UserEx">
         SELECT
-        u.id, u.nick_name, u.phone, u.head_img,u.city, u.age
+        u.id, u.nick_name nickName, u.phone, u.head_img headImg
         FROM
         t_user_follow t left join b_user u on t.user_id = u.id
         where t.status=1 and u.state=1 and t.follow_id=#{userId}  and t.type=1 order by t.create_time desc
@@ -209,5 +209,14 @@
          update b_user set balance = ifnull(balance,0) +#{amount} where id = #{userId}
     </update>
 
+	<select id="getCnt" resultType="java.lang.Integer">
+		select count(1) from t_user_follow where status=1 and type=1
+		<if test="userId!=null">
+			and user_id = #{userId}
+		</if>
+		<if test="followId!=null">
+			and follow_id = #{followId}
+		</if>
+	</select>
 
 </mapper>

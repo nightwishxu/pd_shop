@@ -59,6 +59,8 @@ public interface UserMapperEx{
 
 	int reSumBalance(@Param("userId")Integer userId);
 
+	int getCnt(@Param("userId")Integer userId,@Param("followId")Integer followId);
+
 	int saveBalance(@Param("userId")Integer userId,@Param("amount")BigDecimal amount);
 
 

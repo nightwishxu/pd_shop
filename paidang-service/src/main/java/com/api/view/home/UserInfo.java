@@ -42,6 +42,15 @@ public class UserInfo {
 	@ApiModelProperty(value="是否有支付密码 1有 0没有")
 	private Integer hasPayPassword;
 
+	@ApiModelProperty(value="粉丝数量")
+	private Integer fansCount;
+
+	@ApiModelProperty(value="关注数量")
+	private Integer followCount;
+
+	@ApiModelProperty(value="动态数量")
+	private Integer articleCount;
+
 	public UserInfo(){};
 
 	public UserInfo(Integer id,String nickName){
@@ -141,5 +150,30 @@ public class UserInfo {
 
 	public void setHasPayPassword(Integer hasPayPassword) {
 		this.hasPayPassword = hasPayPassword;
+	}
+
+
+	public Integer getFansCount() {
+		return fansCount;
+	}
+
+	public void setFansCount(Integer fansCount) {
+		this.fansCount = fansCount;
+	}
+
+	public Integer getFollowCount() {
+		return followCount;
+	}
+
+	public void setFollowCount(Integer followCount) {
+		this.followCount = followCount;
+	}
+
+	public Integer getArticleCount() {
+		return articleCount;
+	}
+
+	public void setArticleCount(Integer articleCount) {
+		this.articleCount = articleCount;
 	}
 }
