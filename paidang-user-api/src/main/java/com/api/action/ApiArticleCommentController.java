@@ -95,7 +95,7 @@ public class ApiArticleCommentController  extends ApiBaseController {
         entity.setIsReport(0);
         entity.setAuthorId(article.getUserId());
         entity.setCreateTime(new Date());
-        if (article.getUserId().equals(mobileInfo.getUserId())){
+        if (article.getUserId()!=null && article.getUserId().equals(mobileInfo.getUserId())){
             entity.setIsAuthor(2);
         }else {
             entity.setIsAuthor(0);
